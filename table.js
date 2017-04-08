@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function() {
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');
     let hot;
-    let poloniexBid = document.getElementById('poloniex-bid');
-    let poloniexAsk = document.getElementById('poloniex-ask');
-    let okcoinBid = document.getElementById('okcoin-bid');
-    let okcoinAsk = document.getElementById('okcoin-ask');
+    var elementPoloniexBid = document.getElementById('poloniex-bid');
+    var elementPoloniexAsk = document.getElementById('poloniex-ask');
+    var elementOkcoinBid = document.getElementById('okcoin-bid');
+    var elementOkcoinAsk = document.getElementById('okcoin-ask');
 
     function httpGet(theUrl)
     {
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return xmlHttp.responseText;
     };
 
-    let orderBook = function (dataUrl) {
+    let fetchOrderBook = function (dataUrl) {
 
         let inputData = JSON.parse(httpGet(dataUrl));
 
@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     function createTable(container, dataUrl, dataPartName) {
-        hot = new Handsontable(container, {
-            data: orderBook(dataUrl)[dataPartName],
+        return new Handsontable(container, {
+            data: fetchOrderBook(dataUrl)[dataPartName],
             colWidths: [100, 140, 100, 100, 120, 140],
             rowHeaders: true,
             colHeaders: ['currency', 'price', 'amount', 'orderType', 'timestamp'],
@@ -57,20 +57,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    createTable(poloniexAsk, 'http://localhost:4030/market/poloniex/order-book', 'ask');
-    createTable(poloniexBid, 'http://localhost:4030/market/poloniex/order-book', 'bid');
-    createTable(okcoinAsk, 'http://localhost:4030/market/okcoin/order-book', 'ask');
-    createTable(okcoinBid, 'http://localhost:4030/market/okcoin/order-book', 'bid');
+    var askPoloniexTable = createTable(elementPoloniexAsk, 'http://localhost:4030/market/poloniex/order-book', 'ask');
+    var bidPoloniexTable = createTable(elementPoloniexBid, 'http://localhost:4030/market/poloniex/order-book', 'bid');
+    var askOkcoinTable = createTable(elementOkcoinAsk, 'http://localhost:4030/market/okcoin/order-book', 'ask');
+    var bidOkcoinTable = createTable(elementOkcoinBid, 'http://localhost:4030/market/okcoin/order-book', 'bid');
 
-    setInterval(function () {
-        var str = '';
+    this.b = 1;
+    var that = this;
 
-        str += 'RowOffset: ' + hot.rowOffset();
+    this.set = setInterval( function () {
+        const orderBookP = fetchOrderBook('http://localhost:4030/market/poloniex/order-book');
+        const orderBookO = fetchOrderBook('http://localhost:4030/market/okcoin/order-book');
+        askPoloniexTable.loadData(orderBookP.ask);
+        bidPoloniexTable.loadData(orderBookP.bid);
+        askOkcoinTable.loadData(orderBookO.ask);
+        bidOkcoinTable.loadData(orderBookO.bid);
+    }, 1000 );
 
-        // positions.innerHTML = str;
-    }, 100);
-
-    function bindDumpButton(hot) {
+    function bindDumpButton() {
         if (typeof Handsontable === "undefined") {
             return;
         }
