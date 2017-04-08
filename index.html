@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Getting Started with Webpack</title>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
+    <!-- required modules for bare Handsontable -->
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/numbro/dist/numbro.js"></script>
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/moment/moment.js"></script>
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/pikaday/pikaday.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.Core.js"></script>
+
+    <!--<script src="http://docs.handsontable.com/0.18.0/bower_components/handsontable/dist/handsontable.full.js"></script>-->
+    <link type="text/css" rel="stylesheet" href="http://docs.handsontable.com/0.31.0/bower_components/handsontable/dist/handsontable.full.min.css">
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
+    <link type="text/css" rel="stylesheet" href="./table.css">
+
+    <script src="output/bundle.js"></script>
+
+</head>
+<body>
+    <h1>A table using handsontable</h1>
+
+    <h2>Poloniex</h2>
+    <div id="positions1"></div>
+    <button id="BUTTON" name="update">update</button>
+
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
+        <div id="poloniex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
+        <div id="poloniex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+
+    <h2>Okcoin</h2>
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
+        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
+        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+
+</body>
+</html>
