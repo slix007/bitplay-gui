@@ -57,17 +57,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    var askPoloniexTable = createTable(elementPoloniexAsk, 'http://localhost:4030/market/poloniex/order-book', 'ask');
-    var bidPoloniexTable = createTable(elementPoloniexBid, 'http://localhost:4030/market/poloniex/order-book', 'bid');
-    var askOkcoinTable = createTable(elementOkcoinAsk, 'http://localhost:4030/market/okcoin/order-book', 'ask');
-    var bidOkcoinTable = createTable(elementOkcoinBid, 'http://localhost:4030/market/okcoin/order-book', 'bid');
+    var askPoloniexTable = createTable(elementPoloniexAsk, 'http://bp.magsto.com:4030/market/poloniex/order-book', 'ask');
+    var bidPoloniexTable = createTable(elementPoloniexBid, 'http://bp.magsto.com:4030/market/poloniex/order-book', 'bid');
+    var askOkcoinTable = createTable(elementOkcoinAsk, 'http://bp.magsto.com:4030/market/okcoin/order-book', 'ask');
+    var bidOkcoinTable = createTable(elementOkcoinBid, 'http://bp.magsto.com:4030/market/okcoin/order-book', 'bid');
 
     this.b = 1;
     var that = this;
 
     this.set = setInterval( function () {
-        const orderBookP = fetchOrderBook('http://localhost:4030/market/poloniex/order-book');
-        const orderBookO = fetchOrderBook('http://localhost:4030/market/okcoin/order-book');
+        const orderBookP = fetchOrderBook('http://bp.magsto.com:4030/market/poloniex/order-book');
+        const orderBookO = fetchOrderBook('http://bp.magsto.com:4030/market/okcoin/order-book');
         askPoloniexTable.loadData(orderBookP.ask);
         bidPoloniexTable.loadData(orderBookP.bid);
         askOkcoinTable.loadData(orderBookO.ask);
