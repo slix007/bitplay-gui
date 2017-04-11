@@ -57,6 +57,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // var askPoloniexTable = createTable(elementPoloniexAsk, 'http://localhost:4030/market/poloniex/order-book', 'ask');
+    // var bidPoloniexTable = createTable(elementPoloniexBid, 'http://localhost:4030/market/poloniex/order-book', 'bid');
+    // var askOkcoinTable = createTable(elementOkcoinAsk, 'http://localhost:4030/market/okcoin/order-book', 'ask');
+    // var bidOkcoinTable = createTable(elementOkcoinBid, 'http://localhost:4030/market/okcoin/order-book', 'bid');
+
     var askPoloniexTable = createTable(elementPoloniexAsk, 'http://bp.magsto.com:4030/market/poloniex/order-book', 'ask');
     var bidPoloniexTable = createTable(elementPoloniexBid, 'http://bp.magsto.com:4030/market/poloniex/order-book', 'bid');
     var askOkcoinTable = createTable(elementOkcoinAsk, 'http://bp.magsto.com:4030/market/okcoin/order-book', 'ask');
@@ -65,14 +70,17 @@ document.addEventListener("DOMContentLoaded", function() {
     this.b = 1;
     var that = this;
 
-    this.set = setInterval( function () {
+    var updateFunction = function () {
         const orderBookP = fetchOrderBook('http://bp.magsto.com:4030/market/poloniex/order-book');
         const orderBookO = fetchOrderBook('http://bp.magsto.com:4030/market/okcoin/order-book');
+        // const orderBookP = fetchOrderBook('http://localhost:4030/market/poloniex/order-book');
+        // const orderBookO = fetchOrderBook('http://localhost:4030/market/okcoin/order-book');
         askPoloniexTable.loadData(orderBookP.ask);
         bidPoloniexTable.loadData(orderBookP.bid);
         askOkcoinTable.loadData(orderBookO.ask);
         bidOkcoinTable.loadData(orderBookO.bid);
-    }, 1000 );
+    };
+    var updateData = setInterval(updateFunction, 1000);
 
     function bindDumpButton() {
         if (typeof Handsontable === "undefined") {
@@ -91,13 +99,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (element.nodeName == "BUTTON" && element.name == 'update') {
-                var name = element.getAttribute('example1');
+                // var name = element.getAttribute('example1');
                 // var instance = element.getAttribute('data-instance');
                 // var hot = window[name];
-                console.log('data of ' + name, hot.getData());
-                hot.getData();
+                // console.log('data of ' + name, hot);
 
-
+                clearInterval(updateData); // stop the setInterval()
+                const interval = parseInt(document.getElementById('update_interval').value);
+                console.log('new interval ' + interval);
+                updateData = setInterval(updateFunction, interval);
             }
 
         });

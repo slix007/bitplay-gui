@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Getting Started with Webpack</title>
@@ -24,21 +24,22 @@
 
     <h2>Poloniex</h2>
     <div id="positions1"></div>
-    <!--<button id="BUTTON" name="update">update</button>-->
+    <button id="BUTTON" name="update">update interval</button>
+    <input id="update_interval" type="text" value="1000" onclick="home.updateIntervalFunction()">
 
     <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
-        <div id="poloniex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+        <div id="poloniex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
     <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
-        <div id="poloniex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+        <div id="poloniex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
 
     <h2>Okcoin</h2>
     <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
-        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
     <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
-        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
 
 </body>
