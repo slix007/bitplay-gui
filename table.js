@@ -11,6 +11,29 @@ document.addEventListener("DOMContentLoaded", function() {
     var elementOkcoinBid = document.getElementById('okcoin-bid');
     var elementOkcoinAsk = document.getElementById('okcoin-ask');
 
+    //var socket = new WebSocket("ws://localhost:4030/market/socket");
+    // alert("Socket created");
+    //
+    // socket.onopen = function() {
+    //     alert("Соединение установлено.");
+    // };
+    // socket.onclose = function(event) {
+    //     if (event.wasClean) {
+    //         alert('Соединение закрыто чисто');
+    //     } else {
+    //         alert('Обрыв соединения'); // например, "убит" процесс сервера
+    //     }
+    //     alert('Код: ' + event.code + ' причина: ' + event.reason);
+    // };
+    // socket.onmessage = function(event) {
+    //     alert("Получены данные " + event.data);
+    // };
+    // socket.onerror = function(error) {
+    //     alert("Ошибка " + error.message);
+    // };
+    // socket.send("Привет");
+
+
     function httpGet(theUrl)
     {
         var xmlHttp = new XMLHttpRequest();
@@ -110,7 +133,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 updateData = setInterval(updateFunction, interval);
             }
 
-        });
+            if (element.name == 'sendToSocket') {
+                socket.send("test message");
+            }
+
+            });
     }
     bindDumpButton(hot);
 
