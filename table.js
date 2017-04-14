@@ -137,6 +137,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 socket.send("test message");
             }
 
+            if (element.name == 'fetchPoloniexOrderBook') {
+                const orderBookP = fetchOrderBook('http://bp.magsto.com:4030/market/poloniex/order-book-fetch');
+                askPoloniexTable.loadData(orderBookP.ask);
+                bidPoloniexTable.loadData(orderBookP.bid);
+            }
+
             });
     }
     bindDumpButton(hot);
