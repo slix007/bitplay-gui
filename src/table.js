@@ -34,30 +34,42 @@ document.addEventListener("DOMContentLoaded", function() {
     // socket.send("Привет");
 
 
+    function httpAsyncGet(theUrl, callback)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, true ); // false for synchronous request
+        xmlHttp.send( null );
+        // return xmlHttp.responseText;
+
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4) {
+                if(xmlHttp.status == 200) {
+                    callback(xmlHttp.responseText);
+                }
+            }
+        };
+    }
+
     function httpGet(theUrl)
     {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
         xmlHttp.send( null );
         return xmlHttp.responseText;
-    };
+    }
 
-    let fetchTicker = function (dataUrl) {
-        let inputData = JSON.parse(httpGet(dataUrl));
+    let parseTicker = function (inputData) {
         return inputData.value;
     };
 
-    let fetchOrderBook = function (dataUrl) {
-
-        let inputData = JSON.parse(httpGet(dataUrl));
-
+    let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
-        inputData.bid.forEach(bid => {
+        orderBookJson.bid.forEach(bid => {
             bidArray.push([bid.currency, bid.price, bid.amount, bid.orderType, bid.timestamp]);
         });
         // bid
         let askArray = [];
-        inputData.ask.forEach(ask => {
+        orderBookJson.ask.forEach(ask => {
             askArray.push([ask.currency, ask.price, ask.amount, ask.orderType, ask.timestamp]);
         });
         let orderBook = {};
@@ -66,6 +78,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return orderBook;
     };
+
+    let fetchOrderBook = function (dataUrl) {
+
+        let inputData = JSON.parse(httpGet(dataUrl));
+
+        return parseOrderBook(inputData);
+    };
+
 
     function createTable(container, dataUrl, dataPartName) {
         return new Handsontable(container, {
@@ -93,18 +113,41 @@ document.addEventListener("DOMContentLoaded", function() {
     this.b = 1;
     var that = this;
 
-    var updateFunction = function () {
-        const orderBookP = fetchOrderBook(process.env.baseUrl + '/market/poloniex/order-book');
-        const orderBookO = fetchOrderBook(process.env.baseUrl + '/market/okcoin/order-book');
-        askPoloniexTable.loadData(orderBookP.ask);
-        bidPoloniexTable.loadData(orderBookP.bid);
-        askOkcoinTable.loadData(orderBookO.ask);
-        bidOkcoinTable.loadData(orderBookO.bid);
+    let fetch = function (url, callback) {
+        httpAsyncGet(process.env.baseUrl + url, function (rawData) {
+            const jsonData = JSON.parse(rawData);
+            callback(jsonData);
+        });
+    };
 
-        const tickerData = fetchTicker(process.env.baseUrl + '/market/poloniex/ticker');
-        let pTicker = document.getElementById("poloniex-ticker");
-        // pTicker.value = tickerData;
-        pTicker.innerHTML = tickerData;
+    var updateFunction = function () {
+        fetch('/market/poloniex/order-book', function (jsonData) {
+            let orderBookP = parseOrderBook(jsonData);
+            askPoloniexTable.loadData(orderBookP.ask);
+            bidPoloniexTable.loadData(orderBookP.bid);
+        });
+
+        fetch('/market/okcoin/order-book', function (jsonData) {
+            let orderBookO = parseOrderBook(jsonData);
+            askOkcoinTable.loadData(orderBookO.ask);
+            bidOkcoinTable.loadData(orderBookO.bid);
+        });
+
+        fetch('/market/poloniex/ticker', function (jsonData) {
+            let pTicker = document.getElementById("poloniex-ticker");
+            pTicker.innerHTML = parseTicker(jsonData);
+        });
+
+        fetch('/market/poloniex/account', function (poloniexAccount) {
+            let pBalance = document.getElementById("poloniex-balance");
+            pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc + ', usd=' + poloniexAccount.usd;
+        });
+
+        fetch('/market/okcoin/account', function (okcoinAccount) {
+            let oBalance = document.getElementById("okcoin-balance");
+            oBalance.innerHTML = 'Balance: btc=' + okcoinAccount.btc + ', usd=' + okcoinAccount.usd;
+        });
+
     };
     var updateData = setInterval(updateFunction, 1000);
 
