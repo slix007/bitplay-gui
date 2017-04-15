@@ -21,19 +21,27 @@
 </head>
 <body>
     <!--<h1>A table using handsontable</h1>-->
-
-    <h2>Poloniex</h2>
-    <div id="positions1"></div>
     <button id="BUTTON" name="update">update interval</button>
     <input id="update_interval" type="text" value="1000" onclick="home.updateIntervalFunction()">
 
-    <!--<button name="sendToSocket">send to socket</button>-->
-    <button name="fetchPoloniexOrderBook">fetch whole Poloniex order book</button>
+    <h2>Poloniex</h2>
+    <div id="positions1"></div>
 
-    <div style="width: 700px; height: 200px;" class="scroll-container fixed-container">
+    <div id="poloniex-ticker">
+        <!--<textarea id="poloniex-ticker"></textarea>-->
+    </div>
+
+    <!--<button name="sendToSocket">send to socket</button>-->
+    <br>
+    <button name="fetchPoloniexOrderBook">fetch Poloniex order book(10)</button>
+    <br>
+
+    <!--<button name="cleanPoloniexOrderBook">clean Poloniex order book(1 min old)</button>-->
+
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
         <div id="poloniex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
-    <div style="width: 700px; height: 200px;" class="scroll-container fixed-container">
+    <div style="width: 700px; height: 100px;" class="scroll-container fixed-container">
         <div id="poloniex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
 
