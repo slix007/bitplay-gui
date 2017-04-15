@@ -1,17 +1,50 @@
 var express = require('express');
 var app = express();
+var path = require('path');
 
-app.get('/', function (req, res) {
-    // res.send('Hello World');
-    res.sendfile('./index.html');
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const webpack = require('webpack');
+const config = require('./webpack.config.js');
 
-});
+const webpackMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
-app.use(express.static('./'));
+const isDeveloping = NODE_ENV === 'development';
+const port = 8081;
 
-var server = app.listen(8081, function () {
-    var host = server.address().address
-    var port = server.address().port
+console.log(process.env.NODE_ENV);
 
-    console.log("Example app listening at http://%s:%s", host, port)
+if (isDeveloping) {
+    const compiler = webpack(config);
+    const middleware = webpackMiddleware(compiler, {
+        publicPath: config.output.publicPath,
+        contentBase: 'src',
+        stats: {
+            colors: true,
+            hash: false,
+            timings: true,
+            chunks: false,
+            chunkModules: false,
+            modules: false
+        }
+    });
+
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
+    app.get('*', function response(req, res) {
+        res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'output/index.html')));
+        res.end();
+    });
+} else {
+    app.use(express.static(__dirname + '/output'));
+    app.get('*', function response(req, res) {
+        res.sendFile(path.join(__dirname, 'output/index.html'));
+    });
+}
+
+app.listen(port, '0.0.0.0', function onStart(err) {
+    if (err) {
+        console.log(err);
+    }
+    console.info('==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', port, port);
 });
