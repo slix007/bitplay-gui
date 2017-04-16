@@ -3,21 +3,21 @@ var app = express();
 var path = require('path');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const webpack = require('webpack');
-const config = require('./webpack.config.js');
-
-const webpackMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-
 const isDeveloping = NODE_ENV === 'development';
 const port = 8081;
 
-console.log(process.env.NODE_ENV);
+console.log('server.js ' + NODE_ENV);
 
 if (isDeveloping) {
-    const compiler = webpack(config);
+    const webpack = require('webpack');
+    const webpackConfig = require('./webpack.config.js').getDevelopmentEnv('development');
+
+    const webpackMiddleware = require('webpack-dev-middleware');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
+
+    const compiler = webpack(webpackConfig);
     const middleware = webpackMiddleware(compiler, {
-        publicPath: config.output.publicPath,
+        publicPath: webpackConfig.output.publicPath,
         contentBase: 'src',
         stats: {
             colors: true,

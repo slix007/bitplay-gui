@@ -50,6 +50,23 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
+    function httpAsyncPost(theUrl, data, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", theUrl, true); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-type", "application/json");
+        xmlHttp.send(data);
+
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4) {
+                if (xmlHttp.status == 200) {
+                    callback(xmlHttp.responseText);
+                }
+            }
+        };
+    }
+
+
+
     function httpGet(theUrl)
     {
         var xmlHttp = new XMLHttpRequest();
@@ -184,17 +201,48 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (element.name == 'fetchPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook('http://bp.magsto.com:4030/market/poloniex/order-book-fetch');
+                const orderBookP = fetchOrderBook(process.env.baseUrl + '/market/poloniex/order-book-fetch');
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
 
             if (element.name == 'cleanPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook('http://bp.magsto.com:4030/market/poloniex/order-book-clean');
+                const orderBookP = fetchOrderBook(process.env.baseUrl + '/market/poloniex/order-book-clean');
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
 
+            let showResponse = function (responseData) {
+                console.log(responseData);
+                let responseObj = JSON.parse(responseData);
+                let result = document.getElementById('poloniex-trading-result');
+                result.innerHTML = 'Result orderId=' + responseObj.orderId;
+            };
+
+            if (element.id == 'poloniex-buy') {
+                let amount = document.getElementById('poloniex-trading-input').value;
+                let request = {type: 'BUY', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                              requestData,
+                              showResponse
+                );
+
+            }
+
+            if (element.id == 'poloniex-sell') {
+                let amount = document.getElementById('poloniex-trading-input').value;
+                let request = {type: 'SELL', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                              requestData,
+                              showResponse
+                );
+            }
 
             });
     }
