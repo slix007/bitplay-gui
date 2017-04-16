@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
-    function httpAsyncPost(theUrl, data, callback) {
+    function httpAsyncPost(theUrl, data, callback, resultElement) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("POST", theUrl, true); // false for synchronous request
         xmlHttp.setRequestHeader("Content-type", "application/json");
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
         xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState == 4) {
                 if (xmlHttp.status == 200) {
-                    callback(xmlHttp.responseText);
+                    callback(xmlHttp.responseText, resultElement);
                 }
             }
         };
@@ -212,11 +212,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
 
-            let showResponse = function (responseData) {
+            let showResponse = function (responseData, resultElement) {
                 console.log(responseData);
                 let responseObj = JSON.parse(responseData);
-                let result = document.getElementById('poloniex-trading-result');
-                result.innerHTML = 'Result orderId=' + responseObj.orderId;
+
+                resultElement.innerHTML = 'Result orderId=' + responseObj.orderId;
             };
 
             if (element.id == 'poloniex-buy') {
@@ -225,9 +225,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
+                let resultElement = document.getElementById('poloniex-trading-result');
                 httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
                               requestData,
-                              showResponse
+                              showResponse,
+                              resultElement
                 );
 
             }
@@ -238,9 +240,41 @@ document.addEventListener("DOMContentLoaded", function() {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
+                let resultElement = document.getElementById('poloniex-trading-result');
                 httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
                               requestData,
-                              showResponse
+                              showResponse,
+                              resultElement
+                );
+            }
+
+
+            if (element.id == 'okcoin-buy') {
+                let amount = document.getElementById('okcoin-trading-input').value;
+                let request = {type: 'BUY', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('okcoin-trading-result');
+                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                              requestData,
+                              showResponse,
+                              resultElement
+                );
+
+            }
+
+            if (element.id == 'okcoin-sell') {
+                let amount = document.getElementById('okcoin-trading-input').value;
+                let request = {type: 'SELL', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('okcoin-trading-result');
+                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                              requestData,
+                              showResponse,
+                              resultElement
                 );
             }
 
