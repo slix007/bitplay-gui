@@ -219,6 +219,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 resultElement.innerHTML = 'Result orderId=' + responseObj.orderId;
             };
 
+            let showPoloniexResponse = function (responseData, resultElement) {
+                console.log(responseData);
+                let responseObj = JSON.parse(responseData);
+
+                let trades = responseObj.details.poloniexPublicTrades
+                    .map(trade => 'rate=' + trade.rate + ',amount=' + trade.amount)
+                    .reduce((a, b) => a + "; " + b);
+
+                resultElement.innerHTML = 'Result orderId=' + responseObj.orderId + '. ' + trades;
+
+            };
+
             if (element.id == 'poloniex-buy') {
                 let amount = document.getElementById('poloniex-trading-input').value;
                 let request = {type: 'BUY', amount: amount};
@@ -228,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 let resultElement = document.getElementById('poloniex-trading-result');
                 httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
                               requestData,
-                              showResponse,
+                              showPoloniexResponse,
                               resultElement
                 );
 
@@ -243,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 let resultElement = document.getElementById('poloniex-trading-result');
                 httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
                               requestData,
-                              showResponse,
+                              showPoloniexResponse,
                               resultElement
                 );
             }
