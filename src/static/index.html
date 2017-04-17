@@ -22,7 +22,7 @@
 <body>
     <!--<h1>A table using handsontable</h1>-->
     <button id="BUTTON" name="update">update interval</button>
-    <input id="update_interval" type="text" value="1000" onclick="home.updateIntervalFunction()">
+    <input id="update_interval" type="text" value="1000">
 
     <h2>Poloniex</h2>
     <div id="positions1"></div>
@@ -45,7 +45,7 @@
         <input type="text" id="poloniex-trading-input">
         <button id="poloniex-buy">Poloniex buy</button>
         <button id="poloniex-sell">Poloniex sell</button>
-        <div id="poloniex-trading-result">Result ... </div>
+        <span id="poloniex-trading-result">Result ... </span>
     </div>
     <!--<button name="fetchPoloniexOrderBook">fetch Poloniex order book(5)</button>-->
     <br>
@@ -68,7 +68,7 @@
         <input type="text" id="okcoin-trading-input">
         <button id="okcoin-buy">okcoin buy</button>
         <button id="okcoin-sell">okcoin sell</button>
-        <div id="okcoin-trading-result">Result ... </div>
+        <span id="okcoin-trading-result">Result ... </span>
     </div>
     <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
         <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>

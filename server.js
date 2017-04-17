@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var fs = require('fs');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const isDeveloping = NODE_ENV === 'development';
