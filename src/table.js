@@ -165,6 +165,13 @@ document.addEventListener("DOMContentLoaded", function() {
             oBalance.innerHTML = 'Balance: btc=' + okcoinAccount.btc + ', usd=' + okcoinAccount.usd;
         });
 
+        fetch('/market/deltas?market1=okcoin&market2=poloniex', function (returnData) {
+            let delta1 = document.getElementById("delta1");
+            let delta2 = document.getElementById("delta2");
+            delta1.innerHTML = returnData.delta1;
+            delta2.innerHTML = returnData.delta2;
+        });
+
     };
     var updateData = setInterval(updateFunction, 1000);
 
