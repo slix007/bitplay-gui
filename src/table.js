@@ -172,6 +172,15 @@ document.addEventListener("DOMContentLoaded", function() {
             delta2.innerHTML = returnData.delta2;
         });
 
+        fetch('/market/trade-log/poloniex', function (returnData) {
+            let area1 = document.getElementById("poloniex-trade-log");
+            area1.innerHTML = returnData.trades.reduce((a,b)=> a + '\n' + b);
+        });
+        fetch('/market/trade-log/okcoin', function (returnData) {
+            let area1 = document.getElementById("okcoin-trade-log");
+            area1.innerHTML = returnData.trades.reduce((a,b)=> a + '\n' + b);
+        });
+
     };
     var updateData = setInterval(updateFunction, 1000);
 
