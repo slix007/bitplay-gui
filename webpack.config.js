@@ -32,7 +32,7 @@ function getDevelopmentEnv(envName) {
                                  filename: './bundle.js',
                                  library: 'home'
                              },
-                             // watch: NODE_ENV == 'development',
+                             watch: NODE_ENV == 'development',
                              // devtool: 'eval-source-map',
 
                              devtool: NODE_ENV == 'development' ? 'source-map' : 'source-map',

@@ -12,6 +12,7 @@ console.log('server.js ' + NODE_ENV);
 if (isDeveloping) {
     const webpack = require('webpack');
     const webpackConfig = require('./webpack.config.js').getDevelopmentEnv('development');
+    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
 
     const webpackMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -32,10 +33,19 @@ if (isDeveloping) {
 
     app.use(middleware);
     app.use(webpackHotMiddleware(compiler));
-    app.get('*', function response(req, res) {
-        res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'output/index.html')));
-        res.end();
+    app.get('/', function response(req, res,next) {
+        if(req.url == '/') {
+            res.sendFile(path.join(__dirname,'output/index.html'));
+            return;
+        }
+        next();
     });
+    app.use(express.static(__dirname + '/output'));
+
+    // app.get('*', function response(req, res) {
+    //     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'output/index.html')));
+    //     res.end();
+    // });
 } else {
     app.use(express.static(__dirname + '/output'));
     app.get('*', function response(req, res) {
