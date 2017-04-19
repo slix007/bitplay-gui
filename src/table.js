@@ -137,6 +137,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     };
 
+    let repaintDeltasAndBorders = function (returnData) {
+        let delta1 = document.getElementById("delta1");
+        let delta2 = document.getElementById("delta2");
+        let border1 = document.getElementById("border1");
+        let border2 = document.getElementById("border2");
+        delta1.innerHTML = returnData.delta1;
+        delta2.innerHTML = returnData.delta2;
+        border1.innerHTML = returnData.border1;
+        border2.innerHTML = returnData.border2;
+    };
+
+
     var updateFunction = function () {
         fetch('/market/poloniex/order-book', function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
@@ -166,10 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         fetch('/market/deltas?market1=okcoin&market2=poloniex', function (returnData) {
-            let delta1 = document.getElementById("delta1");
-            let delta2 = document.getElementById("delta2");
-            delta1.innerHTML = returnData.delta1;
-            delta2.innerHTML = returnData.delta2;
+            repaintDeltasAndBorders(returnData);
         });
 
         fetch('/market/trade-log/poloniex', function (returnData) {
@@ -276,7 +285,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 );
             }
 
-
             if (element.id == 'okcoin-buy') {
                 let amount = document.getElementById('okcoin-trading-input').value;
                 let request = {type: 'BUY', amount: amount};
@@ -306,7 +314,37 @@ document.addEventListener("DOMContentLoaded", function() {
                 );
             }
 
-            });
+            if (element.id == 'update-border1') {
+                let newBorderValue = document.getElementById('border1-edit').value;
+                let request = {border1: newBorderValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(process.env.baseUrl + '/market/update-borders',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+            if (element.id == 'update-border2') {
+                let newBorderValue = document.getElementById('border2-edit').value;
+                let request = {border2: newBorderValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(process.env.baseUrl + '/market/update-borders',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+
+        });
     }
     bindDumpButton(hot);
 
