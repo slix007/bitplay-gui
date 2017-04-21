@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data: fetchOrderBook(dataUrl)[dataPartName],
             colWidths: [100, 140, 100, 100, 120, 140],
             rowHeaders: true,
-            colHeaders: ['currency', 'price', 'amount', 'orderType', 'timestamp'],
+            colHeaders: ['currency', 'quote', 'amount', 'orderType', 'timestamp'],
             fixedRowsTop: 1,
             fixedColumnsLeft: 1,
             fixedRowsBottom: 1,
@@ -248,65 +248,121 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log(responseData);
                 let responseObj = JSON.parse(responseData);
 
-                let trades = responseObj.details.poloniexPublicTrades
-                    .map(trade => 'rate=' + trade.rate + ',amount=' + trade.amount)
-                    .reduce((a, b) => a + "; " + b);
+                let trades;
+                if (responseObj.orderId !== null) {
+                    if (responseObj.details.poloniexPublicTrades.length === 0) {
+                        trades = 'just placed';
+                    } else {
+                        trades = responseObj.details.poloniexPublicTrades
+                            .map(trade => 'rate=' + trade.rate + ',amount=' + trade.amount)
+                            .reduce((a, b) => a + "; " + b);
+                    }
+                }
 
                 resultElement.innerHTML = 'Result orderId=' + responseObj.orderId + '. ' + trades;
 
             };
 
-            if (element.id == 'poloniex-buy') {
-                let amount = document.getElementById('poloniex-trading-input').value;
-                let request = {type: 'BUY', amount: amount};
+            if (element.id == 'poloniex-taker-buy') {
+                let amount = document.getElementById('poloniex-taker-input').value;
+                let request = {type: 'BUY', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('poloniex-trading-result');
-                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
-                              requestData,
-                              showPoloniexResponse,
-                              resultElement
-                );
-
-            }
-
-            if (element.id == 'poloniex-sell') {
-                let amount = document.getElementById('poloniex-trading-input').value;
-                let request = {type: 'SELL', amount: amount};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                let resultElement = document.getElementById('poloniex-trading-result');
+                let resultElement = document.getElementById('poloniex-taker-result');
                 httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
                               requestData,
                               showPoloniexResponse,
                               resultElement
                 );
             }
-
-            if (element.id == 'okcoin-buy') {
-                let amount = document.getElementById('okcoin-trading-input').value;
-                let request = {type: 'BUY', amount: amount};
+            if (element.id == 'poloniex-taker-sell') {
+                let amount = document.getElementById('poloniex-taker-input').value;
+                let request = {type: 'SELL', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-trading-result');
+                let resultElement = document.getElementById('poloniex-taker-result');
+                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                              requestData,
+                              showPoloniexResponse,
+                              resultElement
+                );
+            }
+            if (element.id == 'poloniex-maker-buy') {
+                let amount = document.getElementById('poloniex-maker-input').value;
+                let request = {type: 'BUY', placementType: 'MAKER', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('poloniex-maker-result');
+                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                              requestData,
+                              showPoloniexResponse,
+                              resultElement
+                );
+            }
+            if (element.id == 'poloniex-maker-sell') {
+                let amount = document.getElementById('poloniex-maker-input').value;
+                let request = {type: 'SELL', placementType: 'MAKER', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('poloniex-maker-result');
+                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                              requestData,
+                              showPoloniexResponse,
+                              resultElement
+                );
+            }
+
+
+            if (element.id == 'okcoin-taker-buy') {
+                let amount = document.getElementById('okcoin-taker-input').value;
+                let request = {type: 'BUY', placementType: 'TAKER', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('okcoin-taker-result');
                 httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
                               requestData,
                               showResponse,
                               resultElement
                 );
-
             }
-
-            if (element.id == 'okcoin-sell') {
-                let amount = document.getElementById('okcoin-trading-input').value;
-                let request = {type: 'SELL', amount: amount};
+            if (element.id == 'okcoin-taker-sell') {
+                let amount = document.getElementById('okcoin-taker-input').value;
+                let request = {type: 'SELL', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-trading-result');
+                let resultElement = document.getElementById('okcoin-taker-result');
+                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                              requestData,
+                              showResponse,
+                              resultElement
+                );
+            }
+            if (element.id == 'okcoin-maker-buy') {
+                let amount = document.getElementById('okcoin-maker-input').value;
+                let request = {type: 'BUY', placementType: 'MAKER', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('okcoin-maker-result');
+                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                              requestData,
+                              showResponse,
+                              resultElement
+                );
+            }
+            if (element.id == 'okcoin-maker-sell') {
+                let amount = document.getElementById('okcoin-maker-input').value;
+                let request = {type: 'SELL', placementType: 'MAKER', amount: amount};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                let resultElement = document.getElementById('okcoin-maker-result');
                 httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
                               requestData,
                               showResponse,

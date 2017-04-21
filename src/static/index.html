@@ -24,31 +24,34 @@
     <button id="BUTTON" name="update">update interval</button>
     <input id="update_interval" type="text" value="1000">
 
-    <h2>Poloniex</h2>
+    <h3>Poloniex</h3>
     <div id="positions1"></div>
 
     <div id="poloniex-ticker">
         Ticker ...
     </div>
-    <br>
     <div id="poloniex-balance">
         Balance ...
     </div>
 
     <!--<button name="sendToSocket">send to socket</button>-->
-    <br>
     <!--<button name="fetchPoloniexOrderBook">fetch Poloniex order book(5)</button>-->
-    <br>
 
-    <div id="poloniex-market-order">
-        Amount
-        <input type="text" id="poloniex-trading-input">
-        <button id="poloniex-buy">Poloniex buy</button>
-        <button id="poloniex-sell">Poloniex sell</button>
-        <span id="poloniex-trading-result">Result ... </span>
+    <div id="poloniex-taker-order">
+        Taker Amount
+        <input type="text" id="poloniex-taker-input">
+        <button id="poloniex-taker-buy">Poloniex T buy</button>
+        <button id="poloniex-taker-sell">Poloniex T sell</button>
+        <span id="poloniex-taker-result">Result ... </span>
+    </div>
+    <div id="poloniex-maker-order">
+        Maker Amount
+        <input type="text" id="poloniex-maker-input">
+        <button id="poloniex-maker-buy">Poloniex M buy</button>
+        <button id="poloniex-maker-sell">Poloniex M sell</button>
+        <span id="poloniex-maker-result">Result ... </span>
     </div>
     <!--<button name="fetchPoloniexOrderBook">fetch Poloniex order book(5)</button>-->
-    <br>
     <!--<button name="cleanPoloniexOrderBook">clean Poloniex order book(1 min old)</button>-->
 
     <!--<div style="float: right;width: 700px; height: 300px;border:1px solid red;">-->
@@ -63,19 +66,26 @@
         <div id="poloniex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
     </div>
 
-    <h2>Okcoin</h2>
+    <h3>Okcoin</h3>
     <div id="okcoin-balance">
         Balance ...
     </div>
     <br>
     <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
               id="okcoin-trade-log">empty...</textarea>
-    <div id="okcoin-market-order">
-        Amount
-        <input type="text" id="okcoin-trading-input">
-        <button id="okcoin-buy">okcoin buy</button>
-        <button id="okcoin-sell">okcoin sell</button>
-        <span id="okcoin-trading-result">Result ... </span>
+    <div id="okcoin-taker-order">
+        Taker Amount
+        <input type="text" id="okcoin-taker-input">
+        <button id="okcoin-taker-buy">okcoin T buy</button>
+        <button id="okcoin-taker-sell">okcoin T sell</button>
+        <span id="okcoin-taker-result">Result ... </span>
+    </div>
+    <div id="okcoin-maker-order">
+        Maker Amount
+        <input type="text" id="okcoin-maker-input">
+        <button id="okcoin-maker-buy">okcoin M buy</button>
+        <button id="okcoin-maker-sell">okcoin M sell</button>
+        <span id="okcoin-maker-result">Result ... </span>
     </div>
     <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
         <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
