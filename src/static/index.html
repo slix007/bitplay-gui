@@ -25,7 +25,12 @@
     <input id="update_interval" type="text" value="1000">
 
     <h3>Poloniex</h3>
-    <div id="positions1"></div>
+    <!--<div id="positions1"></div>-->
+
+    <div id="poloniex-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
+
+    <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
+              id="poloniex-trade-log">empty...</textarea>
 
     <div id="poloniex-ticker">
         Ticker ...
@@ -54,10 +59,6 @@
     <!--<button name="fetchPoloniexOrderBook">fetch Poloniex order book(5)</button>-->
     <!--<button name="cleanPoloniexOrderBook">clean Poloniex order book(1 min old)</button>-->
 
-    <!--<div style="float: right;width: 700px; height: 300px;border:1px solid red;">-->
-        <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
-                id="poloniex-trade-log">empty...</textarea>
-    <!--</div>-->
 
     <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
         <div id="poloniex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
@@ -67,12 +68,15 @@
     </div>
 
     <h3>Okcoin</h3>
+    <div id="okcoin-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
+
+    <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
+              id="okcoin-trade-log">empty...</textarea>
+
     <div id="okcoin-balance">
         Balance ...
     </div>
-    <br>
-    <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
-              id="okcoin-trade-log">empty...</textarea>
+
     <div id="okcoin-taker-order">
         Taker Amount
         <input type="text" id="okcoin-taker-input">

@@ -150,6 +150,43 @@ document.addEventListener("DOMContentLoaded", function() {
         makerDelta.innerHTML = returnData.makerDelta;
     };
 
+    function createElement(element, attribute, inner) {
+        if (typeof(element) === "undefined") {
+            return false;
+        }
+        if (typeof(inner) === "undefined") {
+            inner = "";
+        }
+        var el = document.createElement(element);
+        if (typeof(attribute) === 'object') {
+            for (var key in attribute) {
+                el.setAttribute(key, attribute[key]);
+            }
+        }
+        if (!Array.isArray(inner)) {
+            inner = [inner];
+        }
+        for (var k = 0; k < inner.length; k++) {
+            if (inner[k].tagName) {
+                el.appendChild(inner[k]);
+            } else {
+                el.appendChild(document.createTextNode(inner[k]));
+            }
+        }
+        return el;
+    }
+
+// var google = createElement("a",{"href":"http://google.com"},"google"),
+//     youtube = createElement("a",{"href":"http://youtube.com"},"youtube"),
+//     facebook = createElement("a",{"href":"http://facebook.com"},"facebook"),
+//     links_conteiner = createElement("div",{"id":"links"},[google,youtube,facebook]);
+// Will make this:
+//
+// <div id="links">
+//     <a href="http://google.com">google</a>
+//     <a href="http://youtube.com">youtube</a>
+//     <a href="http://facebook.com">facebook</a>
+// </div>
 
     var updateFunction = function () {
         fetch('/market/poloniex/order-book', function (jsonData) {
@@ -190,6 +227,37 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch('/market/trade-log/okcoin', function (returnData) {
             let area1 = document.getElementById("okcoin-trade-log");
             area1.innerHTML = returnData.trades.reduce((a,b)=> a + '\n' + b);
+        });
+
+        fetch('/market/poloniex/open-orders', function (returnData) {
+            returnData.forEach(function (oo) {
+                let labelOrder = createElement("span", {"id": "span-" + oo.id},
+                                               "id=" + oo.id
+                                               + ",t=" + oo.orderType
+                                               + ",s=" + oo.status
+                                               + ",q=" + oo.price
+                                               + ",a=" + oo.amount
+                                               + ",time=" + oo.timestamp
+                );
+                let cancel = createElement("button", {"id": "cancel-" + oo.id}, "Cancel");
+                let openOrderDiv = createElement("div", {"id": "links"}, [labelOrder, cancel]);
+                document.getElementById("poloniex-open-orders").appendChild(openOrderDiv);
+            });
+        });
+        fetch('/market/okcoin/open-orders', function (returnData) {
+            returnData.forEach(function (oo) {
+                let labelOrder = createElement("span", {"id": "span-" + oo.id},
+                                               "id=" + oo.id
+                                               + ",t=" + oo.orderType
+                                               + ",s=" + oo.status
+                                               + ",q=" + oo.price
+                                               + ",a=" + oo.amount
+                                               + ",time=" + oo.timestamp
+                );
+                let cancel = createElement("button", {"id": "cancel-" + oo.id}, "Cancel");
+                let openOrderDiv = createElement("div", {"id": "links"}, [labelOrder, cancel]);
+                document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
+            });
         });
 
     };
