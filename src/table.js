@@ -189,6 +189,15 @@ document.addEventListener("DOMContentLoaded", function() {
 // </div>
 
     var updateFunction = function () {
+
+        function moveOrder() {
+            console.log("moveorder");
+        }
+
+        function cancelOrder() {
+            console.log("cancelOrder");
+        }
+
         fetch('/market/poloniex/order-book', function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
             askPoloniexTable.loadData(orderBookP.ask);
@@ -222,41 +231,60 @@ document.addEventListener("DOMContentLoaded", function() {
 
         fetch('/market/trade-log/poloniex', function (returnData) {
             let area1 = document.getElementById("poloniex-trade-log");
-            area1.innerHTML = returnData.trades.reduce((a,b)=> a + '\n' + b);
+            area1.innerHTML = returnData.trades.length > 0
+                ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                : "";
         });
         fetch('/market/trade-log/okcoin', function (returnData) {
             let area1 = document.getElementById("okcoin-trade-log");
-            area1.innerHTML = returnData.trades.reduce((a,b)=> a + '\n' + b);
+            area1.innerHTML = returnData.trades.length > 0
+                ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                : "";
+
         });
 
-        fetch('/market/poloniex/open-orders', function (returnData) {
+        fetch('/market/poloniex/trade-history', function (returnData) {
             returnData.forEach(function (oo) {
-                let labelOrder = createElement("span", {"id": "span-" + oo.id},
-                                               "id=" + oo.id
-                                               + ",t=" + oo.orderType
-                                               + ",s=" + oo.status
-                                               + ",q=" + oo.price
-                                               + ",a=" + oo.amount
-                                               + ",time=" + oo.timestamp
-                );
-                let cancel = createElement("button", {"id": "cancel-" + oo.id}, "Cancel");
-                let openOrderDiv = createElement("div", {"id": "links"}, [labelOrder, cancel]);
-                document.getElementById("poloniex-open-orders").appendChild(openOrderDiv);
+
+                let existedOrder = document.getElementById("p-span-" + oo.id);
+                if (existedOrder === null) {
+                    let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
+                                                   "id=" + oo.id
+                                                   + ",t=" + oo.orderType
+                                                   + ",s=" + oo.status
+                                                   + ",q=" + oo.price
+                                                   + ",a=" + oo.amount
+                                                   + ",time=" + oo.timestamp
+                    );
+                    let move = createElement("button", {"id": "p-move-" + oo.id, "onClick": "moveOrder()"},
+                                             "Try move");
+                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id, "onClick": "cancelOrder()"},
+                                               "Cancel");
+                    let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
+                    document.getElementById("poloniex-open-orders").appendChild(openOrderDiv);
+                }
+
             });
         });
         fetch('/market/okcoin/open-orders', function (returnData) {
             returnData.forEach(function (oo) {
-                let labelOrder = createElement("span", {"id": "span-" + oo.id},
-                                               "id=" + oo.id
-                                               + ",t=" + oo.orderType
-                                               + ",s=" + oo.status
-                                               + ",q=" + oo.price
-                                               + ",a=" + oo.amount
-                                               + ",time=" + oo.timestamp
-                );
-                let cancel = createElement("button", {"id": "cancel-" + oo.id}, "Cancel");
-                let openOrderDiv = createElement("div", {"id": "links"}, [labelOrder, cancel]);
-                document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
+                let existedOrder = document.getElementById("o-span-" + oo.id);
+                if (existedOrder === null) {
+                    let labelOrder = createElement("span", {"id": "o-span-" + oo.id},
+                                                   "id=" + oo.id
+                                                   + ",t=" + oo.orderType
+                                                   + ",s=" + oo.status
+                                                   + ",q=" + oo.price
+                                                   + ",a=" + oo.amount
+                                                   + ",time=" + oo.timestamp
+                    );
+                    let move = createElement("button", {"id": "o-move-" + oo.id, "onClick": "moveOrder(this)"},
+                                             "Try move");
+                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id, "onClick": "cancelOrder(this)"},
+                                               "Cancel");
+                    let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
+                    document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
+                }
             });
         });
 
