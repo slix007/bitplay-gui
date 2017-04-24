@@ -263,6 +263,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         fetch('/market/poloniex/open-orders', function (returnData) {
+            var myNode = document.getElementById("poloniex-open-orders");
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild);
+            }
             returnData.forEach(function (oo) {
 
                 let existedOrder = document.getElementById("p-span-" + oo.id);
@@ -287,6 +291,10 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
         fetch('/market/okcoin/open-orders', function (returnData) {
+            var myNode = document.getElementById("okcoin-open-orders");
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild);
+            }
             returnData.forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
