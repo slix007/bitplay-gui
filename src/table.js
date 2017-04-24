@@ -188,15 +188,34 @@ document.addEventListener("DOMContentLoaded", function() {
 //     <a href="http://facebook.com">facebook</a>
 // </div>
 
+    function moveOrderO(orderId) {
+        moveOrder(orderId, '/market/okcoin/open-orders/move');
+    }
+    function moveOrderP(orderId) {
+        moveOrder(orderId, '/market/poloniex/open-orders/move');
+    }
+    function moveOrder(orderId, moveUrl) {
+        console.log("moveorder");
+
+        let request = {id: orderId};
+        let requestData = JSON.stringify(request);
+        console.log(requestData);
+
+        let showResponse = function (responseData, resultElement) {
+            console.log(responseData);
+            alert(responseData);
+        };
+        httpAsyncPost(process.env.baseUrl + moveUrl,
+                      requestData,
+                      showResponse,
+                      null);
+    }
+
+    function cancelOrder() {
+        console.log("cancelOrder");
+    }
+
     var updateFunction = function () {
-
-        function moveOrder() {
-            console.log("moveorder");
-        }
-
-        function cancelOrder() {
-            console.log("cancelOrder");
-        }
 
         fetch('/market/poloniex/order-book', function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
@@ -256,10 +275,11 @@ document.addEventListener("DOMContentLoaded", function() {
                                                    + ",a=" + oo.amount
                                                    + ",time=" + oo.timestamp
                     );
-                    let move = createElement("button", {"id": "p-move-" + oo.id, "onClick": "moveOrder()"},
-                                             "Try move");
-                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id, "onClick": "cancelOrder()"},
-                                               "Cancel");
+                    let move = createElement("button", {"id": "p-move-" + oo.id}, "Try move");
+                    move.addEventListener("click", function() { moveOrderP( oo.id); }, false);
+                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
+                    cancel.addEventListener("click", cancelOrder, oo.id);
+
                     let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
                     document.getElementById("poloniex-open-orders").appendChild(openOrderDiv);
                 }
@@ -278,10 +298,12 @@ document.addEventListener("DOMContentLoaded", function() {
                                                    + ",a=" + oo.amount
                                                    + ",time=" + oo.timestamp
                     );
-                    let move = createElement("button", {"id": "o-move-" + oo.id, "onClick": "moveOrder(this)"},
-                                             "Try move");
-                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id, "onClick": "cancelOrder(this)"},
-                                               "Cancel");
+                    let move = createElement("button", {"id": "o-move-" + oo.id}, "Try move");
+                    move.addEventListener("click", function() { moveOrderO( oo.id); }, false);
+
+                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
+                    cancel.addEventListener("click", cancelOrder, oo.id);
+
                     let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
                     document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
                 }
