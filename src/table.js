@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         });
 
-        fetch('/market/poloniex/trade-history', function (returnData) {
+        fetch('/market/poloniex/open-orders', function (returnData) {
             returnData.forEach(function (oo) {
 
                 let existedOrder = document.getElementById("p-span-" + oo.id);
