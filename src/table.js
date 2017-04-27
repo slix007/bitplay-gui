@@ -250,12 +250,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         fetch('/market/trade-log/poloniex', function (returnData) {
             let area1 = document.getElementById("poloniex-trade-log");
+            area1.scrollTop = area1.scrollHeight;
             area1.innerHTML = returnData.trades.length > 0
                 ? returnData.trades.reduce((a, b) => a + '\n' + b)
                 : "";
         });
         fetch('/market/trade-log/okcoin', function (returnData) {
             let area1 = document.getElementById("okcoin-trade-log");
+            area1.scrollTop = area1.scrollHeight;
             area1.innerHTML = returnData.trades.length > 0
                 ? returnData.trades.reduce((a, b) => a + '\n' + b)
                 : "";
