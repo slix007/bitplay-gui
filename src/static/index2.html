@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Getting Started with Webpack</title>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
+    <!-- required modules for bare Handsontable -->
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/numbro/dist/numbro.js"></script>
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/moment/moment.js"></script>
+    <script src="http://docs.handsontable.com/pro/1.5.0/bower_components/pikaday/pikaday.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.Core.js"></script>
+
+    <!--<script src="http://docs.handsontable.com/0.18.0/bower_components/handsontable/dist/handsontable.full.js"></script>-->
+    <link type="text/css" rel="stylesheet" href="http://docs.handsontable.com/0.31.0/bower_components/handsontable/dist/handsontable.full.min.css">
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
+    <link type="text/css" rel="stylesheet" href="./table.css">
+
+    <script src="./bundle.js"></script>
+
+</head>
+<body>
+    <!--<h1>A table using handsontable</h1>-->
+    <button id="BUTTON" name="update">update interval</button>
+    <input id="update_interval" type="text" value="1000">
+
+    <h3>bitmex</h3>
+    <!--<div id="positions1"></div>-->
+
+    <div id="bitmex-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
+
+    <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
+              id="bitmex-trade-log">empty...</textarea>
+
+    <div id="bitmex-ticker">
+        Ticker ...
+    </div>
+    <div id="bitmex-balance">
+        Balance ...
+    </div>
+
+    <!--<button name="sendToSocket">send to socket</button>-->
+    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+
+    <div id="bitmex-taker-order">
+        Taker Amount
+        <input type="text" id="bitmex-taker-input">
+        <button id="bitmex-taker-buy">bitmex T buy</button>
+        <button id="bitmex-taker-sell">bitmex T sell</button>
+        <span id="bitmex-taker-result">Result ... </span>
+    </div>
+    <div id="bitmex-maker-order">
+        Maker Amount
+        <input type="text" id="bitmex-maker-input">
+        <button id="bitmex-maker-buy">bitmex M buy</button>
+        <button id="bitmex-maker-sell">bitmex M sell</button>
+        <span id="bitmex-maker-result">Result ... </span>
+    </div>
+    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+    <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
+
+
+    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
+        <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
+        <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+
+    <h3>Okcoin</h3>
+    <div id="okcoin-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
+
+    <textarea style="float: right;width: 50%; height: 300px;border:1px solid black;"
+              id="okcoin-trade-log">empty...</textarea>
+
+    <div id="okcoin-balance">
+        Balance ...
+    </div>
+
+    <div id="okcoin-taker-order">
+        Taker Amount
+        <input type="text" id="okcoin-taker-input">
+        <button id="okcoin-taker-buy">okcoin T buy</button>
+        <button id="okcoin-taker-sell">okcoin T sell</button>
+        <span id="okcoin-taker-result">Result ... </span>
+    </div>
+    <div id="okcoin-maker-order">
+        Maker Amount
+        <input type="text" id="okcoin-maker-input">
+        <button id="okcoin-maker-buy">okcoin M buy</button>
+        <button id="okcoin-maker-sell">okcoin M sell</button>
+        <span id="okcoin-maker-result">Result ... </span>
+    </div>
+    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
+        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
+        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+    </div>
+
+    <div>
+        delta1 = bid1_p - ask1_o = <span id="delta1"></span>; &#09;
+        border1:
+        <input type="text" id="border1-edit"><button id="update-border1">Update border1</button>
+        <span id="border1"></span>
+    </div>
+    <div>
+        delta2 = bid1_o - ask1_p = <span id="delta2"></span>; &#09;
+        border2:
+        <input type="text" id="border2-edit"><button id="update-border2">Update border2</button>
+        <span id="border2"></span>
+    </div>
+    <div>
+        maker delta:
+        <input type="text" id="maker-delta-edit"><button id="update-maker-delta">Update maker delta</button>
+        <span id="maker-delta"></span>
+    </div>
+
+</body>
+</html>

@@ -38,6 +38,10 @@ if (isDeveloping) {
             res.sendFile(path.join(__dirname,'output/index.html'));
             return;
         }
+        if(req.url == '/index2.html') {
+            res.sendFile(path.join(__dirname,'output/index2.html'));
+            return;
+        }
         next();
     });
     app.use(express.static(__dirname + '/output'));
@@ -48,8 +52,11 @@ if (isDeveloping) {
     // });
 } else {
     app.use(express.static(__dirname + '/output'));
-    app.get('*', function response(req, res) {
+    app.get('/', function response(req, res) {
         res.sendFile(path.join(__dirname, 'output/index.html'));
+    });
+    app.get('/index2.html', function response(req, res) {
+        res.sendFile(path.join(__dirname, 'output/index2.html'));
     });
 }
 

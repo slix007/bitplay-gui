@@ -1,15 +1,19 @@
 var Handsontable = require('handsontable');
+var sprintf = require('sprintf-js').sprintf;
 
-document.addEventListener("DOMContentLoaded", function() {
+var exports = module.exports = {};
+
+exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
+    console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     let myData = Handsontable.helper.createSpreadsheetData(5, 5);
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');
     let hot;
-    var elementPoloniexBid = document.getElementById('poloniex-bid');
-    var elementPoloniexAsk = document.getElementById('poloniex-ask');
-    var elementOkcoinBid = document.getElementById('okcoin-bid');
-    var elementOkcoinAsk = document.getElementById('okcoin-ask');
+    var elementPoloniexBid = document.getElementById(sprintf('%s-bid', firstMarketName));
+    var elementPoloniexAsk = document.getElementById(sprintf('%s-ask', firstMarketName));
+    var elementOkcoinBid = document.getElementById(sprintf('%s-bid', secondMarketName));
+    var elementOkcoinAsk = document.getElementById(sprintf('%s-ask', secondMarketName));
 
     //var socket = new WebSocket("ws://localhost:4030/market/socket");
     // alert("Socket created");
@@ -122,10 +126,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    var askPoloniexTable = createTable(elementPoloniexAsk, process.env.baseUrl + '/market/poloniex/order-book', 'ask');
-    var bidPoloniexTable = createTable(elementPoloniexBid, process.env.baseUrl + '/market/poloniex/order-book', 'bid');
-    var askOkcoinTable = createTable(elementOkcoinAsk, process.env.baseUrl + '/market/okcoin/order-book', 'ask');
-    var bidOkcoinTable = createTable(elementOkcoinBid, process.env.baseUrl + '/market/okcoin/order-book', 'bid');
+    var askPoloniexTable = createTable(elementPoloniexAsk,
+                                       sprintf('%s/market/%s/order-book', process.env.baseUrl, firstMarketName), 'ask');
+    var bidPoloniexTable = createTable(elementPoloniexBid,
+                                       sprintf('%s/market/%s/order-book', process.env.baseUrl, firstMarketName), 'bid');
+    var askOkcoinTable = createTable(elementOkcoinAsk,
+                                     sprintf('%s/market/%s/order-book', process.env.baseUrl, secondMarketName), 'ask');
+    var bidOkcoinTable = createTable(elementOkcoinBid,
+                                     sprintf('%s/market/%s/order-book', process.env.baseUrl, secondMarketName), 'bid');
 
     this.b = 1;
     var that = this;
@@ -188,11 +196,12 @@ document.addEventListener("DOMContentLoaded", function() {
 //     <a href="http://facebook.com">facebook</a>
 // </div>
 
-    function moveOrderO(orderId) {
-        moveOrder(orderId, '/market/okcoin/open-orders/move');
-    }
     function moveOrderP(orderId) {
-        moveOrder(orderId, '/market/poloniex/open-orders/move');
+        moveOrder(orderId, sprintf('/market/%s/open-orders/move', firstMarketName));
+    }
+
+    function moveOrderO(orderId) {
+        moveOrder(orderId, sprintf('/market/%s/open-orders/move', secondMarketName));
     }
     function moveOrder(orderId, moveUrl) {
         console.log("moveorder");
@@ -217,46 +226,48 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var updateFunction = function () {
 
-        fetch('/market/poloniex/order-book', function (jsonData) {
+        fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
             askPoloniexTable.loadData(orderBookP.ask);
             bidPoloniexTable.loadData(orderBookP.bid);
         });
 
-        fetch('/market/okcoin/order-book', function (jsonData) {
+        fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
             let orderBookO = parseOrderBook(jsonData);
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
         });
 
-        fetch('/market/poloniex/ticker', function (jsonData) {
-            let pTicker = document.getElementById("poloniex-ticker");
+        /*fetch(sprintf('/market/%s/ticker', firstMarketName), function (jsonData) {
+            let pTicker = document.getElementById(sprintf('%s-ticker', firstMarketName));
             pTicker.innerHTML = parseTicker(jsonData);
-        });
+        });*/
 
-        fetch('/market/poloniex/account', function (poloniexAccount) {
-            let pBalance = document.getElementById("poloniex-balance");
+        fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
+            let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc + ', usd=' + poloniexAccount.usd;
         });
 
-        fetch('/market/okcoin/account', function (okcoinAccount) {
-            let oBalance = document.getElementById("okcoin-balance");
+        fetch(sprintf('/market/%s/account', secondMarketName), function (okcoinAccount) {
+            let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
             oBalance.innerHTML = 'Balance: btc=' + okcoinAccount.btc + ', usd=' + okcoinAccount.usd;
         });
 
-        fetch('/market/deltas?market1=okcoin&market2=poloniex', function (returnData) {
+        // markets order is opposite for deltas
+        fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
+              function (returnData) {
             repaintDeltasAndBorders(returnData);
         });
 
-        fetch('/market/trade-log/poloniex', function (returnData) {
-            let area1 = document.getElementById("poloniex-trade-log");
+        fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
+            let area1 = document.getElementById(firstMarketName + '-trade-log');
             area1.scrollTop = area1.scrollHeight;
             area1.innerHTML = returnData.trades.length > 0
                 ? returnData.trades.reduce((a, b) => a + '\n' + b)
                 : "";
         });
         fetch('/market/trade-log/okcoin', function (returnData) {
-            let area1 = document.getElementById("okcoin-trade-log");
+            let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName));
             area1.scrollTop = area1.scrollHeight;
             area1.innerHTML = returnData.trades.length > 0
                 ? returnData.trades.reduce((a, b) => a + '\n' + b)
@@ -264,8 +275,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         });
 
-        fetch('/market/poloniex/open-orders', function (returnData) {
-            var myNode = document.getElementById("poloniex-open-orders");
+        fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
+            var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName));
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild);
             }
@@ -287,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     cancel.addEventListener("click", cancelOrder, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
-                    document.getElementById("poloniex-open-orders").appendChild(openOrderDiv);
+                    document.getElementById(sprintf('%s-open-orders', firstMarketName)).appendChild(openOrderDiv);
                 }
 
             });
@@ -356,13 +367,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (element.name == 'fetchPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook(process.env.baseUrl + '/market/poloniex/order-book-fetch');
+                const orderBookP = fetchOrderBook(
+                    sprintf('%s/market/%s/order-book-fetch', process.env.baseUrl, firstMarketName));
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
 
             if (element.name == 'cleanPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook(process.env.baseUrl + '/market/poloniex/order-book-clean');
+                const orderBookP = fetchOrderBook(
+                    sprintf('%s/market/%s/order-book-clean', process.env.baseUrl, firstMarketName));
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
@@ -393,53 +406,53 @@ document.addEventListener("DOMContentLoaded", function() {
 
             };
 
-            if (element.id == 'poloniex-taker-buy') {
-                let amount = document.getElementById('poloniex-taker-input').value;
+            if (element.id == sprintf('%s-taker-buy', firstMarketName)) {
+                let amount = document.getElementById(sprintf('%s-taker-input', firstMarketName)).value;
                 let request = {type: 'BUY', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('poloniex-taker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-taker-result', firstMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
                 );
             }
-            if (element.id == 'poloniex-taker-sell') {
-                let amount = document.getElementById('poloniex-taker-input').value;
+            if (element.id == sprintf('%s-taker-sell', firstMarketName)) {
+                let amount = document.getElementById(sprintf('%s-taker-input', firstMarketName)).value;
                 let request = {type: 'SELL', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('poloniex-taker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-taker-result', firstMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
                 );
             }
-            if (element.id == 'poloniex-maker-buy') {
-                let amount = document.getElementById('poloniex-maker-input').value;
+            if (element.id == sprintf('%s-maker-buy', firstMarketName)) {
+                let amount = document.getElementById(sprintf('%s-maker-input', firstMarketName)).value;
                 let request = {type: 'BUY', placementType: 'MAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('poloniex-maker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-maker-result', firstMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
                 );
             }
-            if (element.id == 'poloniex-maker-sell') {
-                let amount = document.getElementById('poloniex-maker-input').value;
+            if (element.id == sprintf('%s-maker-sell', firstMarketName)) {
+                let amount = document.getElementById(sprintf('%s-maker-input', firstMarketName)).value;
                 let request = {type: 'SELL', placementType: 'MAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('poloniex-maker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/poloniex/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-maker-result', firstMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
@@ -447,53 +460,53 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
 
-            if (element.id == 'okcoin-taker-buy') {
-                let amount = document.getElementById('okcoin-taker-input').value;
+            if (element.id == sprintf('%s-taker-buy', secondMarketName)) {
+                let amount = document.getElementById(sprintf('%s-taker-input', secondMarketName)).value;
                 let request = {type: 'BUY', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-taker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-taker-result', secondMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
                 );
             }
-            if (element.id == 'okcoin-taker-sell') {
-                let amount = document.getElementById('okcoin-taker-input').value;
+            if (element.id == sprintf('%s-taker-sell', secondMarketName)) {
+                let amount = document.getElementById(sprintf('%s-taker-input', secondMarketName)).value;
                 let request = {type: 'SELL', placementType: 'TAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-taker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-taker-result', secondMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
                 );
             }
-            if (element.id == 'okcoin-maker-buy') {
-                let amount = document.getElementById('okcoin-maker-input').value;
+            if (element.id == sprintf('%s-maker-buy', secondMarketName)) {
+                let amount = document.getElementById(sprintf('%s-maker-input', secondMarketName)).value;
                 let request = {type: 'BUY', placementType: 'MAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-maker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-maker-result', secondMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
                 );
             }
-            if (element.id == 'okcoin-maker-sell') {
-                let amount = document.getElementById('okcoin-maker-input').value;
+            if (element.id == sprintf('%s-maker-sell', secondMarketName)) {
+                let amount = document.getElementById(sprintf('%s-maker-input', secondMarketName)).value;
                 let request = {type: 'SELL', placementType: 'MAKER', amount: amount};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                let resultElement = document.getElementById('okcoin-maker-result');
-                httpAsyncPost(process.env.baseUrl + '/market/okcoin/place-market-order',
+                let resultElement = document.getElementById(sprintf('%s-maker-result', secondMarketName));
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
@@ -549,5 +562,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     bindDumpButton(hot);
 
-
-});
+}
