@@ -8,16 +8,20 @@ let httpVar = require('./http');
 
 welcome('home');
 
-httpVar.httpAsyncGet(sprintf('%s:4030/market/list', process.env.baseUrl), function (response) {
+let firstMarketName = document.getElementById('first-market-name');
+// var firstMarketName = document.getElementsByTagName("title")[0];
+
+let portNumber = "4030";
+//TODO
+if (firstMarketName !== null) {
+    portNumber = "4031";
+}
+
+httpVar.httpAsyncGet(sprintf('%s:%s/market/list', process.env.baseUrl, portNumber), function (response) {
     console.log(response);
     let parsed = JSON.parse(response);
     console.log('first market=' + parsed.first);
-
-    if (parsed.first=='poloniex') {
-        tableVar.onDomLoadedFunc(parsed.first, parsed.second, process.env.baseUrl + ':4030');
-    } else if (parsed.first=='bitmex') {
-        tableVar.onDomLoadedFunc(parsed.first, parsed.second, process.env.baseUrl + ':4031');
-    }
+    tableVar.onDomLoadedFunc(parsed.first, parsed.second, sprintf('%s:%s', process.env.baseUrl, portNumber));
 });
 
 if (process.env.NODE_ENV == 'development') {
