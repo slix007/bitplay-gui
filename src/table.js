@@ -3,7 +3,7 @@ var sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
-exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
+exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) {
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     let myData = Handsontable.helper.createSpreadsheetData(5, 5);
@@ -127,19 +127,19 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
     }
 
     var askPoloniexTable = createTable(elementPoloniexAsk,
-                                       sprintf('%s/market/%s/order-book', process.env.baseUrl, firstMarketName), 'ask');
+                                       sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
     var bidPoloniexTable = createTable(elementPoloniexBid,
-                                       sprintf('%s/market/%s/order-book', process.env.baseUrl, firstMarketName), 'bid');
+                                       sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
     var askOkcoinTable = createTable(elementOkcoinAsk,
-                                     sprintf('%s/market/%s/order-book', process.env.baseUrl, secondMarketName), 'ask');
+                                     sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
     var bidOkcoinTable = createTable(elementOkcoinBid,
-                                     sprintf('%s/market/%s/order-book', process.env.baseUrl, secondMarketName), 'bid');
+                                     sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid');
 
     this.b = 1;
     var that = this;
 
     let fetch = function (url, callback) {
-        httpAsyncGet(process.env.baseUrl + url, function (rawData) {
+        httpAsyncGet(baseUrl + url, function (rawData) {
             const jsonData = JSON.parse(rawData);
             callback(jsonData);
         });
@@ -214,7 +214,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
             console.log(responseData);
             alert(responseData);
         };
-        httpAsyncPost(process.env.baseUrl + moveUrl,
+        httpAsyncPost(baseUrl + moveUrl,
                       requestData,
                       showResponse,
                       null);
@@ -368,14 +368,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
 
             if (element.name == 'fetchPoloniexOrderBook') {
                 const orderBookP = fetchOrderBook(
-                    sprintf('%s/market/%s/order-book-fetch', process.env.baseUrl, firstMarketName));
+                    sprintf('%s/market/%s/order-book-fetch', baseUrl, firstMarketName));
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
 
             if (element.name == 'cleanPoloniexOrderBook') {
                 const orderBookP = fetchOrderBook(
-                    sprintf('%s/market/%s/order-book-clean', process.env.baseUrl, firstMarketName));
+                    sprintf('%s/market/%s/order-book-clean', baseUrl, firstMarketName));
                 askPoloniexTable.loadData(orderBookP.ask);
                 bidPoloniexTable.loadData(orderBookP.bid);
             }
@@ -413,7 +413,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-taker-result', firstMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
@@ -426,7 +426,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-taker-result', firstMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
@@ -439,7 +439,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-maker-result', firstMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
@@ -452,7 +452,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-maker-result', firstMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, firstMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName),
                               requestData,
                               showPoloniexResponse,
                               resultElement
@@ -467,7 +467,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-taker-result', secondMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
@@ -480,7 +480,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-taker-result', secondMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
@@ -493,7 +493,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-maker-result', secondMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
@@ -506,7 +506,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 console.log(requestData);
 
                 let resultElement = document.getElementById(sprintf('%s-maker-result', secondMarketName));
-                httpAsyncPost(sprintf('%s/market/%s/place-market-order', process.env.baseUrl, secondMarketName),
+                httpAsyncPost(sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName),
                               requestData,
                               showResponse,
                               resultElement
@@ -519,7 +519,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(process.env.baseUrl + '/market/update-borders',
+                httpAsyncPost(baseUrl + '/market/update-borders',
                               requestData,
                               function (responseData, resultElement) {
                                   repaintDeltasAndBorders(responseData);
@@ -533,7 +533,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(process.env.baseUrl + '/market/update-borders',
+                httpAsyncPost(baseUrl + '/market/update-borders',
                               requestData,
                               function (responseData, resultElement) {
                                   repaintDeltasAndBorders(responseData);
@@ -548,7 +548,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(process.env.baseUrl + '/market/update-maker-delta',
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
                               requestData,
                               function (responseData, resultElement) {
                                   repaintDeltasAndBorders(responseData);

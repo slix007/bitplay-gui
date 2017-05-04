@@ -1,23 +1,22 @@
 'use strict';
 
 let welcome = require('./welcome');
+var sprintf = require('sprintf-js').sprintf;
 
 let tableVar = require('./table');
 let httpVar = require('./http');
 
 welcome('home');
 
-httpVar.httpAsyncGet(process.env.baseUrl + '/market/list', function (response) {
+httpVar.httpAsyncGet(sprintf('%s:4030/market/list', process.env.baseUrl), function (response) {
     console.log(response);
     let parsed = JSON.parse(response);
-    // document.addEventListener("DOMContentLoaded", function() {
-        tableVar.onDomLoadedFunc(parsed.first, parsed.second);
-    // });
+    console.log('first market=' + parsed.first);
 
-    if (parsed.first=='bitmex') {
-        console.log('first market=' + parsed.first);
-    } else {
-        console.log(response);
+    if (parsed.first=='poloniex') {
+        tableVar.onDomLoadedFunc(parsed.first, parsed.second, process.env.baseUrl + ':4030');
+    } else if (parsed.first=='bitmex') {
+        tableVar.onDomLoadedFunc(parsed.first, parsed.second, process.env.baseUrl + ':4031');
     }
 });
 
