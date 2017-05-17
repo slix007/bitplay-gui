@@ -245,7 +245,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
-            pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc + ', usd=' + poloniexAccount.usd;
+            if (poloniexAccount.btc === null) {
+                pBalance.innerHTML = 'Balance: wallet=' + poloniexAccount.wallet
+                                     + ', available=' + poloniexAccount.available
+                                     + ', margin=' + poloniexAccount.margin;
+            } else {
+                pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
+                                     + ', usd=' + poloniexAccount.usd;
+            }
         });
 
         fetch(sprintf('/market/%s/account', secondMarketName), function (okcoinAccount) {
