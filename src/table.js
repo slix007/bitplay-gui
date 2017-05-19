@@ -248,7 +248,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (poloniexAccount.btc === null) {
                 pBalance.innerHTML = 'Balance: wallet=' + poloniexAccount.wallet
                                      + ', available=' + poloniexAccount.available
-                                     + ', margin=' + poloniexAccount.margin;
+                                     + ', margin=' + poloniexAccount.margin
+                                     + ', position=' + poloniexAccount.position;
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
                                      + ', usd=' + poloniexAccount.usd;
