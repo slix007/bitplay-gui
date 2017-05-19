@@ -247,8 +247,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             if (poloniexAccount.btc === null) {
                 pBalance.innerHTML = 'Balance: wallet=' + poloniexAccount.wallet
-                                     + ', available=' + poloniexAccount.available
                                      + ', margin=' + poloniexAccount.margin
+                                     + ', available=' + poloniexAccount.available
                                      + ', position=' + poloniexAccount.position;
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
