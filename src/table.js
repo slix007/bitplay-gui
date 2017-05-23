@@ -153,6 +153,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let makerDelta = document.getElementById("maker-delta");
         let sumDelta = document.getElementById("sum-delta");
         let periodSec = document.getElementById("period-sec");
+        let bu = document.getElementById("bu");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -160,6 +161,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         makerDelta.innerHTML = returnData.makerDelta;
         sumDelta.innerHTML = returnData.sumDelta;
         periodSec.innerHTML = returnData.periodSec;
+        bu.innerHTML = returnData.buValue;
     };
 
     function createElement(element, attribute, inner) {
@@ -595,6 +597,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-period-sec') {
                 let newPeriodSecValue = document.getElementById('period-sec-edit').value;
                 let request = {periodSec: newPeriodSecValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-bu') {
+                let newPeriodSecValue = document.getElementById('bu-edit').value;
+                let request = {buValue: newPeriodSecValue};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
