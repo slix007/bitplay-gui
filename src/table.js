@@ -594,7 +594,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
             if (element.id == 'update-period-sec') {
                 let newPeriodSecValue = document.getElementById('period-sec-edit').value;
-                let request = {sumDelta: newPeriodSecValue};
+                let request = {periodSec: newPeriodSecValue};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
