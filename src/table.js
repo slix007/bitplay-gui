@@ -151,11 +151,13 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let border1 = document.getElementById("border1");
         let border2 = document.getElementById("border2");
         let makerDelta = document.getElementById("maker-delta");
+        let sumDelta = document.getElementById("sum-delta");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
         border2.innerHTML = returnData.border2;
         makerDelta.innerHTML = returnData.makerDelta;
+        sumDelta.innerHTML = returnData.sumDelta;
     };
 
     function createElement(element, attribute, inner) {
@@ -561,6 +563,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-maker-delta') {
                 let newMakerDeltaValue = document.getElementById('maker-delta-edit').value;
                 let request = {makerDelta: newMakerDeltaValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-sum-delta') {
+                let newSumDeltaValue = document.getElementById('sum-delta-edit').value;
+                let request = {sumDelta: newSumDeltaValue};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
