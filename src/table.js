@@ -155,6 +155,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let periodSec = document.getElementById("period-sec");
         let bu = document.getElementById("bu");
         let cumDelta = document.getElementById("cum-delta");
+        let lastDelta = document.getElementById("last-delta");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -164,6 +165,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         periodSec.innerHTML = returnData.periodSec;
         bu.innerHTML = returnData.buValue;
         cumDelta.innerHTML = returnData.cumDelta;
+        lastDelta.innerHTML = returnData.lastDelta;
     };
 
     function createElement(element, attribute, inner) {
@@ -641,6 +643,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'update-last-delta') {
+                let newLastDeltaValue = document.getElementById('last-delta-edit').value;
+                let request = {lastDelta: newLastDeltaValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
 
         });
     }
