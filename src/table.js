@@ -159,6 +159,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDeltaFact = document.getElementById("cum-delta-fact");
         let cumDiff1 = document.getElementById("cum-diff1");
         let cumDiff2 = document.getElementById("cum-diff2");
+        let cumCom1 = document.getElementById("cum-com1");
+        let cumCom2 = document.getElementById("cum-com2");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -172,6 +174,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDeltaFact.innerHTML = returnData.cumDeltaFact;
         cumDiff1.innerHTML = returnData.cumDiffFact1;
         cumDiff2.innerHTML = returnData.cumDiffFact2;
+        cumCom1.innerHTML = returnData.cumCom1;
+        cumCom2.innerHTML = returnData.cumCom2;
     };
 
     function createElement(element, attribute, inner) {
@@ -697,6 +701,36 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-diff2') {
                 let element = document.getElementById('cum-diff2-edit').value;
                 let request = {cumDiffFact2: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-cum-com1') {
+                let element = document.getElementById('cum-com1-edit').value;
+                let request = {cumCom1: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-cum-com2') {
+                let element = document.getElementById('cum-com1-edit').value;
+                let request = {cumCom2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
