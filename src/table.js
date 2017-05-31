@@ -157,7 +157,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDelta = document.getElementById("cum-delta");
         let lastDelta = document.getElementById("last-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
-        let cumDiffs = document.getElementById("cum-diffs");
+        let cumDiff1 = document.getElementById("cum-diff1");
+        let cumDiff2 = document.getElementById("cum-diff2");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -169,7 +170,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDelta.innerHTML = returnData.cumDelta;
         lastDelta.innerHTML = returnData.lastDelta;
         cumDeltaFact.innerHTML = returnData.cumDeltaFact;
-        cumDiffs.innerHTML = returnData.cumDiffs;
+        cumDiff1.innerHTML = returnData.cumDiffFact1;
+        cumDiff2.innerHTML = returnData.cumDiffFact2;
     };
 
     function createElement(element, attribute, inner) {
@@ -677,9 +679,24 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
-            if (element.id == 'update-cum-diffs') {
-                let element = document.getElementById('cum-diffs-edit').value;
-                let request = {cumDiffs: element};
+            if (element.id == 'update-cum-diff1') {
+                let element = document.getElementById('cum-diff1-edit').value;
+                let request = {cumDiffFact1: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-cum-diff2') {
+                let element = document.getElementById('cum-diff2-edit').value;
+                let request = {cumDiffFact2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
