@@ -178,6 +178,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumCom2.innerHTML = returnData.cumCom2;
     };
 
+    let repaintStopMoving = function (returnData) {
+        let isStopMoving = document.getElementById("is-stop-moving");
+        let isEnabled = 'stopped';
+        if (returnData.firstMarket) {
+            isEnabled = 'stopped';
+        } else {
+            isEnabled = 'moving enabled';
+        }
+        isStopMoving.innerHTML = isEnabled;
+    };
+
     function createElement(element, attribute, inner) {
         if (typeof(element) === "undefined") {
             return false;
@@ -285,6 +296,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
               function (returnData) {
             repaintDeltasAndBorders(returnData);
+        });
+
+        // markets order is opposite for deltas
+        fetch('/market/stop-moving', function (returnData) {
+            repaintStopMoving(JSON.parse(returnData));
         });
 
         fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
@@ -738,6 +754,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                               requestData,
                               function (responseData, resultElement) {
                                   repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'toggle-stop-moving') {
+                let request = {firstMarket:true, secondMarket:true};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintStopMoving(JSON.parse(responseData));
                               },
                               null
                 );
