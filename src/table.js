@@ -177,7 +177,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumCom1.innerHTML = returnData.cumCom1;
         cumCom2.innerHTML = returnData.cumCom2;
     };
-
+    let repaintTradableAmount = function (returnData) {
+        let tradableAmount = document.getElementById("tradable-amount");
+        tradableAmount.innerHTML = returnData.amount;
+    };
     let repaintStopMoving = function (returnData) {
         let isStopMoving = document.getElementById("is-stop-moving");
         let isEnabled = 'stopped';
@@ -298,9 +301,13 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             repaintDeltasAndBorders(returnData);
         });
 
+        fetch('/market/tradable-amount', function (returnData) {
+            repaintTradableAmount(returnData);
+        });
+
         // markets order is opposite for deltas
         fetch('/market/stop-moving', function (returnData) {
-            repaintStopMoving(JSON.parse(returnData));
+            repaintStopMoving(returnData);
         });
 
         fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
@@ -773,6 +780,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'update-tradable-amount') {
+                let element = document.getElementById('tradable-amount-edit').value;
+                let request = {amount: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/tradable-amount',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintTradableAmount(JSON.parse(responseData));
+                              },
+                              null
+                );
+            }
         });
     }
     bindDumpButton(hot);
