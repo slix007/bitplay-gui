@@ -752,7 +752,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
 
             if (element.id == 'update-cum-com2') {
-                let element = document.getElementById('cum-com1-edit').value;
+                let element = document.getElementById('cum-com2-edit').value;
                 let request = {cumCom2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
