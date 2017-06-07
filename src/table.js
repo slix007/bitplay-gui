@@ -191,6 +191,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         }
         isStopMoving.innerHTML = isEnabled;
     };
+    let repaintStates = function (returnData) {
+        let elementById = document.getElementById("markets-states");
+        elementById.innerHTML = 'first: ' + returnData.firstMarket + ', second: ' + returnData.secondMarket;
+    };
 
     function createElement(element, attribute, inner) {
         if (typeof(element) === "undefined") {
@@ -308,6 +312,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         // markets order is opposite for deltas
         fetch('/market/stop-moving', function (returnData) {
             repaintStopMoving(returnData);
+        });
+        fetch('/market/states', function (returnData) {
+            repaintStates(returnData);
         });
 
         fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
@@ -790,6 +797,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                               requestData,
                               function (responseData, resultElement) {
                                   repaintTradableAmount(JSON.parse(responseData));
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'free-markets-states') {
+                let request = {firstMarket:true, secondMarket:true};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/free-states',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintStates(JSON.parse(responseData));
                               },
                               null
                 );
