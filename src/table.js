@@ -193,7 +193,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     };
     let repaintStates = function (returnData) {
         let elementById = document.getElementById("markets-states");
-        elementById.innerHTML = 'first: ' + returnData.firstMarket + ', second: ' + returnData.secondMarket;
+        elementById.innerHTML = 'Market is ready for new signals. First: ' + returnData.firstMarket + ', second: ' + returnData.secondMarket;
     };
 
     function createElement(element, attribute, inner) {
