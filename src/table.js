@@ -161,6 +161,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDiff2 = document.getElementById("cum-diff2");
         let cumCom1 = document.getElementById("cum-com1");
         let cumCom2 = document.getElementById("cum-com2");
+        let count1 = document.getElementById("count1");
+        let count2 = document.getElementById("count2");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -176,6 +178,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDiff2.innerHTML = returnData.cumDiffFact2;
         cumCom1.innerHTML = returnData.cumCom1;
         cumCom2.innerHTML = returnData.cumCom2;
+        count1.innerHTML = returnData.count1;
+        count2.innerHTML = returnData.count2;
     };
     let repaintTradableAmount = function (returnData) {
         let tradableAmount = document.getElementById("tradable-amount");
@@ -816,6 +820,34 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                               null
                 );
             }
+
+            if (element.id == 'update-count1') {
+                let element = document.getElementById('count1-edit').value;
+                let request = {count1: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+            if (element.id == 'update-count2') {
+                let element = document.getElementById('count2-edit').value;
+                let request = {count2: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
         });
     }
     bindDumpButton(hot);
