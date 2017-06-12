@@ -848,6 +848,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'print-sum-bal') {
+                let request = {};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/print-sum-bal',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintStates(JSON.parse(responseData));
+                              },
+                              null
+                );
+            }
+
         });
     }
     bindDumpButton(hot);
