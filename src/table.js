@@ -161,6 +161,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDiff2 = document.getElementById("cum-diff2");
         let cumCom1 = document.getElementById("cum-com1");
         let cumCom2 = document.getElementById("cum-com2");
+        let cumBitmexMCom = document.getElementById("cumBitmexMCom");
         let count1 = document.getElementById("count1");
         let count2 = document.getElementById("count2");
         delta1.innerHTML = returnData.delta1;
@@ -178,6 +179,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDiff2.innerHTML = returnData.cumDiffFact2;
         cumCom1.innerHTML = returnData.cumCom1;
         cumCom2.innerHTML = returnData.cumCom2;
+        cumBitmexMCom.innerHTML = returnData.cumBitmexMCom;
         count1.innerHTML = returnData.count1;
         count2.innerHTML = returnData.count2;
     };
@@ -766,6 +768,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-com2') {
                 let element = document.getElementById('cum-com2-edit').value;
                 let request = {cumCom2: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+
+            if (element.id == 'update-cumBitmexMCom') {
+                let element = document.getElementById('cumBitmexMCom-edit').value;
+                let request = {cumBitmexMCom: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
