@@ -241,17 +241,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 //     <a href="http://facebook.com">facebook</a>
 // </div>
 
-    function moveOrderP(orderId) {
-        moveOrder(orderId, sprintf('/market/%s/open-orders/move', firstMarketName));
+    function moveOrderP(orderId, orderType) {
+        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', firstMarketName));
     }
 
-    function moveOrderO(orderId) {
-        moveOrder(orderId, sprintf('/market/%s/open-orders/move', secondMarketName));
+    function moveOrderO(orderId, orderType) {
+        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', secondMarketName));
     }
-    function moveOrder(orderId, moveUrl) {
+    function moveOrder(orderId, orderType, moveUrl) {
         console.log("moveorder");
 
-        let request = {id: orderId};
+        let request = {id: orderId, orderType: orderType};
         let requestData = JSON.stringify(request);
         console.log(requestData);
 
@@ -366,7 +366,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                                    + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "p-move-" + oo.id}, "Try move");
-                    move.addEventListener("click", function() { moveOrderP( oo.id); }, false);
+                    move.addEventListener("click", function() { moveOrderP(oo.id, oo.orderType); }, false);
                     let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
                     cancel.addEventListener("click", cancelOrder, oo.id);
 
@@ -393,7 +393,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                                    + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "o-move-" + oo.id}, "Try move");
-                    move.addEventListener("click", function() { moveOrderO( oo.id); }, false);
+                    move.addEventListener("click", function() { moveOrderO(oo.id, oo.orderType); }, false);
 
                     let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
                     cancel.addEventListener("click", cancelOrder, oo.id);
