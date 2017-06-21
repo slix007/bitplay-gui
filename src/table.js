@@ -301,9 +301,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
         });
 
-        fetch(sprintf('/market/%s/account', secondMarketName), function (okcoinAccount) {
+        fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
             let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
-            oBalance.innerHTML = 'Balance: btc=' + okcoinAccount.btc + ', usd=' + okcoinAccount.usd;
+            if (marketAccount.btc === null) {
+                oBalance.innerHTML = 'Balance: wallet=' + marketAccount.wallet
+                                     + ', margin=' + marketAccount.margin
+                                     + ', available=' + marketAccount.available
+                                     + ', position=' + marketAccount.position;
+            } else {
+                oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
+                                     + ', usd=' + marketAccount.usd;
+            }
         });
 
         // markets order is opposite for deltas
