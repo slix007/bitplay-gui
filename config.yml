@@ -4,5 +4,6 @@ development:
 
 production:
   name: "production"
-  baseUrl: "http://bp.magsto.com"
+#  baseUrl: "http://bp.magsto.com"
+  baseUrl: "http://664-vuto.magsto.com"
 #  baseUrl: "http://localhost:4030"
