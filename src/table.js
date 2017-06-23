@@ -86,12 +86,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid.forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.amount, bid.orderType, bid.timestamp]);
+            bidArray.push([bid.currency, bid.price, bid.contracts, bid.amount, bid.orderType, bid.timestamp]);
         });
         // bid
         let askArray = [];
         orderBookJson.ask.forEach(ask => {
-            askArray.push([ask.currency, ask.price, ask.amount, ask.orderType, ask.timestamp]);
+            askArray.push([ask.currency, ask.price, ask.contracts, ask.amount, ask.orderType, ask.timestamp]);
         });
         let orderBook = {};
         orderBook.bid = bidArray;
@@ -111,9 +111,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     function createTable(container, dataUrl, dataPartName) {
         return new Handsontable(container, {
             data: fetchOrderBook(dataUrl)[dataPartName],
-            colWidths: [100, 140, 100, 100, 120, 140],
+            colWidths: [100, 140, 100, 80, 90, 120, 140],
             rowHeaders: true,
-            colHeaders: ['currency', 'quote', 'amount', 'orderType', 'timestamp'],
+            colHeaders: ['currency', 'quote', 'contracts', 'amount', 'orderType', 'timestamp'],
             fixedRowsTop: 1,
             fixedColumnsLeft: 1,
             fixedRowsBottom: 1,
