@@ -86,12 +86,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid.forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.contracts, bid.amount, bid.orderType, bid.timestamp]);
+            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.orderType, bid.timestamp]);
         });
         // bid
         let askArray = [];
         orderBookJson.ask.forEach(ask => {
-            askArray.push([ask.currency, ask.price, ask.contracts, ask.amount, ask.orderType, ask.timestamp]);
+            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.orderType, ask.timestamp]);
         });
         let orderBook = {};
         orderBook.bid = bidArray;
