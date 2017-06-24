@@ -85,13 +85,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
-        orderBookJson.bid.forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.orderType, bid.timestamp]);
+        orderBookJson.bid
+            .slice(0,5)
+            .forEach(bid => {
+            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
         });
         // bid
         let askArray = [];
-        orderBookJson.ask.forEach(ask => {
-            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.orderType, ask.timestamp]);
+        orderBookJson.ask
+            .slice(0,5)
+            .reverse().forEach(ask => {
+            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp]);
         });
         let orderBook = {};
         orderBook.bid = bidArray;
@@ -113,7 +117,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             data: fetchOrderBook(dataUrl)[dataPartName],
             colWidths: [100, 140, 100, 80, 90, 120, 140],
             rowHeaders: true,
-            colHeaders: ['currency', 'quote', 'contracts', 'amount', 'orderType', 'timestamp'],
+            colHeaders: ['currency', 'quote', 'contracts', 'amount', 'timestamp'],
             fixedRowsTop: 1,
             fixedColumnsLeft: 1,
             fixedRowsBottom: 1,
