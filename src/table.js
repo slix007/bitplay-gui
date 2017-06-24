@@ -313,6 +313,16 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                      + ', usd=' + marketAccount.usd;
             }
         });
+        fetch(sprintf('/market/%s/future-index', firstMarketName), function (futureIndex) {
+            let oBalance = document.getElementById(sprintf('%s-future-index', firstMarketName));
+            oBalance.innerHTML = 'Index: ' + futureIndex.index
+                                 + ', timestamp=' + futureIndex.timestamp;
+        });
+        fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
+            let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
+            oBalance.innerHTML = 'Index: ' + futureIndex.index
+                                     + ', timestamp=' + futureIndex.timestamp;
+        });
 
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
