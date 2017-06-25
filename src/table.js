@@ -188,8 +188,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         count2.innerHTML = returnData.count2;
     };
     let repaintTradableAmount = function (returnData) {
-        let tradableAmount = document.getElementById("tradable-amount");
-        tradableAmount.innerHTML = returnData.amount;
+        let blocksize1 = document.getElementById("blocksize1");
+        blocksize1.innerHTML = returnData.blockSize1;
+        let blocksize2 = document.getElementById("blocksize2");
+        blocksize2.innerHTML = returnData.blockSize2;
     };
     let repaintStopMoving = function (returnData) {
         let isStopMoving = document.getElementById("is-stop-moving");
@@ -831,9 +833,23 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
-            if (element.id == 'update-tradable-amount') {
-                let element = document.getElementById('tradable-amount-edit').value;
-                let request = {amount: element};
+            if (element.id == 'update-blocksize1') {
+                let element = document.getElementById('blocksize1-edit').value;
+                let request = {blockSize1: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/tradable-amount',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintTradableAmount(JSON.parse(responseData));
+                              },
+                              null
+                );
+            }
+            if (element.id == 'update-blocksize2') {
+                let element = document.getElementById('blocksize2-edit').value;
+                let request = {blockSize2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
