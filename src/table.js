@@ -298,6 +298,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             if (poloniexAccount.btc === null) {
                 pBalance.innerHTML = 'Balance: wallet=' + poloniexAccount.wallet
+                                     + ', equity=' + poloniexAccount.equity
                                      + ', margin=' + poloniexAccount.margin
                                      + ', available=' + poloniexAccount.available
                                      + ', position=' + poloniexAccount.position;
@@ -311,6 +312,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
             if (marketAccount.btc === null) {
                 oBalance.innerHTML = 'Balance: wallet=' + marketAccount.wallet
+                                     + ', equity=' + marketAccount.equity
                                      + ', margin=' + marketAccount.margin
                                      + ', available=' + marketAccount.available
                                      + ', position=' + marketAccount.position;
