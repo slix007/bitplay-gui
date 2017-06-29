@@ -168,6 +168,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumBitmexMCom = document.getElementById("cumBitmexMCom");
         let count1 = document.getElementById("count1");
         let count2 = document.getElementById("count2");
+        let reserveBtc1 = document.getElementById("reserveBtc1");
+        let reserveBtc2 = document.getElementById("reserveBtc2");
         delta1.innerHTML = returnData.delta1;
         delta2.innerHTML = returnData.delta2;
         border1.innerHTML = returnData.border1;
@@ -186,6 +188,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumBitmexMCom.innerHTML = returnData.cumBitmexMCom;
         count1.innerHTML = returnData.count1;
         count2.innerHTML = returnData.count2;
+        reserveBtc1.innerHTML = returnData.reserveBtc1;
+        reserveBtc2.innerHTML = returnData.reserveBtc2;
     };
     let repaintTradableAmount = function (returnData) {
         let blocksize1 = document.getElementById("blocksize1");
@@ -894,6 +898,32 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-count2') {
                 let element = document.getElementById('count2-edit').value;
                 let request = {count2: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+            if (element.id == 'update-reserveBtc1') {
+                let element = document.getElementById('reserveBtc1-edit').value;
+                let request = {reserveBtc1: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                              requestData,
+                              function (responseData, resultElement) {
+                                  repaintDeltasAndBorders(responseData);
+                              },
+                              null
+                );
+            }
+            if (element.id == 'update-reserveBtc2') {
+                let element = document.getElementById('reserveBtc2-edit').value;
+                let request = {reserveBtc2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
