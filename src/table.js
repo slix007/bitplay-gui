@@ -192,10 +192,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         reserveBtc2.innerHTML = returnData.reserveBtc2;
     };
     let repaintTradableAmount = function (returnData) {
-        let blocksize1 = document.getElementById("blocksize1");
-        blocksize1.innerHTML = returnData.blockSize1;
-        let blocksize2 = document.getElementById("blocksize2");
-        blocksize2.innerHTML = returnData.blockSize2;
+        let block1 = document.getElementById("block1");
+        block1.innerHTML = returnData.block1;
+        let block2 = document.getElementById("block2");
+        block2.innerHTML = returnData.block2;
     };
     let repaintStopMoving = function (returnData) {
         let isStopMoving = document.getElementById("is-stop-moving");
@@ -839,9 +839,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
-            if (element.id == 'update-blocksize1') {
-                let element = document.getElementById('blocksize1-edit').value;
-                let request = {blockSize1: element};
+            if (element.id == 'update-block1') {
+                let element = document.getElementById('block1-edit').value;
+                let request = {block1: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
@@ -853,9 +853,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                               null
                 );
             }
-            if (element.id == 'update-blocksize2') {
-                let element = document.getElementById('blocksize2-edit').value;
-                let request = {blockSize2: element};
+            if (element.id == 'update-block2') {
+                let element = document.getElementById('block2-edit').value;
+                let request = {block2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
