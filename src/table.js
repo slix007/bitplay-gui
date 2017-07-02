@@ -37,17 +37,15 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     // };
     // socket.send("Привет");
 
-
-    function httpAsyncGet(theUrl, callback)
-    {
+    function httpAsyncGet(theUrl, callback) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, true ); // false for synchronous request
-        xmlHttp.send( null );
+        xmlHttp.open("GET", theUrl, true); // false for synchronous request
+        xmlHttp.send(null);
         // return xmlHttp.responseText;
 
-        xmlHttp.onreadystatechange = function() {
+        xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState == 4) {
-                if(xmlHttp.status == 200) {
+                if (xmlHttp.status == 200) {
                     callback(xmlHttp.responseText);
                 }
             }
@@ -69,13 +67,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         };
     }
 
-
-
-    function httpGet(theUrl)
-    {
+    function httpGet(theUrl) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
         return xmlHttp.responseText;
     }
 
@@ -86,14 +81,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid
-            .slice(0,5)
+            .slice(0, 5)
             .forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
-        });
+                bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
+            });
         // bid
         let askArray = [];
         orderBookJson.ask
-            .slice(0,5)
+            .slice(0, 5)
             .reverse().forEach(ask => {
             askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp]);
         });
@@ -110,7 +105,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
         return parseOrderBook(inputData);
     };
-
 
     function createTable(container, dataUrl, dataPartName) {
         return new Handsontable(container, {
@@ -258,6 +252,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     function moveOrderO(orderId, orderType) {
         moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', secondMarketName));
     }
+
     function moveOrder(orderId, orderType, moveUrl) {
         console.log("moveorder");
 
@@ -270,9 +265,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             alert(responseData);
         };
         httpAsyncPost(baseUrl + moveUrl,
-                      requestData,
-                      showResponse,
-                      null);
+            requestData,
+            showResponse,
+            null);
     }
 
     function cancelOrder() {
@@ -297,6 +292,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             let pTicker = document.getElementById(sprintf('%s-ticker', firstMarketName));
             pTicker.innerHTML = parseTicker(jsonData);
         });*/
+        fetch('/market/sum-bal', function (resultJson) {
+            let sumBal = document.getElementById("sum-bal");
+            sumBal.innerHTML = resultJson.result;
+        });
 
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
@@ -333,14 +332,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
             let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
             oBalance.innerHTML = 'Index: ' + futureIndex.index
-                                     + ', timestamp=' + futureIndex.timestamp;
+                                 + ', timestamp=' + futureIndex.timestamp;
         });
 
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
               function (returnData) {
-            repaintDeltasAndBorders(returnData);
-        });
+                  repaintDeltasAndBorders(returnData);
+              });
 
         fetch('/market/tradable-amount', function (returnData) {
             repaintTradableAmount(returnData);
@@ -388,15 +387,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let existedOrder = document.getElementById("p-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
-                                                   "id=" + oo.id
-                                                   + ",t=" + oo.orderType
-                                                   + ",s=" + oo.status
-                                                   + ",q=" + oo.price
-                                                   + ",a=" + oo.amount
-                                                   + ",time=" + oo.timestamp
+                        "id=" + oo.id
+                        + ",t=" + oo.orderType
+                        + ",s=" + oo.status
+                        + ",q=" + oo.price
+                        + ",a=" + oo.amount
+                        + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "p-move-" + oo.id}, "Try move");
-                    move.addEventListener("click", function() { moveOrderP(oo.id, oo.orderType); }, false);
+                    move.addEventListener("click", function () {
+                        moveOrderP(oo.id, oo.orderType);
+                    }, false);
                     let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
                     cancel.addEventListener("click", cancelOrder, oo.id);
 
@@ -415,15 +416,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "o-span-" + oo.id},
-                                                   "id=" + oo.id
-                                                   + ",t=" + oo.orderType
-                                                   + ",s=" + oo.status
-                                                   + ",q=" + oo.price
-                                                   + ",a=" + oo.amount
-                                                   + ",time=" + oo.timestamp
+                        "id=" + oo.id
+                        + ",t=" + oo.orderType
+                        + ",s=" + oo.status
+                        + ",q=" + oo.price
+                        + ",a=" + oo.amount
+                        + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "o-move-" + oo.id}, "Try move");
-                    move.addEventListener("click", function() { moveOrderO(oo.id, oo.orderType); }, false);
+                    move.addEventListener("click", function () {
+                        moveOrderO(oo.id, oo.orderType);
+                    }, false);
 
                     let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
                     cancel.addEventListener("click", cancelOrder, oo.id);
@@ -562,7 +565,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
-
             if (element.id == sprintf('%s-taker-buy', secondMarketName)) {
                 let amount = document.getElementById(sprintf('%s-taker-input', secondMarketName)).value;
                 let request = {type: 'BUY', placementType: 'TAKER', amount: amount};
@@ -623,11 +625,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-borders',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
             if (element.id == 'update-border2') {
@@ -637,11 +639,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-borders',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -652,11 +654,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -667,11 +669,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -682,11 +684,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -697,11 +699,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -712,11 +714,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -727,11 +729,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -742,11 +744,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -757,11 +759,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -772,11 +774,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -787,11 +789,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -802,11 +804,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -817,25 +819,25 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
             if (element.id == 'toggle-stop-moving') {
-                let request = {firstMarket:true, secondMarket:true};
+                let request = {firstMarket: true, secondMarket: true};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintStopMoving(JSON.parse(responseData));
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintStopMoving(JSON.parse(responseData));
+                    },
+                    null
                 );
             }
 
@@ -846,11 +848,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/tradable-amount',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintTradableAmount(JSON.parse(responseData));
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintTradableAmount(JSON.parse(responseData));
+                    },
+                    null
                 );
             }
             if (element.id == 'update-block2') {
@@ -860,25 +862,25 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/tradable-amount',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintTradableAmount(JSON.parse(responseData));
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintTradableAmount(JSON.parse(responseData));
+                    },
+                    null
                 );
             }
 
             if (element.id == 'free-markets-states') {
-                let request = {firstMarket:true, secondMarket:true};
+                let request = {firstMarket: true, secondMarket: true};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/free-states',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintStates(JSON.parse(responseData));
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintStates(JSON.parse(responseData));
+                    },
+                    null
                 );
             }
 
@@ -888,11 +890,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
             if (element.id == 'update-count2') {
@@ -901,11 +903,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
             if (element.id == 'update-reserveBtc1') {
@@ -914,11 +916,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
             if (element.id == 'update-reserveBtc2') {
@@ -927,11 +929,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintDeltasAndBorders(responseData);
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
                 );
             }
 
@@ -941,16 +943,17 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/print-sum-bal',
-                              requestData,
-                              function (responseData, resultElement) {
-                                  repaintStates(JSON.parse(responseData));
-                              },
-                              null
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintStates(JSON.parse(responseData));
+                    },
+                    null
                 );
             }
 
         });
     }
+
     bindDumpButton(hot);
 
-}
+};
