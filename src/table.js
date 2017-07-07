@@ -1,5 +1,6 @@
 var Handsontable = require('handsontable');
 var sprintf = require('sprintf-js').sprintf;
+var Utils = require('./utils');
 
 var exports = module.exports = {};
 
@@ -164,8 +165,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let count2 = document.getElementById("count2");
         let reserveBtc1 = document.getElementById("reserveBtc1");
         let reserveBtc2 = document.getElementById("reserveBtc2");
-        delta1.innerHTML = returnData.delta1;
-        delta2.innerHTML = returnData.delta2;
+        delta1.innerHTML = Utils.withSign(returnData.delta1);
+        delta2.innerHTML = Utils.withSign(returnData.delta2);
         border1.innerHTML = returnData.border1;
         border2.innerHTML = returnData.border2;
         makerDelta.innerHTML = returnData.makerDelta;
@@ -304,11 +305,16 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             if (poloniexAccount.btc === null) {
-                pBalance.innerHTML = 'Balance: wallet=' + poloniexAccount.wallet
-                                     + ', equity=' + poloniexAccount.equity
-                                     + ', margin=' + poloniexAccount.margin
-                                     + ', available=' + poloniexAccount.available
-                                     + ', position=' + poloniexAccount.position;
+                let quAvg = poloniexAccount.quAvg;
+                pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet, quAvg)
+                                     + ', e' + poloniexAccount.equity + '_' + Utils.toUsd(poloniexAccount.equity, quAvg)
+                                     + ', u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
+                                     + ', m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
+                                     + ', a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg)
+                                     + ', p' + poloniexAccount.position
+                                     + ', lv' + poloniexAccount.leverage
+                                     + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
+                                     + ', st' + Utils.withSign(poloniexAccount.availableForShort);
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
                                      + ', usd=' + poloniexAccount.usd;
@@ -318,11 +324,16 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
             let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
             if (marketAccount.btc === null) {
-                oBalance.innerHTML = 'Balance: wallet=' + marketAccount.wallet
-                                     + ', equity=' + marketAccount.equity
-                                     + ', margin=' + marketAccount.margin
-                                     + ', available=' + marketAccount.available
-                                     + ', position=' + marketAccount.position;
+                let quAvg = marketAccount.quAvg;
+                oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
+                                     + ', e' + marketAccount.equity + '_' + Utils.toUsd(marketAccount.equity, quAvg)
+                                     + ', u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
+                                     + ', m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
+                                     + ', a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
+                                     + ', p' + marketAccount.position
+                                     + ', lv' + marketAccount.leverage
+                                     + ', lg' + Utils.withSign(marketAccount.availableForLong)
+                                     + ', st' + Utils.withSign(marketAccount.availableForShort);
             } else {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
                                      + ', usd=' + marketAccount.usd;
