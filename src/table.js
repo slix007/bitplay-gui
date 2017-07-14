@@ -165,6 +165,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let count2 = document.getElementById("count2");
         let reserveBtc1 = document.getElementById("reserveBtc1");
         let reserveBtc2 = document.getElementById("reserveBtc2");
+        let hedgeAmount = document.getElementById("hedgeAmount");
         delta1.innerHTML = Utils.withSign(returnData.delta1);
         delta2.innerHTML = Utils.withSign(returnData.delta2);
         border1.innerHTML = returnData.border1;
@@ -185,6 +186,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         count2.innerHTML = returnData.count2;
         reserveBtc1.innerHTML = returnData.reserveBtc1;
         reserveBtc2.innerHTML = returnData.reserveBtc2;
+        hedgeAmount.innerHTML = returnData.hedgeAmount;
     };
     let repaintTradableAmount = function (returnData) {
         let block1 = document.getElementById("block1");
@@ -989,6 +991,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     requestData,
                     function (responseData, resultElement) {
                         repaintPlacingType(JSON.parse(responseData));
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-hedgeAmount') {
+                let element = document.getElementById('hedgeAmount-edit').value;
+                let request = {hedgeAmount: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
                     },
                     null
                 );
