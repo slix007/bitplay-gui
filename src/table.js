@@ -316,7 +316,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                      + ', p' + poloniexAccount.position
                                      + ', lv' + poloniexAccount.leverage
                                      + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
-                                     + ', st' + Utils.withSign(poloniexAccount.availableForShort);
+                                     + ', st' + Utils.withSign(poloniexAccount.availableForShort)
+                                     + ', liq' + Utils.withSign(poloniexAccount.liqPrice);
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
                                      + ', usd=' + poloniexAccount.usd;
@@ -335,7 +336,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                      + ', p' + marketAccount.position
                                      + ', lv' + marketAccount.leverage
                                      + ', lg' + Utils.withSign(marketAccount.availableForLong)
-                                     + ', st' + Utils.withSign(marketAccount.availableForShort);
+                                     + ', st' + Utils.withSign(marketAccount.availableForShort)
+                                     + ', liq' + Utils.withSign(marketAccount.liqPrice);
             } else {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
                                      + ', usd=' + marketAccount.usd;
