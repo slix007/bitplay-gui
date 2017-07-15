@@ -304,6 +304,16 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             sumBal.innerHTML = resultJson.result;
         });
 
+        fetch('/market/pos-diff', function (resultJson) {
+            let sumBal = document.getElementById("pos-diff");
+            if (resultJson.result == 0) {
+                sumBal.style.color = "#008f00";
+            } else {
+                sumBal.style.color = "#bf0000";
+            }
+            sumBal.innerHTML = 'Pos diff = ' + resultJson.description;
+        });
+
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             if (poloniexAccount.btc === null) {
