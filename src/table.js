@@ -208,6 +208,19 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let placingType = document.getElementById("okcoin-placing-type");
         placingType.innerHTML = returnData.secondMarket;
     };
+    let repaintPosCorr = function (returnData) {
+        let posCorr = document.getElementById("pos-corr");
+        if (returnData.status == 'stopped') {
+            posCorr.style.color = "#bf0000";
+        } else {
+            posCorr.style.color = "#008f00";
+        }
+        posCorr.innerHTML = returnData.status;
+        let periodToCorrection = document.getElementById("periodToCorrection");
+        periodToCorrection.innerHTML = returnData.periodToCorrection + ' min';
+        let maxDiffCorr = document.getElementById("maxDiffCorr");
+        maxDiffCorr.innerHTML = returnData.maxDiffCorr;
+    };
     let repaintStates = function (returnData) {
         let elementById = document.getElementById("markets-states");
         elementById.innerHTML = 'Market is ready for new signals(flag isBusy and openOrders.size==0). '
@@ -384,7 +397,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/states', function (returnData) {
             repaintStates(returnData);
         });
-
+        fetch('/market/pos-corr', function (returnData) {
+            repaintPosCorr(returnData);
+        });
         fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
             let area1 = document.getElementById(firstMarketName + '-trade-log');
             area1.scrollTop = area1.scrollHeight;
@@ -1021,6 +1036,55 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     null
                 );
             }
+
+            if (element.id == 'update-pos-corr') {
+                let posCorr = document.getElementById("pos-corr").innerHTML;
+                if (posCorr == 'stopped') {
+                    posCorr = 'enabled';
+                } else {
+                    posCorr = 'stopped';
+                }
+                let request = {status: posCorr};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/pos-corr',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintPosCorr(JSON.parse(responseData));
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-periodToCorrection') {
+                let element = document.getElementById('periodToCorrection-edit').value;
+                let request = {periodToCorrection: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/pos-corr',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintPosCorr(responseData);
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-maxDiffCorr') {
+                let element = document.getElementById('maxDiffCorr-edit').value;
+                let request = {maxDiffCorr: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/pos-corr',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintPosCorr(responseData);
+                    },
+                    null
+                );
+            }
+
 
         });
     }

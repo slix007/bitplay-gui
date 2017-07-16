@@ -42,14 +42,14 @@
 
     <!--<button name="sendToSocket">send to socket</button>-->
     <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
-
+<!--
     <div id="bitmex-taker-order">
         Taker Amount
         <input type="text" id="bitmex-taker-input">
         <button id="bitmex-taker-buy">bitmex T buy</button>
         <button id="bitmex-taker-sell">bitmex T sell</button>
         <span id="bitmex-taker-result">Result ... </span>
-    </div>
+    </div> -->
     <div id="bitmex-maker-order">
         Maker Amount(contracts)
         <input type="text" id="bitmex-maker-input">
@@ -104,7 +104,7 @@
     <textarea style="float: right;width: 60%; height: 300px;border:1px solid black;"
               id="deltas-log">empty...</textarea>
 
-    <div id="okcoin-maker-order">
+    <div id="okcoin-maker-order" style="font-style: italic">
         Maker Amount (contracts)
         <input type="text" id="okcoin-maker-input">
         <button id="okcoin-maker-buy">okcoin M buy</button>
@@ -249,6 +249,21 @@
         Hedge amount:
         <input type="text" id="hedgeAmount-edit"><button id="update-hedgeAmount">update hedgeAmount</button>
         <span id="hedgeAmount"></span>
+    </div>
+    <div>
+        Positions correction state:
+        <button id="update-pos-corr">change</button>
+        <span id="pos-corr"></span>
+    </div>
+    <div>
+        Period to correction:
+        <input type="text" id="periodToCorrection-edit"><button id="update-periodToCorrection">update periodToCorrection</button>
+        <span id="periodToCorrection"></span>
+    </div>
+    <div>
+        maxDiffCorr:
+        <input type="text" id="maxDiffCorr-edit"><button id="update-maxDiffCorr">update maxDiffCorr</button>
+        <span id="maxDiffCorr"></span>
     </div>
     <div>
         <a href="http://665-vuff.magsto.com:4031/market/trade-log/bitmex">trade-log/bitmex</a> <br>
