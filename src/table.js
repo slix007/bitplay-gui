@@ -221,6 +221,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let maxDiffCorr = document.getElementById("maxDiffCorr");
         maxDiffCorr.innerHTML = returnData.maxDiffCorr;
     };
+    let repaintLiqParams = function (returnData) {
+        let bMrLiq = document.getElementById("b_mr_liq");
+        let oMrLiq = document.getElementById("o_mr_liq");
+        bMrLiq.innerHTML = returnData.bMrLiq;
+        oMrLiq.innerHTML = returnData.oMrLiq;
+    };
     let repaintStates = function (returnData) {
         let elementById = document.getElementById("markets-states");
         elementById.innerHTML = 'Market is ready for new signals(flag isBusy and openOrders.size==0). '
@@ -376,6 +382,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             oBalance.innerHTML = 'Index: ' + futureIndex.index
                                  + ', timestamp=' + futureIndex.timestamp;
         });
+        fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
+            let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));
+            liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl);
+        });
+        fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
+            let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName));
+            liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl);
+        });
 
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
@@ -399,6 +413,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch('/market/pos-corr', function (returnData) {
             repaintPosCorr(returnData);
+        });
+        fetch('/market/liq-params', function (returnData) {
+            repaintLiqParams(returnData);
         });
         fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
             let area1 = document.getElementById(firstMarketName + '-trade-log');
@@ -1085,6 +1102,32 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'update-b_mr_liq') {
+                let element = document.getElementById('b_mr_liq-edit').value;
+                let request = {bMrLiq: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/liq-params',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintLiqParams(responseData);
+                    },
+                    null
+                );
+            }
+            if (element.id == 'update-o_mr_liq') {
+                let element = document.getElementById('o_mr_liq-edit').value;
+                let request = {oMrLiq: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/liq-params',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintLiqParams(responseData);
+                    },
+                    null
+                );
+            }
 
         });
     }
