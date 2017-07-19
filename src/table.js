@@ -384,11 +384,15 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));
-            liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl);
+            liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
+                                + '<br>b_' + marketAccount.mmDql
+                                + '<br>b_' + marketAccount.mmDmrl;
         });
         fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName));
-            liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl);
+            liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
+                                + '<br>o_' + marketAccount.mmDql
+                                + '<br>o_' + marketAccount.mmDmrl;
         });
 
         // markets order is opposite for deltas
@@ -1129,6 +1133,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'okcoin-reset-liq-info') {
+                httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {}, null);
+            }
+            if (element.id == 'bitmex-reset-liq-info') {
+                httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
+            }
         });
     }
 
