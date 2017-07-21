@@ -236,8 +236,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let repaintLiqParams = function (returnData) {
         let bMrLiq = document.getElementById("b_mr_liq");
         let oMrLiq = document.getElementById("o_mr_liq");
+        let bDQLOpenMin = document.getElementById("b_DQL_open_min");
+        let oDQLOpenMin = document.getElementById("o_DQL_open_min");
         bMrLiq.innerHTML = returnData.bMrLiq;
         oMrLiq.innerHTML = returnData.oMrLiq;
+        bDQLOpenMin.innerHTML = returnData.bDQLOpenMin;
+        oDQLOpenMin.innerHTML = returnData.oDQLOpenMin;
     };
     let repaintStates = function (returnData) {
         let elementById = document.getElementById("markets-states");
@@ -1152,6 +1156,32 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-o_mr_liq') {
                 let element = document.getElementById('o_mr_liq-edit').value;
                 let request = {oMrLiq: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/liq-params',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintLiqParams(responseData);
+                    },
+                    null
+                );
+            }
+            if (element.id == 'update-b_DQL_open_min') {
+                let element = document.getElementById('b_DQL_open_min-edit').value;
+                let request = {bDQLOpenMin: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/liq-params',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintLiqParams(responseData);
+                    },
+                    null
+                );
+            }
+            if (element.id == 'update-o_DQL_open_min') {
+                let element = document.getElementById('o_DQL_open_min-edit').value;
+                let request = {oDQLOpenMin: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/liq-params',
