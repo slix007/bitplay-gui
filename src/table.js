@@ -414,6 +414,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                 + '<br>o_' + marketAccount.mmDql
                                 + '<br>o_' + marketAccount.mmDmrl;
         });
+        fetch('/delta-params', function (result) {
+            let b = document.getElementById('b_delta_minmax');
+            let o = document.getElementById('o_delta_minmax');
+            b.innerHTML = Utils.withSign(result.bDeltaMin) + '...' + Utils.withSign(result.bDeltaMax);
+            o.innerHTML = Utils.withSign(result.oDeltaMin) + '...' + Utils.withSign(result.oDeltaMax);
+        });
 
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
@@ -1228,6 +1234,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
             if (element.id == 'bitmex-reset-liq-info') {
                 httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
+            }
+            if (element.id == 'reset-delta-minmax') {
+                httpAsyncPost(baseUrl + '/delta-params', '', function (responseData, resultElement) {}, null);
             }
         });
     }
