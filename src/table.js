@@ -217,7 +217,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         }
         posCorr.innerHTML = returnData.status;
         let periodToCorrection = document.getElementById("periodToCorrection");
-        periodToCorrection.innerHTML = returnData.periodToCorrection + ' min';
+        periodToCorrection.innerHTML = returnData.periodToCorrection + ' sec';
         let maxDiffCorr = document.getElementById("maxDiffCorr");
         maxDiffCorr.innerHTML = returnData.maxDiffCorr;
     };
