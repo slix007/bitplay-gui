@@ -420,7 +420,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             b.innerHTML = Utils.withSign(result.bDeltaMin) + '...' + Utils.withSign(result.bDeltaMax);
             o.innerHTML = Utils.withSign(result.oDeltaMin) + '...' + Utils.withSign(result.oDeltaMax);
         });
-
+        fetch('/market/borders-timer', function (result) {
+            let bordersTimer = document.getElementById('borders-timer');
+            bordersTimer.innerHTML = result.result;
+        });
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
               function (returnData) {
