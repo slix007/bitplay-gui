@@ -393,9 +393,22 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
         });
         fetch(sprintf('/market/%s/future-index', firstMarketName), function (futureIndex) {
-            let oBalance = document.getElementById(sprintf('%s-future-index', firstMarketName));
-            oBalance.innerHTML = 'Index: ' + futureIndex.index
-                                 + ', timestamp=' + futureIndex.timestamp;
+            let ind = document.getElementById('bitmex-future-index');
+            ind.innerHTML = 'Index: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
+
+            let fund = document.getElementById('bitmex-future-index-funding');
+            if (futureIndex.swapType === 'noSwap') {
+                fund.style.color = "#008f00";
+            } else {
+                fund.style.color = "#bf0000";
+            }
+            fund.innerHTML = 'fundingRate=' + futureIndex.fundingRate + '%'
+                             + '(' + futureIndex.swapType + ')';
+
+            let fundTime = document.getElementById('bitmex-future-index-funding-time');
+            fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap
+                                 + ', swapTime=' + futureIndex.swapTime
+                                 + ', ';
         });
         fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
             let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
