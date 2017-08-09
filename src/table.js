@@ -402,7 +402,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             } else {
                 fund.style.color = "#bf0000";
             }
-            fund.innerHTML = 'fundingRate=' + futureIndex.fundingRate + '%'
+            fund.innerHTML = 'fRate=' + futureIndex.fundingRate + '% p=' + Utils.withSign(futureIndex.position)
                              + '(' + futureIndex.swapType + ')';
 
             let fundTime = document.getElementById('bitmex-future-index-funding-time');
