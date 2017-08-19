@@ -404,7 +404,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             } else {
                 fund.style.color = "#bf0000";
             }
-            fund.innerHTML = 'fRate=' + futureIndex.fundingRate + '% p=' + Utils.withSign(futureIndex.position)
+            fund.innerHTML = 'fRate' + futureIndex.fundingRate + '%'
+                             + ' fCost' + futureIndex.fundingCost + 'XBT'
+                             + ' p' + Utils.withSign(futureIndex.position)
                              + '(' + futureIndex.swapType + ')';
 
             let fundTime = document.getElementById('bitmex-future-index-funding-time');
@@ -1114,6 +1116,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-customSwapTime') {
+                let element = document.getElementById('customSwapTime-edit').value;
+                let request = {command: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
+                    requestData,
+                    function (responseData, resultElement) {
+                        let cst = document.getElementById("customSwapTime");
+                        cst.innerHTML = responseData.result;
                     },
                     null
                 );
