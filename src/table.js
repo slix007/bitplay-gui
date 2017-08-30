@@ -7,6 +7,8 @@ var exports = module.exports = {};
 exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) {
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
+    Utils.fillLinksToLogs();
+
     let myData = Handsontable.helper.createSpreadsheetData(5, 5);
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');

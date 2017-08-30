@@ -19,6 +19,7 @@ function getDevelopmentEnv(envName) {
     const NODE_ENV = envName;
     const myConfig = YAML.load('config.yml')[NODE_ENV];
     const baseUrl = myConfig.baseUrl;
+    const backendUrl = myConfig.backendUrl;
     console.log('dev webpack.config.js NODE_ENV ' + NODE_ENV);
 
 // module.exports = {
@@ -41,7 +42,8 @@ function getDevelopmentEnv(envName) {
                                  new webpack.DefinePlugin({
                                                               'process.env': {
                                                                   NODE_ENV: JSON.stringify(NODE_ENV),
-                                                                  baseUrl: JSON.stringify(baseUrl)
+                                                                  baseUrl: JSON.stringify(baseUrl),
+                                                                  backendUrl: JSON.stringify(backendUrl)
                                                               }
                                                           })
                              ],
@@ -71,6 +73,7 @@ function getProductionEnv(envName) {
     const NODE_ENV = envName;
     const myConfig = YAML.load('config.yml')[NODE_ENV];
     const baseUrl = myConfig.baseUrl;
+    const backendUrl = myConfig.backendUrl;
     console.log('prod webpack.config.js NODE_ENV ' + NODE_ENV);
 
     return Object.assign({
@@ -87,7 +90,8 @@ function getProductionEnv(envName) {
                                  new webpack.DefinePlugin({
                                                               'process.env': {
                                                                   NODE_ENV: JSON.stringify(NODE_ENV),
-                                                                  baseUrl: JSON.stringify(baseUrl)
+                                                                  baseUrl: JSON.stringify(baseUrl),
+                                                                  backendUrl: JSON.stringify(backendUrl)
                                                               }
                                                           })
                              ],
