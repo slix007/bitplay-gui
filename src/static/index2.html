@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>bitmex-okcoin</title>
-    <div id="first-market-name" name="bitmex">bitmex</div>
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
     <!-- required modules for bare Handsontable -->
@@ -21,9 +20,11 @@
 
 </head>
 <body>
-    <!--<h1>A table using handsontable</h1>-->
-    <button id="BUTTON" name="update">update interval</button>
-    <input id="update_interval" type="text" value="1000">
+    <div name="update settings">
+        <button id="BUTTON" name="update">update interval</button>
+        <input id="update_interval" type="text" value="1000">
+        <input type="checkbox" id="logs-fetching">Fetch logs</div>
+    </div>
 
     <h3>Bitmex(1 contract = $1)</h3>
     <!--<div id="positions1"></div>-->

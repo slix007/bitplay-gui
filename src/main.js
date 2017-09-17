@@ -8,14 +8,14 @@ let httpVar = require('./http');
 
 welcome('home');
 
-let firstMarketName = document.getElementById('first-market-name');
+// let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
 
-let portNumber = "4030";
+let portNumber = "4031";
 //TODO
-if (firstMarketName !== null) {
-    portNumber = "4031";
-}
+// if (firstMarketName !== null) {
+//     portNumber = "4031";
+// }
 
 // let baseUrlWithPort = sprintf('%s:%s', process.env.baseUrl, portNumber);
 let baseUrlWithPort = sprintf('http://%s:%s', window.location.hostname, portNumber);

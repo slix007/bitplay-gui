@@ -472,34 +472,39 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/liq-params', function (returnData) {
             repaintLiqParams(returnData);
         });
-        fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
-            let area1 = document.getElementById(firstMarketName + '-trade-log');
-            area1.scrollTop = area1.scrollHeight;
-            area1.innerHTML = returnData.trades.length > 0
-                ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                : "";
-        });
-        fetch('/market/trade-log/okcoin', function (returnData) {
-            let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName));
-            area1.scrollTop = area1.scrollHeight;
-            area1.innerHTML = returnData.trades.length > 0
-                ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                : "";
-        });
-        fetch('/market/deltas-log', function (returnData) {
-            let area1 = document.getElementById('deltas-log');
-            area1.scrollTop = area1.scrollHeight;
-            area1.innerHTML = returnData.trades.length > 0
-                ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                : "";
-        });
-        fetch('/market/warning-log', function (returnData) {
-            let area1 = document.getElementById('warning-log');
-            area1.scrollTop = area1.scrollHeight;
-            area1.innerHTML = returnData.trades.length > 0
-                ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                : "";
-        });
+
+        var logsFetching = document.getElementById('logs-fetching');
+
+        if (logsFetching.checked) {
+            fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
+                let area1 = document.getElementById(firstMarketName + '-trade-log');
+                area1.scrollTop = area1.scrollHeight;
+                area1.innerHTML = returnData.trades.length > 0
+                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                    : "";
+            });
+            fetch('/market/trade-log/okcoin', function (returnData) {
+                let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName));
+                area1.scrollTop = area1.scrollHeight;
+                area1.innerHTML = returnData.trades.length > 0
+                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                    : "";
+            });
+            fetch('/market/deltas-log', function (returnData) {
+                let area1 = document.getElementById('deltas-log');
+                area1.scrollTop = area1.scrollHeight;
+                area1.innerHTML = returnData.trades.length > 0
+                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                    : "";
+            });
+            fetch('/market/warning-log', function (returnData) {
+                let area1 = document.getElementById('warning-log');
+                area1.scrollTop = area1.scrollHeight;
+                area1.innerHTML = returnData.trades.length > 0
+                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                    : "";
+            });
+        }
 
         fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
             var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName));
