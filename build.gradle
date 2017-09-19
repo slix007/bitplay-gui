@@ -13,6 +13,12 @@ remotes {
         password = bpPassword
         port = bpPort as Integer
     }
+    prod {
+        host = bpProdHost
+        user = bpUser
+        password = bpPassword
+        port = bpPort as Integer
+    }
 }
 
 def remoteInstallDir = '/var/www/bitplay-gui'
@@ -22,9 +28,19 @@ task clean << {
     delete project.buildDir
 }
 
-task deploy << {
+task deployTest << {
     ssh.run {
         session(remotes.test) {
+            put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
+            executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
+            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
+        }
+    }
+}
+
+task deployProd << {
+    ssh.run {
+        session(remotes.prod) {
             put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
             executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
