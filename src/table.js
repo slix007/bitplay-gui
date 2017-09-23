@@ -77,10 +77,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         return xmlHttp.responseText;
     }
 
-    let parseTicker = function (inputData) {
-        return inputData.value;
-    };
-
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid
@@ -338,10 +334,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             bidOkcoinTable.loadData(orderBookO.bid);
         });
 
-        /*fetch(sprintf('/market/%s/ticker', firstMarketName), function (jsonData) {
-            let pTicker = document.getElementById(sprintf('%s-ticker', firstMarketName));
-            pTicker.innerHTML = parseTicker(jsonData);
-        });*/
+        fetch('/deadlock/check', function (resultJson) {
+            let pTicker = document.getElementById('deadlock-checker');
+            pTicker.innerHTML = resultJson.description;
+        });
         fetch('/market/sum-bal', function (resultJson) {
             let sumBal = document.getElementById("sum-bal");
             sumBal.innerHTML = resultJson.result;
