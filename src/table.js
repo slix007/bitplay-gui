@@ -1,6 +1,7 @@
 var Handsontable = require('handsontable');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
+var Http = require('./http');
 
 var exports = module.exports = {};
 
@@ -8,6 +9,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     Utils.fillLinksToLogs();
+    Utils.addRestartButton();
 
     let myData = Handsontable.helper.createSpreadsheetData(5, 5);
     let container = document.getElementById('example1');
@@ -41,33 +43,11 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     // socket.send("Привет");
 
     function httpAsyncGet(theUrl, callback) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", theUrl, true); // false for synchronous request
-        xmlHttp.send(null);
-        // return xmlHttp.responseText;
-
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4) {
-                if (xmlHttp.status == 200) {
-                    callback(xmlHttp.responseText);
-                }
-            }
-        };
+        Http.httpAsyncGet(theUrl, callback);
     }
 
     function httpAsyncPost(theUrl, data, callback, resultElement) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("POST", theUrl, true); // false for synchronous request
-        xmlHttp.setRequestHeader("Content-type", "application/json");
-        xmlHttp.send(data);
-
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4) {
-                if (xmlHttp.status == 200) {
-                    callback(xmlHttp.responseText, resultElement);
-                }
-            }
-        };
+        Http.httpAsyncPost(theUrl, data, callback, resultElement);
     }
 
     function httpGet(theUrl) {
