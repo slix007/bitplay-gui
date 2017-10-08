@@ -172,26 +172,18 @@
         <button id="reset-delta-minmax">reset</button>
     </div>
 
+    <!--
     <div>
         maker delta:
         <input type="text" id="maker-delta-edit"><button id="update-maker-delta">Update maker delta</button>
         <span id="maker-delta"></span>
-    </div>
-    <div>
-        sum delta:
-        <input type="text" id="sum-delta-edit"><button id="update-sum-delta">Update sum delta</button>
-        <span id="sum-delta"></span>
-    </div>
-    <div>
-        period sec:
-        <input type="text" id="period-sec-edit"><button id="update-period-sec">Update period sec</button>
-        <span id="period-sec"></span>
-    </div>
+    </div>-->
+    <!--
     <div>
         bu:
         <input type="text" id="bu-edit"><button id="update-bu">Update bu</button>
         <span id="bu"></span>
-    </div>
+    </div> -->
     <div>
         cum delta:
         <input type="text" id="cum-delta-edit"><button id="update-cum-delta">Update cum delta</button>
@@ -250,6 +242,28 @@
         <button id="free-markets-states">Free markets states</button>
         <span id="markets-states"></span>
     </div>
+
+    <div id="borders-v1" style="background-color: azure; border: solid">
+        <div>Borders calculation settings</div>
+        <div>
+            sum delta:
+            <input type="text" id="sum-delta-edit"><button id="update-sum-delta">Update sum delta</button>
+            <span id="sum-delta"></span>
+        </div>
+        <div>
+            period sec:
+            <input type="text" id="period-sec-edit"><button id="update-period-sec">Update period sec</button>
+            <span id="period-sec"></span>
+        </div>
+    </div>
+
+    <div id="borders-v2" style="background-color: ivory; border: solid; display: flex">
+        <div id="b_br_close" style="float: left; padding-right: 10px;"></div>
+        <div id="b_br_open" style="float: left; padding-right: 10px;"></div>
+        <div id="o_br_close" style="float: left; padding-right: 10px;"></div>
+        <div id="o_br_open" style="float: left; padding-right: 10px;"></div>
+    </div>
+
     <div>
         Count1:
         <input type="text" id="count1-edit"><button id="update-count1">update count1</button>

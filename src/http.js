@@ -2,6 +2,13 @@
 
 var exports = module.exports = {};
 
+exports.httpGet = function httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false); // false for synchronous request
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
 exports.httpAsyncGet = function httpAsyncGet(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", theUrl, true); // false for synchronous request

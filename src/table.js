@@ -11,7 +11,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     Utils.fillLinksToLogs();
     Utils.addRestartButton();
 
-    let myData = Handsontable.helper.createSpreadsheetData(5, 5);
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');
     let hot;
@@ -127,10 +126,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let delta2 = document.getElementById("delta2");
         let border1 = document.getElementById("border1");
         let border2 = document.getElementById("border2");
-        let makerDelta = document.getElementById("maker-delta");
+        // let makerDelta = document.getElementById("maker-delta");
         let sumDelta = document.getElementById("sum-delta");
         let periodSec = document.getElementById("period-sec");
-        let bu = document.getElementById("bu");
+        // let bu = document.getElementById("bu");
         let cumDelta = document.getElementById("cum-delta");
         let lastDelta = document.getElementById("last-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
@@ -149,10 +148,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         delta2.innerHTML = Utils.withSign(returnData.delta2);
         border1.innerHTML = returnData.border1;
         border2.innerHTML = returnData.border2;
-        makerDelta.innerHTML = returnData.makerDelta;
+        // makerDelta.innerHTML = returnData.makerDelta;
         sumDelta.innerHTML = returnData.sumDelta;
         periodSec.innerHTML = returnData.periodSec;
-        bu.innerHTML = returnData.buValue;
+        // bu.innerHTML = returnData.buValue;
         cumDelta.innerHTML = returnData.cumDelta;
         lastDelta.innerHTML = returnData.lastDelta;
         cumDeltaFact.innerHTML = returnData.cumDeltaFact;
@@ -304,6 +303,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
         fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
+            // console.log('orderBookP.ask');
+            // console.log(orderBookP.ask);
             askPoloniexTable.loadData(orderBookP.ask);
             bidPoloniexTable.loadData(orderBookP.bid);
         });
@@ -751,21 +752,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     null
                 );
             }
-
-            if (element.id == 'update-maker-delta') {
-                let newMakerDeltaValue = document.getElementById('maker-delta-edit').value;
-                let request = {makerDelta: newMakerDeltaValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
+            //
+            // if (element.id == 'update-maker-delta') {
+            //     let newMakerDeltaValue = document.getElementById('maker-delta-edit').value;
+            //     let request = {makerDelta: newMakerDeltaValue};
+            //     let requestData = JSON.stringify(request);
+            //     console.log(requestData);
+            //
+            //     httpAsyncPost(baseUrl + '/market/update-maker-delta',
+            //         requestData,
+            //         function (responseData, resultElement) {
+            //             repaintDeltasAndBorders(responseData);
+            //         },
+            //         null
+            //     );
+            // }
 
             if (element.id == 'update-sum-delta') {
                 let newSumDeltaValue = document.getElementById('sum-delta-edit').value;
@@ -797,20 +798,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
-            if (element.id == 'update-bu') {
-                let newPeriodSecValue = document.getElementById('bu-edit').value;
-                let request = {buValue: newPeriodSecValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
+            // if (element.id == 'update-bu') {
+            //     let newPeriodSecValue = document.getElementById('bu-edit').value;
+            //     let request = {buValue: newPeriodSecValue};
+            //     let requestData = JSON.stringify(request);
+            //     console.log(requestData);
+            //
+            //     httpAsyncPost(baseUrl + '/market/update-maker-delta',
+            //         requestData,
+            //         function (responseData, resultElement) {
+            //             repaintDeltasAndBorders(responseData);
+            //         },
+            //         null
+            //     );
+            // }
 
             if (element.id == 'update-cum-delta') {
                 let newCumDeltaValue = document.getElementById('cum-delta-edit').value;

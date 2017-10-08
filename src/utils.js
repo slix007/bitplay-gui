@@ -58,3 +58,13 @@ exports.addRestartButton = function () {
         }
     });
 };
+
+exports.objectToArray = function(obj) {
+    var arr =[];
+    for(let o in obj) {
+        if (obj.hasOwnProperty(o)) {
+            arr.push(obj[o]);
+        }
+    }
+    return arr;
+};
