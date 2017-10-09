@@ -9,7 +9,7 @@ var Http = require('./http');
 var exports = module.exports = {};
 
 exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
-    const BORDERS_URL = baseUrl + '/borders/list';
+    const BORDERS_URL = baseUrl + '/borders/tables';
 
     let myData = Handsontable.helper.createSpreadsheetData(2, 2);
 
