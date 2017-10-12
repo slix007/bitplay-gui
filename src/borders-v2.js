@@ -9,7 +9,8 @@ var Http = require('./http');
 var exports = module.exports = {};
 
 exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
-    const BORDERS_URL = baseUrl + '/borders/tables';
+    const MAIN_BORDERS_URL = baseUrl + '/borders/';
+    const BORDERS_TABLES_URL = baseUrl + '/borders/tables';
 
     let myData = Handsontable.helper.createSpreadsheetData(2, 2);
 
@@ -21,7 +22,7 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     }
 
     function updateTable(table, elementId, callback) {
-        Http.httpAsyncGet(BORDERS_URL, function(rawData) {
+        Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
             let tableData = JSON.parse(rawData);
             let updatedData = extractTableData(tableData, elementId);
             table.loadData(updatedData);
@@ -48,7 +49,7 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
         let data = table.getData();
         const requestData = JSON.stringify(generateRequest(data));
         // console.log(requestData);
-        Http.httpAsyncPost(BORDERS_URL, requestData, callback);
+        Http.httpAsyncPost(BORDERS_TABLES_URL, requestData, callback);
     }
 
     function createTable(container, dataUrl, dataPartName) {
@@ -105,11 +106,41 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     var o_br_close = createBorderTable('o_br_close');
     var o_br_open = createBorderTable('o_br_open');
 
-    Http.httpAsyncGet(BORDERS_URL, function(rawData) {
-        let tableData = JSON.parse(rawData);
+    Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
+        let borderData = JSON.parse(rawData);
+        createVerDropdown(borderData.activeVersion, baseUrl);
+
+        let tableData = borderData.bordersV2.borderTableList;
         b_br_close.loadData(extractTableData(tableData, 'b_br_close'));
         b_br_open.loadData(extractTableData(tableData, 'b_br_open'));
         o_br_close.loadData(extractTableData(tableData, 'o_br_close'));
         o_br_open.loadData(extractTableData(tableData, 'o_br_open'));
     });
 };
+
+function createVerDropdown(ver, baseUrl) {
+    var container = document.getElementById("select-border-version");
+
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    option1.setAttribute("value", "V1");
+    option2.setAttribute("value", "V2");
+    option1.innerHTML = 'V1';
+    option2.innerHTML = 'V2';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.addEventListener("change", onVerPick);
+    select.value = ver;
+
+    container.appendChild(select);
+
+    function onVerPick() {
+        const requestData = JSON.stringify({version: this.value});
+
+        Http.httpAsyncPost(baseUrl + '/borders/version',
+            requestData, function(result) {
+                alert('Result' + result);
+            });
+    }
+}
