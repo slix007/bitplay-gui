@@ -109,6 +109,7 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
         let borderData = JSON.parse(rawData);
         createVerDropdown(borderData.activeVersion, baseUrl);
+        createPosModeDropdown(borderData.posMode, baseUrl);
 
         let tableData = borderData.bordersV2.borderTableList;
         b_br_close.loadData(extractTableData(tableData, 'b_br_close'));
@@ -138,7 +139,33 @@ function createVerDropdown(ver, baseUrl) {
     function onVerPick() {
         const requestData = JSON.stringify({version: this.value});
 
-        Http.httpAsyncPost(baseUrl + '/borders/version',
+        Http.httpAsyncPost(baseUrl + '/borders/settings',
+            requestData, function(result) {
+                alert('Result' + result);
+            });
+    }
+}
+function createPosModeDropdown(posMode, baseUrl) {
+    var container = document.getElementById("select-border-posMode");
+
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    option1.setAttribute("value", "OK_MODE");
+    option2.setAttribute("value", "BTM_MODE");
+    option1.innerHTML = 'OK_MODE';
+    option2.innerHTML = 'BTM_MODE';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.addEventListener("change", onPosModePick);
+    select.value = posMode !== 'undefined' ? posMode : 'OK_MODE';
+
+    container.appendChild(select);
+
+    function onPosModePick() {
+        const requestData = JSON.stringify({posMode: this.value});
+
+        Http.httpAsyncPost(baseUrl + '/borders/settings',
             requestData, function(result) {
                 alert('Result' + result);
             });
