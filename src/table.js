@@ -392,6 +392,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap
                                  + ', swapTime=' + futureIndex.swapTime
                                  + ', ';
+            let timeCompare = document.getElementById('timeCompare');
+            timeCompare.innerHTML = futureIndex.timeCompareString;
+
         });
         fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
             let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
