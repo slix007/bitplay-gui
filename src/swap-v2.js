@@ -14,6 +14,7 @@ exports.showSwapV2 = function (firstMarketName, secondMarketName, baseUrl) {
         createVerDropdown(swapParams.activeVersion, MAIN_SWAP_PARAMS_URL);
         createOrdTypeDropdown(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
         createOrdAmountInput(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
+        createSwapTimeCorrMsInput(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
     });
 };
 
@@ -130,6 +131,40 @@ function createOrdAmountInput(swapV2, MAIN_SWAP_PARAMS_URL) {
             requestData, function(result) {
                 alert('Result' + result);
                 title.innerHTML = 'Amount:' + input.value;
+            });
+    }
+}
+function createSwapTimeCorrMsInput(swapV2, MAIN_SWAP_PARAMS_URL) {
+    var container = document.getElementById("swap-v2");
+    if (swapV2 == null) {
+        swapV2 = {swapOpenType: 'Buy', swapOpenAmount: '0'}
+    }
+
+    var span = document.createElement('span');
+    var title = document.createElement('span');
+    var input = document.createElement('input');
+    var button = document.createElement('button');
+    title.setAttribute("style", "margin-right: 5px;");
+    title.setAttribute("id", "swapTimeCorrMs-title");
+    input.setAttribute("id", "swapTimeCorrMs-input");
+    button.setAttribute("id", "swapTimeCorrMs-button");
+    title.innerHTML = 'OpenTimeCorr(ms):' + swapV2.swapTimeCorrMs;
+    input.value = swapV2.swapTimeCorrMs;
+    button.innerHTML = 'Update';
+    span.appendChild(title);
+    span.appendChild(input);
+    span.appendChild(button);
+    button.addEventListener("click", onUpdateClick);
+
+    container.appendChild(span);
+
+    function onUpdateClick() {
+        const requestData = JSON.stringify({swapV2: {swapTimeCorrMs: input.value}});
+
+        Http.httpAsyncPost(MAIN_SWAP_PARAMS_URL + '/settings',
+            requestData, function(result) {
+                alert('Result' + result);
+                title.innerHTML = 'OpenTimeCorr:' + input.value;
             });
     }
 }
