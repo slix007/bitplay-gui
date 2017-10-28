@@ -15,6 +15,7 @@ exports.showSwapV2 = function (firstMarketName, secondMarketName, baseUrl) {
         createOrdTypeDropdown(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
         createOrdAmountInput(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
         createSwapTimeCorrMsInput(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
+        createToSwapV2Open(swapParams.swapV2, MAIN_SWAP_PARAMS_URL);
     });
 };
 
@@ -167,4 +168,29 @@ function createSwapTimeCorrMsInput(swapV2, MAIN_SWAP_PARAMS_URL) {
                 title.innerHTML = 'OpenTimeCorr:' + input.value;
             });
     }
+}
+
+function createToSwapV2Open(swapV2, MAIN_SWAP_PARAMS_URL) {
+    var container = document.getElementById("swap-v2");
+    if (swapV2 == null) {
+        swapV2 = {swapOpenType: 'Buy', swapOpenAmount: '0'}
+    }
+
+    var div = document.createElement('div');
+    div.setAttribute("id", "div-swap-to-open");
+    div.innerHTML = 'To open(swapV2): ' + swapV2.msToSwapString;
+    container.appendChild(div);
+
+    setInterval(updateToSwapV2Open, 1000, MAIN_SWAP_PARAMS_URL);
+}
+
+function updateToSwapV2Open(MAIN_SWAP_PARAMS_URL) {
+
+    Http.httpAsyncGet(MAIN_SWAP_PARAMS_URL, function (rawData) {
+        let swapParams = JSON.parse(rawData);
+        const div = document.getElementById("div-swap-to-open");
+        const swapV2 = swapParams.swapV2;
+        div.innerHTML = 'To open(swapV2): ' + swapV2.msToSwapString;
+
+    });
 }
