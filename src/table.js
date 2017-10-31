@@ -1274,6 +1274,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'reset-delta-minmax') {
                 httpAsyncPost(baseUrl + '/delta-params', '', function (responseData, resultElement) {}, null);
             }
+            if (element.id == 'reset-time-compare') {
+                httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {}, null);
+            }
+
         });
     }
 
