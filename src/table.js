@@ -394,6 +394,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                  + ', ';
             let timeCompare = document.getElementById('timeCompare');
             timeCompare.innerHTML = futureIndex.timeCompareString;
+            let timeCompareUpdating = document.getElementById('timeCompareUpdating');
+            timeCompareUpdating.innerHTML = futureIndex.timeCompareUpdating;
 
         });
         fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
@@ -1123,6 +1125,22 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'update-timeCompareUpdating') {
+                let element = document.getElementById('timeCompareUpdating-edit').value;
+                let request = {command: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
+                    requestData,
+                    function (responseData, resultElement) {
+                        let timeCompareUpdating = document.getElementById('timeCompareUpdating');
+                        timeCompareUpdating.innerHTML = responseData.result;
+                    },
+                    null
+                );
+            }
+
+
             if (element.id == 'update-pos-corr') {
                 let posCorr = document.getElementById("pos-corr").innerHTML;
                 if (posCorr == 'stopped') {
@@ -1275,7 +1293,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 httpAsyncPost(baseUrl + '/delta-params', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-time-compare') {
-                httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {}, null);
+                httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
+                    let timeCompare = document.getElementById('timeCompare');
+                    timeCompare.innerHTML = responseData.result;
+                }, null);
             }
 
         });
