@@ -347,6 +347,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                      + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
                                      + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
                                      + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
+                                     + ',<br> entry_price ' + poloniexAccount.entryPrice
                                      + ',<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
                                      + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
                                      + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg);
@@ -369,6 +370,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                                      + ',<br> e_last_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
                                      + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
                                      + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
+                                     + ',<br> entry_price ' + marketAccount.entryPrice
                                      + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
                                      + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                                      + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
