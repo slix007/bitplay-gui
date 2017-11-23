@@ -229,7 +229,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let repaintStates = function (returnData) {
         let elementById = document.getElementById("markets-states");
         elementById.innerHTML = 'Market is ready for new signals(flag isBusy and openOrders.size==0). '
-                                + 'First: ' + returnData.firstMarket + ', second: ' + returnData.secondMarket;
+                                + 'First: ' + returnData.firstMarket
+                                + (returnData.firstTimeToReset.length === 0 ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))
+                                + ', second: ' + returnData.secondMarket
+                                + (returnData.secondTimeToReset.length === 0 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'));
     };
 
     function createElement(element, attribute, inner) {
