@@ -1005,6 +1005,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'stop-markets') {
+                let request = {firstMarket: 'STOPPED', secondMarket: 'STOPPED'};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/states',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintStates(JSON.parse(responseData));
+                    },
+                    null
+                );
+            }
+
             if (element.id == 'update-count1') {
                 let element = document.getElementById('count1-edit').value;
                 let request = {count1: element};
