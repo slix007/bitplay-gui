@@ -6,6 +6,7 @@ let tableVar = require('./table');
 let httpVar = require('./http');
 let bordersVar = require('./borders-v2');
 let swapVar = require('./swap-v2');
+let arbVar = require('./arb-version');
 
 // let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
@@ -28,6 +29,7 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     let parsed = JSON.parse(response);
     console.log('first market=' + parsed.first);
     tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
+    arbVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
     bordersVar.showBordersV2(parsed.first, parsed.second, baseUrlWithPort);
     swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
 });
