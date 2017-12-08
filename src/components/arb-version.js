@@ -1,6 +1,6 @@
 'use strict';
 
-var Http = require('./http');
+var Http = require('../http');
 
 var exports = module.exports = {};
 
@@ -14,9 +14,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL);
 
         var overloadContainer = document.getElementById("sys-overload-settings");
+        createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
-        createMovingErrorsResetTimeout(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
     });
 };
 
@@ -51,19 +51,20 @@ function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
     }
 }
 
-function createSysOverloadErrors(mainContainer, obj, SETTINGS_URL) {
-    var container = document.createElement('div');
+
+function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
+    let container = document.createElement('div');
     mainContainer.appendChild(container);
 
-    var label = document.createElement('span');
-    label.innerHTML = 'errorsCountForOverload';
-    var edit = document.createElement('input');
+    let label = document.createElement('span');
+    label.innerHTML = 'placeAttempts';
+    let edit = document.createElement('input');
     edit.innerHTML = '';
-    var updateBtn = document.createElement('button');
+    let updateBtn = document.createElement('button');
     updateBtn.onclick = onBtnClick;
     updateBtn.innerHTML = 'update';
-    var realValue = document.createElement('span');
-    realValue.innerHTML = obj.errorsCountForOverload;
+    let realValue = document.createElement('span');
+    realValue.innerHTML = obj.placeAttempts;
 
     container.appendChild(label);
     container.appendChild(edit);
@@ -71,11 +72,41 @@ function createSysOverloadErrors(mainContainer, obj, SETTINGS_URL) {
     container.appendChild(realValue);
 
     function onBtnClick() {
-        const requestData = JSON.stringify({bitmexSysOverloadArgs: {errorsCountForOverload: edit.value}});
+        const requestData = JSON.stringify({bitmexSysOverloadArgs: {placeAttempts: edit.value}});
         updateBtn.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
-            realValue.innerHTML = data.bitmexSysOverloadArgs.errorsCountForOverload;
+            realValue.innerHTML = data.bitmexSysOverloadArgs.placeAttempts;
+            updateBtn.disabled = false;
+        });
+    }
+}
+
+function createSysOverloadErrors(mainContainer, obj, SETTINGS_URL) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = 'movingErrorsForOverload';
+    var edit = document.createElement('input');
+    edit.innerHTML = '';
+    var updateBtn = document.createElement('button');
+    updateBtn.onclick = onBtnClick;
+    updateBtn.innerHTML = 'update';
+    var realValue = document.createElement('span');
+    realValue.innerHTML = obj.movingErrorsForOverload;
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(updateBtn);
+    container.appendChild(realValue);
+
+    function onBtnClick() {
+        const requestData = JSON.stringify({bitmexSysOverloadArgs: {movingErrorsForOverload: edit.value}});
+        updateBtn.disabled = true;
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+            let data = JSON.parse(result);
+            realValue.innerHTML = data.bitmexSysOverloadArgs.movingErrorsForOverload;
             updateBtn.disabled = false;
         });
     }
@@ -106,36 +137,6 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             realValue.innerHTML = data.bitmexSysOverloadArgs.overloadTimeSec;
-            updateBtn.disabled = false;
-        });
-    }
-}
-
-function createMovingErrorsResetTimeout(mainContainer, obj, SETTINGS_URL) {
-    let container = document.createElement('div');
-    mainContainer.appendChild(container);
-
-    let label = document.createElement('span');
-    label.innerHTML = 'movingErrorsResetTimeout';
-    let edit = document.createElement('input');
-    edit.innerHTML = '';
-    let updateBtn = document.createElement('button');
-    updateBtn.onclick = onBtnClick;
-    updateBtn.innerHTML = 'update';
-    let realValue = document.createElement('span');
-    realValue.innerHTML = obj.movingErrorsResetTimeout;
-
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(updateBtn);
-    container.appendChild(realValue);
-
-    function onBtnClick() {
-        const requestData = JSON.stringify({bitmexSysOverloadArgs: {movingErrorsResetTimeout: edit.value}});
-        updateBtn.disabled = true;
-        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
-            let data = JSON.parse(result);
-            realValue.innerHTML = data.bitmexSysOverloadArgs.movingErrorsResetTimeout;
             updateBtn.disabled = false;
         });
     }

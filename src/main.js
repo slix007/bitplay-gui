@@ -4,9 +4,10 @@ var sprintf = require('sprintf-js').sprintf;
 
 let tableVar = require('./table');
 let httpVar = require('./http');
-let bordersVar = require('./borders-v2');
+let bordersVar = require('./components/borders-v2');
 let swapVar = require('./swap-v2');
-let arbVar = require('./arb-version');
+let arbVar = require('./components/arb-version');
+let orderActionVar = require('./components/order-actions')
 
 // let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
@@ -32,6 +33,7 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     arbVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
     bordersVar.showBordersV2(parsed.first, parsed.second, baseUrlWithPort);
     swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
+    orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort)
 });
 
 if (process.env.NODE_ENV == 'development') {
