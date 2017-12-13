@@ -30,11 +30,11 @@
     <!--<div id="positions1"></div>-->
 
     <div id="bitmex-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
-    <textarea style="float: right;width: 60%; height: 500px;border:1px solid black;"
+    <textarea style="float: right;width: 60%; height: 600px;border:1px solid black;"
               id="bitmex-trade-log">empty...</textarea>
 
     <div id="okcoin-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
-    <textarea style="float: right;width: 60%; height: 500px;border:1px solid black;"
+    <textarea style="float: right;width: 60%; height: 600px;border:1px solid black;"
               id="okcoin-trade-log">empty...</textarea>
 
     <textarea style="float: right;width: 60%; height: 300px;border:1px solid black;"
@@ -240,6 +240,7 @@
 
     <div style="background-color: azure; border: solid">Arbitrage version
         <span id="select-arb-version"></span>
+        <div>Okex place orders type:<span id="okex-placing-type"></span></div>
     </div>
 
     <div style="background-color: azure; border: solid">Borders version
@@ -288,11 +289,6 @@
         reserveBtc2:
         <input type="text" id="reserveBtc2-edit"><button id="update-reserveBtc2">update reserveBtc2</button>
         <span id="reserveBtc2"></span>
-    </div>
-    <div>
-        OkCoin orders type:
-        <button id="update-okcoin-placing-type">change</button>
-        <span id="okcoin-placing-type"></span>
     </div>
     <div>
         Hedge amount:

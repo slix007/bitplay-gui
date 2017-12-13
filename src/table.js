@@ -183,10 +183,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         }
         isStopMoving.innerHTML = isEnabled;
     };
-    let repaintPlacingType = function (returnData) {
-        let placingType = document.getElementById("okcoin-placing-type");
-        placingType.innerHTML = returnData.secondMarket;
-    };
     let repaintPosCorr = function (returnData) {
         let posCorr = document.getElementById("pos-corr");
         if (returnData.status == 'stopped') {
@@ -448,9 +444,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         // markets order is opposite for deltas
         fetch('/market/stop-moving', function (returnData) {
             repaintStopMoving(returnData);
-        });
-        fetch('/market/placing-type', function (returnData) {
-            repaintPlacingType(returnData);
         });
         fetch('/market/states', function (returnData) {
             repaintStates(returnData);
@@ -975,26 +968,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     requestData,
                     function (responseData, resultElement) {
                         repaintStates(JSON.parse(responseData));
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-okcoin-placing-type') {
-                let placingType = document.getElementById("okcoin-placing-type").innerHTML;
-                if (placingType == 'maker') {
-                    placingType = 'taker';
-                } else {
-                    placingType = 'maker';
-                }
-                let request = {firstMarket: 'maker', secondMarket: placingType};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/placing-type',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintPlacingType(JSON.parse(responseData));
                     },
                     null
                 );

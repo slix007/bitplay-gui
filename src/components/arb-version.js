@@ -17,6 +17,10 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
+
+        var okexPlacingCont = document.getElementById("okex-placing-type");
+
+        createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
     });
 };
 
@@ -139,5 +143,35 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
             realValue.innerHTML = data.bitmexSysOverloadArgs.overloadTimeSec;
             updateBtn.disabled = false;
         });
+    }
+}
+
+function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    var option3 = document.createElement('option');
+    option1.setAttribute("value", "TAKER");
+    option2.setAttribute("value", "MAKER");
+    option3.setAttribute("value", "HYBRID");
+    option1.innerHTML = 'TAKER';
+    option2.innerHTML = 'MAKER';
+    option3.innerHTML = 'HYBRID';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.appendChild(option3);
+    select.addEventListener("change", onVerPick);
+    select.value = ver;
+
+    mainContainer.appendChild(select);
+
+    function onVerPick() {
+        const requestData = JSON.stringify({okexPlacingType: this.value});
+
+        Http.httpAsyncPost(SETTINGS_URL,
+                           requestData, function(result) {
+                let data = JSON.parse(result);
+                alert('New value: ' + data.okexPlacingType);
+            });
     }
 }

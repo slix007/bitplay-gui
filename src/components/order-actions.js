@@ -18,6 +18,7 @@ exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl)
 
     createOrderActions(okcoinCont, 'Taker  ', 'TAKER', OKCOIN_ORDER_URL);
     createOrderActions(okcoinCont, 'Maker  ', 'MAKER', OKCOIN_ORDER_URL);
+    createOrderActions(okcoinCont, 'Hybrid ', 'HYBRID', OKCOIN_ORDER_URL);
 };
 
 function createOrderActions(mainContainer, labelName, placementType, SETTINGS_URL) {
