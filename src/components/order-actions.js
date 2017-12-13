@@ -17,6 +17,7 @@ exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl)
     var okcoinCont = document.getElementById("okcoin-orders");
 
     createOrderActions(okcoinCont, 'Taker  ', 'TAKER', OKCOIN_ORDER_URL);
+    createOrderActions(okcoinCont, 'Maker  ', 'MAKER', OKCOIN_ORDER_URL);
 };
 
 function createOrderActions(mainContainer, labelName, placementType, SETTINGS_URL) {
