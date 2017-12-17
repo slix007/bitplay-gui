@@ -19,8 +19,10 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
 
         var okexPlacingCont = document.getElementById("okex-placing-type");
-
         createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
+
+        var bitmexPriceCont = document.getElementById("bitmex-price");
+        createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL)
     });
 };
 
@@ -173,5 +175,35 @@ function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
                 let data = JSON.parse(result);
                 alert('New value: ' + data.okexPlacingType);
             });
+    }
+}
+
+function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
+    let container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    let label = document.createElement('span');
+    label.innerHTML = 'bitmexPrice';
+    let edit = document.createElement('input');
+    edit.innerHTML = '';
+    let updateBtn = document.createElement('button');
+    updateBtn.onclick = onBtnClick;
+    updateBtn.innerHTML = 'update';
+    let realValue = document.createElement('span');
+    realValue.innerHTML = obj;
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(updateBtn);
+    container.appendChild(realValue);
+
+    function onBtnClick() {
+        const requestData = JSON.stringify({bitmexPrice: edit.value});
+        updateBtn.disabled = true;
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+            let data = JSON.parse(result);
+            realValue.innerHTML = data.bitmexPrice;
+            updateBtn.disabled = false;
+        });
     }
 }
