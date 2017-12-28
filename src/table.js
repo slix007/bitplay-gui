@@ -294,8 +294,25 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             null);
     }
 
-    function cancelOrder() {
+    function cancelOrderP() {
         console.log("cancelOrder");
+    }
+
+    function cancelOrderO(orderId) {
+        console.log("cancelOrder" + orderId);
+        let cancelUrl = sprintf('/market/%s/open-orders/cancel', secondMarketName);
+        let request = {id: orderId};
+        let requestData = JSON.stringify(request);
+        console.log(requestData);
+
+        let showResponse = function (responseData, resultElement) {
+            console.log(responseData);
+            alert(responseData);
+        };
+        httpAsyncPost(baseUrl + cancelUrl,
+            requestData,
+            showResponse,
+            null);
     }
 
     var updateFunction = function () {
@@ -513,7 +530,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                         moveOrderP(oo.id, oo.orderType);
                     }, false);
                     let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
-                    cancel.addEventListener("click", cancelOrder, oo.id);
+                    cancel.addEventListener("click", cancelOrderP, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
                     document.getElementById(sprintf('%s-open-orders', firstMarketName)).appendChild(openOrderDiv);
@@ -543,7 +560,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     }, false);
 
                     let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
-                    cancel.addEventListener("click", cancelOrder, oo.id);
+                    cancel.addEventListener("click", function () {
+                        cancelOrderO(oo.id);
+                    }, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
                     document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
