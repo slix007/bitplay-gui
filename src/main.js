@@ -7,7 +7,8 @@ let httpVar = require('./http');
 let bordersVar = require('./components/borders-v2');
 let swapVar = require('./swap-v2');
 let arbVar = require('./components/arb-version');
-let orderActionVar = require('./components/order-actions')
+let orderActionVar = require('./components/order-actions');
+let placingBlocks = require('./components/placing-blocks');
 
 // let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
@@ -25,6 +26,8 @@ console.log('baseUrlWithPort:' + baseUrlWithPort);
 console.log('theUrl:' + theUrl);
 console.log('NODE_ENV ' + process.env.NODE_ENV);
 
+placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
+
 httpVar.httpAsyncGet(theUrl, function (response) {
     console.log(response);
     let parsed = JSON.parse(response);
@@ -33,7 +36,7 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     arbVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
     bordersVar.showBordersV2(parsed.first, parsed.second, baseUrlWithPort);
     swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
-    orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort)
+    orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort);
 });
 
 if (process.env.NODE_ENV == 'development') {
