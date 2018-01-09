@@ -167,12 +167,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         hedgeAmount.innerHTML = returnData.hedgeAmount;
         fundingRateFee.innerHTML = returnData.fundingRateFee;
     };
-    let repaintTradableAmount = function (returnData) {
-        let block1 = document.getElementById("block1");
-        block1.innerHTML = returnData.block1;
-        let block2 = document.getElementById("block2");
-        block2.innerHTML = returnData.block2;
-    };
     let repaintStopMoving = function (returnData) {
         let isStopMoving = document.getElementById("is-stop-moving");
         let isEnabled = 'stopped';
@@ -453,10 +447,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
               function (returnData) {
                   repaintDeltasAndBorders(returnData);
               });
-
-        fetch('/market/tradable-amount', function (returnData) {
-            repaintTradableAmount(returnData);
-        });
 
         // markets order is opposite for deltas
         fetch('/market/stop-moving', function (returnData) {
@@ -863,35 +853,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     requestData,
                     function (responseData, resultElement) {
                         repaintStopMoving(JSON.parse(responseData));
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-block1') {
-                let element = document.getElementById('block1-edit').value;
-                let request = {block1: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/tradable-amount',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintTradableAmount(JSON.parse(responseData));
-                    },
-                    null
-                );
-            }
-            if (element.id == 'update-block2') {
-                let element = document.getElementById('block2-edit').value;
-                let request = {block2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/tradable-amount',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintTradableAmount(JSON.parse(responseData));
                     },
                     null
                 );
