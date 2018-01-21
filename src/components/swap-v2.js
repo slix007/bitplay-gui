@@ -1,8 +1,8 @@
 'use strict';
 
 var sprintf = require('sprintf-js').sprintf;
-var Utils = require('./utils');
-var Http = require('./http');
+var Utils = require('../utils');
+var Http = require('../http');
 
 var exports = module.exports = {};
 

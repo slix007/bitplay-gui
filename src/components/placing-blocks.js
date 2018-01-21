@@ -1,6 +1,8 @@
 'use strict';
 
 var Http = require('../http');
+const settingsStore = require('../store/settings-store');
+let enableRestart = require('../components/enable-restart');
 
 var exports = module.exports = {};
 
@@ -20,6 +22,13 @@ exports.showPlacingBlocksVersion = function (baseUrl) {
         container.appendChild(dynCont);
         createFixedBlocks(fixedCont, settingsData, SETTINGS_URL);
         createDynamicBlocks(dynCont, settingsData, SETTINGS_URL);
+
+        // TODO move it to the end. Using options
+        // 1) data-binding with vanilla js https://namitamalik.github.io/2-way-data-binding-in-Plain-Vanilla-JavaScript/
+        // 2) mobx for store ?
+        // 3) vue binding + vuex store ?
+        settingsStore.allSettings.setRestartEnabled(settingsData.restartEnabled);
+        enableRestart.showRestartEnable(baseUrl);
     });
 };
 
