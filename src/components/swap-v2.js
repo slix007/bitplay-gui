@@ -23,12 +23,16 @@ function createVerDropdown(ver, MAIN_SWAP_PARAMS_URL) {
     var container = document.getElementById("select-swap-version");
 
     var select = document.createElement('select');
+    var option0 = document.createElement('option');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
+    option0.setAttribute("value", "OFF");
     option1.setAttribute("value", "V1");
     option2.setAttribute("value", "V2");
+    option0.innerHTML = 'OFF';
     option1.innerHTML = 'V1';
     option2.innerHTML = 'V2';
+    select.appendChild(option0);
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", onVerPick);
