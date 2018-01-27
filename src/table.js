@@ -133,6 +133,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDelta = document.getElementById("cum-delta");
         let lastDelta = document.getElementById("last-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
+        let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
         let cumDiff1 = document.getElementById("cum-diff1");
         let cumDiff2 = document.getElementById("cum-diff2");
         let cumCom1 = document.getElementById("cum-com1");
@@ -155,6 +156,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDelta.innerHTML = returnData.cumDelta;
         lastDelta.innerHTML = returnData.lastDelta;
         cumDeltaFact.innerHTML = returnData.cumDeltaFact;
+        cumDiffFactBr.innerHTML = returnData.cumDiffFactBr;
         cumDiff1.innerHTML = returnData.cumDiffFact1;
         cumDiff2.innerHTML = returnData.cumDiffFact2;
         cumCom1.innerHTML = returnData.cumCom1;
@@ -757,6 +759,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-delta-fact') {
                 let newCumDeltaFactValue = document.getElementById('cum-delta-fact-edit').value;
                 let request = {cumDeltaFact: newCumDeltaFactValue};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-cum-diff-fact-br') {
+                let newVal = document.getElementById('cum-diff-fact-br-edit').value;
+                let request = {cumDiffFactBr: newVal};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
