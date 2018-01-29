@@ -136,6 +136,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
         let cumDiff1 = document.getElementById("cum-diff1");
         let cumDiff2 = document.getElementById("cum-diff2");
+        let cumAvgDiffFact = document.getElementById("cum_avg_diff_fact");
         let cumCom1 = document.getElementById("cum-com1");
         let cumCom2 = document.getElementById("cum-com2");
         let cumBitmexMCom = document.getElementById("cumBitmexMCom");
@@ -159,6 +160,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumDiffFactBr.innerHTML = returnData.cumDiffFactBr;
         cumDiff1.innerHTML = returnData.cumDiffFact1;
         cumDiff2.innerHTML = returnData.cumDiffFact2;
+        cumAvgDiffFact.innerHTML = sprintf('%s+%s=%s', returnData.cumAvgDiffFact1, returnData.cumAvgDiffFact2, returnData.cumAvgDiffFact);
         cumCom1.innerHTML = sprintf('%s/%s', returnData.cumCom1, returnData.cumAvgCom1);
         cumCom2.innerHTML = sprintf('%s/%s', returnData.cumCom2, returnData.cumAvgCom2);
         cumBitmexMCom.innerHTML = sprintf('%s/%s', returnData.cumBitmexMCom, returnData.cumAvgBitmexMCom);
@@ -804,6 +806,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-diff2') {
                 let element = document.getElementById('cum-diff2-edit').value;
                 let request = {cumDiffFact2: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-cum_avg_diff_fact') {
+                let element = document.getElementById('cum_avg_diff_fact-edit').value;
+                let request = {cumAvgDiffFact: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
