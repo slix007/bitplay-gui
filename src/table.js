@@ -139,6 +139,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumCom1 = document.getElementById("cum-com1");
         let cumCom2 = document.getElementById("cum-com2");
         let cumBitmexMCom = document.getElementById("cumBitmexMCom");
+        let cumSlipM = document.getElementById("cum_slip_m");
+        let cumSlipT = document.getElementById("cum_slip_t");
         let count1 = document.getElementById("count1");
         let count2 = document.getElementById("count2");
         let reserveBtc1 = document.getElementById("reserveBtc1");
@@ -162,6 +164,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         cumCom1.innerHTML = sprintf('%s/%s', returnData.cumCom1, returnData.cumAvgCom1);
         cumCom2.innerHTML = sprintf('%s/%s', returnData.cumCom2, returnData.cumAvgCom2);
         cumBitmexMCom.innerHTML = sprintf('%s/%s', returnData.cumBitmexMCom, returnData.cumAvgBitmexMCom);
+        cumSlipM.innerHTML = returnData.cumSlipM;
+        cumSlipT.innerHTML = returnData.cumSlipT;
         count1.innerHTML = returnData.count1;
         count2.innerHTML = returnData.count2;
         reserveBtc1.innerHTML = returnData.reserveBtc1;
@@ -849,6 +853,36 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cumBitmexMCom') {
                 let element = document.getElementById('cumBitmexMCom-edit').value;
                 let request = {cumBitmexMCom: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
+          if (element.id == 'update-cum_slip_m') {
+                let element = document.getElementById('cum_slip_m-edit').value;
+                let request = {cumSlipM: element};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
+            if (element.id == 'update-cum_slip_t') {
+                let element = document.getElementById('cum_slip_t-edit').value;
+                let request = {cumSlipT: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
