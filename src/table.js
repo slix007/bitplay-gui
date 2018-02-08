@@ -133,7 +133,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let cumDelta = document.getElementById("cum-delta");
         let lastDelta = document.getElementById("last-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
-        let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
         let cumDiff1 = document.getElementById("cum-diff1");
         let cumDiff2 = document.getElementById("cum-diff2");
         let cumCom1 = document.getElementById("cum-com1");
@@ -155,15 +154,14 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         sumDelta.innerHTML = returnData.sumDelta;
         periodSec.innerHTML = returnData.periodSec;
         // bu.innerHTML = returnData.buValue;
-        cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAvgDelta);
+        cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAstDelta);
         lastDelta.innerHTML = returnData.lastDelta;
-        cumDeltaFact.innerHTML = sprintf('%s/%s', returnData.cumDeltaFact, returnData.cumAvgDeltaFact);
-        cumDiffFactBr.innerHTML = sprintf('%s/%s', returnData.cumDiffFactBr, returnData.cumAvgDiffFactBr);
-        cumDiff1.innerHTML = sprintf('%s/%s', returnData.cumDiffFact1, returnData.cumAvgDiffFact1);
-        cumDiff2.innerHTML = sprintf('%s/%s', returnData.cumDiffFact2, returnData.cumAvgDiffFact2);
-        cumCom1.innerHTML = sprintf('%s/%s', returnData.cumCom1, returnData.cumAvgCom1);
-        cumCom2.innerHTML = sprintf('%s/%s', returnData.cumCom2, returnData.cumAvgCom2);
-        cumBitmexMCom.innerHTML = sprintf('%s/%s', returnData.cumBitmexMCom, returnData.cumAvgBitmexMCom);
+        cumDeltaFact.innerHTML = sprintf('%s/%s', returnData.cumDeltaFact, returnData.cumAstDeltaFact);
+        cumDiff1.innerHTML = sprintf('%s/%s', returnData.cumDiffFact1, returnData.cumAstDiffFact1);
+        cumDiff2.innerHTML = sprintf('%s/%s', returnData.cumDiffFact2, returnData.cumAstDiffFact2);
+        cumCom1.innerHTML = sprintf('%s/%s', returnData.cumCom1, returnData.cumAstCom1);
+        cumCom2.innerHTML = sprintf('%s/%s', returnData.cumCom2, returnData.cumAstCom2);
+        cumBitmexMCom.innerHTML = sprintf('%s/%s', returnData.cumBitmexMCom, returnData.cumAstBitmexMCom);
         cumSlipM.innerHTML = returnData.cumSlipM;
         cumSlipT.innerHTML = returnData.cumSlipT;
         count1.innerHTML = returnData.count1;
@@ -763,21 +761,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-delta-fact') {
                 let newCumDeltaFactValue = document.getElementById('cum-delta-fact-edit').value;
                 let request = {cumDeltaFact: newCumDeltaFactValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-cum-diff-fact-br') {
-                let newVal = document.getElementById('cum-diff-fact-br-edit').value;
-                let request = {cumDiffFactBr: newVal};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
