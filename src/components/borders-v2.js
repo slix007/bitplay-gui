@@ -52,6 +52,13 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
         Http.httpAsyncPost(BORDERS_TABLES_URL, requestData, callback);
     }
 
+    function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        if (instance.getData()[row][0] === 0) {
+            td.style.color = 'grey';
+        }
+    }
+
     function createTable(container, dataUrl, dataPartName) {
         return new Handsontable(container, {
             data: myData, //fetchBorderTables(dataUrl, dataPartName),
@@ -67,7 +74,14 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
             autoColumnSize: {
                 samplingRatio: 23
             },
-            contextMenu: true
+            contextMenu: true,
+            cells: function (row, col, prop) {
+                var cellProperties = {};
+
+                cellProperties.renderer = firstRowRenderer; // uses function directly
+
+                return cellProperties;
+            }
         });
     }
 
