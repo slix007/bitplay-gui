@@ -775,6 +775,21 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'update-cum-diff-fact-br') {
+                let newVal = document.getElementById('cum-diff-fact-br-edit').value;
+                let request = {cumDiffFactBr: newVal};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+
+                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    requestData,
+                    function (responseData, resultElement) {
+                        repaintDeltasAndBorders(responseData);
+                    },
+                    null
+                );
+            }
+
             if (element.id == 'update-cum-diff1') {
                 let element = document.getElementById('cum-diff1-edit').value;
                 let request = {cumDiffFact1: element};
