@@ -11,6 +11,8 @@ var exports = module.exports = {};
 exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     const MAIN_BORDERS_URL = baseUrl + '/borders/';
     const BORDERS_TABLES_URL = baseUrl + '/borders/tables';
+    const BORDERS_SETTINGS_URL = baseUrl + '/borders/settings';
+    const BORDERS_SETTINGS_V2_URL = baseUrl + '/borders/settingsV2';
 
     let myData = Handsontable.helper.createSpreadsheetData(2, 2);
 
@@ -122,8 +124,22 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
 
     Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
         let borderData = JSON.parse(rawData);
-        createVerDropdown(borderData.activeVersion, baseUrl);
-        createPosModeDropdown(borderData.posMode, baseUrl);
+        createVerDropdown(borderData.activeVersion, BORDERS_SETTINGS_URL);
+        var container = document.getElementById("borders-v2-params");
+        createPosModeDropdown(container, borderData.posMode, BORDERS_SETTINGS_URL);
+        container.appendChild(document.createElement('br'));
+        container.appendChild(document.createElement('br'));
+
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'maxLvl');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'periodSec');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlCnt');
+        createBaseLvlTypeDropdown(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlType');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'gapStep');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'bAddDelta');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'okAddDelta');
+
+        container.appendChild(document.createElement('br'));
 
         let tableData = borderData.bordersV2.borderTableList;
         b_br_close.loadData(extractTableData(tableData, 'b_br_close'));
@@ -133,7 +149,43 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     });
 };
 
-function createVerDropdown(ver, baseUrl) {
+function saveBordersSettings(BORDERS_SETTINGS_URL, key, value) {
+    let reqObj = {};
+    reqObj[key] = value;
+    const requestData = JSON.stringify(reqObj);
+
+    Http.httpAsyncPost(BORDERS_SETTINGS_URL,
+                       requestData, function (result) {
+            alert('Result' + result);
+        });
+}
+
+function saveParamAsNumber(BORDERS_SETTINGS_V2_URL, key, value, el) {
+    let reqObj = {};
+    reqObj[key] = Number(value);
+    const requestData = JSON.stringify(reqObj);
+    Http.httpAsyncPost(BORDERS_SETTINGS_V2_URL,
+                       requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            el.innerHTML = res.result;
+            //alert('Result' + result);
+        });
+}
+
+function saveParam(BORDERS_SETTINGS_V2_URL, key, value, el) {
+    let reqObj = {};
+    reqObj[key] = value;
+    const requestData = JSON.stringify(reqObj);
+    Http.httpAsyncPost(BORDERS_SETTINGS_V2_URL,
+                       requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            el.value = res.result;
+            //alert('Result' + result);
+        });
+}
+
+
+function createVerDropdown(ver, BORDERS_SETTINGS_URL) {
     var container = document.getElementById("select-border-version");
 
     var select = document.createElement('select');
@@ -145,23 +197,15 @@ function createVerDropdown(ver, baseUrl) {
     option2.innerHTML = 'V2';
     select.appendChild(option1);
     select.appendChild(option2);
-    select.addEventListener("change", onVerPick);
+    select.addEventListener("change", function () {
+        saveBordersSettings(BORDERS_SETTINGS_URL, 'version', this.value);
+    });
     select.value = ver;
 
     container.appendChild(select);
-
-    function onVerPick() {
-        const requestData = JSON.stringify({version: this.value});
-
-        Http.httpAsyncPost(baseUrl + '/borders/settings',
-            requestData, function(result) {
-                alert('Result' + result);
-            });
-    }
 }
-function createPosModeDropdown(posMode, baseUrl) {
-    var container = document.getElementById("select-border-posMode");
 
+function createPosModeDropdown(container, posMode, BORDERS_SETTINGS_URL) {
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
@@ -171,17 +215,58 @@ function createPosModeDropdown(posMode, baseUrl) {
     option2.innerHTML = 'BTM_MODE';
     select.appendChild(option1);
     select.appendChild(option2);
-    select.addEventListener("change", onPosModePick);
+    select.addEventListener("change", function () {
+        saveBordersSettings(BORDERS_SETTINGS_URL, 'posMode', this.value);
+    });
     select.value = posMode !== 'undefined' ? posMode : 'OK_MODE';
 
     container.appendChild(select);
+}
 
-    function onPosModePick() {
-        const requestData = JSON.stringify({posMode: this.value});
+function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
 
-        Http.httpAsyncPost(baseUrl + '/borders/settings',
-            requestData, function(result) {
-                alert('Result' + result);
-            });
-    }
+    var label = document.createElement('span');
+    label.innerHTML = Utils.camelToUnderscore(elName);
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = bordersV2[elName];
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        saveParamAsNumber(BORDERS_SETTINGS_V2_URL, elName, edit.value, resultLabel);
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
+function createBaseLvlTypeDropdown(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = Utils.camelToUnderscore(elName);
+
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    option1.setAttribute("value", "B_OPEN");
+    option2.setAttribute("value", "OK_OPEN");
+    option1.innerHTML = 'B_OPEN';
+    option2.innerHTML = 'OK_OPEN';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.addEventListener("change", function () {
+        saveParam(BORDERS_SETTINGS_V2_URL, 'baseLvlType', this.value, select);
+    });
+    select.value = bordersV2.baseLvlType; // bordersV2.baseLvlType !== 'undefined' ? bordersV2.baseLvlType : 'B_OPEN';
+
+    container.appendChild(label);
+    container.appendChild(select);
 }

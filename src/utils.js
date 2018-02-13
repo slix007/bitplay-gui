@@ -68,3 +68,7 @@ exports.objectToArray = function(obj) {
     }
     return arr;
 };
+
+exports.camelToUnderscore = function (str) {
+    return str.split(/(?=[A-Z])/).join('_').toLowerCase();
+};
