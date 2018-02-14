@@ -125,13 +125,26 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
         let borderData = JSON.parse(rawData);
         createVerDropdown(borderData.activeVersion, BORDERS_SETTINGS_URL);
+        createPeriodSec(borderData, BORDERS_SETTINGS_URL);
+
+        // BorderV1
+        var container = document.getElementById("borders-v1");
+        var label1 = document.createElement('div');
+        if (borderData.activeVersion === 'V1') label1.style.fontWeight = 'bold';
+        label1.innerHTML = 'BordersV1';
+        container.appendChild(label1);
+        createBorderV1SumDelta(container, borderData, BORDERS_SETTINGS_URL);
+
+        // BorderV2
         var container = document.getElementById("borders-v2-params");
+        var label2 = document.createElement('div');
+        if (borderData.activeVersion === 'V2') label2.style.fontWeight = 'bold';
+        label2.innerHTML = 'BordersV2:';
+        container.appendChild(label2);
+
         createPosModeDropdown(container, borderData.posMode, BORDERS_SETTINGS_URL);
-        container.appendChild(document.createElement('br'));
-        container.appendChild(document.createElement('br'));
 
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'maxLvl');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'periodSec');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlCnt');
         createBaseLvlTypeDropdown(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlType');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
@@ -149,7 +162,7 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
     });
 };
 
-function saveBordersSettings(BORDERS_SETTINGS_URL, key, value) {
+function saveBordersSettings(BORDERS_SETTINGS_URL, key, value, el) {
     let reqObj = {};
     reqObj[key] = value;
     const requestData = JSON.stringify(reqObj);
@@ -157,10 +170,11 @@ function saveBordersSettings(BORDERS_SETTINGS_URL, key, value) {
     Http.httpAsyncPost(BORDERS_SETTINGS_URL,
                        requestData, function (result) {
             alert('Result' + result);
+            el.disabled = false;
         });
 }
 
-function saveParamAsNumber(BORDERS_SETTINGS_V2_URL, key, value, el) {
+function saveParamAsNumber(BORDERS_SETTINGS_V2_URL, key, value, el, setBtn) {
     let reqObj = {};
     reqObj[key] = Number(value);
     const requestData = JSON.stringify(reqObj);
@@ -168,6 +182,7 @@ function saveParamAsNumber(BORDERS_SETTINGS_V2_URL, key, value, el) {
                        requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
             el.innerHTML = res.result;
+            setBtn.disabled = false;
             //alert('Result' + result);
         });
 }
@@ -180,13 +195,15 @@ function saveParam(BORDERS_SETTINGS_V2_URL, key, value, el) {
                        requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
             el.value = res.result;
-            //alert('Result' + result);
+            el.disabled = false;
         });
 }
 
-
 function createVerDropdown(ver, BORDERS_SETTINGS_URL) {
-    var container = document.getElementById("select-border-version");
+    var container = document.getElementById("border-select-version");
+    var label = document.createElement('span');
+    label.innerHTML = 'Borders version';
+    container.appendChild(label);
 
     var select = document.createElement('select');
     var option1 = document.createElement('option');
@@ -198,14 +215,64 @@ function createVerDropdown(ver, BORDERS_SETTINGS_URL) {
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", function () {
-        saveBordersSettings(BORDERS_SETTINGS_URL, 'version', this.value);
+        select.disabled = true;
+        saveBordersSettings(BORDERS_SETTINGS_URL, 'version', this.value, select);
     });
     select.value = ver;
 
     container.appendChild(select);
 }
 
+function createPeriodSec(borderData, BORDERS_SETTINGS_URL) {
+    var container = document.getElementById("border-period-sec");
+    var label = document.createElement('span');
+    label.innerHTML = 'Recalc period sec';
+    container.appendChild(label);
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = borderData.recalcPeriodSec;
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        saveParamAsNumber(BORDERS_SETTINGS_URL, 'recalcPeriodSec', edit.value, resultLabel, setBtn);
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
+function createBorderV1SumDelta(container, borderData, BORDERS_SETTINGS_URL) {
+    var label = document.createElement('span');
+    label.innerHTML = 'sum_delta';
+    container.appendChild(label);
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = borderData.bordersV1.sumDelta;
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        saveParamAsNumber(BORDERS_SETTINGS_URL, 'borderV1SumDelta', edit.value, resultLabel, setBtn);
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
 function createPosModeDropdown(container, posMode, BORDERS_SETTINGS_URL) {
+    var label = document.createElement('span');
+    label.innerHTML = 'pos_mode';
+
+
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
@@ -216,10 +283,12 @@ function createPosModeDropdown(container, posMode, BORDERS_SETTINGS_URL) {
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", function () {
-        saveBordersSettings(BORDERS_SETTINGS_URL, 'posMode', this.value);
+        select.disabled = true;
+        saveBordersSettings(BORDERS_SETTINGS_URL, 'posMode', this.value, select);
     });
     select.value = posMode !== 'undefined' ? posMode : 'OK_MODE';
 
+    container.appendChild(label);
     container.appendChild(select);
 }
 
@@ -236,7 +305,8 @@ function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, el
     resultLabel.innerHTML = bordersV2[elName];
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
-        saveParamAsNumber(BORDERS_SETTINGS_V2_URL, elName, edit.value, resultLabel);
+        setBtn.disabled = true;
+        saveParamAsNumber(BORDERS_SETTINGS_V2_URL, elName, edit.value, resultLabel, setBtn);
     };
     setBtn.innerHTML = 'set';
 
@@ -263,6 +333,7 @@ function createBaseLvlTypeDropdown(mainContainer, bordersV2, BORDERS_SETTINGS_V2
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", function () {
+        select.disabled = true;
         saveParam(BORDERS_SETTINGS_V2_URL, 'baseLvlType', this.value, select);
     });
     select.value = bordersV2.baseLvlType; // bordersV2.baseLvlType !== 'undefined' ? bordersV2.baseLvlType : 'B_OPEN';

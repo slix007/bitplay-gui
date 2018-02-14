@@ -127,8 +127,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let border1 = document.getElementById("border1");
         let border2 = document.getElementById("border2");
         // let makerDelta = document.getElementById("maker-delta");
-        let sumDelta = document.getElementById("sum-delta");
-        let periodSec = document.getElementById("period-sec");
         // let bu = document.getElementById("bu");
         let cumDelta = document.getElementById("cum-delta");
         let lastDelta = document.getElementById("last-delta");
@@ -153,8 +151,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         border1.innerHTML = returnData.border1;
         border2.innerHTML = returnData.border2;
         // makerDelta.innerHTML = returnData.makerDelta;
-        sumDelta.innerHTML = returnData.sumDelta;
-        periodSec.innerHTML = returnData.periodSec;
         // bu.innerHTML = returnData.buValue;
         cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAstDelta);
         lastDelta.innerHTML = returnData.lastDelta;
@@ -686,36 +682,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             //         null
             //     );
             // }
-
-            if (element.id == 'update-sum-delta') {
-                let newSumDeltaValue = document.getElementById('sum-delta-edit').value;
-                let request = {sumDelta: newSumDeltaValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-period-sec') {
-                let newPeriodSecValue = document.getElementById('period-sec-edit').value;
-                let request = {periodSec: newPeriodSecValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
 
             // if (element.id == 'update-bu') {
             //     let newPeriodSecValue = document.getElementById('bu-edit').value;
