@@ -2,6 +2,7 @@ var Handsontable = require('handsontable');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
 var Http = require('./http');
+            let bordersVar = require('./components/borders-v2');
 
 var exports = module.exports = {};
 
@@ -445,6 +446,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/borders-timer', function (result) {
             let bordersTimer = document.getElementById('borders-timer');
             bordersTimer.innerHTML = result.result;
+            bordersVar.updateTableHash(result.description);
         });
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),

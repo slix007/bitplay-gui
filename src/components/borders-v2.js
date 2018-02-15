@@ -6,22 +6,55 @@ var sprintf = require('sprintf-js').sprintf;
 var Utils = require('../utils');
 var Http = require('../http');
 
+let borderTableHashCode = 0;
+let BASE_URL = '';
+let b_br_close;
+let b_br_open;
+let o_br_close;
+let o_br_open;
+
 var exports = module.exports = {};
 
-exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
+exports.updateTableHash = function (newHashCode) {
+    if (newHashCode != borderTableHashCode) {
+        borderTableHashCode = newHashCode;
+
+        // update tables
+        const BORDERS_TABLES_URL = BASE_URL + '/borders/tables';
+        updateAllTables(BORDERS_TABLES_URL, function(result) {
+            console.log('updated' + result.reduce((sum,item) => sum + item.borderName + ',', ' '));
+        });
+    }
+};
+
+function updateAllTables(BORDERS_TABLES_URL, callback) {
+    Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
+        let tableData = JSON.parse(rawData);
+
+        b_br_close.loadData(extractTableData(tableData, 'b_br_close'));
+        b_br_open.loadData(extractTableData(tableData, 'b_br_open'));
+        o_br_close.loadData(extractTableData(tableData, 'o_br_close'));
+        o_br_open.loadData(extractTableData(tableData, 'o_br_open'));
+
+        callback(tableData);
+    });
+}
+
+function extractTableData(tableData, elementId) {
+    return tableData
+        .find(el => el.borderName === elementId)
+        .borderItemList
+        .map(el => Utils.objectToArray(el));
+}
+
+exports.showBordersV2 = function (baseUrl) {
+    BASE_URL = baseUrl;
     const MAIN_BORDERS_URL = baseUrl + '/borders/';
     const BORDERS_TABLES_URL = baseUrl + '/borders/tables';
     const BORDERS_SETTINGS_URL = baseUrl + '/borders/settings';
     const BORDERS_SETTINGS_V2_URL = baseUrl + '/borders/settingsV2';
 
     let myData = Handsontable.helper.createSpreadsheetData(2, 2);
-
-    function extractTableData(tableData, elementId) {
-        return tableData
-            .find(el => el.borderName === elementId)
-            .borderItemList
-            .map(el => Utils.objectToArray(el));
-    }
 
     function updateTable(table, elementId, callback) {
         Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
@@ -117,13 +150,14 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
         return theTableRef;
     }
 
-    var b_br_close = createBorderTable('b_br_close');
-    var b_br_open = createBorderTable('b_br_open');
-    var o_br_close = createBorderTable('o_br_close');
-    var o_br_open = createBorderTable('o_br_open');
+    b_br_close = createBorderTable('b_br_close');
+    b_br_open = createBorderTable('b_br_open');
+    o_br_close = createBorderTable('o_br_close');
+    o_br_open = createBorderTable('o_br_open');
 
     Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
         let borderData = JSON.parse(rawData);
+        borderTableHashCode = borderData.bordersV2.borderTableHashCode;
         createVerDropdown(borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(borderData, BORDERS_SETTINGS_URL);
 
@@ -144,11 +178,17 @@ exports.showBordersV2 = function (firstMarketName, secondMarketName, baseUrl) {
 
         createPosModeDropdown(container, borderData.posMode, BORDERS_SETTINGS_URL);
 
+        container.appendChild(document.createElement('br'));
+        container.appendChild(document.createElement('br'));
+        const label4 = document.createElement('div');
+        label4.innerHTML = 'recalc params:';
+        container.appendChild(label4);
+
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'gapStep');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'maxLvl');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlCnt');
         createBaseLvlTypeDropdown(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlType');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'gapStep');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'bAddDelta');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'okAddDelta');
 

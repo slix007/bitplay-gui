@@ -34,7 +34,7 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     console.log('first market=' + parsed.first);
     tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
     arbVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
-    bordersVar.showBordersV2(parsed.first, parsed.second, baseUrlWithPort);
+    bordersVar.showBordersV2(baseUrlWithPort);
     swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
     orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort);
 });
