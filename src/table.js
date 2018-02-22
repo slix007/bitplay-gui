@@ -880,6 +880,23 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 );
             }
 
+            if (element.id == 'reset-all-cum') {
+                let confirmation = window.confirm("Reset all cum values!\n\nAre you sure?");
+                if (confirmation) {
+                    let request = {resetAllCumValues: true};
+                    let requestData = JSON.stringify(request);
+                    console.log(requestData);
+
+                    httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
+                    );
+                }
+            }
+
             if (element.id == 'toggle-stop-moving') {
                 let request = {firstMarket: true, secondMarket: true};
                 let requestData = JSON.stringify(request);
