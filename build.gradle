@@ -19,6 +19,12 @@ remotes {
         password = bpPassword
         port = bpPort as Integer
     }
+    demo {
+        host = bpDemoHost
+        user = bpDemoUser
+        password = bpDemoPassword
+        port = bpDemoPort as Integer
+    }
 }
 
 def remoteInstallDir = '/var/www/bitplay-gui'
@@ -44,6 +50,18 @@ task deployProd << {
             put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
             executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
+        }
+    }
+}
+
+task deployDemo << {
+    def remoteHomeDir1 = '/home/' + remotes.demo.user
+
+    ssh.run {
+        session(remotes.demo) {
+            put from: "output/*", into: "$remoteHomeDir1/bitplay-gui"
+            executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
+            executeSudo "sudo cp -r $remoteHomeDir1/bitplay-gui/* ${remoteInstallDir}", pty: true
         }
     }
 }
