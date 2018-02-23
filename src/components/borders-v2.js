@@ -56,17 +56,8 @@ exports.showBordersV2 = function (baseUrl) {
 
     let myData = Handsontable.helper.createSpreadsheetData(2, 2);
 
-    function updateTable(table, elementId, callback) {
-        Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
-            let tableData = JSON.parse(rawData);
-            let updatedData = extractTableData(tableData, elementId);
-            table.loadData(updatedData);
-            callback(updatedData);
-        });
-    }
-
-    function saveTable(table, elementId, callback) {
-        function generateRequest(data) {
+    function saveAllTables(callback) {
+        function generateRequest(data, elementId) {
             let borderItemList = data.map(el => {
                 let item = {};
                 item.id = el[0];
@@ -75,17 +66,48 @@ exports.showBordersV2 = function (baseUrl) {
                 item.posShortLimit = el[3];
                 return item;
             });
-            return [{
+            return {
                 borderName: elementId,
                 borderItemList: borderItemList
-            }];
-
+            };
         }
-        let data = table.getData();
-        const requestData = JSON.stringify(generateRequest(data));
+
+        const b_br_closeData = generateRequest(b_br_close.getData(), 'b_br_close');
+        const b_br_openData = generateRequest(b_br_open.getData(), 'b_br_open');
+        const o_br_closeData = generateRequest(o_br_close.getData(), 'o_br_close');
+        const o_br_openData = generateRequest(o_br_open.getData(), 'o_br_open');
+        const requestData = JSON.stringify([b_br_closeData, b_br_openData, o_br_closeData, o_br_openData]);
+
         // console.log(requestData);
         Http.httpAsyncPost(BORDERS_TABLES_URL, requestData, callback);
     }
+
+    let updateSaveButtons = function () {
+        const showResult = function (result) {
+            alert('Result: ' + result);
+        };
+
+        var updateBtn = document.createElement('button');
+        updateBtn.innerHTML = 'reload all tables';
+        updateBtn.onclick = function () {
+            // update tables
+            updateAllTables(BORDERS_TABLES_URL, function (result) {
+                console.log('reload:');
+                console.log(result);
+            });
+        };
+
+        var saveBtn = document.createElement('button');
+        saveBtn.innerHTML = 'save all tables';
+        saveBtn.onclick = function () {
+            saveAllTables(showResult);
+        };
+
+        var container = document.getElementById('border-buttons');
+        container.appendChild(updateBtn);
+        container.appendChild(saveBtn);
+    };
+    updateSaveButtons();
 
     function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -124,27 +146,11 @@ exports.showBordersV2 = function (baseUrl) {
         var table = document.createElement('div');
         var theTableRef = createTable(table, baseUrl + '/borders/list', elementId);
 
-        var updateBtn = document.createElement('button');
-        updateBtn.setAttribute('id', 'update_' + elementId);
-        updateBtn.innerHTML = 'update ' + elementId;
-        updateBtn.onclick = function() {
-            updateTable(theTableRef, elementId, function(result) {
-                alert('Result: ' + result);
-            });
-        };
-
-        var saveBtn = document.createElement('button');
-        saveBtn.setAttribute('id', 'save_' + elementId);
-        saveBtn.innerHTML = 'save ' + elementId;
-        saveBtn.onclick = function() {
-            saveTable(theTableRef, elementId, function(result) {
-                alert('Result: ' + result);
-            });
-        };
-
         var container = document.getElementById(elementId);
-        container.appendChild(updateBtn);
-        container.appendChild(saveBtn);
+
+        var label = document.createElement('div');
+        label.innerHTML = elementId;
+        container.appendChild(label);
         container.appendChild(table);
 
         return theTableRef;
