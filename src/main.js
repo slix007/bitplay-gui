@@ -6,7 +6,7 @@ let tableVar = require('./table');
 let httpVar = require('./http');
 let bordersVar = require('./components/borders-v2');
 let swapVar = require('./components/swap-v2');
-let arbVar = require('./components/arb-version');
+let settingsVar = require('./components/settings');
 let orderActionVar = require('./components/order-actions');
 let placingBlocks = require('./components/placing-blocks');
 
@@ -33,7 +33,7 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     let parsed = JSON.parse(response);
     console.log('first market=' + parsed.first);
     tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
-    arbVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
+    settingsVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
     bordersVar.showBordersV2(baseUrlWithPort);
     swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
     orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort);

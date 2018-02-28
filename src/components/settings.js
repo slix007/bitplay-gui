@@ -1,6 +1,7 @@
 'use strict';
 
 var Http = require('../http');
+var Utils = require('../utils');
 
 var exports = module.exports = {};
 
@@ -10,19 +11,29 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
         let settingsData = JSON.parse(rawData);
 
+        // Arb version
         var container = document.getElementById("select-arb-version");
         createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL);
 
+        var okexPlacingCont = document.getElementById("okex-placing-type");
+        createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
+
+        // System overload settings
         var overloadContainer = document.getElementById("sys-overload-settings");
         createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
 
-        var okexPlacingCont = document.getElementById("okex-placing-type");
-        createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
-
+        // Bitmex price workaround (for testing)
         var bitmexPriceCont = document.getElementById("bitmex-price");
-        createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL)
+        createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL);
+
+        // Fee settings
+        var feeSettings = document.getElementById("fee-settings");
+        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'bTakerComRate');
+        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'bMakerComRate');
+        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oTakerComRate');
+        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oMakerComRate');
     });
 };
 
@@ -206,4 +217,41 @@ function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
             updateBtn.disabled = false;
         });
     }
+}
+
+function createNumberParam(mainContainer, mainObj, nestedObjName, SETTINGS_URL, elName) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = Utils.camelToUnderscore(elName);
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = mainObj[nestedObjName][elName];
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        mainObj[nestedObjName][elName] = Number(edit.value);
+        saveParamAsNumber(SETTINGS_URL, mainObj, resultLabel, setBtn, nestedObjName, elName);
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
+function saveParamAsNumber(SETTINGS_URL, requestObj, el, setBtn, nestedObjName, elName) {
+    const requestData = JSON.stringify(requestObj);
+    console.log(requestData);
+    Http.httpAsyncPost(SETTINGS_URL,
+                       requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            el.innerHTML = res[nestedObjName][elName];
+            setBtn.disabled = false;
+            // alert(rawRes);
+        });
 }
