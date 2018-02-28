@@ -130,7 +130,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         // let makerDelta = document.getElementById("maker-delta");
         // let bu = document.getElementById("bu");
         let cumDelta = document.getElementById("cum-delta");
-        let lastDelta = document.getElementById("last-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
         let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
         let cumDiff1 = document.getElementById("cum-diff1");
@@ -154,7 +153,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         // makerDelta.innerHTML = returnData.makerDelta;
         // bu.innerHTML = returnData.buValue;
         cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAstDelta);
-        lastDelta.innerHTML = returnData.lastDelta;
         cumDeltaFact.innerHTML = sprintf('%s/%s', returnData.cumDeltaFact, returnData.cumAstDeltaFact);
         cumDiffFactBr.innerHTML = sprintf('%s', returnData.cumDiffFactBr);
         cumDiff1.innerHTML = sprintf('%s/%s', returnData.cumDiffFact1, returnData.cumAstDiffFact1);
@@ -703,21 +701,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-cum-delta') {
                 let newCumDeltaValue = document.getElementById('cum-delta-edit').value;
                 let request = {cumDelta: newCumDeltaValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-last-delta') {
-                let newLastDeltaValue = document.getElementById('last-delta-edit').value;
-                let request = {lastDelta: newLastDeltaValue};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
