@@ -15,6 +15,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         var container = document.getElementById("select-arb-version");
         createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL);
 
+        var bitmexPlacingCont = document.getElementById("bitmex-placing-type");
+        createBitmexPlacingType(bitmexPlacingCont, settingsData.bitmexPlacingType, SETTINGS_URL);
+
         var okexPlacingCont = document.getElementById("okex-placing-type");
         createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
 
@@ -43,15 +46,12 @@ function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
-    option1.setAttribute("value", "MT");
-    option2.setAttribute("value", "MT2");
-    option3.setAttribute("value", "TT");
-    option1.innerHTML = 'MT';
-    option2.innerHTML = 'MT2';
-    option3.innerHTML = 'TT';
+    option1.setAttribute("value", "SIM");
+    option2.setAttribute("value", "CON_B_O");
+    option1.innerHTML = 'SIM';
+    option2.innerHTML = 'CON_B_O';
     select.appendChild(option1);
     select.appendChild(option2);
-    select.appendChild(option3);
     select.addEventListener("change", onVerPick);
     select.value = ver;
 
@@ -185,6 +185,32 @@ function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
                            requestData, function(result) {
                 let data = JSON.parse(result);
                 alert('New value: ' + data.okexPlacingType);
+            });
+    }
+}
+
+function createBitmexPlacingType(mainContainer, ver, SETTINGS_URL) {
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    option1.setAttribute("value", "TAKER");
+    option2.setAttribute("value", "MAKER");
+    option1.innerHTML = 'TAKER';
+    option2.innerHTML = 'MAKER';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.addEventListener("change", onVerPick);
+    select.value = ver;
+
+    mainContainer.appendChild(select);
+
+    function onVerPick() {
+        const requestData = JSON.stringify({bitmexPlacingType: this.value});
+
+        Http.httpAsyncPost(SETTINGS_URL,
+                           requestData, function(result) {
+                let data = JSON.parse(result);
+                alert('New value: ' + data.bitmexPlacingType);
             });
     }
 }
