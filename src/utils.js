@@ -21,6 +21,7 @@ exports.fillLinksToLogs = function () {
     addLink('/market/deltas-log');
     addLink('/market/warning-log');
     addLink('/market/trade-log/bitmex?date=2017-08-29');
+    addLink('/chart.html');
 };
 
 function addLink(urlPath) {
