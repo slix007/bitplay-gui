@@ -191,18 +191,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let maxDiffCorr = document.getElementById("maxDiffCorr");
         maxDiffCorr.innerHTML = returnData.maxDiffCorr;
     };
-    let repaintPosCorrImm = function (returnData) {
-        let posCorr = document.getElementById("pos-corr-imm");
-        let text = 'enabled';
-        if (returnData.result == 'false') {
-            posCorr.style.color = "#bf0000";
-            text = 'stopped';
-        } else {
-            posCorr.style.color = "#008f00";
-            text = 'enabled';
-        }
-        posCorr.innerHTML = text;
-    };
     let repaintLiqParams = function (returnData) {
         let bMrLiq = document.getElementById("b_mr_liq");
         let oMrLiq = document.getElementById("o_mr_liq");
@@ -459,9 +447,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch('/market/pos-corr', function (returnData) {
             repaintPosCorr(returnData);
-        });
-        fetch('/market/pos-corr-imm', function (returnData) {
-            repaintPosCorrImm(returnData);
         });
         fetch('/market/liq-params', function (returnData) {
             repaintLiqParams(returnData);
@@ -1043,21 +1028,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 console.log(requestData);
 
                 httpAsyncPost(baseUrl + '/market/pos-corr',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintPosCorr(JSON.parse(responseData));
-                    },
-                    null
-                );
-            }
-
-            if (element.id == 'update-pos-corr-imm') {
-                let posCorr = document.getElementById("pos-corr-imm").innerHTML;
-                let request = {command: true};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                httpAsyncPost(baseUrl + '/market/pos-corr-imm',
                     requestData,
                     function (responseData, resultElement) {
                         repaintPosCorr(JSON.parse(responseData));

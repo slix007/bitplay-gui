@@ -9,6 +9,7 @@ let swapVar = require('./components/swap-v2');
 let settingsVar = require('./components/settings');
 let orderActionVar = require('./components/order-actions');
 let placingBlocks = require('./components/placing-blocks');
+let corrReset = require('./components/correction');
 
 // let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
@@ -27,6 +28,7 @@ console.log('theUrl:' + theUrl);
 console.log('NODE_ENV ' + process.env.NODE_ENV);
 
 placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
+corrReset.showCorr(baseUrlWithPort);
 
 httpVar.httpAsyncGet(theUrl, function (response) {
     console.log(response);

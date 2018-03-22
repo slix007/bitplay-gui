@@ -326,15 +326,7 @@
         <input type="text" id="hedgeAmount-edit"><button id="update-hedgeAmount">update hedgeAmount</button>
         <span id="hedgeAmount"></span>
     </div>
-    <div>
-        Positions correction(and preliq) state:
-        <button id="update-pos-corr">change</button>
-        <span id="pos-corr"></span>
-    </div>
-    <div>
-        Immediate Positions correction state(dc==mdc or dc-timer):
-        <button id="update-pos-corr-imm">reset</button>
-        <span id="pos-corr-imm"></span>
+    <div id="correction">
     </div>
     <div>
         Period to correction:
@@ -345,6 +337,11 @@
         maxDiffCorr:
         <input type="text" id="maxDiffCorr-edit"><button id="update-maxDiffCorr">update maxDiffCorr</button>
         <span id="maxDiffCorr"></span>
+    </div>
+    <div>
+        preliq state:
+        <button id="update-pos-corr">change</button>
+        <span id="pos-corr"></span>
     </div>
     <div>
         b_mr_liq:
@@ -384,9 +381,13 @@
     <div id="links-to-logs">
     </div>
     <br><br>
+
     <h3>Monitoring:</h3>
     <div id="deadlock-checker">
     </div>
+    <div id="corr-monitoring">
+    </div>
+
     <br><br>
     <div id="restart-div">
     </div>
