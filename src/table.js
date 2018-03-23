@@ -179,13 +179,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         isStopMoving.innerHTML = isEnabled;
     };
     let repaintPosCorr = function (returnData) {
-        let posCorr = document.getElementById("pos-corr");
-        if (returnData.status == 'stopped') {
-            posCorr.style.color = "#bf0000";
-        } else {
-            posCorr.style.color = "#008f00";
-        }
-        posCorr.innerHTML = returnData.status;
         let periodToCorrection = document.getElementById("periodToCorrection");
         periodToCorrection.innerHTML = returnData.periodToCorrection + ' sec';
         let maxDiffCorr = document.getElementById("maxDiffCorr");
