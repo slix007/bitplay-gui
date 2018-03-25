@@ -7,6 +7,7 @@ var sprintf = require('sprintf-js').sprintf;
 var exports = module.exports = {};
 
 var URL, corrCountLabel, preliqCountLabel;
+var errorLables = {};
 
 exports.showCorr = function (baseUrl) {
     URL = baseUrl + '/settings/corr';
@@ -35,8 +36,8 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     label.innerHTML = subObject + ' errors';
     var edit = document.createElement('input');
     edit.style.width = '80px';
-    var resultLabel = document.createElement('span');
-    fillResultLabel(subObject, resultLabel, corrParams);
+    errorLables[subObject] = document.createElement('span');
+    fillResultLabel(subObject, errorLables[subObject], corrParams);
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
         setBtn.disabled = true;
@@ -45,7 +46,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
         console.log(requestData);
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
-            fillResultLabel(subObject, resultLabel, res);
+            fillResultLabel(subObject, errorLables[subObject], res);
             setCorrCount(corrCountLabel, res);
             setPreliqCount(preliqCountLabel, res);
             setBtn.disabled = false;
@@ -57,7 +58,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     container.appendChild(label);
     container.appendChild(edit);
     container.appendChild(setBtn);
-    container.appendChild(resultLabel);
+    container.appendChild(errorLables[subObject]);
 }
 
 function createSetPreliqBlock(mainContainer, corrParams, URL, corrCountLabel, preliqCountLabel) {
@@ -139,8 +140,8 @@ function setPreliqCount(label, corrParams) {
 var updateMonitorFunction = function () {
     Http.httpAsyncGet(URL, function (rawData) {
         let res = JSON.parse(rawData);
-        fillResultLabel('corr', corrCountLabel, res);
-        fillResultLabel('preliq', preliqCountLabel, res);
+        fillResultLabel('corr', errorLables.corr, res);
+        fillResultLabel('preliq', errorLables.preliq, res);
         setCorrCount(corrCountLabel, res);
         setPreliqCount(preliqCountLabel, res);
     });
