@@ -6,8 +6,10 @@ var sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
+var URL, corrCountLabel, preliqCountLabel;
+
 exports.showCorr = function (baseUrl) {
-    const URL = baseUrl + '/settings/corr';
+    URL = baseUrl + '/settings/corr';
     const RESET_CORR_URL = baseUrl + '/settings/corr-set-max-error';
     const RESET_PRELIQ_URL = baseUrl + '/settings/corr-set-max-error-preliq';
 
@@ -15,8 +17,8 @@ exports.showCorr = function (baseUrl) {
         let corrParams = JSON.parse(rawData);
 
         var corrMon = document.getElementById("corr-monitoring");
-        var corrCountLabel = createMonitorCounter(corrMon, corrParams);
-        var preliqCountLabel = createMonitorPreliqCounter(corrMon, corrParams);
+        corrCountLabel = createMonitorCounter(corrMon, corrParams);
+        preliqCountLabel = createMonitorPreliqCounter(corrMon, corrParams);
 
         var main = document.getElementById("correction");
         createResetParam(main, corrParams, 'corr', RESET_CORR_URL, corrCountLabel, preliqCountLabel);
@@ -33,13 +35,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     var edit = document.createElement('input');
     edit.style.width = '80px';
     var resultLabel = document.createElement('span');
-    let fillResultLabel = function (el, params) {
-        if (params[subObject].maxErrorCount <= 0) {
-            el.style.color = 'red';
-        } else el.style.color = 'black';
-        el.innerHTML = sprintf('%s/%s', params[subObject].currErrorCount, params[subObject].maxErrorCount);
-    };
-    fillResultLabel(resultLabel, corrParams);
+    fillResultLabel(subObject, resultLabel, corrParams);
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
         setBtn.disabled = true;
@@ -48,7 +44,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
         console.log(requestData);
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
-            fillResultLabel(resultLabel, res);
+            fillResultLabel(subObject, resultLabel, res);
             setCorrCount(corrCountLabel, res);
             setPreliqCount(preliqCountLabel, res);
             setBtn.disabled = false;
@@ -61,6 +57,15 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     container.appendChild(edit);
     container.appendChild(setBtn);
     container.appendChild(resultLabel);
+}
+
+function fillResultLabel(subObject, el, params) {
+    if (params[subObject].maxErrorCount <= 0) {
+        el.style.color = 'red';
+    } else {
+        el.style.color = 'black';
+    }
+    el.innerHTML = sprintf('%s/%s', params[subObject].currErrorCount, params[subObject].maxErrorCount);
 }
 
 function createMonitorCounter(corrMon, corrParams) {
@@ -96,5 +101,17 @@ function setPreliqCount(label, corrParams) {
     let failedCount = corrParams.preliq.failedCount;
     label.innerHTML = sprintf('Preliq success/fail: %s/%s', succeedCount, failedCount);
 }
+
+var updateMonitorFunction = function () {
+    Http.httpAsyncGet(URL, function (rawData) {
+        let res = JSON.parse(rawData);
+        fillResultLabel('corr', corrCountLabel, res);
+        fillResultLabel('preliq', preliqCountLabel, res);
+        setCorrCount(corrCountLabel, res);
+        setPreliqCount(preliqCountLabel, res);
+    });
+};
+
+setInterval(updateMonitorFunction, 1000);
 
 
