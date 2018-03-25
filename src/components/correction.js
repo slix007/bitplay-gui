@@ -23,6 +23,7 @@ exports.showCorr = function (baseUrl) {
         var main = document.getElementById("correction");
         createResetParam(main, corrParams, 'corr', RESET_CORR_URL, corrCountLabel, preliqCountLabel);
         createResetParam(main, corrParams, 'preliq', RESET_PRELIQ_URL, corrCountLabel, preliqCountLabel);
+        createSetPreliqBlock(main, corrParams, URL, corrCountLabel, preliqCountLabel);
     });
 };
 
@@ -31,7 +32,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
-    label.innerHTML = 'Max '+ subObject + ' attempts';
+    label.innerHTML = subObject + ' errors';
     var edit = document.createElement('input');
     edit.style.width = '80px';
     var resultLabel = document.createElement('span');
@@ -45,6 +46,39 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
             fillResultLabel(subObject, resultLabel, res);
+            setCorrCount(corrCountLabel, res);
+            setPreliqCount(preliqCountLabel, res);
+            setBtn.disabled = false;
+            // alert(rawRes);
+        });
+    };
+    setBtn.innerHTML = 'set max';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
+function createSetPreliqBlock(mainContainer, corrParams, URL, corrCountLabel, preliqCountLabel) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = 'Preliq okexBlock';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = corrParams.preliq.preliqBlockOkex + ' (bitmexBlock=' + corrParams.preliq.preliqBlockOkex * 100 + ')';
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        let requestObj = {preliq: {preliqBlockOkex: edit.value}};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+        Http.httpAsyncPost(URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            resultLabel.innerHTML = res.preliq.preliqBlockOkex + ' (bitmexBlock=' + res.preliq.preliqBlockOkex * 100 + ')';
             setCorrCount(corrCountLabel, res);
             setPreliqCount(preliqCountLabel, res);
             setBtn.disabled = false;
