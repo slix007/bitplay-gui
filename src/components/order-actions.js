@@ -13,6 +13,7 @@ exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl)
 
     createOrderActions(container, 'Taker  ', 'TAKER', BITMEX_ORDER_URL);
     createOrderActions(container, 'Maker', 'MAKER', BITMEX_ORDER_URL);
+    container.appendChild(document.createElement('br'));
 
     var okcoinCont = document.getElementById("okcoin-orders");
 

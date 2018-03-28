@@ -1,7 +1,7 @@
 development:
   name: "development"
-  baseUrl: "http://localhost"
-  backendUrl: "http://localhost:4031"
+  baseUrl: "http://664-vuld.fplay.io"
+  backendUrl: "http://664-vuld.fplay.io:4031"
 
 production:
   name: "production"

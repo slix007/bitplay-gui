@@ -20,7 +20,7 @@ let portNumber = "4031";
 //     portNumber = "4031";
 // }
 
-//let baseUrlWithPort = sprintf('%s:%s', process.env.baseUrl, portNumber);
+// let baseUrlWithPort = sprintf('%s:%s', process.env.baseUrl, portNumber);
 let baseUrlWithPort = sprintf('http://%s:%s', window.location.hostname, portNumber);
 let theUrl = sprintf('%s/market/list', baseUrlWithPort);
 console.log('baseUrlWithPort:' + baseUrlWithPort);

@@ -478,11 +478,20 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             });
         }
 
+        function setOpenOrdersHeight(ordersContainer) {
+            if (ordersContainer.childNodes.length > 4) {
+                ordersContainer.style.height = 'auto';
+            } else {
+                ordersContainer.style.height = '80px';
+            }
+        }
+
         fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
             var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName));
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild);
             }
+            setOpenOrdersHeight(myNode);
             returnData.forEach(function (oo) {
 
                 let existedOrder = document.getElementById("p-span-" + oo.id);
@@ -503,7 +512,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     cancel.addEventListener("click", cancelOrderP, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
-                    document.getElementById(sprintf('%s-open-orders', firstMarketName)).appendChild(openOrderDiv);
+                    const ordersContainer = document.getElementById(sprintf('%s-open-orders', firstMarketName));
+                    ordersContainer.appendChild(openOrderDiv);
+                    setOpenOrdersHeight(ordersContainer);
                 }
 
             });
@@ -513,6 +524,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild);
             }
+            setOpenOrdersHeight(myNode);
             returnData.forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
@@ -535,7 +547,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     }, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
-                    document.getElementById("okcoin-open-orders").appendChild(openOrderDiv);
+                    const ordersContainer = document.getElementById("okcoin-open-orders");
+                    ordersContainer.appendChild(openOrderDiv);
+                    setOpenOrdersHeight(ordersContainer);
                 }
             });
         });

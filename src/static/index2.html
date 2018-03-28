@@ -23,92 +23,150 @@
     <div name="update settings">
         <button id="BUTTON" name="update">update interval</button>
         <input id="update_interval" type="text" value="1000">
-        <input type="checkbox" id="logs-fetching">Fetch logs</div>
+        <input disabled type="checkbox" id="logs-fetching">Fetch logs
+    </div>
     </div>
 
-    <h3>Bitmex(1 contract = $1)</h3>
-    <!--<div id="positions1"></div>-->
+    <!-- Pair of Stock exchanges -->
+    <div id="STOCK_PAIR" style="border: solid; display: flex;">
 
-    <div id="bitmex-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
-    <textarea style="float: right;width: 60%; height: 900px;border:1px solid black;"
-              id="bitmex-trade-log">empty...</textarea>
+        <div id="STOCK_PAIR_RELATIVE" style="border: solid; float: top;">
 
-    <div id="okcoin-open-orders" style="float: right;width: 50%; border:1px solid black;"></div>
-    <textarea style="float: right;width: 60%; height: 600px;border:1px solid black;"
-              id="okcoin-trade-log">empty...</textarea>
+            <div style="width: 800px; float: left; padding-right: 10px; border:1px solid gray; ">
+                <!--<div>-->
+                <h3>Bitmex(1 contract = $1)</h3>
 
-    <textarea style="float: right;width: 60%; height: 300px;border:1px solid black;"
-              id="deltas-log">empty...</textarea>
+                <div id="bitmex-open-orders" style="border:1px solid black;"></div>
 
-    <textarea style="float: right;width: 60%; height: 300px;border:1px solid black;"
-              id="warning-log">empty...</textarea>
+                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                <!--id="bitmex-trade-log">empty...</textarea>-->
 
-    <div id="bitmex-balance">
-        Balance ...
+                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                <!--id="okcoin-trade-log">empty...</textarea>-->
+
+                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                <!--id="deltas-log">empty...</textarea>-->
+
+                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                <!--id="warning-log">empty...</textarea>-->
+
+                <div id="bitmex-balance">
+                    Balance ...
+                </div>
+
+                <div>
+                <span id="bitmex-liq-info">
+                    liq info ...
+                </span>
+                    <button id="bitmex-reset-liq-info">reset</button>
+                </div>
+                <!--<button name="sendToSocket">send to socket</button>-->
+                <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+
+                <div style="border: solid; height: 70px" id="bitmex-orders">
+                </div>
+
+                <div id="bitmex-future-index">
+                    Mark:
+                </div>
+
+                <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+                <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
+
+
+                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                    <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                </div>
+
+                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                    <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                </div>
+
+
+
+
+                <div style="background-color: azure; border: solid">System overload settings
+                    <div id="sys-overload-settings"></div>
+                </div>
+
+                <div>Bitmex price<span id="bitmex-price"></span></div>
+
+
+
+                <div>
+                    <span id="bitmex-future-index-funding">Funding:</span>
+                    <span id="bitmex-future-index-funding-time"></span>
+                </div>
+                <div>
+                    fundingRateFee:
+                    <input type="text" id="fundingRateFee-edit">
+                    <button id="update-fundingRateFee">update fundingRateFee</button>
+                    <span id="fundingRateFee"></span>
+                </div>
+                <div>
+                    customSwapTime:
+                    <input type="text" id="customSwapTime-edit">
+                    <button id="update-customSwapTime">update customSwapTime</button>
+                    <span id="customSwapTime">example: 2017-08-10T13:45:00Z</span>
+                </div>
+                <div>
+                    timeCompare:
+                    <span id="timeCompare"></span>
+                    <button id="reset-time-compare">reset</button>
+                </div>
+                <div>
+                    timeCompareUpdating:
+                    <input type="text" id="timeCompareUpdating-edit">
+                    <button id="update-timeCompareUpdating">update</button>
+                    <span id="timeCompareUpdating"></span>
+                </div>
+                <div style="background-color: azure; border: solid">Swap version
+                    <span id="select-swap-version"></span>
+                    <div id="swap-v2"></div>
+                </div>
+
+                <!--</div>-->
+            </div>
+
+            <div style="width: 800px; float: left; padding-left: 10px; border:1px solid gray; ">
+                <!--<div>-->
+                <h3>Okcoin(1 contract = $100)</h3>
+
+                <div id="okcoin-open-orders" style="border:1px solid black;"></div>
+
+                <div id="okcoin-balance">
+                    Balance ...
+                </div>
+
+                <div>
+                    <span id="okcoin-liq-info">
+                        liq info ...
+                    </span>
+
+                    <button id="okcoin-reset-liq-info">reset</button>
+                </div>
+
+                <div style="border: solid; height: 70px;" id="okcoin-orders">
+                </div>
+
+
+                <div id="okcoin-future-index">
+                    Index:
+                </div>
+
+
+                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                    <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                </div>
+                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                    <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                </div>
+            </div>
+            <!--</div>-->
+
+        </div>
+
     </div>
-    <div>
-        <span id="bitmex-liq-info">
-            liq info ...
-        </span>
-        <button id="bitmex-reset-liq-info">reset</button>
-    </div>
-    <!--<button name="sendToSocket">send to socket</button>-->
-    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
-
-    <div style="background-color: azure; border: solid">System overload settings
-        <div id="sys-overload-settings"></div>
-    </div>
-
-    <div>Bitmex price<span id="bitmex-price"></span></div>
-
-
-    <div style="border: solid" id="bitmex-orders">
-    </div>
-
-    <div id="bitmex-future-index">
-        Mark:
-    </div>
-    <div>
-        <span id="bitmex-future-index-funding">Funding:</span>
-        <span id="bitmex-future-index-funding-time"></span>
-    </div>
-    <div>
-        fundingRateFee:
-        <input type="text" id="fundingRateFee-edit"><button id="update-fundingRateFee">update fundingRateFee</button>
-        <span id="fundingRateFee"></span>
-    </div>
-    <div>
-        customSwapTime:
-        <input type="text" id="customSwapTime-edit"><button id="update-customSwapTime">update customSwapTime</button>
-        <span id="customSwapTime">example: 2017-08-10T13:45:00Z</span>
-    </div>
-    <div>
-        timeCompare:
-        <span id="timeCompare"></span>
-        <button id="reset-time-compare">reset</button>
-    </div>
-    <div>
-        timeCompareUpdating:
-        <input type="text" id="timeCompareUpdating-edit"><button id="update-timeCompareUpdating">update</button>
-        <span id="timeCompareUpdating"></span>
-    </div>
-    <div style="background-color: azure; border: solid">Swap version
-        <span id="select-swap-version"></span>
-        <div id="swap-v2"></div>
-    </div>
-
-    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
-    <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
-
-
-    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
-        <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-    </div>
-
-    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
-        <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-    </div>
-
     <br>
 
     <div id="sum-bal" style="font-weight:bold">
@@ -118,33 +176,6 @@
         <span id="pos-diff">Pos diff =</span>
     </div>
 
-    <h3>Okcoin(1 contract = $100)</h3>
-
-    <div id="okcoin-balance">
-        Balance ...
-    </div>
-    <div>
-        <span id="okcoin-liq-info">
-            liq info ...
-        </span>
-        <button id="okcoin-reset-liq-info">reset</button>
-    </div>
-
-    <div style="border: solid" id="okcoin-orders">
-    </div>
-
-
-    <div id="okcoin-future-index">
-        Index:
-    </div>
-
-
-    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
-        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-    </div>
-    <div style="width: 700px; height: 140px;" class="scroll-container fixed-container">
-        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-    </div>
 
     <div>
         b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span>; &#09;
