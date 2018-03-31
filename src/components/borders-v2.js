@@ -193,10 +193,18 @@ exports.showBordersV2 = function (baseUrl) {
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'gapStep');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'maxLvl');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlCnt');
-        createBaseLvlTypeDropdown(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlType');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'bAddDelta');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'okAddDelta');
+
+        // --- autoBaseLvl
+        const autoContainer = document.createElement('div');
+        autoContainer.style.border = "solid #555555";
+        container.appendChild(autoContainer);
+        createCheckBox(autoContainer, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'auto');
+        createNumberParam(autoContainer, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlCnt');
+        createBaseLvlTypeDropdown(autoContainer, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'baseLvlType');
+        autoBaseLvlChanged();
+        // autoBaseLvl ---
 
         container.appendChild(document.createElement('br'));
 
@@ -208,6 +216,43 @@ exports.showBordersV2 = function (baseUrl) {
     });
 };
 
+function createCheckBox(container, bordersV2, BORDERS_SETTINGS_V2_URL) {
+    let checkbox = document.createElement('input');
+    checkbox.type = "checkbox";
+    checkbox.checked = bordersV2.autoBaseLvl;
+    checkbox.id = "autoBaseLvl";
+    checkbox.onchange = function (ev) {
+        container.disabled = true;
+        saveParamAsBoolean(BORDERS_SETTINGS_V2_URL, 'autoBaseLvl', checkbox.checked, autoBaseLvlChanged);
+    };
+
+    let label = document.createElement('label');
+    label.appendChild(document.createTextNode('auto'));
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+}
+
+function autoBaseLvlChanged() {
+    function disableChildren(obj) {
+        obj.childNodes.forEach(function(val) {
+            val.style.color = 'grey';
+        });
+    }
+    function enableChildren(obj) {
+        obj.childNodes.forEach(function(val) {
+            val.style.color = 'black';
+        });
+    }
+    if (document.getElementById('autoBaseLvl').checked) {
+        disableChildren(document.getElementById('baseLvlCnt'));
+        disableChildren(document.getElementById('baseLvlType'));
+    } else {
+        enableChildren(document.getElementById('baseLvlCnt'));
+        enableChildren(document.getElementById('baseLvlType'));
+    }
+}
+
 function saveBordersSettings(BORDERS_SETTINGS_URL, key, value, el) {
     let reqObj = {};
     reqObj[key] = value;
@@ -217,6 +262,19 @@ function saveBordersSettings(BORDERS_SETTINGS_URL, key, value, el) {
                        requestData, function (result) {
             alert('Result' + result);
             el.disabled = false;
+        });
+}
+
+function saveParamAsBoolean(BORDERS_SETTINGS_V2_URL, key, value, callback) {
+    let reqObj = {};
+    reqObj[key] = value;
+    const requestData = JSON.stringify(reqObj);
+    Http.httpAsyncPost(BORDERS_SETTINGS_V2_URL,
+                       requestData, function (rawRes) {
+            // const res = JSON.parse(rawRes);
+            console.log(rawRes);
+            callback();
+            // alert(rawRes);
         });
 }
 
@@ -340,6 +398,7 @@ function createPosModeDropdown(container, posMode, BORDERS_SETTINGS_URL) {
 
 function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName) {
     var container = document.createElement('div');
+    container.setAttribute("id", elName);
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
@@ -364,6 +423,7 @@ function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, el
 
 function createBaseLvlTypeDropdown(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName) {
     var container = document.createElement('div');
+    container.setAttribute("id", elName);
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
