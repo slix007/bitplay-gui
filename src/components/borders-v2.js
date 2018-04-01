@@ -24,8 +24,23 @@ exports.updateTableHash = function (newHashCode) {
         updateAllTables(BORDERS_TABLES_URL, function(result) {
             console.log('updated' + result.reduce((sum,item) => sum + item.borderName + ',', ' '));
         });
+        updateAutoBaseLvl();
     }
 };
+
+function updateAutoBaseLvl() {
+    const MAIN_BORDERS_URL = BASE_URL + '/borders/';
+
+    Http.httpAsyncGet(MAIN_BORDERS_URL, function (rawData) {
+        let borderParams = JSON.parse(rawData);
+        document.getElementById('autoBaseLvl').checked = borderParams.bordersV2.autoBaseLvl;
+        document.getElementById('baseLvlCnt-span').innerHTML = borderParams.bordersV2.baseLvlCnt;
+        document.getElementById('baseLvlType-select').value = borderParams.bordersV2.baseLvlType;
+
+        console.log('borderParams.bordersV2');
+        console.log(borderParams.bordersV2);
+    });
+}
 
 function updateAllTables(BORDERS_TABLES_URL, callback) {
     Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
@@ -407,6 +422,7 @@ function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, el
     edit.style.width = '80px';
     edit.innerHTML = '';
     var resultLabel = document.createElement('span');
+    resultLabel.id = elName + '-span';
     resultLabel.innerHTML = bordersV2[elName];
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
@@ -430,6 +446,7 @@ function createBaseLvlTypeDropdown(mainContainer, bordersV2, BORDERS_SETTINGS_V2
     label.innerHTML = Utils.camelToUnderscore(elName);
 
     var select = document.createElement('select');
+    select.id = 'baseLvlType-select';
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     option1.setAttribute("value", "B_OPEN");
