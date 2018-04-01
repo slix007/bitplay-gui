@@ -251,12 +251,14 @@ function createCheckBox(container, bordersV2, BORDERS_SETTINGS_V2_URL) {
 function autoBaseLvlChanged() {
     function disableChildren(obj) {
         obj.childNodes.forEach(function(val) {
-            val.style.color = 'grey';
+            // val.style.color = 'grey';
+            val.disabled = true;
         });
     }
     function enableChildren(obj) {
         obj.childNodes.forEach(function(val) {
-            val.style.color = 'black';
+            // val.style.color = 'black';
+            val.disabled = false;
         });
     }
     if (document.getElementById('autoBaseLvl').checked) {
