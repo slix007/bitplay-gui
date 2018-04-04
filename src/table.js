@@ -374,7 +374,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch(sprintf('/market/%s/future-index', firstMarketName), function (futureIndex) {
             let ind = document.getElementById('bitmex-future-index');
-            ind.innerHTML = 'Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
+            ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
 
             let fund = document.getElementById('bitmex-future-index-funding');
             if (futureIndex.swapType === 'noSwap') {
