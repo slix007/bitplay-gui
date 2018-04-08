@@ -1,5 +1,6 @@
 'use strict';
 
+var $ = require('jquery');
 var Http = require('../http');
 var Utils = require('../utils');
 
@@ -291,6 +292,12 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     let checkbox = document.createElement('input');
     checkbox.type = "checkbox";
     checkbox.checked = settingsData.limits.ignoreLimits;
+    let decorateLimitsStatus = function () {
+        if (checkbox.checked) $('#limits-status').css("text-decoration", "line-through");
+        else $('#limits-status').css("text-decoration", "initial");
+    };
+    decorateLimitsStatus();
+
     checkbox.id = "ignoreLimits";
     checkbox.onchange = function (ev) {
         checkbox.disabled = true;
@@ -302,6 +309,7 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
             const res = JSON.parse(rawRes);
             console.log(res);
             checkbox.checked = res.limits.ignoreLimits;
+            decorateLimitsStatus();
             checkbox.disabled = false;
         });
     };

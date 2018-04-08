@@ -61,4 +61,10 @@ function createLimitPrice(container, value, URL) {
 function updateLimits(limits) {
     label.innerHTML = 'Limit ask / Max price = ' + limits.limitAsk + ' / ' + limits.maxPrice;
     label2.innerHTML = 'Limit bid / Min price = ' + limits.limitBid + ' / ' + limits.minPrice;
+
+    if (limits.insideLimits) {
+        $('#okex-limits-status').css('color', 'green').html('Inside limits');
+    } else {
+        $('#okex-limits-status').css('color', 'red').html('Outside limits');
+    }
 }
