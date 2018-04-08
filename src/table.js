@@ -2,7 +2,9 @@ var Handsontable = require('handsontable');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
 var Http = require('./http');
-            let bordersVar = require('./components/borders-v2');
+let bordersVar = require('./components/borders-v2');
+let bitmexIndexVar = require('./components/comp/bitmex-index');
+let okexIndexVar = require('./components/comp/okex-index');
 
 var exports = module.exports = {};
 
@@ -374,7 +376,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch(sprintf('/market/%s/future-index', firstMarketName), function (futureIndex) {
             let ind = document.getElementById('bitmex-future-index');
-            ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
+            bitmexIndexVar.fillComponents(ind, futureIndex, baseUrl);
 
             let fund = document.getElementById('bitmex-future-index-funding');
             if (futureIndex.swapType === 'noSwap') {
@@ -399,8 +401,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
         fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
             let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
-            oBalance.innerHTML = 'Index: ' + futureIndex.index
-                                 + ', timestamp=' + futureIndex.timestamp;
+            okexIndexVar.fillComponents(oBalance, futureIndex, baseUrl);
         });
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));

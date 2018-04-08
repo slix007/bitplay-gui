@@ -37,6 +37,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'bMakerComRate');
         createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oTakerComRate');
         createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oMakerComRate');
+
+        // Ignore limits
+        createIgnoreLimitPrice(settingsData, SETTINGS_URL);
     });
 };
 
@@ -280,4 +283,32 @@ function saveParamAsNumber(SETTINGS_URL, requestObj, el, setBtn, nestedObjName, 
             setBtn.disabled = false;
             // alert(rawRes);
         });
+}
+
+function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
+    var container = document.getElementById("ignore-limits");
+
+    let checkbox = document.createElement('input');
+    checkbox.type = "checkbox";
+    checkbox.checked = settingsData.limits.ignoreLimits;
+    checkbox.id = "ignoreLimits";
+    checkbox.onchange = function (ev) {
+        checkbox.disabled = true;
+
+        let requestObj = {limits: {ignoreLimits: checkbox.checked}};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            console.log(res);
+            checkbox.checked = res.limits.ignoreLimits;
+            checkbox.disabled = false;
+        });
+    };
+
+    let label = document.createElement('label');
+    label.appendChild(document.createTextNode('ignoreLimits'));
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
 }
