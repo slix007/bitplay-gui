@@ -1,5 +1,7 @@
 # GUI for bitplay project
 
+Init: `npm install`
+
 build:
 `npm run build production`
 
