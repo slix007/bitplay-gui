@@ -5,6 +5,7 @@ var Http = require('./http');
 let bordersVar = require('./components/borders-v2');
 let bitmexIndexVar = require('./components/comp/bitmex-index');
 let okexIndexVar = require('./components/comp/okex-index');
+let marketState = require('./components/comp/market-states');
 
 var exports = module.exports = {};
 
@@ -201,12 +202,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         oDQLCloseMin.innerHTML = returnData.oDQLCloseMin;
     };
     let repaintStates = function (returnData) {
-        let elementById = document.getElementById("markets-states");
-        elementById.innerHTML = 'Market is ready for new signals(flag isBusy and openOrders.size==0). '
-                                + 'First: ' + returnData.firstMarket
-                                + (returnData.firstTimeToReset.length === 0 ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))
-                                + ', second: ' + returnData.secondMarket
-                                + (returnData.secondTimeToReset.length === 0 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'));
+        marketState.repaintStates(returnData);
     };
 
     function createElement(element, attribute, inner) {
