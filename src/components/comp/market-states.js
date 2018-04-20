@@ -11,11 +11,10 @@ exports.repaintStates = function (returnData) {
 
     if ($(container).children().length === 0) {
         let markets = $('#markets-states');
-        $('<span>').text('Market is ready for new signals(flag isBusy and openOrders.size==0). ').appendTo(markets);
-        $('<span>').text('First: ').appendTo(markets);
+        $('<span>').text('Bitmex state: ').appendTo(markets);
         $('<span>',{id:firstId}).text(returnData.firstMarket).appendTo(markets);
         $('<span>').text((returnData.firstTimeToReset.length === 0 ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))).appendTo(markets);
-        $('<span>').text(', second: ').appendTo(markets);
+        $('<span>').text(', Okex state: ').appendTo(markets);
         $('<span>',{id:secondId}).text(returnData.secondMarket).appendTo(markets);
         $('<span>').text((returnData.secondTimeToReset.length === 0 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'))).appendTo(markets);
     }
