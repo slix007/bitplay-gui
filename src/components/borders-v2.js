@@ -189,7 +189,7 @@ exports.showBordersV2 = function (baseUrl) {
         var container = document.getElementById("borders-v1");
         var label1 = document.createElement('div');
         if (borderData.activeVersion === 'V1') label1.style.fontWeight = 'bold';
-        label1.innerHTML = 'BordersV1';
+        label1.innerHTML = 'BordersV1:';
         container.appendChild(label1);
         createBorderV1SumDelta(container, borderData, BORDERS_SETTINGS_URL);
 

@@ -3,25 +3,37 @@ let $ = require('jquery');
 let Http = require('../../http');
 let bordersUtils = require('./borders-utils');
 
+let deltaCalcTypeSelectId = 'delta-calc-type-select-id';
+let deltaCalcPastId = 'delta-calc-past-id';
+
+let deltaSaveTypeSelectId = 'delta-save-type-select-id';
+let deltaSaveDevId = 'delta-save-dev-id';
+let deltaSavePerSecId = 'delta-save-per-sec-id';
+
 export function repaint(borderData, BORDERS_SETTINGS_URL) {
-    let container = $('#borders-main-settings');
+    let main = $('#borders-main-settings').html('<b>Borders common:</b>');
+    let container = $('<div>').css('display', 'flex').appendTo(main);
 
     if ($(container).children().length === 0) {
-        createVerDropdown(container, borderData.activeVersion, BORDERS_SETTINGS_URL);
-        createPeriodSec(container, borderData, BORDERS_SETTINGS_URL);
+        const firstPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
+        createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
 
-        createDeltaCalcTypeDropdown(container, borderData, BORDERS_SETTINGS_URL);
-        createDeltaCalcPast(container, borderData, BORDERS_SETTINGS_URL);
+        const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        createDeltaCalcTypeDropdown(secondPart, borderData, BORDERS_SETTINGS_URL);
+        createDeltaCalcPast(secondPart, borderData, BORDERS_SETTINGS_URL);
+        deltaCalcChanged();
 
-        createDeltaSaveType(container, borderData, BORDERS_SETTINGS_URL);
-        deltaSaveDev(container, borderData, BORDERS_SETTINGS_URL);
-        deltaSavePerSec(container, borderData, BORDERS_SETTINGS_URL);
+        const thirdPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        createDeltaSaveType(thirdPart, borderData, BORDERS_SETTINGS_URL);
+        deltaSaveDev(thirdPart, borderData, BORDERS_SETTINGS_URL);
+        deltaSavePerSec(thirdPart, borderData, BORDERS_SETTINGS_URL);
+        deltaSaveChanged();
     }
 }
 
-function createVerDropdown(parent, ver, BORDERS_SETTINGS_URL) {
-    let container = $('<span>',{id:'border-select-version'}).appendTo(parent);
-    $('<span>').text('Borders version').appendTo(container);
+function createVerDropdown(container, ver, BORDERS_SETTINGS_URL) {
+    $('<span>').text('Borders version: ').appendTo(container);
 
     let select = document.createElement('select');
     let option1 = document.createElement('option');
@@ -68,7 +80,7 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<span>').appendTo(parent);
     $('<span>').text('DeltaCalcType: ').appendTo(container);
 
-    let select = $('<select>');
+    let select = $('<select>', {id: deltaCalcTypeSelectId});
     select.append($('<option>').val('DELTA').text('DELTA'));
     select.append($('<option>').val('AVG_DELTA').text('AVG_DELTA'));
     select.change(function () {
@@ -78,7 +90,7 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
 
         Http.httpAsyncPost(BORDERS_SETTINGS_URL,
                 requestData, function (result) {
-                    alert('Result' + result);
+                    deltaCalcChanged();
                     select.disabled = false;
                 });
     });
@@ -87,8 +99,13 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
     container.append(select);
 }
 
+function deltaCalcChanged() {
+    let val = $('#' + deltaCalcTypeSelectId).val();
+    $('#' + deltaCalcPastId).find('*').attr('disabled', val === 'DELTA');
+}
+
 function createDeltaCalcPast(parent, borderData, BORDERS_SETTINGS_URL) {
-    let container = $('<div>').appendTo(parent);
+    let container = $('<div>', {id: deltaCalcPastId}).appendTo(parent);
     $('<span>').text('deltaCalcPast').appendTo(container);
     let edit = $('<input>').width('80px').appendTo(container);
     let resultLabel = $('<span>').text(borderData.borderDelta.deltaCalcPast);
@@ -114,7 +131,7 @@ function createDeltaSaveType(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<span>').appendTo(parent);
     $('<span>').text('DeltaSaveType: ').appendTo(container);
 
-    let select = $('<select>');
+    let select = $('<select>', {id: deltaSaveTypeSelectId});
     select.append($('<option>').val('DEVIATION').text('DEVIATION'));
     select.append($('<option>').val('PERIODIC').text('PERIODIC'));
     select.append($('<option>').val('ALL').text('ALL'));
@@ -125,7 +142,7 @@ function createDeltaSaveType(parent, borderData, BORDERS_SETTINGS_URL) {
 
         Http.httpAsyncPost(BORDERS_SETTINGS_URL,
                 requestData, function (result) {
-                    alert('Result' + result);
+                    deltaSaveChanged();
                     select.disabled = false;
                 });
     });
@@ -134,9 +151,15 @@ function createDeltaSaveType(parent, borderData, BORDERS_SETTINGS_URL) {
     container.append(select);
 }
 
+function deltaSaveChanged() {
+    let val = $('#' + deltaSaveTypeSelectId).val();
+    $('#' + deltaSaveDevId).find('*').attr('disabled', val !== 'DEVIATION');
+    $('#' + deltaSavePerSecId).find('*').attr('disabled', val === 'DEVIATION');
+}
+
 function deltaSaveDev(parent, borderData, BORDERS_SETTINGS_URL) {
-    let container = $('<div>').appendTo(parent);
-    $('<span>').text('deltaSaveDev').appendTo(container);
+    let container = $('<div>', {id: deltaSaveDevId}).appendTo(parent);
+    $('<span>').text('deltaSaveDev(USD)').appendTo(container);
     let edit = $('<input>').width('80px').appendTo(container);
     let resultLabel = $('<span>').text(borderData.borderDelta.deltaSaveDev);
     let setBtn = $('<button>').text('set').click(function () {
@@ -157,9 +180,8 @@ function deltaSaveDev(parent, borderData, BORDERS_SETTINGS_URL) {
     container.append(resultLabel);
 }
 
-
 function deltaSavePerSec(parent, borderData, BORDERS_SETTINGS_URL) {
-    let container = $('<div>').appendTo(parent);
+    let container = $('<div>', {id: deltaSavePerSecId}).appendTo(parent);
     $('<span>').text('deltaSavePerSec').appendTo(container);
     let edit = $('<input>').width('80px').appendTo(container);
     let resultLabel = $('<span>').text(borderData.borderDelta.deltaSavePerSec);
