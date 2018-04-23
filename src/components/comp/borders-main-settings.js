@@ -154,7 +154,7 @@ function createDeltaSaveType(parent, borderData, BORDERS_SETTINGS_URL) {
 function deltaSaveChanged() {
     let val = $('#' + deltaSaveTypeSelectId).val();
     $('#' + deltaSaveDevId).find('*').attr('disabled', val !== 'DEVIATION');
-    $('#' + deltaSavePerSecId).find('*').attr('disabled', val === 'DEVIATION');
+    $('#' + deltaSavePerSecId).find('*').attr('disabled', val === 'DEVIATION' || val === 'ALL');
 }
 
 function deltaSaveDev(parent, borderData, BORDERS_SETTINGS_URL) {
