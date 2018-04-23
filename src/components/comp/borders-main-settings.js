@@ -106,7 +106,7 @@ function deltaCalcChanged() {
 
 function createDeltaCalcPast(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<div>', {id: deltaCalcPastId}).appendTo(parent);
-    $('<span>').text('deltaCalcPast').appendTo(container);
+    $('<span>').text('deltaCalcPast(sec)').appendTo(container);
     let edit = $('<input>').width('80px').appendTo(container);
     let resultLabel = $('<span>').text(borderData.borderDelta.deltaCalcPast);
     let setBtn = $('<button>').text('set').click(function () {
