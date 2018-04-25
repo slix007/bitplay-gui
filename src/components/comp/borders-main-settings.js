@@ -38,12 +38,16 @@ function createVerDropdown(container, ver, BORDERS_SETTINGS_URL) {
     let select = document.createElement('select');
     let option1 = document.createElement('option');
     let option2 = document.createElement('option');
+    let option3 = document.createElement('option');
     option1.setAttribute("value", "V1");
     option2.setAttribute("value", "V2");
+    option3.setAttribute("value", "OFF");
     option1.innerHTML = 'V1';
     option2.innerHTML = 'V2';
+    option3.innerHTML = 'OFF';
     select.appendChild(option1);
     select.appendChild(option2);
+    select.appendChild(option3);
     select.addEventListener("change", function () {
         select.disabled = true;
         bordersUtils.saveBordersSettings(BORDERS_SETTINGS_URL, 'version', this.value, select);
