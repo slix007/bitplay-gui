@@ -23,6 +23,7 @@ exports.showCorr = function (baseUrl) {
 
         var main = document.getElementById("correction");
         createResetParam(main, corrParams, 'corr', RESET_CORR_URL, corrCountLabel, preliqCountLabel);
+        createMaxVolCorr(main, corrParams, URL);
         createResetParam(main, corrParams, 'preliq', RESET_PRELIQ_URL, corrCountLabel, preliqCountLabel);
         createSetPreliqBlock(main, corrParams, URL, corrCountLabel, preliqCountLabel);
     });
@@ -33,7 +34,7 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
-    label.innerHTML = subObject + ' errors';
+    label.innerHTML = subObject + ' attempts';
     var edit = document.createElement('input');
     edit.style.width = '80px';
     errorLables[subObject] = document.createElement('span');
@@ -59,6 +60,37 @@ function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrC
     container.appendChild(edit);
     container.appendChild(setBtn);
     container.appendChild(errorLables[subObject]);
+}
+
+function createMaxVolCorr(mainContainer, corrParams, URL) {
+    var container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = 'maxVolCorrOkex: ';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = corrParams.corr.maxVolCorrOkex + ' (maxVolCorrBitmex=' + corrParams.corr.maxVolCorrOkex * 100 + ')';
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        let requestObj = {corr: {maxVolCorrOkex: edit.value}};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+        Http.httpAsyncPost(URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            resultLabel.innerHTML = res.corr.maxVolCorrOkex + ' (maxVolCorrBitmex=' + res.corr.maxVolCorrOkex * 100 + ')';
+            setBtn.disabled = false;
+            // alert(rawRes);
+        });
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
 }
 
 function createSetPreliqBlock(mainContainer, corrParams, URL, corrCountLabel, preliqCountLabel) {
