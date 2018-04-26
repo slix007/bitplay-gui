@@ -60,7 +60,7 @@ function createVerDropdown(container, ver, BORDERS_SETTINGS_URL) {
 function createPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<div>').appendTo(parent);
     let label = document.createElement('span');
-    label.innerHTML = 'Recalc period sec';
+    label.innerHTML = 'Border comp period (sec)';
     container.append(label);
     let edit = document.createElement('input');
     edit.style.width = '80px';
@@ -82,11 +82,11 @@ function createPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
 
 function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<span>').appendTo(parent);
-    $('<span>').text('DeltaCalcType: ').appendTo(container);
+    $('<span>').text('Border comp type: ').appendTo(container);
 
     let select = $('<select>', {id: deltaCalcTypeSelectId});
-    select.append($('<option>').val('DELTA').text('DELTA'));
-    select.append($('<option>').val('AVG_DELTA').text('AVG_DELTA'));
+    select.append($('<option>').val('DELTA').text('Delta_SAM'));
+    select.append($('<option>').val('AVG_DELTA').text('Delta_SMA'));
     select.change(function () {
         select.disabled = true;
         const requestData = JSON.stringify({borderDelta: {deltaCalcType: this.value}});
@@ -110,7 +110,7 @@ function deltaCalcChanged() {
 
 function createDeltaCalcPast(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<div>', {id: deltaCalcPastId}).appendTo(parent);
-    $('<span>').text('deltaCalcPast(sec)').appendTo(container);
+    $('<span>').text('Delta historical period (sec)').appendTo(container);
     let edit = $('<input>').width('80px').appendTo(container);
     let resultLabel = $('<span>').text(borderData.borderDelta.deltaCalcPast);
     let setBtn = $('<button>').text('set').click(function () {
