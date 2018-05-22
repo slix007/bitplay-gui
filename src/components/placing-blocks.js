@@ -28,6 +28,7 @@ exports.showPlacingBlocksVersion = function (baseUrl) {
         // 2) mobx for store ?
         // 3) vue binding + vuex store ?
         settingsStore.allSettings.setRestartEnabled(settingsData.restartEnabled);
+        settingsStore.allSettings.setRestartSettings(settingsData.restartSettings);
         enableRestart.showRestartEnable(baseUrl);
     });
 };
