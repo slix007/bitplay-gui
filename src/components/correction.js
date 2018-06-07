@@ -1,5 +1,6 @@
 'use strict';
 
+var $ = require('jquery');
 var Http = require('../http');
 var Utils = require('../utils');
 var sprintf = require('sprintf-js').sprintf;
@@ -7,178 +8,172 @@ var sprintf = require('sprintf-js').sprintf;
 var exports = module.exports = {};
 
 var URL, corrCountLabel, preliqCountLabel;
-var errorLables = {};
 
 exports.showCorr = function (baseUrl) {
     URL = baseUrl + '/settings/corr';
-    const RESET_CORR_URL = baseUrl + '/settings/corr-set-max-error';
-    const RESET_PRELIQ_URL = baseUrl + '/settings/corr-set-max-error-preliq';
+    const RESET_CORR_URL = baseUrl + '/settings/corr/reset';
+
 
     Http.httpAsyncGet(URL, function (rawData) {
         let corrParams = JSON.parse(rawData);
 
         var corrMon = document.getElementById("corr-monitoring");
-        corrCountLabel = createMonitorCounter(corrMon, corrParams);
-        preliqCountLabel = createMonitorPreliqCounter(corrMon, corrParams);
+        corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
+        preliqCountLabel = createMonitorCounter(corrMon, corrParams, 'preliq');
+        createResetBtn(corrMon, RESET_CORR_URL);
 
         var main = document.getElementById("correction");
-        createResetParam(main, corrParams, 'corr', RESET_CORR_URL, corrCountLabel, preliqCountLabel);
-        createMaxVolCorr(main, corrParams, URL);
-        createResetParam(main, corrParams, 'preliq', RESET_PRELIQ_URL, corrCountLabel, preliqCountLabel);
-        createSetPreliqBlock(main, corrParams, URL, corrCountLabel, preliqCountLabel);
+
+        createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
+        createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
+        createSetParamBlock(main, URL, 'corr maxBlockOkex', corrParams, 'corr', 'maxVolCorrOkex', ' / maxBlockBitmex=');
+
+        createSetParam(main, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
+        createSetParam(main, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
+        createSetParamBlock(main, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=');
     });
 };
 
-function createResetParam(mainContainer, corrParams, subObject, RESET_URL, corrCountLabel, preliqCountLabel) {
+function createResetBtn(mainContainer, RESET_URL) {
     var container = document.createElement('div');
-    mainContainer.appendChild(container);
+    $(mainContainer).append(container);
 
-    var label = document.createElement('span');
-    label.innerHTML = subObject + ' attempts';
-    var edit = document.createElement('input');
-    edit.style.width = '80px';
-    errorLables[subObject] = document.createElement('span');
-    fillResultLabel(subObject, errorLables[subObject], corrParams);
     var setBtn = document.createElement('button');
-    setBtn.onclick = function () {
+    setBtn.innerHTML = 'Reset corr/preliq';
+    $(setBtn).click(function () {
         setBtn.disabled = true;
-        let requestObj = {command: edit.value};
-        const requestData = JSON.stringify(requestObj);
+        const requestData = JSON.stringify({command: 'reset corr/preliq'});
         console.log(requestData);
+
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
-            fillResultLabel(subObject, errorLables[subObject], res);
-            setCorrCount(corrCountLabel, res);
-            setPreliqCount(preliqCountLabel, res);
+            console.log(res);
+            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(preliqCountLabel, res, 'preliq');
             setBtn.disabled = false;
-            // alert(rawRes);
         });
-    };
-    setBtn.innerHTML = 'set max';
 
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(setBtn);
-    container.appendChild(errorLables[subObject]);
+    });
+    $(container).append(setBtn);
 }
 
-function createMaxVolCorr(mainContainer, corrParams, URL) {
+function getCurrTotalCount(corr) {
+    return (corr.succeedCount + corr.failedCount);
+}
+
+function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2) {
+    // label, edit, btn, currValLabel - currval, url+currvalObjectPlace
     var container = document.createElement('div');
-    mainContainer.appendChild(container);
+    // $('#okex-limits-status')
+    $(mainContainer).append(container);
 
     var label = document.createElement('span');
-    label.innerHTML = 'maxVolCorrOkex: ';
+    label.innerHTML = labelVal;
     var edit = document.createElement('input');
     edit.style.width = '80px';
-    var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = corrParams.corr.maxVolCorrOkex + ' (maxVolCorrBitmex=' + corrParams.corr.maxVolCorrOkex * 100 + ')';
+    var currValLabel = document.createElement('span');
+    currValLabel.innerHTML = paramsObj[paramName1][paramName2];
+
     var setBtn = document.createElement('button');
-    setBtn.onclick = function () {
+    setBtn.innerHTML = 'set';
+    $(setBtn).click(function () {
         setBtn.disabled = true;
-        let requestObj = {corr: {maxVolCorrOkex: edit.value}};
+        let requestObj = {[paramName1]: {[paramName2]: edit.value}};
         const requestData = JSON.stringify(requestObj);
         console.log(requestData);
-        Http.httpAsyncPost(URL, requestData, function (rawRes) {
+
+        Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
-            resultLabel.innerHTML = res.corr.maxVolCorrOkex + ' (maxVolCorrBitmex=' + res.corr.maxVolCorrOkex * 100 + ')';
+            console.log(res);
+            currValLabel.innerHTML = res[paramName1][paramName2];
+            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(preliqCountLabel, res, 'preliq');
+
             setBtn.disabled = false;
             // alert(rawRes);
         });
-    };
-    setBtn.innerHTML = 'set';
 
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(setBtn);
-    container.appendChild(resultLabel);
+    });
+    $(container).append(label, edit, setBtn, currValLabel);
 }
 
-function createSetPreliqBlock(mainContainer, corrParams, URL, corrCountLabel, preliqCountLabel) {
-    var container = document.createElement('div');
-    mainContainer.appendChild(container);
 
-    var label = document.createElement('span');
-    label.innerHTML = 'Preliq okexBlock';
-    var edit = document.createElement('input');
-    edit.style.width = '80px';
-    var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = corrParams.preliq.preliqBlockOkex + ' (bitmexBlock=' + corrParams.preliq.preliqBlockOkex * 100 + ')';
-    var setBtn = document.createElement('button');
-    setBtn.onclick = function () {
-        setBtn.disabled = true;
-        let requestObj = {preliq: {preliqBlockOkex: edit.value}};
-        const requestData = JSON.stringify(requestObj);
-        console.log(requestData);
-        Http.httpAsyncPost(URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            resultLabel.innerHTML = res.preliq.preliqBlockOkex + ' (bitmexBlock=' + res.preliq.preliqBlockOkex * 100 + ')';
-            setCorrCount(corrCountLabel, res);
-            setPreliqCount(preliqCountLabel, res);
-            setBtn.disabled = false;
-            // alert(rawRes);
-        });
-    };
-    setBtn.innerHTML = 'set';
-
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(setBtn);
-    container.appendChild(resultLabel);
-}
-
-function fillResultLabel(subObject, el, params) {
-    if (params[subObject].maxErrorCount <= 0) {
-        el.style.color = 'red';
-    } else {
-        el.style.color = 'black';
+function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2, label2Val) {
+    function getBBlockName(corrParams) {
+        const bBlock = corrParams[paramName1][paramName2] * 100;
+        return label2Val + bBlock;
     }
-    el.innerHTML = sprintf('%s/%s', params[subObject].currErrorCount, params[subObject].maxErrorCount);
+
+    var container = document.createElement('div');
+    $(mainContainer).append(container);
+
+    var label = document.createElement('span');
+    label.innerHTML = labelVal;
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    var currValLabel = document.createElement('span');
+    currValLabel.innerHTML = paramsObj[paramName1][paramName2] + getBBlockName(paramsObj);
+
+    var setBtn = document.createElement('button');
+    setBtn.innerHTML = 'set';
+    $(setBtn).click(function () {
+        setBtn.disabled = true;
+        let requestObj = {[paramName1]: {[paramName2]: edit.value}};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+
+        Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            console.log(res);
+            currValLabel.innerHTML = res[paramName1][paramName2] + getBBlockName(res);
+            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(preliqCountLabel, res, 'preliq');
+
+            setBtn.disabled = false;
+            // alert(rawRes);
+        });
+
+    });
+    $(container).append(label, edit, setBtn, currValLabel);
 }
 
-function createMonitorCounter(corrMon, corrParams) {
+function createMonitorCounter(corrMon, corrParams, subParamName) {
     var container = document.createElement('div');
     corrMon.appendChild(container);
 
     var label = document.createElement('span');
-    setCorrCount(label, corrParams);
+    setMonitoringCount(label, corrParams, subParamName);
 
     container.appendChild(label);
     return label;
 }
 
-function createMonitorPreliqCounter(corrMon, corrParams) {
-    var container = document.createElement('div');
-    corrMon.appendChild(container);
-
-    var label = document.createElement('span');
-    setPreliqCount(label, corrParams);
-
-    container.appendChild(label);
-    return label;
-}
-
-function setCorrCount(label, corrParams) {
-    let succeedCount = corrParams.corr.succeedCount;
-    let failedCount = corrParams.corr.failedCount;
-    label.innerHTML = sprintf('Corrections success/fail: %s/%s', succeedCount, failedCount);
-}
-
-function setPreliqCount(label, corrParams) {
-    let succeedCount = corrParams.preliq.succeedCount;
-    let failedCount = corrParams.preliq.failedCount;
-    label.innerHTML = sprintf('Preliq success/fail: %s/%s', succeedCount, failedCount);
+function setMonitoringCount(label, corrParams, subParam) {
+    const currErrorCount = corrParams[subParam].currErrorCount;
+    const maxErrorCount = corrParams[subParam].maxErrorCount;
+    const succeedCount = corrParams[subParam].succeedCount;
+    const failedCount = corrParams[subParam].failedCount;
+    const currTotalCount = getCurrTotalCount(corrParams[subParam]);
+    const maxTotalCount = corrParams[subParam].maxTotalCount;
+    if (currTotalCount >= maxTotalCount || currErrorCount >= maxErrorCount) {
+        label.style.color = 'red';
+    } else {
+        label.style.color = 'black';
+    }
+    label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail=total / max): %s+%s=%s / %s',
+            subParam,
+            currErrorCount, maxErrorCount,
+            succeedCount, failedCount, currTotalCount, maxTotalCount);
 }
 
 var updateMonitorFunction = function () {
     Http.httpAsyncGet(URL, function (rawData) {
         let res = JSON.parse(rawData);
-        fillResultLabel('corr', errorLables.corr, res);
-        fillResultLabel('preliq', errorLables.preliq, res);
-        setCorrCount(corrCountLabel, res);
-        setPreliqCount(preliqCountLabel, res);
+        setMonitoringCount(corrCountLabel, res, 'corr');
+        setMonitoringCount(preliqCountLabel, res, 'preliq');
     });
 };
 
-setInterval(updateMonitorFunction, 1000);
+setInterval(updateMonitorFunction, 2000);
 
 
