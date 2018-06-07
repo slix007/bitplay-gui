@@ -146,7 +146,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let slip = document.getElementById("slip");
         let count1 = document.getElementById("count1");
         let count2 = document.getElementById("count2");
-        let diffFactBrFailsCount = document.getElementById("diffFactBrFailsCount");
         let reserveBtc1 = document.getElementById("reserveBtc1");
         let reserveBtc2 = document.getElementById("reserveBtc2");
         let hedgeAmount = document.getElementById("hedgeAmount");
@@ -171,7 +170,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         slip.innerHTML = returnData.slip;
         count1.innerHTML = returnData.count1 + '/' + returnData.completedCount1;
         count2.innerHTML = returnData.count2 + '/' + returnData.completedCount2;
-        diffFactBrFailsCount.innerHTML = returnData.diffFactBrFailsCount;
         reserveBtc1.innerHTML = returnData.reserveBtc1;
         reserveBtc2.innerHTML = returnData.reserveBtc2;
         hedgeAmount.innerHTML = returnData.hedgeAmount;
@@ -916,19 +914,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             if (element.id == 'update-count2') {
                 let element = document.getElementById('count2-edit').value;
                 let request = {count2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
-                );
-            }
-            if (element.id == 'update-diffFactBrFailsCount') {
-                let element = document.getElementById('diffFactBrFailsCount-edit').value;
-                let request = {diffFactBrFailsCount: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 httpAsyncPost(baseUrl + '/market/update-maker-delta',
