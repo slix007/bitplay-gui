@@ -43,9 +43,9 @@ task clean << {
 task deployHost665 << {
     ssh.run {
         session(remotes.host665) {
-            put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
+            put from: "output", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
-            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
+            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/output/** ${remoteInstallDir}", pty: true
         }
     }
 }
@@ -53,9 +53,9 @@ task deployHost665 << {
 task deployTest << {
     ssh.run {
         session(remotes.test) {
-            put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
+            put from: "output", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
-            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
+            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/output/** ${remoteInstallDir}", pty: true
         }
     }
 }
@@ -63,9 +63,9 @@ task deployTest << {
 task deployProd << {
     ssh.run {
         session(remotes.prod) {
-            put from: "output/*", into: "${remoteHomeDir}/bitplay-gui"
+            put from: "output", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
-            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/* ${remoteInstallDir}", pty: true
+            executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/output/** ${remoteInstallDir}", pty: true
         }
     }
 }
@@ -75,9 +75,9 @@ task deployDemo << {
 
     ssh.run {
         session(remotes.demo) {
-            put from: "output/*", into: "$remoteHomeDir1/bitplay-gui"
+            put from: "output", into: "$remoteHomeDir1/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
-            executeSudo "sudo cp -r $remoteHomeDir1/bitplay-gui/* ${remoteInstallDir}", pty: true
+            executeSudo "sudo cp -r $remoteHomeDir1/bitplay-gui/output/** ${remoteInstallDir}", pty: true
         }
     }
 }
