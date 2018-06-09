@@ -272,13 +272,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             null);
     }
 
-    function cancelOrderP() {
-        console.log("cancelOrder");
-    }
-
-    function cancelOrderO(orderId) {
+    function cancelOrder(orderId, marketName) {
         console.log("cancelOrder" + orderId);
-        let cancelUrl = sprintf('/market/%s/open-orders/cancel', secondMarketName);
+        let cancelUrl = sprintf('/market/%s/open-orders/cancel', marketName);
         let request = {id: orderId};
         let requestData = JSON.stringify(request);
         console.log(requestData);
@@ -510,7 +506,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                         moveOrderP(oo.id, oo.orderType);
                     }, false);
                     let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
-                    cancel.addEventListener("click", cancelOrderP, oo.id);
+                    cancel.addEventListener("click", function () {
+                        cancelOrder(oo.id, firstMarketName);
+                    }, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
                     const ordersContainer = document.getElementById(sprintf('%s-open-orders', firstMarketName));
@@ -544,7 +542,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
                     let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
                     cancel.addEventListener("click", function () {
-                        cancelOrderO(oo.id);
+                        cancelOrder(oo.id, secondMarketName);
                     }, oo.id);
 
                     let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
