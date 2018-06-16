@@ -22,6 +22,7 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createDeltaCalcTypeDropdown(secondPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaCalcPast(secondPart, borderData, BORDERS_SETTINGS_URL);
+        createDeltaHistReset(secondPart, borderData, BORDERS_SETTINGS_URL);
         deltaCalcChanged();
 
         const thirdPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
@@ -87,6 +88,8 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
     let select = $('<select>', {id: deltaCalcTypeSelectId});
     select.append($('<option>').val('DELTA').text('Delta_SAM'));
     select.append($('<option>').val('AVG_DELTA').text('Delta_SMA'));
+    select.append($('<option>').val('AVG_DELTA_EVERY_BORDER_COMP').text('Delta_SMA_EVERY_BORDER_COMP'));
+    select.append($('<option>').val('AVG_DELTA_EVERY_NEW_DELTA').text('Delta_SMA_EVERY_NEW_DELTA'));
     select.change(function () {
         select.disabled = true;
         const requestData = JSON.stringify({borderDelta: {deltaCalcType: this.value}});
@@ -129,6 +132,24 @@ function createDeltaCalcPast(parent, borderData, BORDERS_SETTINGS_URL) {
 
     container.append(setBtn);
     container.append(resultLabel);
+}
+
+function createDeltaHistReset(parent, borderData, BORDERS_SETTINGS_URL) {
+    let container = $('<div>').appendTo(parent);
+    let setBtn = $('<button>').text('Reset delta_hist_per').click(function () {
+        setBtn.disabled = true;
+
+        const requestData = JSON.stringify({doResetDeltaHistPer: 'request'});
+        console.log(requestData);
+
+        Http.httpAsyncPost(BORDERS_SETTINGS_URL,
+                requestData, function (result) {
+                    console.log(result);
+                    setBtn.disabled = false;
+                });
+    });
+
+    container.append(setBtn);
 }
 
 function createDeltaSaveType(parent, borderData, BORDERS_SETTINGS_URL) {
