@@ -6,6 +6,7 @@ let bordersVar = require('./components/borders-v2');
 let bitmexIndexVar = require('./components/comp/bitmex-index');
 let okexIndexVar = require('./components/comp/okex-index');
 let marketState = require('./components/comp/market-states');
+let monCalcDelta = require('./components/comp/mon-calc-delta');
 
 var exports = module.exports = {};
 
@@ -317,6 +318,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             let pTicker = document.getElementById('deadlock-checker');
             pTicker.innerHTML = resultJson.description;
         });
+        fetch('/mon/calc-delta', function (resultJson) {
+            monCalcDelta.updateMonCalcDelta(baseUrl, resultJson);
+        });
+
         fetch('/market/sum-bal', function (resultJson) {
             let sumBal = document.getElementById("sum-bal");
             sumBal.innerHTML = resultJson.result;
