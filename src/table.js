@@ -162,7 +162,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         delta1EveryCalc.innerHTML = Utils.withSign(returnData.delta1EveryCalc);
         delta2EveryCalc.innerHTML = Utils.withSign(returnData.delta2EveryCalc);
         deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted;
-        deltaSmaUpdateIn.innerHTML = returnData.deltaSmaUpdateIn;
+        deltaSmaUpdateIn.innerHTML = returnData.deltaSmaUpdateIn === '0'
+                ? ''
+                : 'Border_sma update in ' + returnData.deltaSmaUpdateIn + ' sec.';
         border1.innerHTML = returnData.border1;
         border2.innerHTML = returnData.border2;
         // makerDelta.innerHTML = returnData.makerDelta;

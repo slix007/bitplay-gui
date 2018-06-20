@@ -52,7 +52,7 @@ exports.updateMonCalcDelta = function (baseUrl, resultJson) {
     borderMs.html('borderMs=' + resultJson.borderMs);
     maxBorderMs.html('maxBorderMs=' + resultJson.maxBorderMs);
     lastBorderTime.html('lastBorderTime=' + resultJson.lastBorderTime);
-    items.html('delta itmes in calculation. b=' + resultJson.bdeltaItems + ', o=' + resultJson.odeltaItems);
+    items.html('delta items in calculation. b=' + resultJson.bdeltaItems + ', o=' + resultJson.odeltaItems);
 
     // console.log(resultJson);
 };
