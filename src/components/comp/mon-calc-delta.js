@@ -32,6 +32,10 @@ exports.updateMonCalcDelta = function (baseUrl, resultJson) {
 
         $('<a>').attr('href', baseUrl + '/mon/calc-delta/list').text('/mon/calc-delta/list')
         .appendTo($('<div>').appendTo(main));
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/bitmex').text('/mon/calc-delta/list/bitmex')
+        .appendTo($('<div>').appendTo(main));
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/okex').text('/mon/calc-delta/list/okex')
+        .appendTo($('<div>').appendTo(main));
 
         resetBtn = $('<button>').text('Reset').click(function () {
             resetBtn.disabled = true;
