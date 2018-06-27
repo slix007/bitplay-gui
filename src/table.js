@@ -159,8 +159,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         delta2.innerHTML = Utils.withSign(returnData.delta2);
         delta1Sma.innerHTML = Utils.withSign(returnData.delta1Sma);
         delta2Sma.innerHTML = Utils.withSign(returnData.delta2Sma);
-        delta1EveryCalc.innerHTML = Utils.withSign(returnData.delta1EveryCalc);
-        delta2EveryCalc.innerHTML = Utils.withSign(returnData.delta2EveryCalc);
+        delta1EveryCalc.innerHTML = returnData.delta1EveryCalc;
+        delta2EveryCalc.innerHTML = returnData.delta2EveryCalc;
         deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted;
         deltaSmaUpdateIn.innerHTML = returnData.deltaSmaUpdateIn === '0'
                 ? ''
