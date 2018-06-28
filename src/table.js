@@ -429,8 +429,16 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/delta-params', function (result) {
             let b = document.getElementById('b_delta_minmax');
             let o = document.getElementById('o_delta_minmax');
-            b.innerHTML = Utils.withSign(result.bDeltaMin) + '...' + Utils.withSign(result.bDeltaMax);
-            o.innerHTML = Utils.withSign(result.oDeltaMin) + '...' + Utils.withSign(result.oDeltaMax);
+            b.innerHTML = Utils.withSign(result.btmDeltaMin) + '...';
+            o.innerHTML = Utils.withSign(result.okDeltaMin) + '...';
+            let btmMax = document.createElement('span');
+            btmMax.innerHTML = Utils.withSign(result.btmDeltaMax);
+            btmMax.style.color = result.btmMaxColor;
+            b.appendChild(btmMax);
+            let okMax = document.createElement('span');
+            okMax.innerHTML = Utils.withSign(result.okDeltaMax);
+            okMax.style.color = result.okMaxColor;
+            o.appendChild(okMax);
         });
         fetch('/market/borders-timer', function (result) {
             let bordersTimer = document.getElementById('borders-timer');
