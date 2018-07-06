@@ -327,6 +327,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/sum-bal', function (resultJson) {
             let sumBal = document.getElementById("sum-bal");
             sumBal.innerHTML = resultJson.result;
+            let eBestMin = document.getElementById("s_e_best_min");
+            eBestMin.innerHTML = 's_e_best_min=' + resultJson.s_e_best_min + ' usd';
         });
 
         fetch('/market/pos-diff', function (resultJson) {

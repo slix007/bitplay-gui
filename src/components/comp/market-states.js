@@ -38,6 +38,7 @@ function updateState(id, text) {
             el.style.color = 'darkgoldenrod';
             break;
         case 'STOPPED':
+        case 'FORBIDDEN':
         case 'SYSTEM_OVERLOADED':
             el.style.color = 'red';
             break;
