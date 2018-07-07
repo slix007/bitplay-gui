@@ -7,6 +7,7 @@ let bitmexIndexVar = require('./components/comp/bitmex-index');
 let okexIndexVar = require('./components/comp/okex-index');
 let marketState = require('./components/comp/market-states');
 let monCalcDelta = require('./components/comp/mon-calc-delta');
+let eBestMin = require('./components/comp/e-best-min');
 
 var exports = module.exports = {};
 
@@ -327,8 +328,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/sum-bal', function (resultJson) {
             let sumBal = document.getElementById("sum-bal");
             sumBal.innerHTML = resultJson.result;
-            let eBestMin = document.getElementById("s_e_best_min");
-            eBestMin.innerHTML = 's_e_best_min=' + resultJson.s_e_best_min + ' usd';
+
+            eBestMin.fillComponents(resultJson, baseUrl);
         });
 
         fetch('/market/pos-diff', function (resultJson) {
