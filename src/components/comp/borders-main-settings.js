@@ -87,7 +87,9 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
 
     let select = $('<select>', {id: deltaCalcTypeSelectId});
     select.append($('<option>').val('DELTA').text('Delta_SAM'));
-    // select.append($('<option>').val('AVG_DELTA').text('Delta_SMA'));
+    if (borderData.borderDelta.deltaCalcType === 'AVG_DELTA') {
+        select.append($('<option>').val('AVG_DELTA').text('Delta_SMA'));
+    }
     select.append($('<option>').val('AVG_DELTA_EVERY_BORDER_COMP_IN_PARTS').text('Delta_SMA_EVERY_BORDER_COMP'));
     select.append($('<option>').val('AVG_DELTA_EVERY_NEW_DELTA_IN_PARTS').text('Delta_SMA_EVERY_NEW_DELTA'));
     // select.append($('<option>').val('AVG_DELTA_EVERY_BORDER_COMP_AT_ONCE').text('Delta_SMA_EVERY_BORDER_COMP_AT_ONCE'));
