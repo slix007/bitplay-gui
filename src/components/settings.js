@@ -41,6 +41,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         // Ignore limits
         createIgnoreLimitPrice(settingsData, SETTINGS_URL);
+
+        // Signal delay
+        createSignalDelay(settingsData, SETTINGS_URL);
     });
 };
 
@@ -319,4 +322,35 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
 
     container.appendChild(checkbox);
     container.appendChild(label);
+}
+
+function createSignalDelay(settingsData, SETTINGS_URL) {
+    var container = document.getElementById("signal-delay");
+
+    var label = document.createElement('span');
+    label.innerHTML = 'Signal delay:';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = settingsData.signalDelayMs + ' ms';
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        const requestData = JSON.stringify({signalDelayMs: edit.value});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (rawRes) {
+                    const res = JSON.parse(rawRes);
+                    resultLabel.innerHTML = res.signalDelayMs + ' ms';
+                    setBtn.disabled = false;
+                    // alert(rawRes);
+                });
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
 }
