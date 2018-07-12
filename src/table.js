@@ -1,4 +1,5 @@
 var Handsontable = require('handsontable');
+var $ = require('jquery');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
 var Http = require('./http');
@@ -326,8 +327,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
 
         fetch('/market/sum-bal', function (resultJson) {
-            let sumBal = document.getElementById("sum-bal");
-            sumBal.innerHTML = resultJson.result;
+            $("#cold-storage-label").html('Cold Storage(btc)=' + resultJson.cold_storage);
+            $("#sum-bal").html(resultJson.result);
 
             eBestMin.fillComponents(resultJson, baseUrl);
         });
