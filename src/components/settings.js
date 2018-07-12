@@ -42,8 +42,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         // Ignore limits
         createIgnoreLimitPrice(settingsData, SETTINGS_URL);
 
-        // Signal delay
         createSignalDelay(settingsData, SETTINGS_URL);
+
+        createColdStorage(settingsData, SETTINGS_URL);
     });
 };
 
@@ -52,7 +53,6 @@ function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
-    var option3 = document.createElement('option');
     option1.setAttribute("value", "SIM");
     option2.setAttribute("value", "CON_B_O");
     option1.innerHTML = 'SIM';
@@ -328,12 +328,12 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
     var container = document.getElementById("signal-delay");
 
     var label = document.createElement('span');
-    label.innerHTML = 'Signal delay:';
+    label.innerHTML = 'Signal delay (ms):';
     var edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
     var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = settingsData.signalDelayMs + ' ms';
+    resultLabel.innerHTML = settingsData.signalDelayMs;
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
         setBtn.disabled = true;
@@ -342,7 +342,38 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (rawRes) {
                     const res = JSON.parse(rawRes);
-                    resultLabel.innerHTML = res.signalDelayMs + ' ms';
+                    resultLabel.innerHTML = res.signalDelayMs;
+                    setBtn.disabled = false;
+                    // alert(rawRes);
+                });
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+}
+
+function createColdStorage(settingsData, SETTINGS_URL) {
+    var container = document.getElementById("cold-storage");
+
+    var label = document.createElement('span');
+    label.innerHTML = 'Cold Storage(btc):';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = settingsData.coldStorageBtc;
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        const requestData = JSON.stringify({coldStorageBtc: edit.value});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (rawRes) {
+                    const res = JSON.parse(rawRes);
+                    resultLabel.innerHTML = res.coldStorageBtc;
                     setBtn.disabled = false;
                     // alert(rawRes);
                 });
