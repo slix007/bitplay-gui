@@ -332,8 +332,8 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
     var edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
-    var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = settingsData.signalDelayMs;
+    // var resultLabel = document.createElement('span');
+    // resultLabel.innerHTML = settingsData.signalDelayMs;
     var setBtn = document.createElement('button');
     setBtn.onclick = function () {
         setBtn.disabled = true;
@@ -342,7 +342,7 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (rawRes) {
                     const res = JSON.parse(rawRes);
-                    resultLabel.innerHTML = res.signalDelayMs;
+                    // resultLabel.innerHTML = res.signalDelayMs;
                     setBtn.disabled = false;
                     // alert(rawRes);
                 });
@@ -352,7 +352,7 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
     container.appendChild(label);
     container.appendChild(edit);
     container.appendChild(setBtn);
-    container.appendChild(resultLabel);
+    // container.appendChild(resultLabel);
 }
 
 function createColdStorage(settingsData, SETTINGS_URL) {

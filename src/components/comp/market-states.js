@@ -22,7 +22,7 @@ exports.repaintStates = function (returnData) {
     updateState(firstId, returnData.firstMarket);
     updateState(secondId, returnData.secondMarket);
 
-    const sigDeltay = 'Signal delay (ms): ' + returnData.signalDelay;
+    const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + returnData.timeToSignal;
     $('#signal-delay-label').html(sigDeltay + timeToSig);
 };
