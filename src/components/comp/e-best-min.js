@@ -10,11 +10,13 @@ let responseLabel = document.createElement('span');
 
 exports.fillComponents = function (resultJson, baseUrl) {
 
+    $("#cold-storage-label").html('Cold Storage(btc)=' + resultJson.cold_storage);
+
     let eBestMinDiv = document.getElementById("s_e_best_min");
 
     let reloadURL = baseUrl + '/settings/reload-e-best-min';
 
-    eBestMin.innerHTML = 's_e_best_min=' + resultJson.s_e_best_min + ' usd';
+    eBestMin.innerHTML = ', s_e_best_min=' + resultJson.s_e_best_min + ' usd';
     responseLabel.innerHTML = '';
 
     if ($(eBestMinDiv).children().length === 0) {

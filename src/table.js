@@ -327,7 +327,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
 
         fetch('/market/sum-bal', function (resultJson) {
-            $("#cold-storage-label").html('Cold Storage(btc)=' + resultJson.cold_storage);
             $("#sum-bal").html(resultJson.result);
 
             eBestMin.fillComponents(resultJson, baseUrl);
