@@ -44,7 +44,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createSignalDelay(settingsData, SETTINGS_URL);
 
-        createColdStorage(settingsData, SETTINGS_URL);
+        // createColdStorage(settingsData, SETTINGS_URL);
+
+        // createUsdQuoteType(settingsData, SETTINGS_URL);
     });
 };
 
@@ -384,4 +386,33 @@ function createColdStorage(settingsData, SETTINGS_URL) {
     container.appendChild(edit);
     container.appendChild(setBtn);
     container.appendChild(resultLabel);
+}
+
+function createUsdQuoteType(settingsData, SETTINGS_URL) {
+    var arr = [
+        'BITMEX',
+        'OKEX',
+        'AVG',
+        'INDEX_BITMEX',
+        'INDEX_OKEX'
+    ];
+    const label = $('<span/>', {title: 'How to convert BTC to USD'}).html('Usd quote type: ');
+    const select = $('<select/>').html($.map(arr, function (item) {
+        return $('<option/>', {value: item, text: item});
+    })).val(settingsData.usdQuoteType);
+    select.on('change', onVerPick);
+
+    $("#usd-quote-type").append(label).append(select);
+
+    function onVerPick() {
+        console.log(this.value);
+        const requestData = JSON.stringify({usdQuoteType: this.value});
+
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (result) {
+                    let data = JSON.parse(result);
+                    alert('New value: ' + data.usdQuoteType);
+                });
+    }
+
 }
