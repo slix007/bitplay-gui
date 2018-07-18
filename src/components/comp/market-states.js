@@ -3,6 +3,7 @@ var $ = require('jquery');
 
 var exports = module.exports = {};
 
+// const arbId = 'arb-state';
 const firstId = 'first-state';
 const secondId = 'second-state';
 
@@ -17,10 +18,14 @@ exports.repaintStates = function (returnData) {
         $('<span>').text(', Okex state: ').appendTo(markets);
         $('<span>',{id:secondId}).text(returnData.secondMarket).appendTo(markets);
         $('<span>').text((returnData.secondTimeToReset.length === 0 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'))).appendTo(markets);
+
+        // $('<span>').text('; Arbitrage state: ').appendTo(markets);
+        // $('<span>', {id: arbId}).text(returnData.arbState).appendTo(markets);
     }
 
     updateState(firstId, returnData.firstMarket);
     updateState(secondId, returnData.secondMarket);
+    // updateState(arbId, returnData.arbState);
 
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + returnData.timeToSignal;
@@ -34,6 +39,7 @@ function updateState(id, text) {
             el.style.color = 'green';
             break;
         case 'ARBITRAGE':
+        // case 'IN_PROGRESS':
         case 'WAITING_ARB':
         case 'MOVING':
         case 'PLACING_ORDER':
