@@ -516,12 +516,13 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let existedOrder = document.getElementById("p-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
-                        "id=" + oo.id
-                        + ",t=" + oo.orderType
-                        + ",s=" + oo.status
-                        + ",q=" + oo.price
-                        + ",a=" + oo.amount
-                        + ",time=" + oo.timestamp
+                            "#" + oo.arbId
+                            + ": id='" + oo.id.substring(0, 9) + "...'"
+                            + ",t=" + oo.orderType
+                            + ",s=" + oo.status
+                            + ",q=" + oo.price
+                            + ",a=" + oo.amount
+                            + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "p-move-" + oo.id}, "Try move");
                     move.addEventListener("click", function () {
@@ -550,12 +551,13 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "o-span-" + oo.id},
-                        "id=" + oo.id
-                        + ",t=" + oo.orderType
-                        + ",s=" + oo.status
-                        + ",q=" + oo.price
-                        + ",a=" + oo.amount
-                        + ",time=" + oo.timestamp
+                            "#" + oo.arbId
+                            + ": id='" + oo.id + "'"
+                            + ",t=" + oo.orderType
+                            + ",s=" + oo.status
+                            + ",q=" + oo.price
+                            + ",a=" + oo.amount
+                            + ",time=" + oo.timestamp
                     );
                     let move = createElement("button", {"id": "o-move-" + oo.id}, "Try move");
                     move.addEventListener("click", function () {
