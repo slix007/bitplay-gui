@@ -11,6 +11,7 @@ let responseLabel = document.createElement('span');
 exports.fillComponents = function (resultJson, baseUrl) {
 
     $("#cold-storage-label").html('Cold Storage(btc)=' + resultJson.cold_storage);
+    $("#s_e_best_min_time_to_forbidden").html('Forbidden in ' + resultJson.s_e_best_min_time_to_forbidden + ' sec');
 
     let eBestMinDiv = document.getElementById("s_e_best_min");
 
