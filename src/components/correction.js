@@ -58,6 +58,9 @@ function createResetBtn(mainContainer, RESET_URL) {
 }
 
 function getCurrTotalCount(corr) {
+    if (corr.totalCount !== undefined) {
+        return corr.totalCount;
+    }
     return (corr.succeedCount + corr.failedCount);
 }
 
@@ -160,10 +163,19 @@ function setMonitoringCount(label, corrParams, subParam) {
     } else {
         label.style.color = 'black';
     }
-    label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail=total / max): %s+%s=%s / %s',
-            subParam,
-            currErrorCount, maxErrorCount,
-            succeedCount, failedCount, currTotalCount, maxTotalCount);
+
+    if (subParam === 'preliq') {
+        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
+                subParam,
+                currErrorCount, maxErrorCount,
+                succeedCount, failedCount, currTotalCount, maxTotalCount);
+    } else {
+        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail=total / max): %s+%s=%s / %s',
+                subParam,
+                currErrorCount, maxErrorCount,
+                succeedCount, failedCount, currTotalCount, maxTotalCount);
+    }
+
 }
 
 var updateMonitorFunction = function () {
