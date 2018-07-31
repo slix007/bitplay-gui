@@ -15,12 +15,13 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
     let container = $('<div>').css('display', 'flex').appendTo(main);
 
     if ($(container).children().length === 0) {
-        const firstPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        const firstPart = $('<div>').attr('id', 'first-part').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
 
         const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
-        createDeltaCalcTypeDropdown(secondPart, borderData, BORDERS_SETTINGS_URL);
+        createDeltaCalcTypeDropdown(firstPart, secondPart, borderData, BORDERS_SETTINGS_URL);
+        createSmaCheckbox(secondPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaCalcPast(secondPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaHistReset(secondPart, borderData, BORDERS_SETTINGS_URL);
         deltaCalcChanged();
@@ -31,6 +32,43 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         deltaSavePerSec(thirdPart, borderData, BORDERS_SETTINGS_URL);
         deltaSaveChanged();
     }
+}
+
+function createSmaCheckbox(container, borderDelta, BORDERS_SETTINGS_URL) {
+    const smaOffCont = $('<div>').appendTo(container);
+    const smaOffCheckbox = $('<input>').attr('type', 'checkbox').appendTo(smaOffCont);
+    const label = $('<label>').appendTo(smaOffCont);
+
+    function updateLabel(val) {
+        console.log('use ' + val);
+        let valName;
+        if (val === 'false') {
+            valName = 'OFF';
+            smaOffCheckbox.prop('checked', false);
+
+        } else {
+            valName = 'ON';
+            smaOffCheckbox.prop('checked', true);
+        }
+        label.text('SMA ' + valName);
+    }
+
+    updateLabel(borderDelta.deltaSmaCalcOn);
+
+    smaOffCheckbox.click(function () {
+        label.text('SMA ...');
+
+        smaOffCheckbox.attr('disabled', true);
+        const requestData = JSON.stringify({borderDelta: {deltaSmaCalcOn: smaOffCheckbox.prop('checked')}});
+        console.log(requestData);
+
+        Http.httpAsyncPost(BORDERS_SETTINGS_URL,
+                requestData, function (result) {
+                    const res = JSON.parse(result);
+                    updateLabel(res.result);
+                    smaOffCheckbox.attr('disabled', false);
+                });
+    });
 }
 
 function createVerDropdown(container, ver, BORDERS_SETTINGS_URL) {
@@ -60,6 +98,7 @@ function createVerDropdown(container, ver, BORDERS_SETTINGS_URL) {
 
 function createPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<div>').appendTo(parent);
+    container.attr('id', 'border-comp-period');
     let label = document.createElement('span');
     label.innerHTML = 'Border comp period (sec)';
     container.append(label);
@@ -81,7 +120,7 @@ function createPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
     container.append(resultLabel);
 }
 
-function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
+function createDeltaCalcTypeDropdown(firstPart, parent, borderData, BORDERS_SETTINGS_URL) {
     let container = $('<span>').appendTo(parent);
     $('<span>').text('Border comp type: ').appendTo(container);
 
@@ -97,6 +136,7 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
     select.change(function () {
         select.disabled = true;
         const requestData = JSON.stringify({borderDelta: {deltaCalcType: this.value}});
+        updateBorderCompPeriod(firstPart, this.value);
         console.log(requestData);
 
         Http.httpAsyncPost(BORDERS_SETTINGS_URL,
@@ -106,6 +146,7 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
                 });
     });
     select.val(borderData.borderDelta.deltaCalcType);
+    updateBorderCompPeriod(firstPart, borderData.borderDelta.deltaCalcType);
 
     container.append(select);
 }
@@ -113,6 +154,14 @@ function createDeltaCalcTypeDropdown(parent, borderData, BORDERS_SETTINGS_URL) {
 function deltaCalcChanged() {
     let val = $('#' + deltaCalcTypeSelectId).val();
     $('#' + deltaCalcPastId).find('*').attr('disabled', val === 'DELTA');
+}
+
+function updateBorderCompPeriod(firstPart, theVal) {
+    if (theVal === 'AVG_DELTA_EVERY_NEW_DELTA_IN_PARTS') {
+        $('#border-comp-period').css('color', 'grey');
+    } else {
+        $('#border-comp-period').css('color', 'black');
+    }
 }
 
 function createDeltaCalcPast(parent, borderData, BORDERS_SETTINGS_URL) {
