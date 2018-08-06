@@ -34,7 +34,7 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
     }
 }
 
-function createSmaCheckbox(container, borderDelta, BORDERS_SETTINGS_URL) {
+function createSmaCheckbox(container, borderData, BORDERS_SETTINGS_URL) {
     const smaOffCont = $('<div>').appendTo(container);
     const smaOffCheckbox = $('<input>').attr('type', 'checkbox').appendTo(smaOffCont);
     const label = $('<label>').appendTo(smaOffCont);
@@ -42,7 +42,7 @@ function createSmaCheckbox(container, borderDelta, BORDERS_SETTINGS_URL) {
     function updateLabel(val) {
         console.log('use ' + val);
         let valName;
-        if (val === 'false') {
+        if (val === 'false' || val === false) {
             valName = 'OFF';
             smaOffCheckbox.prop('checked', false);
 
@@ -53,7 +53,7 @@ function createSmaCheckbox(container, borderDelta, BORDERS_SETTINGS_URL) {
         label.text('SMA ' + valName);
     }
 
-    updateLabel(borderDelta.deltaSmaCalcOn);
+    updateLabel(borderData.borderDelta.deltaSmaCalcOn);
 
     smaOffCheckbox.click(function () {
         label.text('SMA ...');
