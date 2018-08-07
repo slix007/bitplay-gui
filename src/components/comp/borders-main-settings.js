@@ -18,6 +18,7 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         const firstPart = $('<div>').attr('id', 'first-part').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
+        createDeltaMinPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
 
         const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createDeltaCalcTypeDropdown(firstPart, secondPart, borderData, BORDERS_SETTINGS_URL);
@@ -111,6 +112,30 @@ function createPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
     setBtn.onclick = function () {
         setBtn.disabled = true;
         bordersUtils.saveParamAsNumber(BORDERS_SETTINGS_URL, 'recalcPeriodSec', edit.value, resultLabel, setBtn);
+    };
+    setBtn.innerHTML = 'set';
+
+    container.append(label);
+    container.append(edit);
+    container.append(setBtn);
+    container.append(resultLabel);
+}
+
+function createDeltaMinPeriodSec(parent, borderData, BORDERS_SETTINGS_URL) {
+    let container = $('<div>').appendTo(parent);
+    container.attr('id', 'delta-min-period');
+    let label = document.createElement('span');
+    label.innerHTML = 'Delta min period (sec)';
+    container.append(label);
+    let edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    let resultLabel = document.createElement('span');
+    resultLabel.innerHTML = borderData.deltaMinFixPeriodSec;
+    let setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        bordersUtils.saveParamAsNumber(BORDERS_SETTINGS_URL, 'deltaMinFixPeriodSec', edit.value, resultLabel, setBtn);
     };
     setBtn.innerHTML = 'set';
 

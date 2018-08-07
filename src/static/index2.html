@@ -198,6 +198,7 @@
     <div>
         b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span>; &#09;
         b_delta_sma:<span id="delta1Sma"></span>; &#09;&#09;
+        b_delta_min:<span id="delta1MinFixed"></span>; &#09;&#09;
         b_border:
         <input type="text" id="border1-edit"><button id="update-border1">Update border1</button>
         <span id="border1"></span>
@@ -205,17 +206,43 @@
     <div>
         o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span>; &#09;
         o_delta_sma:<span id="delta2Sma"></span>; &#09;&#09;
+        o_delta_min:<span id="delta2MinFixed"></span>; &#09;&#09;
         o_border:
         <input type="text" id="border2-edit"><button id="update-border2">Update border2</button>
         <span id="border2"></span>
     </div>
-    <div id="borders-timer">
+
+    <span id="borders-timer"></span>;&#09;&#09;
+    <span id="delta-min-timer"></span>
+
+    <div id="RANGE_DELTA_BLOCK" style="display: flex;">
+
+        <div id="RANGE_DELTA_PAIR_RELATIVE" style="float: top;">
+
+            <div style="float: left; padding-right: 10px; padding-left: 10px; border:1px solid gray; ">
+                <div>
+                    range b_delta: <span id="b_delta_minmax"></span><br>
+                    range o_delta: <span id="o_delta_minmax"></span>
+                    <button id="reset-delta-minmax">reset</button>
+                </div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; border:1px solid gray; ">
+                <div>
+                    range b_delta_min: <span id="b_delta_min_minmax"></span>;<br>
+                    range o_delta_min: <span id="o_delta_min_minmax"></span>;
+                    <button id="reset-delta_min-minmax">reset</button>
+                </div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; border:1px solid gray; ">
+                <div>
+                    <span id="delta1MinInstant"></span><br>
+                    <span id="delta2MinInstant"></span>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div>
-        range b_delta: <span id="b_delta_minmax"></span>;<br>
-        range o_delta: <span id="o_delta_minmax"></span>;
-        <button id="reset-delta-minmax">reset</button>
-    </div>
+
     <div>
         <span id="signal-delay"></span>
         <span id="signal-delay-label"></span>

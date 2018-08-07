@@ -133,6 +133,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         let delta2 = document.getElementById("delta2");
         let delta1Sma = document.getElementById("delta1Sma");
         let delta2Sma = document.getElementById("delta2Sma");
+        let delta1MinFixed = document.getElementById("delta1MinFixed");
+        let delta2MinFixed = document.getElementById("delta2MinFixed");
+        let delta1MinInstant = document.getElementById("delta1MinInstant");
+        let delta2MinInstant = document.getElementById("delta2MinInstant");
         let delta1EveryCalc = document.getElementById("delta1EveryCalc");
         let delta2EveryCalc = document.getElementById("delta2EveryCalc");
         let deltaHistPerStarted = document.getElementById("deltaHistPerStarted");
@@ -159,6 +163,10 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         delta2.innerHTML = Utils.withSign(returnData.delta2);
         delta1Sma.innerHTML = Utils.withSign(returnData.delta1Sma);
         delta2Sma.innerHTML = Utils.withSign(returnData.delta2Sma);
+        delta1MinFixed.innerHTML = Utils.withSign(returnData.delta1MinFixed);
+        delta2MinFixed.innerHTML = Utils.withSign(returnData.delta2MinFixed);
+        delta1MinInstant.innerHTML = 'b_delta_min_current=' + Utils.withSign(returnData.delta1MinInstant);
+        delta2MinInstant.innerHTML = 'o_delta_min_current=' + Utils.withSign(returnData.delta2MinInstant);
         delta1EveryCalc.innerHTML = returnData.delta1EveryCalc;
         delta2EveryCalc.innerHTML = returnData.delta2EveryCalc;
         deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted;
@@ -428,21 +436,37 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/delta-params', function (result) {
             let b = document.getElementById('b_delta_minmax');
             let o = document.getElementById('o_delta_minmax');
-            b.innerHTML = Utils.withSign(result.btmDeltaMin) + '...';
-            o.innerHTML = Utils.withSign(result.okDeltaMin) + '...';
+            b.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMin) + '...';
+            o.innerHTML = Utils.withSign(result.instantDelta.okDeltaMin) + '...';
             let btmMax = document.createElement('span');
-            btmMax.innerHTML = Utils.withSign(result.btmDeltaMax);
-            btmMax.style.color = result.btmMaxColor;
+            btmMax.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMax);
+            btmMax.style.color = result.instantDelta.btmMaxColor;
             b.appendChild(btmMax);
             let okMax = document.createElement('span');
-            okMax.innerHTML = Utils.withSign(result.okDeltaMax);
-            okMax.style.color = result.okMaxColor;
+            okMax.innerHTML = Utils.withSign(result.instantDelta.okDeltaMax);
+            okMax.style.color = result.instantDelta.okMaxColor;
             o.appendChild(okMax);
+            let b_min = document.getElementById('b_delta_min_minmax');
+            let o_min = document.getElementById('o_delta_min_minmax');
+            b_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMin) + '...';
+            o_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMin) + '...';
+            let btmMax_min = document.createElement('span');
+            btmMax_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMax);
+            btmMax_min.style.color = result.deltaMin.btmMaxColor;
+            b_min.appendChild(btmMax_min);
+            let okMax_min = document.createElement('span');
+            okMax_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMax);
+            okMax_min.style.color = result.deltaMin.okMaxColor;
+            o_min.appendChild(okMax_min);
         });
         fetch('/market/borders-timer', function (result) {
             let bordersTimer = document.getElementById('borders-timer');
             bordersTimer.innerHTML = result.result;
             bordersVar.updateTableHash(result.description);
+        });
+        fetch('/market/delta-min-timer', function (result) {
+            let deltaMinTimer = document.getElementById('delta-min-timer');
+            deltaMinTimer.innerHTML = result.result;
         });
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
@@ -1151,6 +1175,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
             if (element.id == 'reset-delta-minmax') {
                 httpAsyncPost(baseUrl + '/delta-params', '', function (responseData, resultElement) {}, null);
+            }
+            if (element.id == 'reset-delta_min-minmax') {
+                httpAsyncPost(baseUrl + '/delta-params-min', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-time-compare') {
                 httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
