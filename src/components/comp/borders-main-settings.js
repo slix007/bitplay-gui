@@ -156,6 +156,7 @@ function createDeltaCalcTypeDropdown(firstPart, parent, borderData, BORDERS_SETT
     }
     select.append($('<option>').val('AVG_DELTA_EVERY_BORDER_COMP_IN_PARTS').text('Delta_SMA_EVERY_BORDER_COMP'));
     select.append($('<option>').val('AVG_DELTA_EVERY_NEW_DELTA_IN_PARTS').text('Delta_SMA_EVERY_NEW_DELTA'));
+    select.append($('<option>').val('DELTA_MIN').text('Delta_MIN'));
     // select.append($('<option>').val('AVG_DELTA_EVERY_BORDER_COMP_AT_ONCE').text('Delta_SMA_EVERY_BORDER_COMP_AT_ONCE'));
     // select.append($('<option>').val('AVG_DELTA_EVERY_NEW_DELTA_AT_ONCE').text('Delta_SMA_EVERY_NEW_DELTA_AT_ONCE'));
     select.change(function () {

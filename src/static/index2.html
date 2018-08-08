@@ -195,21 +195,35 @@
     </div>
 
     <br>
-    <div>
-        b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span>; &#09;
-        b_delta_sma:<span id="delta1Sma"></span>; &#09;&#09;
-        b_delta_min:<span id="delta1MinFixed"></span>; &#09;&#09;
-        b_border:
-        <input type="text" id="border1-edit"><button id="update-border1">Update border1</button>
-        <span id="border1"></span>
-    </div>
-    <div>
-        o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span>; &#09;
-        o_delta_sma:<span id="delta2Sma"></span>; &#09;&#09;
-        o_delta_min:<span id="delta2MinFixed"></span>; &#09;&#09;
-        o_border:
-        <input type="text" id="border2-edit"><button id="update-border2">Update border2</button>
-        <span id="border2"></span>
+    <div id="DELTA_BLOCK" style="display: flex;">
+        <div id="DELTA_DATA_BLOCKS" style="float: top;">
+            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                <div>b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span></div>
+                <div>o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span></div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                <div>b_delta_sma:<span id="delta1Sma"></span></div>
+                <div>o_delta_sma:<span id="delta2Sma"></span></div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                <div>b_delta_min:<span id="delta1MinFixed"></span></div>
+                <div>o_delta_min:<span id="delta2MinFixed"></span></div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                <div>
+                    b_border:
+                    <input type="text" id="border1-edit">
+                    <button id="update-border1">Update border1</button>
+                    <span id="border1"></span>
+                </div>
+                <div>
+                    o_border:
+                    <input type="text" id="border2-edit">
+                    <button id="update-border2">Update border2</button>
+                    <span id="border2"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <span id="borders-timer"></span>;&#09;&#09;
