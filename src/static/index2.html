@@ -226,15 +226,13 @@
         </div>
     </div>
 
-    <span id="borders-timer"></span>;&#09;&#09;
-    <span id="delta-min-timer"></span>
-
     <div id="RANGE_DELTA_BLOCK" style="display: flex;">
 
         <div id="RANGE_DELTA_PAIR_RELATIVE" style="float: top;">
 
             <div style="float: left; padding-right: 10px; padding-left: 10px;">
                 <div>
+                    <span id="borders-timer"></span><br>
                     range b_delta: <span id="b_delta_minmax"></span><br>
                     range o_delta: <span id="o_delta_minmax"></span>
                     <button id="reset-delta-minmax">reset</button>
@@ -242,6 +240,7 @@
             </div>
             <div style="float: left; padding-right: 10px; padding-left: 10px; ">
                 <div>
+                    <span id="delta-min-timer"></span><br>
                     range b_delta_min: <span id="b_delta_min_minmax"></span>;<br>
                     range o_delta_min: <span id="o_delta_min_minmax"></span>;
                     <button id="reset-delta_min-minmax">reset</button>
@@ -249,8 +248,17 @@
             </div>
             <div style="float: left; padding-right: 10px; padding-left: 10px; ">
                 <div>
+                    <br>
                     <span id="delta1MinInstant"></span><br>
                     <span id="delta2MinInstant"></span>
+                </div>
+            </div>
+            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                <div>
+                    <div id="start-signal-timer"></div>
+                    range signal time(sec): <span id="signal-time-range"></span><br>
+                    avg signal time(sec): <span id="signal-time-avg"></span>
+                    <button id="reset-signal-time-params">reset</button>
                 </div>
             </div>
         </div>

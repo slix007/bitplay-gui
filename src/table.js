@@ -446,6 +446,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             okMax.innerHTML = Utils.withSign(result.instantDelta.okDeltaMax);
             okMax.style.color = result.instantDelta.okMaxColor;
             o.appendChild(okMax);
+
             let b_min = document.getElementById('b_delta_min_minmax');
             let o_min = document.getElementById('o_delta_min_minmax');
             b_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMin) + '...';
@@ -458,15 +459,27 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             okMax_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMax);
             okMax_min.style.color = result.deltaMin.okMaxColor;
             o_min.appendChild(okMax_min);
+
+            let sRange = document.getElementById('signal-time-range');
+            sRange.innerHTML = Utils.withSign(result.signalData.signalTimeMin) + '...';
+            let sRangeMax = document.createElement('span');
+            sRangeMax.innerHTML = Utils.withSign(result.signalData.signalTimeMax);
+            // sRangeMax.style.color = result.signalData.maxColor;
+            sRange.appendChild(sRangeMax);
+
+            let sAvg = document.getElementById('signal-time-avg');
+            sAvg.innerHTML = Utils.withSign(result.signalData.signalTimeAvg);
         });
-        fetch('/market/borders-timer', function (result) {
-            let bordersTimer = document.getElementById('borders-timer');
-            bordersTimer.innerHTML = result.result;
-            bordersVar.updateTableHash(result.description);
-        });
-        fetch('/market/delta-min-timer', function (result) {
+        fetch('/market/timers', function (result) {
+            let startSignalTimer = document.getElementById('start-signal-timer');
+            startSignalTimer.innerHTML = result.startSignalTimerStr;
+
             let deltaMinTimer = document.getElementById('delta-min-timer');
-            deltaMinTimer.innerHTML = result.result;
+            deltaMinTimer.innerHTML = result.deltaMinTimerStr;
+
+            let bordersTimer = document.getElementById('borders-timer');
+            bordersTimer.innerHTML = result.bordersTimerStr;
+            bordersVar.updateTableHash(result.bordersV2TableHashCode);
         });
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
@@ -1174,10 +1187,13 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-delta-minmax') {
-                httpAsyncPost(baseUrl + '/delta-params', '', function (responseData, resultElement) {}, null);
+                httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {}, null);
+            }
+            if (element.id == 'reset-signal-time-params') {
+                httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-delta_min-minmax') {
-                httpAsyncPost(baseUrl + '/delta-params-min', '', function (responseData, resultElement) {}, null);
+                httpAsyncPost(baseUrl + '/reset-delta-params-min', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-time-compare') {
                 httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
