@@ -3,6 +3,7 @@ var $ = require('jquery');
 
 var exports = module.exports = {};
 
+const btmReconId = 'btm-reconnect-state';
 const arbId = 'arb-state';
 const firstId = 'first-state';
 const secondId = 'second-state';
@@ -21,11 +22,15 @@ exports.repaintStates = function (returnData) {
 
         $('<span>').text('; Arbitrage state: ').appendTo(markets);
         $('<span>', {id: arbId}).text(returnData.arbState).appendTo(markets);
+
+        $('<span>').text('; Bitmex reconnect state: ').appendTo(markets);
+        $('<span>', {id: btmReconId}).text(returnData.bitmexReconnectState).appendTo(markets);
     }
 
     updateState(firstId, returnData.firstMarket);
     updateState(secondId, returnData.secondMarket);
     updateState(arbId, returnData.arbState);
+    updateState(btmReconId, returnData.bitmexReconnectState);
 
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + returnData.timeToSignal;
