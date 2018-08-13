@@ -46,7 +46,7 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         // createColdStorage(settingsData, SETTINGS_URL);
 
-        // createUsdQuoteType(settingsData, SETTINGS_URL);
+        createUsdQuoteType(settingsData, SETTINGS_URL);
     });
 };
 
