@@ -39,7 +39,7 @@
 
             <div style="width: 800px; float: left; padding-right: 10px; border:1px solid gray; ">
                 <!--<div>-->
-                <h3>Bitmex(1 contract = $1)</h3>
+                <h3>Bitmex(1 contract = $1)[<span id="bitmex-contract-type-label"></span>]</h3>
 
                 <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
                 <!--id="bitmex-trade-log">empty...</textarea>-->
@@ -134,7 +134,7 @@
 
             <div style="width: 800px; float: left; padding-left: 10px; border:1px solid gray; ">
                 <!--<div>-->
-                <h3>Okcoin(1 contract = $100)</h3>
+                <h3>Okex(1 contract = $100)[<span id="okex-contract-type-label"></span>]</h3>
 
                 <div id="okcoin-balance">
                     Balance ...
@@ -415,6 +415,7 @@
         <button id="print-sum-bal">Print sum_bal</button>
     </div>
     <div id="usd-quote-type"></div>
+    <div id="okex-contract-type"></div>
     <div>
         reserveBtc1:
         <input type="text" id="reserveBtc1-edit"><button id="update-reserveBtc1">update reserveBtc1</button>

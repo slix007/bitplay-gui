@@ -1,5 +1,6 @@
 'use strict';
 
+let $ = require('jquery');
 var sprintf = require('sprintf-js').sprintf;
 
 let tableVar = require('./table');
@@ -34,6 +35,10 @@ httpVar.httpAsyncGet(theUrl, function (response) {
     console.log(response);
     let parsed = JSON.parse(response);
     console.log('first market=' + parsed.first);
+
+    $('#bitmex-contract-type-label').text(parsed.firstFutureContractName);
+    $('#okex-contract-type-label').text(parsed.secondFutureContractName);
+
     tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
     settingsVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
     bordersVar.showBordersV2(baseUrlWithPort);
