@@ -48,6 +48,7 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createUsdQuoteType(settingsData, SETTINGS_URL);
 
+        createBtmFutureContractType(settingsData, SETTINGS_URL);
         createOkFutureContractType(settingsData, SETTINGS_URL);
     });
 };
@@ -419,11 +420,53 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 
 }
 
+function createBtmFutureContractType(settingsData, SETTINGS_URL) {
+    var arr = [
+        'XBTUSD',
+        'XBT7D_D95',
+        'XBT7D_U105',
+        'XBTU18',
+        'XBTZ18',
+        'ETHUSD',
+        'ETHU18',
+    ];
+    const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Bitmex future contract type: ');
+    const select = $('<select/>').html($.map(arr, function (item) {
+        return $('<option/>', {value: item, text: item});
+    })).val(settingsData.bitmexContractType);
+    select.on('change', onVerPick);
+
+    const warnLabel = $('<span/>').css('color', 'red');
+
+    function updateWarning(data) {
+        warnLabel.html(data.bitmexContractType === data.bitmexContractTypeCurrent ? ''
+                : 'warning: to apply the changes restart is needed');
+    }
+
+    updateWarning(settingsData);
+
+    $("#bitmex-contract-type").append(label).append(select).append(warnLabel);
+
+    function onVerPick() {
+        console.log(this.value);
+        const requestData = JSON.stringify({bitmexContractType: this.value});
+
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (result) {
+                    let data = JSON.parse(result);
+                    updateWarning(data);
+                    alert('New value: ' + data.bitmexContractType);
+                });
+    }
+}
+
 function createOkFutureContractType(settingsData, SETTINGS_URL) {
     var arr = [
         'BTC_ThisWeek',
+        'BTC_NextWeek',
         'BTC_Quarter',
         'ETH_ThisWeek',
+        'ETH_NextWeek',
         'ETH_Quarter',
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Okex future contract type: ');
