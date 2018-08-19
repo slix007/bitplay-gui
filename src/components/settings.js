@@ -423,8 +423,8 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 function createBtmFutureContractType(settingsData, SETTINGS_URL) {
     var arr = [
         'XBTUSD',
-        'XBT7D_D95',
-        'XBT7D_U105',
+        // 'XBT7D_D95',
+        // 'XBT7D_U105',
         'XBTU18',
         'XBTZ18',
         'ETHUSD',
