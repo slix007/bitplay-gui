@@ -427,8 +427,8 @@ function createBtmFutureContractType(settingsData, SETTINGS_URL) {
         // 'XBT7D_U105',
         'XBTU18',
         'XBTZ18',
-        'ETHUSD',
-        'ETHU18',
+        // 'ETHUSD',
+        // 'ETHU18',
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Bitmex future contract type: ');
     const select = $('<select/>').html($.map(arr, function (item) {
@@ -465,9 +465,9 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
         'BTC_ThisWeek',
         'BTC_NextWeek',
         'BTC_Quarter',
-        'ETH_ThisWeek',
-        'ETH_NextWeek',
-        'ETH_Quarter',
+        // 'ETH_ThisWeek',
+        // 'ETH_NextWeek',
+        // 'ETH_Quarter',
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Okex future contract type: ');
     const select = $('<select/>').html($.map(arr, function (item) {
