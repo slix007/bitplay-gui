@@ -23,7 +23,9 @@ exports.fillComponents = function (container, futureIndex, baseUrl) {
         container.append(label2);
     }
 
-    updateLimits(futureIndex.limits);
+    if (futureIndex.limits != null) {
+        updateLimits(futureIndex.limits);
+    }
 };
 
 function createLimitPrice(container, value, URL) {

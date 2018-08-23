@@ -176,15 +176,23 @@ function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
+    var option4 = document.createElement('option');
+    var option5 = document.createElement('option');
     option1.setAttribute("value", "TAKER");
     option2.setAttribute("value", "MAKER");
     option3.setAttribute("value", "HYBRID");
+    option4.setAttribute("value", "MAKER_TICK");
+    option5.setAttribute("value", "HYBRID_TICK");
     option1.innerHTML = 'TAKER';
     option2.innerHTML = 'MAKER';
     option3.innerHTML = 'HYBRID';
+    option4.innerHTML = 'MAKER_TICK';
+    option5.innerHTML = 'HYBRID_TICK';
     select.appendChild(option1);
     select.appendChild(option2);
     select.appendChild(option3);
+    select.appendChild(option4);
+    select.appendChild(option5);
     select.addEventListener("change", onVerPick);
     select.value = ver;
 
@@ -205,12 +213,24 @@ function createBitmexPlacingType(mainContainer, ver, SETTINGS_URL) {
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
+    var option3 = document.createElement('option');
+    var option4 = document.createElement('option');
+    var option5 = document.createElement('option');
     option1.setAttribute("value", "TAKER");
     option2.setAttribute("value", "MAKER");
+    option3.setAttribute("value", "HYBRID");
+    option4.setAttribute("value", "MAKER_TICK");
+    option5.setAttribute("value", "HYBRID_TICK");
     option1.innerHTML = 'TAKER';
     option2.innerHTML = 'MAKER';
+    option3.innerHTML = 'HYBRID';
+    option4.innerHTML = 'MAKER_TICK';
+    option5.innerHTML = 'HYBRID_TICK';
     select.appendChild(option1);
     select.appendChild(option2);
+    select.appendChild(option3);
+    select.appendChild(option4);
+    select.appendChild(option5);
     select.addEventListener("change", onVerPick);
     select.value = ver;
 
