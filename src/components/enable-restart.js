@@ -115,6 +115,9 @@ function fillRestartMonitoringLabels(data) {
 
 
 var updateMonitorFunction = function () {
+    if (userInfo === undefined || !userInfo.isAuthorized()) {
+        return;
+    }
     Http.httpAsyncGet(URL, function (rawData) {
         let data = JSON.parse(rawData);
         fillRestartMonitoringLabels(data);

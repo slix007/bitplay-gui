@@ -48,21 +48,6 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     // };
     // socket.send("Привет");
 
-    function httpAsyncGet(theUrl, callback) {
-        Http.httpAsyncGet(theUrl, callback);
-    }
-
-    function httpAsyncPost(theUrl, data, callback, resultElement) {
-        Http.httpAsyncPost(theUrl, data, callback, resultElement);
-    }
-
-    function httpGet(theUrl) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", theUrl, false); // false for synchronous request
-        xmlHttp.send(null);
-        return xmlHttp.responseText;
-    }
-
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid
@@ -86,7 +71,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
     let fetchOrderBook = function (dataUrl) {
 
-        let inputData = JSON.parse(httpGet(dataUrl));
+        let inputData = JSON.parse(Http.httpGet(dataUrl));
 
         return parseOrderBook(inputData);
     };
@@ -122,7 +107,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     var that = this;
 
     let fetch = function (url, callback) {
-        httpAsyncGet(baseUrl + url, function (rawData) {
+        Http.httpAsyncGet(baseUrl + url, function (rawData) {
             const jsonData = JSON.parse(rawData);
             callback(jsonData);
         });
@@ -283,7 +268,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             console.log(responseData);
             alert(responseData);
         };
-        httpAsyncPost(baseUrl + moveUrl,
+        Http.httpAsyncPost(baseUrl + moveUrl,
             requestData,
             showResponse,
             null);
@@ -300,7 +285,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             console.log(responseData);
             alert(responseData);
         };
-        httpAsyncPost(baseUrl + cancelUrl,
+        Http.httpAsyncPost(baseUrl + cancelUrl,
             requestData,
             showResponse,
             null);
@@ -695,7 +680,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-borders',
+                Http.httpAsyncPost(baseUrl + '/market/update-borders',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -709,7 +694,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-borders',
+                Http.httpAsyncPost(baseUrl + '/market/update-borders',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -724,7 +709,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -739,7 +724,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -754,7 +739,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -769,7 +754,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -784,7 +769,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -799,7 +784,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -814,7 +799,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -829,7 +814,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -844,7 +829,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -859,7 +844,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+              Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -875,7 +860,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                     let requestData = JSON.stringify(request);
                     console.log(requestData);
 
-                    httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                    Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                         requestData,
                         function (responseData, resultElement) {
                             repaintDeltasAndBorders(responseData);
@@ -890,7 +875,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
+                Http.httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
                     requestData,
                     function (responseData, resultElement) {
                         repaintStopMoving(JSON.parse(responseData));
@@ -904,7 +889,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/free-states',
+                Http.httpAsyncPost(baseUrl + '/market/free-states',
                     requestData,
                     function (responseData, resultElement) {
                         repaintStates(JSON.parse(responseData));
@@ -918,7 +903,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/states',
+                Http.httpAsyncPost(baseUrl + '/market/states',
                     requestData,
                     function (responseData, resultElement) {
                         repaintStates(JSON.parse(responseData));
@@ -932,7 +917,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {count1: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -945,7 +930,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {count2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -958,7 +943,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {reserveBtc1: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -971,7 +956,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {reserveBtc2: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -985,7 +970,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/print-sum-bal',
+                Http.httpAsyncPost(baseUrl + '/market/print-sum-bal',
                     requestData,
                     function (responseData, resultElement) {
                         repaintStates(JSON.parse(responseData));
@@ -999,7 +984,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {hedgeAmount: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -1013,7 +998,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {fundingRateFee: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                     requestData,
                     function (responseData, resultElement) {
                         repaintDeltasAndBorders(responseData);
@@ -1027,7 +1012,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {command: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
                     requestData,
                     function (responseData, resultElement) {
                         let cst = document.getElementById("customSwapTime");
@@ -1042,7 +1027,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {command: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
                     requestData,
                     function (responseData, resultElement) {
                         let timeCompareUpdating = document.getElementById('timeCompareUpdating');
@@ -1064,7 +1049,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-                httpAsyncPost(baseUrl + '/market/pos-corr',
+                Http.httpAsyncPost(baseUrl + '/market/pos-corr',
                     requestData,
                     function (responseData, resultElement) {
                         repaintPosCorr(JSON.parse(responseData));
@@ -1078,7 +1063,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {periodToCorrection: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/pos-corr',
+                Http.httpAsyncPost(baseUrl + '/market/pos-corr',
                     requestData,
                     function (responseData, resultElement) {
                         repaintPosCorr(responseData);
@@ -1092,7 +1077,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {maxDiffCorr: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/pos-corr',
+                Http.httpAsyncPost(baseUrl + '/market/pos-corr',
                     requestData,
                     function (responseData, resultElement) {
                         repaintPosCorr(responseData);
@@ -1106,7 +1091,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {bMrLiq: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1119,7 +1104,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {oMrLiq: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1132,7 +1117,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {bDQLOpenMin: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1145,7 +1130,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {oDQLOpenMin: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1158,7 +1143,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {bDQLCloseMin: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1171,7 +1156,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
                 let request = {oDQLCloseMin: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
-                httpAsyncPost(baseUrl + '/market/liq-params',
+                Http.httpAsyncPost(baseUrl + '/market/liq-params',
                     requestData,
                     function (responseData, resultElement) {
                         repaintLiqParams(responseData);
@@ -1181,22 +1166,22 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             }
 
             if (element.id == 'okcoin-reset-liq-info') {
-                httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'bitmex-reset-liq-info') {
-                httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-delta-minmax') {
-                httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-signal-time-params') {
-                httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-delta_min-minmax') {
-                httpAsyncPost(baseUrl + '/reset-delta-params-min', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-delta-params-min', '', function (responseData, resultElement) {}, null);
             }
             if (element.id == 'reset-time-compare') {
-                httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
                     let timeCompare = document.getElementById('timeCompare');
                     timeCompare.innerHTML = responseData.result;
                 }, null);

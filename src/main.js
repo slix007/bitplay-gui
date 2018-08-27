@@ -3,6 +3,7 @@
 let $ = require('jquery');
 var sprintf = require('sprintf-js').sprintf;
 
+let userInfo = require('./userInfo');
 let tableVar = require('./table');
 let httpVar = require('./http');
 let bordersVar = require('./components/borders-v2');
@@ -22,6 +23,7 @@ let portNumber = "4031";
 // }
 
 // let baseUrlWithPort = sprintf('%s:%s', process.env.baseUrl, portNumber);
+// let baseUrlWithPort = 'http://664-vuld.fplay.io:4031';
 let baseUrlWithPort = sprintf('http://%s:%s', window.location.hostname, portNumber);
 let theUrl = sprintf('%s/market/list', baseUrlWithPort);
 console.log('baseUrlWithPort:' + baseUrlWithPort);
@@ -31,21 +33,26 @@ console.log('NODE_ENV ' + process.env.NODE_ENV);
 placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
 corrReset.showCorr(baseUrlWithPort);
 
-httpVar.httpAsyncGet(theUrl, function (response) {
-    console.log(response);
-    let parsed = JSON.parse(response);
-    console.log('first market=' + parsed.first);
+userInfo.fillUserInfo(baseUrlWithPort, function (isAuthorized) {
+    // baseUrl = baseUrlWithPort;
+    if (isAuthorized) {
+        httpVar.httpAsyncGet(theUrl, function (response) {
+            console.log(response);
+            let parsed = JSON.parse(response);
+            console.log('first market=' + parsed.first);
 
-    $('#bitmex-contract-type-label').text(parsed.firstFutureContractName);
-    $('#okex-contract-type-label').text(parsed.secondFutureContractName);
+            $('#bitmex-contract-type-label').text(parsed.firstFutureContractName);
+            $('#okex-contract-type-label').text(parsed.secondFutureContractName);
 
-    tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
-    settingsVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
-    bordersVar.showBordersV2(baseUrlWithPort);
-    swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
-    orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort);
+            tableVar.onDomLoadedFunc(parsed.first, parsed.second, baseUrlWithPort);
+            settingsVar.showArbVersion(parsed.first, parsed.second, baseUrlWithPort);
+            bordersVar.showBordersV2(baseUrlWithPort);
+            swapVar.showSwapV2(parsed.first, parsed.second, baseUrlWithPort);
+            orderActionVar.showOrderActions(parsed.first, parsed.second, baseUrlWithPort);
+        });
+
+        if (process.env.NODE_ENV == 'development') {
+            console.log('Hello from Webpack');
+        }
+    }
 });
-
-if (process.env.NODE_ENV == 'development') {
-    console.log('Hello from Webpack');
-}

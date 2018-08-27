@@ -179,6 +179,9 @@ function setMonitoringCount(label, corrParams, subParam) {
 }
 
 var updateMonitorFunction = function () {
+    if (userInfo === undefined || !userInfo.isAuthorized()) {
+        return;
+    }
     Http.httpAsyncGet(URL, function (rawData) {
         let res = JSON.parse(rawData);
         setMonitoringCount(corrCountLabel, res, 'corr');
