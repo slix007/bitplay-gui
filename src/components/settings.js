@@ -490,6 +490,7 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
         // 'ETH_Quarter',
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Okex future contract type: ');
+    const cnLabel = $('<span/>', {title: 'It is dynamicly calculated. Please compare it with the name in okex.com'});
     const select = $('<select/>').html($.map(arr, function (item) {
         return $('<option/>', {value: item, text: item});
     })).val(settingsData.okexContractType);
@@ -497,14 +498,15 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
 
     const warnLabel = $('<span/>').css('color', 'red');
 
-    function updateWarning(data) {
+    function updateLabels(data) {
         warnLabel.html(data.okexContractType === data.okexContractTypeCurrent ? ''
                 : 'warning: to apply the changes restart is needed');
+        cnLabel.html(data.okexContractName);
     }
 
-    updateWarning(settingsData);
+    updateLabels(settingsData);
 
-    $("#okex-contract-type").append(label).append(select).append(warnLabel);
+    $("#okex-contract-type").append(label).append(select).append(cnLabel).append(warnLabel);
 
     function onVerPick() {
         console.log(this.value);
@@ -513,7 +515,7 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (result) {
                     let data = JSON.parse(result);
-                    updateWarning(data);
+                    updateLabels(data);
                     alert('New value: ' + data.okexContractType);
                 });
     }
