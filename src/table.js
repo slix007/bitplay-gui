@@ -21,8 +21,8 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');
     let hot;
-    var elementPoloniexBid = document.getElementById(sprintf('%s-bid', firstMarketName));
-    var elementPoloniexAsk = document.getElementById(sprintf('%s-ask', firstMarketName));
+    var elementBitmexBid = document.getElementById(sprintf('%s-bid', firstMarketName));
+    var elementBitmexAsk = document.getElementById(sprintf('%s-ask', firstMarketName));
     var elementOkcoinBid = document.getElementById(sprintf('%s-bid', secondMarketName));
     var elementOkcoinAsk = document.getElementById(sprintf('%s-ask', secondMarketName));
 
@@ -73,6 +73,12 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
 
         let inputData = JSON.parse(Http.httpGet(dataUrl));
 
+        if (dataUrl.includes('bitmex')) {
+            $('#bitmex-last-price').html(inputData.lastPrice);
+        } else {
+            $('#okcoin-last-price').html(inputData.lastPrice);
+        }
+
         return parseOrderBook(inputData);
     };
 
@@ -94,9 +100,9 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         });
     }
 
-    var askPoloniexTable = createTable(elementPoloniexAsk,
+    var askPoloniexTable = createTable(elementBitmexAsk,
                                        sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
-    var bidPoloniexTable = createTable(elementPoloniexBid,
+    var bidPoloniexTable = createTable(elementBitmexBid,
                                        sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
     var askOkcoinTable = createTable(elementOkcoinAsk,
                                      sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
@@ -299,12 +305,15 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
             // console.log(orderBookP.ask);
             askPoloniexTable.loadData(orderBookP.ask);
             bidPoloniexTable.loadData(orderBookP.bid);
+
+            $('#bitmex-last-price').html(jsonData.lastPrice);
         });
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
             let orderBookO = parseOrderBook(jsonData);
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
+            $('#okcoin-last-price').html(jsonData.lastPrice);
         });
 
         fetch('/deadlock/check', function (resultJson) {
