@@ -18,6 +18,10 @@ userInfo = {
                 && this.roles.length > 0
                 && this.user !== 'unauthorized';
     },
+    isAdmin: function () {
+        return this.isAuthorized()
+                && this.roles.indexOf("ROLE_ADMIN") > -1;
+    },
     update: function (anUpdate) {
         this.user = anUpdate.user;
         this.roles = anUpdate.roles;

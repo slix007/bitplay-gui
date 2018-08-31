@@ -8,6 +8,7 @@ var exports = module.exports = {};
 
 exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
+    const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
         let settingsData = JSON.parse(rawData);
@@ -44,7 +45,8 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createSignalDelay(settingsData, SETTINGS_URL);
 
-        // createColdStorage(settingsData, SETTINGS_URL);
+        createColdStorage(settingsData, SETTINGS_ADMIN_URL);
+        createEBestMin(settingsData, SETTINGS_ADMIN_URL);
 
         createUsdQuoteType(settingsData, SETTINGS_URL);
 
@@ -380,7 +382,7 @@ function createSignalDelay(settingsData, SETTINGS_URL) {
     // container.appendChild(resultLabel);
 }
 
-function createColdStorage(settingsData, SETTINGS_URL) {
+function createColdStorage(settingsData, SETTINGS_ADMIN_URL) {
     var container = document.getElementById("cold-storage");
 
     var label = document.createElement('span');
@@ -395,7 +397,7 @@ function createColdStorage(settingsData, SETTINGS_URL) {
         setBtn.disabled = true;
         const requestData = JSON.stringify({coldStorageBtc: edit.value});
         console.log(requestData);
-        Http.httpAsyncPost(SETTINGS_URL,
+        Http.httpAsyncPost(SETTINGS_ADMIN_URL,
                 requestData, function (rawRes) {
                     const res = JSON.parse(rawRes);
                     resultLabel.innerHTML = res.coldStorageBtc;
@@ -409,6 +411,45 @@ function createColdStorage(settingsData, SETTINGS_URL) {
     container.appendChild(edit);
     container.appendChild(setBtn);
     container.appendChild(resultLabel);
+
+    if (!userInfo.isAdmin()) {
+        Utils.disableChildren(container);
+    }
+}
+
+function createEBestMin(settingsData, SETTINGS_ADMIN_URL) {
+    var container = document.getElementById("e-best-min");
+
+    var label = document.createElement('span');
+    label.innerHTML = 'e_best_min:';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+    resultLabel.innerHTML = settingsData.ebestMin;
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        const requestData = JSON.stringify({ebestMin: edit.value});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_ADMIN_URL,
+                requestData, function (rawRes) {
+                    const res = JSON.parse(rawRes);
+                    resultLabel.innerHTML = res.ebestMin;
+                    setBtn.disabled = false;
+                    // alert(rawRes);
+                });
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
+
+    if (!userInfo.isAdmin()) {
+        Utils.disableElements($("#e-best-min"));
+    }
 }
 
 function createUsdQuoteType(settingsData, SETTINGS_URL) {

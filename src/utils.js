@@ -76,3 +76,34 @@ exports.objectToArray = function(obj) {
 exports.camelToUnderscore = function (str) {
     return str.split(/(?=[A-Z])/).join('_').toLowerCase();
 };
+
+exports.disableElements = function disableElements(el) {      // Utils.disableElements($("#e-best-min"));
+    for (var i = 0; i < el.length; i++) {
+        el[i].disabled = true;
+
+        disableElements(el[i].children);
+    }
+};
+
+exports.enableElements = function enableElements(el) {
+    for (var i = 0; i < el.length; i++) {
+        el[i].disabled = false;
+
+        enableElements(el[i].children);
+    }
+};
+
+exports.disableChildren = function disableChildren(obj) { // Utils.disableChildren(document.getElementById("e-best-min"));
+    obj.childNodes.forEach(function (val) {
+        // val.style.color = 'grey';
+        val.disabled = true;
+    });
+};
+
+exports.enableChildren = function enableChildren(obj) {
+    obj.childNodes.forEach(function (val) {
+        // val.style.color = 'black';
+        val.disabled = false;
+    });
+};
+

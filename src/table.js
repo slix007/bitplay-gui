@@ -327,7 +327,7 @@ exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) 
         fetch('/market/sum-bal', function (resultJson) {
             $("#sum-bal").html(resultJson.result);
 
-            eBestMin.fillComponents(resultJson, baseUrl);
+            eBestMin.fillComponents(resultJson);
         });
 
         fetch('/market/pos-diff', function (resultJson) {

@@ -252,24 +252,12 @@ function createCheckBox(container, bordersV2, BORDERS_SETTINGS_V2_URL) {
 }
 
 function autoBaseLvlChanged() {
-    function disableChildren(obj) {
-        obj.childNodes.forEach(function(val) {
-            // val.style.color = 'grey';
-            val.disabled = true;
-        });
-    }
-    function enableChildren(obj) {
-        obj.childNodes.forEach(function(val) {
-            // val.style.color = 'black';
-            val.disabled = false;
-        });
-    }
     if (document.getElementById('autoBaseLvl').checked) {
-        disableChildren(document.getElementById('baseLvlCnt'));
-        disableChildren(document.getElementById('baseLvlType'));
+        Utils.disableChildren(document.getElementById('baseLvlCnt'));
+        Utils.disableChildren(document.getElementById('baseLvlType'));
     } else {
-        enableChildren(document.getElementById('baseLvlCnt'));
-        enableChildren(document.getElementById('baseLvlType'));
+        Utils.enableChildren(document.getElementById('baseLvlCnt'));
+        Utils.enableChildren(document.getElementById('baseLvlType'));
     }
 }
 
