@@ -34,7 +34,7 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
 
     const handleUserInfo = function (resp) {
         let contentDiv = document.getElementById("user-info-div");
-        if (resp === HTTP_ERROR ||resp === HTTP_ERROR_UNAUTH || resp.user === 'unauthorized') {
+        if (resp === HTTP_ERROR_UNAUTH || resp.user === 'unauthorized') {
             if (resp === HTTP_ERROR_UNAUTH) {
                 console.log('Clear credentials');
                 http.clearAuthCookie();
@@ -42,6 +42,8 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
             contentDiv.innerHTML = loginPage.loginPage; // userInfo[window.location.hash];
             loginPage.showLoginPage(baseUrl);
 
+        } else if (resp === HTTP_ERROR) {
+            // do nothing
         } else {
             userInfo.update(resp);
             contentDiv.innerHTML = userInfo.user
