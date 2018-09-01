@@ -5,6 +5,7 @@ var exports = module.exports = {};
 
 let logoutPage = '';
 let homePage = '';
+const HTTP_ERROR_UNAUTH = 'HTTP_ERROR_UNAUTH';
 const HTTP_ERROR = 'HTTP_ERROR';
 
 userInfo = {
@@ -33,8 +34,11 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
 
     const handleUserInfo = function (resp) {
         let contentDiv = document.getElementById("user-info-div");
-        if (resp === HTTP_ERROR || resp.user === 'unauthorized') {
-            http.clearAuthCookie();
+        if (resp === HTTP_ERROR ||resp === HTTP_ERROR_UNAUTH || resp.user === 'unauthorized') {
+            if (resp === HTTP_ERROR_UNAUTH) {
+                console.log('Clear credentials');
+                http.clearAuthCookie();
+            }
             contentDiv.innerHTML = loginPage.loginPage; // userInfo[window.location.hash];
             loginPage.showLoginPage(baseUrl);
 
@@ -60,7 +64,12 @@ function getUserInfo(baseUrl, callback) {
         callback(resp);
     }, function (errorHttp) {
         console.log(errorHttp);
-        console.log('http response status=' + errorHttp.status + '. Clear credentials');
-        callback(HTTP_ERROR);
+
+        console.log('http response status=' + errorHttp.status);
+        if (errorHttp.status === 401 || errorHttp.status === 403) {
+            callback(HTTP_ERROR_UNAUTH);
+        } else {
+            callback(HTTP_ERROR);
+        }
     });
 };
