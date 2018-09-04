@@ -52,6 +52,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createBtmFutureContractType(settingsData, SETTINGS_URL);
         createOkFutureContractType(settingsData, SETTINGS_URL);
+
+        maxBitmexReconnects(settingsData, SETTINGS_URL);
+
     });
 };
 
@@ -560,5 +563,37 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
                     alert('New value: ' + data.okexContractType);
                 });
     }
+}
 
+function maxBitmexReconnects(settingsData, SETTINGS_URL) {
+    var container = document.getElementById("max-bitmex-reconnects");
+
+    var label = document.createElement('span');
+    label.innerHTML = 'Max bitmex reconnects:';
+    var edit = document.createElement('input');
+    edit.style.width = '80px';
+    edit.innerHTML = '';
+    var resultLabel = document.createElement('span');
+
+    resultLabel.innerHTML = settingsData.restartSettings.maxBitmexReconnects;
+    var setBtn = document.createElement('button');
+    setBtn.onclick = function () {
+        setBtn.disabled = true;
+        const requestData = JSON.stringify({restartSettings: {maxBitmexReconnects: edit.value}});
+        console.log(requestData);
+        console.log(SETTINGS_URL);
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (rawRes) {
+                    const res = JSON.parse(rawRes);
+                    resultLabel.innerHTML = res.restartSettings.maxBitmexReconnects;
+                    setBtn.disabled = false;
+                    // alert(rawRes);
+                });
+    };
+    setBtn.innerHTML = 'set';
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(setBtn);
+    container.appendChild(resultLabel);
 }
