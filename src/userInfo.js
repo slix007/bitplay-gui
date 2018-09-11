@@ -34,6 +34,7 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
 
     const handleUserInfo = function (resp) {
         let contentDiv = document.getElementById("user-info-div");
+        // contentDiv.style.color = 'yellow';
         if (resp === HTTP_ERROR_UNAUTH || resp.user === 'unauthorized') {
             if (resp === HTTP_ERROR_UNAUTH) {
                 console.log('Clear credentials');
@@ -44,6 +45,9 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
 
         } else if (resp === HTTP_ERROR) {
             // do nothing
+            contentDiv.innerHTML = '!Server does not respond!';
+            contentDiv.style.color = 'darkgoldenrod';
+            contentDiv.style.fontWeight = 'bold';
         } else {
             userInfo.update(resp);
             contentDiv.innerHTML = userInfo.user

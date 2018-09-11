@@ -12,7 +12,7 @@ let eBestMin = require('./components/comp/e-best-min');
 
 var exports = module.exports = {};
 
-exports.onDomLoadedFunc = function (firstMarketName, secondMarketName, baseUrl) {
+exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     Utils.fillLinksToLogs();

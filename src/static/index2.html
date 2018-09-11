@@ -20,494 +20,540 @@
     <link type="text/css" rel="stylesheet" href="./handsontable-3.0.0.min.css">
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
     <link type="text/css" rel="stylesheet" href="./table.css">
+    <link type="text/css" rel="stylesheet" href="./tabs.css">
 
     <script src="./bundle.js"></script>
 
 </head>
 <body>
-    <div id="user-info-div"></div>
-    <div name="update settings">
-        <button id="BUTTON" name="update">update interval</button>
-        <input id="update_interval" type="text" value="1000">
-        <input disabled type="checkbox" id="logs-fetching">Fetch logs
-    </div>
-    </div>
 
-    <!-- Pair of Stock exchanges -->
-    <div id="STOCK_PAIR" style="border: solid; display: flex;">
+<div id="user-info-div"></div>
 
-        <div id="STOCK_PAIR_RELATIVE" style="border: solid; float: top;">
+<nav id="tabNav">
+    <ul class="tabNavList">
+        <li><a href="#tab1" class="act">Main</a></li>
+        <li><a href="#tab2">DeltaLogs</a></li>
+        <!--<li><a href="#tab3">Таб 3</a></li>-->
+        <!--<li><a href="#tab4">Таб 4</a></li>-->
+    </ul>
+</nav>
 
-            <div style="width: 800px; float: left; padding-right: 10px; border:1px solid gray; ">
-                <!--<div>-->
-                <h3>Bitmex(1 contract = $1)[<span id="bitmex-contract-type-label"></span>]</h3>
+<div id="tabsWrap">
 
-                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                <!--id="bitmex-trade-log">empty...</textarea>-->
+    <div class="tab" id="tab2" data-name="deltalogs-page">deltalogs-page</div>
+    <div class="tab" id="tab3">Контент 3</div>
+    <div class="tab" id="tab4">Контент 4</div>
 
-                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                <!--id="okcoin-trade-log">empty...</textarea>-->
+    <div class="tab act" id="tab1" data-name="main-page">
 
-                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                <!--id="deltas-log">empty...</textarea>-->
+        <div name="update settings">
+            <button id="BUTTON" name="update">update interval</button>
+            <input id="update_interval" type="text" value="1000">
+            <input disabled type="checkbox" id="logs-fetching">Fetch logs
+        </div>
 
-                <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                <!--id="warning-log">empty...</textarea>-->
+        <!-- Pair of Stock exchanges -->
+        <div id="STOCK_PAIR" style="border: solid; display: flex;">
 
-                <div id="bitmex-balance">
-                    Balance ...
-                </div>
+            <div id="STOCK_PAIR_RELATIVE" style="border: solid; float: top;">
 
-                <div>
+                <div style="width: 800px; float: left; padding-right: 10px; border:1px solid gray; ">
+                    <!--<div>-->
+                    <h3>Bitmex(1 contract = $1)[<span id="bitmex-contract-type-label"></span>]</h3>
+
+                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                    <!--id="bitmex-trade-log">empty...</textarea>-->
+
+                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                    <!--id="okcoin-trade-log">empty...</textarea>-->
+
+                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                    <!--id="deltas-log">empty...</textarea>-->
+
+                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
+                    <!--id="warning-log">empty...</textarea>-->
+
+                    <div id="bitmex-balance">
+                        Balance ...
+                    </div>
+
+                    <div>
                 <span id="bitmex-liq-info">
                     liq info ...
                 </span>
-                    <button id="bitmex-reset-liq-info">reset</button>
-                </div>
-                <!--<button name="sendToSocket">send to socket</button>-->
-                <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+                        <button id="bitmex-reset-liq-info">reset</button>
+                    </div>
+                    <!--<button name="sendToSocket">send to socket</button>-->
+                    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
 
-                <div id="bitmex-open-orders" style="border:1px solid black;"></div>
+                    <div id="bitmex-open-orders" style="border:1px solid black;"></div>
 
-                <div style="border: solid; height: 40px" id="bitmex-orders">
-                </div>
+                    <div style="border: solid; height: 40px" id="bitmex-orders">
+                    </div>
 
-                <div id="bitmex-future-index">
-                </div>
+                    <div id="bitmex-future-index">
+                    </div>
 
-                <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
-                <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
-
-
-                <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
-                    <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-                </div>
-                <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="bitmex-last-price"></span></div>
-                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
-                    <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-                </div>
+                    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
+                    <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
 
 
+                    <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
+                        <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                    </div>
+                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="bitmex-last-price"></span>
+                    </div>
+                    <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                        <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                    </div>
 
 
-                <div style="background-color: azure; border: solid">System overload settings
-                    <div id="sys-overload-settings"></div>
-                </div>
+                    <div style="background-color: azure; border: solid">System overload settings
+                        <div id="sys-overload-settings"></div>
+                    </div>
 
-                <div>Bitmex price<span id="bitmex-price"></span></div>
+                    <div>Bitmex price<span id="bitmex-price"></span></div>
 
 
+                    <div>
+                        <span id="bitmex-future-index-funding">Funding:</span>
+                        <span id="bitmex-future-index-funding-time"></span>
+                    </div>
+                    <div>
+                        fundingRateFee:
+                        <input type="text" id="fundingRateFee-edit">
+                        <button id="update-fundingRateFee">update fundingRateFee</button>
+                        <span id="fundingRateFee"></span>
+                    </div>
+                    <div>
+                        customSwapTime:
+                        <input type="text" id="customSwapTime-edit">
+                        <button id="update-customSwapTime">update customSwapTime</button>
+                        <span id="customSwapTime">example: 2017-08-10T13:45:00Z</span>
+                    </div>
+                    <div>
+                        timeCompare:
+                        <span id="timeCompare"></span>
+                        <button id="reset-time-compare">reset</button>
+                    </div>
+                    <div>
+                        timeCompareUpdating:
+                        <input type="text" id="timeCompareUpdating-edit">
+                        <button id="update-timeCompareUpdating">update</button>
+                        <span id="timeCompareUpdating"></span>
+                    </div>
+                    <div style="background-color: azure; border: solid">Swap version
+                        <span id="select-swap-version"></span>
+                        <div id="swap-v2"></div>
+                    </div>
 
-                <div>
-                    <span id="bitmex-future-index-funding">Funding:</span>
-                    <span id="bitmex-future-index-funding-time"></span>
-                </div>
-                <div>
-                    fundingRateFee:
-                    <input type="text" id="fundingRateFee-edit">
-                    <button id="update-fundingRateFee">update fundingRateFee</button>
-                    <span id="fundingRateFee"></span>
-                </div>
-                <div>
-                    customSwapTime:
-                    <input type="text" id="customSwapTime-edit">
-                    <button id="update-customSwapTime">update customSwapTime</button>
-                    <span id="customSwapTime">example: 2017-08-10T13:45:00Z</span>
-                </div>
-                <div>
-                    timeCompare:
-                    <span id="timeCompare"></span>
-                    <button id="reset-time-compare">reset</button>
-                </div>
-                <div>
-                    timeCompareUpdating:
-                    <input type="text" id="timeCompareUpdating-edit">
-                    <button id="update-timeCompareUpdating">update</button>
-                    <span id="timeCompareUpdating"></span>
-                </div>
-                <div style="background-color: azure; border: solid">Swap version
-                    <span id="select-swap-version"></span>
-                    <div id="swap-v2"></div>
-                </div>
-
-                <!--</div>-->
-            </div>
-
-            <div style="width: 800px; float: left; padding-left: 10px; border:1px solid gray; ">
-                <!--<div>-->
-                <h3>Okex(1 contract = $100)[<span id="okex-contract-type-label"></span>]</h3>
-
-                <div id="okcoin-balance">
-                    Balance ...
+                    <!--</div>-->
                 </div>
 
-                <div>
+                <div style="width: 800px; float: left; padding-left: 10px; border:1px solid gray; ">
+                    <!--<div>-->
+                    <h3>Okex(1 contract = $100)[<span id="okex-contract-type-label"></span>]</h3>
+
+                    <div id="okcoin-balance">
+                        Balance ...
+                    </div>
+
+                    <div>
                     <span id="okcoin-liq-info">
                         liq info ...
                     </span>
 
-                    <button id="okcoin-reset-liq-info">reset</button>
+                        <button id="okcoin-reset-liq-info">reset</button>
+                    </div>
+
+                    <div id="okcoin-open-orders" style="border:1px solid black;"></div>
+
+                    <div style="border: solid; height: 40px;" id="okcoin-orders">
+                    </div>
+
+
+                    <div id="okcoin-future-index">
+                    </div>
+
+
+                    <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
+                        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                    </div>
+                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="okcoin-last-price"></span>
+                    </div>
+                    <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
+                        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                    </div>
                 </div>
+                <!--</div>-->
 
-                <div id="okcoin-open-orders" style="border:1px solid black;"></div>
-
-                <div style="border: solid; height: 40px;" id="okcoin-orders">
-                </div>
-
-
-                <div id="okcoin-future-index">
-                </div>
-
-
-                <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
-                    <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-                </div>
-                <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="okcoin-last-price"></span></div>
-                <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
-                    <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-                </div>
             </div>
-            <!--</div>-->
 
         </div>
+        <br>
 
-    </div>
-    <br>
+        <div id="sum-bal" style="font-weight:bold">
+            Sum bal
+        </div>
+        <div>
+            <span id="pos-diff">Pos diff =</span>
+        </div>
+        <br>
 
-    <div id="sum-bal" style="font-weight:bold">
-        Sum bal
-    </div>
-    <div>
-        <span id="pos-diff">Pos diff =</span>
-    </div>
-    <br>
-
-    <span id="limits-status">
+        <span id="limits-status">
         Bitmex: <span id="bitmex-limits-status"></span>,
         Okex: <span id="okex-limits-status"></span>;
     </span>
-    <span id="markets-states"></span>
-    <div>
-        <span id="ignore-limits"></span>
-        <button id="free-markets-states">Free markets states</button>
-        <button id="stop-markets">Stop everything</button>
-        <span id="cold-storage-label"></span>
-        <span id="s_e_best_min"></span>
-        <span id="s_e_best_min_time_to_forbidden"></span>
-    </div>
-
-    <br>
-    <div id="DELTA_BLOCK" style="display: flex;">
-        <div id="DELTA_DATA_BLOCKS" style="float: top;">
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span></div>
-                <div>o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span></div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>b_delta_sma:<span id="delta1Sma"></span></div>
-                <div>o_delta_sma:<span id="delta2Sma"></span></div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>b_delta_min:<span id="delta1MinFixed"></span></div>
-                <div>o_delta_min:<span id="delta2MinFixed"></span></div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>
-                    b_border:
-                    <input type="text" id="border1-edit">
-                    <button id="update-border1">Update border1</button>
-                    <span id="border1"></span>
-                </div>
-                <div>
-                    o_border:
-                    <input type="text" id="border2-edit">
-                    <button id="update-border2">Update border2</button>
-                    <span id="border2"></span>
-                </div>
-            </div>
+        <span id="markets-states"></span>
+        <div>
+            <span id="ignore-limits"></span>
+            <button id="free-markets-states">Free markets states</button>
+            <button id="stop-markets">Stop everything</button>
+            <span id="cold-storage-label"></span>
+            <span id="s_e_best_min"></span>
+            <span id="s_e_best_min_time_to_forbidden"></span>
         </div>
-    </div>
 
-    <div id="RANGE_DELTA_BLOCK" style="display: flex;">
-
-        <div id="RANGE_DELTA_PAIR_RELATIVE" style="float: top;">
-
-            <div style="float: left; padding-right: 10px; padding-left: 10px;">
-                <div>
-                    <span id="borders-timer"></span><br>
-                    range b_delta: <span id="b_delta_minmax"></span><br>
-                    range o_delta: <span id="o_delta_minmax"></span>
-                    <button id="reset-delta-minmax">reset</button>
+        <br>
+        <div id="DELTA_BLOCK" style="display: flex;">
+            <div id="DELTA_DATA_BLOCKS" style="float: top;">
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span></div>
+                    <div>o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span></div>
                 </div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>
-                    <span id="delta-min-timer"></span><br>
-                    range b_delta_min: <span id="b_delta_min_minmax"></span>;<br>
-                    range o_delta_min: <span id="o_delta_min_minmax"></span>;
-                    <button id="reset-delta_min-minmax">reset</button>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>b_delta_sma:<span id="delta1Sma"></span></div>
+                    <div>o_delta_sma:<span id="delta2Sma"></span></div>
                 </div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>
-                    <br>
-                    <span id="delta1MinInstant"></span><br>
-                    <span id="delta2MinInstant"></span>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>b_delta_min:<span id="delta1MinFixed"></span></div>
+                    <div>o_delta_min:<span id="delta2MinFixed"></span></div>
                 </div>
-            </div>
-            <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                <div>
-                    <div id="start-signal-timer"></div>
-                    range signal time(sec): <span id="signal-time-range"></span><br>
-                    avg signal time(sec): <span id="signal-time-avg"></span>
-                    <button id="reset-signal-time-params">reset</button>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>
+                        b_border:
+                        <input type="text" id="border1-edit">
+                        <button id="update-border1">Update border1</button>
+                        <span id="border1"></span>
+                    </div>
+                    <div>
+                        o_border:
+                        <input type="text" id="border2-edit">
+                        <button id="update-border2">Update border2</button>
+                        <span id="border2"></span>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
+        <div id="RANGE_DELTA_BLOCK" style="display: flex;">
 
-    <div>
-        <span id="signal-delay"></span>
-        <span id="signal-delay-label"></span>
-    </div>
+            <div id="RANGE_DELTA_PAIR_RELATIVE" style="float: top;">
 
-    <!--
-    <div>
-        maker delta:
-        <input type="text" id="maker-delta-edit"><button id="update-maker-delta">Update maker delta</button>
-        <span id="maker-delta"></span>
-    </div>-->
-    <!--
-    <div>
-        bu:
-        <input type="text" id="bu-edit"><button id="update-bu">Update bu</button>
-        <span id="bu"></span>
-    </div> -->
-    <div>
-        cum_delta/ast:
-        <input type="text" id="cum-delta-edit"><button id="update-cum-delta">Update cum delta</button>
-        <span id="cum-delta"></span>
-    </div>
-    <!--<div>-->
+                <div style="float: left; padding-right: 10px; padding-left: 10px;">
+                    <div>
+                        <span id="borders-timer"></span><br>
+                        range b_delta: <span id="b_delta_minmax"></span><br>
+                        range o_delta: <span id="o_delta_minmax"></span>
+                        <button id="reset-delta-minmax">reset</button>
+                    </div>
+                </div>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>
+                        <span id="delta-min-timer"></span><br>
+                        range b_delta_min: <span id="b_delta_min_minmax"></span>;<br>
+                        range o_delta_min: <span id="o_delta_min_minmax"></span>;
+                        <button id="reset-delta_min-minmax">reset</button>
+                    </div>
+                </div>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>
+                        <br>
+                        <span id="delta1MinInstant"></span><br>
+                        <span id="delta2MinInstant"></span>
+                    </div>
+                </div>
+                <div style="float: left; padding-right: 10px; padding-left: 10px; ">
+                    <div>
+                        <div id="start-signal-timer"></div>
+                        range signal time(sec): <span id="signal-time-range"></span><br>
+                        avg signal time(sec): <span id="signal-time-avg"></span>
+                        <button id="reset-signal-time-params">reset</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <span id="signal-delay"></span>
+            <span id="signal-delay-label"></span>
+        </div>
+
+        <!--
+        <div>
+            maker delta:
+            <input type="text" id="maker-delta-edit"><button id="update-maker-delta">Update maker delta</button>
+            <span id="maker-delta"></span>
+        </div>-->
+        <!--
+        <div>
+            bu:
+            <input type="text" id="bu-edit"><button id="update-bu">Update bu</button>
+            <span id="bu"></span>
+        </div> -->
+        <div>
+            cum_delta/ast:
+            <input type="text" id="cum-delta-edit">
+            <button id="update-cum-delta">Update cum delta</button>
+            <span id="cum-delta"></span>
+        </div>
+        <!--<div>-->
         <!--last delta:-->
         <!--<input type="text" id="last-delta-edit"><button id="update-last-delta">Update last delta</button>-->
         <!--<span id="last-delta"></span>-->
-    <!--</div>-->
-    <div>
-        cum_delta_fact/ast:
-        <input type="text" id="cum-delta-fact-edit"><button id="update-cum-delta-fact">Update cum delta fact</button>
-        <span id="cum-delta-fact"></span>
-    </div>
-    <div>
-        cum diff fact br:
-        <input type="text" id="cum-diff-fact-br-edit"><button id="update-cum-diff-fact-br">Update cum diff fact br</button>
-        <span id="cum-diff-fact-br"></span>
-    </div>
-    <div>
-        cum diff1/ast:
-        <input type="text" id="cum-diff1-edit"><button id="update-cum-diff1">Update cum diff1</button>
-        <span id="cum-diff1"></span>
-    </div>
-    <div>
-        cum diff2/ast:
-        <input type="text" id="cum-diff2-edit"><button id="update-cum-diff2">Update cum diff2</button>
-        <span id="cum-diff2"></span>
-    </div>
-    <div>
-        cum diff/ast:
-        <input type="text" id="cum-diff-edit"><button id="update-cum-diff">Update cum diff</button>
-        <span id="cum-diff"></span>
-    </div>
-    <div>
-        cum_com1/ast:
-        <input type="text" id="cum-com1-edit"><button id="update-cum-com1">Update cum com1</button>
-        <span id="cum-com1"></span>
-    </div>
-    <div>
-        cum_com2/ast:
-        <input type="text" id="cum-com2-edit"><button id="update-cum-com2">Update cum com2</button>
-        <span id="cum-com2"></span>
-    </div>
-    <div>
-        cum_bitmex_M_com/ast:
-        <input type="text" id="cumBitmexMCom-edit"><button id="update-cumBitmexMCom">Update cumBitmexMCom</button>
-        <span id="cumBitmexMCom"></span>
-    </div>
-    <div>
-        slip_br/slip:
-        <input type="text" id="slip-edit"><button id="update-slip">Update slip</button>
-        <span id="slip"></span>
-    </div>
-    <div>
-        Count1/CompletedCount1:
-        <input type="text" id="count1-edit"><button id="update-count1">update count1</button>
-        <span id="count1"></span>
-    </div>
-    <div>
-        Count2/CompletedCount2:
-        <input type="text" id="count2-edit"><button id="update-count2">update count2</button>
-        <span id="count2"></span>
-    </div>
-    <div>
-        <button id="reset-all-cum">Reset all cum values</button>
-    </div>
-
-    <div>
-        <button id="toggle-stop-moving">Toggle moving</button>
-        <span id="is-stop-moving"></span>
-    </div>
-
-    <div style="background-color: azure; border: solid" id="placing-blocks">
-        Placing blocks:
-    </div>
-    <!--<div>-->
-    <!--block1(conctracts for a signal):-->
-    <!--<input type="text" id="block1-edit"><button id="update-block1">Update block1</button>-->
-    <!--<span id="block1"></span>-->
-    <!--</div>-->
-    <!--<div>-->
-    <!--block2(conctracts for a signal):-->
-    <!--<input type="text" id="block2-edit"><button id="update-block2">Update block2</button>-->
-    <!--<span id="block2"></span>-->
-    <!--</div>-->
-
-    <div style="background-color: azure; border: solid">Arbitrage version
-        <span id="select-arb-version"></span>
-        <div>Bitmex place orders type:<span id="bitmex-placing-type"></span></div>
-        <div>Okex place orders type:<span id="okex-placing-type"></span></div>
-    </div>
-
-    <div style="background-color: azure; border: solid">
-
-        <div id="borders-main-settings"></div>
-
+        <!--</div>-->
         <div>
-            delta_historical_period started
-            <span id="deltaHistPerStarted"></span>
-            sec ago.
-            <span id="deltaSmaUpdateIn"></span>
+            cum_delta_fact/ast:
+            <input type="text" id="cum-delta-fact-edit">
+            <button id="update-cum-delta-fact">Update cum delta fact</button>
+            <span id="cum-delta-fact"></span>
         </div>
         <div>
-            b_delta_sma_calc:<span id="delta1EveryCalc"></span>; &#09;&#09;
+            cum diff fact br:
+            <input type="text" id="cum-diff-fact-br-edit">
+            <button id="update-cum-diff-fact-br">Update cum diff fact br</button>
+            <span id="cum-diff-fact-br"></span>
         </div>
         <div>
-            o_delta_sma_calc:<span id="delta2EveryCalc"></span>; &#09;&#09;
+            cum diff1/ast:
+            <input type="text" id="cum-diff1-edit">
+            <button id="update-cum-diff1">Update cum diff1</button>
+            <span id="cum-diff1"></span>
+        </div>
+        <div>
+            cum diff2/ast:
+            <input type="text" id="cum-diff2-edit">
+            <button id="update-cum-diff2">Update cum diff2</button>
+            <span id="cum-diff2"></span>
+        </div>
+        <div>
+            cum diff/ast:
+            <input type="text" id="cum-diff-edit">
+            <button id="update-cum-diff">Update cum diff</button>
+            <span id="cum-diff"></span>
+        </div>
+        <div>
+            cum_com1/ast:
+            <input type="text" id="cum-com1-edit">
+            <button id="update-cum-com1">Update cum com1</button>
+            <span id="cum-com1"></span>
+        </div>
+        <div>
+            cum_com2/ast:
+            <input type="text" id="cum-com2-edit">
+            <button id="update-cum-com2">Update cum com2</button>
+            <span id="cum-com2"></span>
+        </div>
+        <div>
+            cum_bitmex_M_com/ast:
+            <input type="text" id="cumBitmexMCom-edit">
+            <button id="update-cumBitmexMCom">Update cumBitmexMCom</button>
+            <span id="cumBitmexMCom"></span>
+        </div>
+        <div>
+            slip_br/slip:
+            <input type="text" id="slip-edit">
+            <button id="update-slip">Update slip</button>
+            <span id="slip"></span>
+        </div>
+        <div>
+            Count1/CompletedCount1:
+            <input type="text" id="count1-edit">
+            <button id="update-count1">update count1</button>
+            <span id="count1"></span>
+        </div>
+        <div>
+            Count2/CompletedCount2:
+            <input type="text" id="count2-edit">
+            <button id="update-count2">update count2</button>
+            <span id="count2"></span>
+        </div>
+        <div>
+            <button id="reset-all-cum">Reset all cum values</button>
         </div>
 
-        <div id="borders-v1" style="background-color: azure; border: solid; margin-left: 3px; margin-bottom: 3px"></div>
+        <div>
+            <button id="toggle-stop-moving">Toggle moving</button>
+            <span id="is-stop-moving"></span>
+        </div>
 
-        <div id="borders-v2" style="background-color: ivory; border: solid; display: flex; margin-left: 3px">
-            <div id="borders-v2-params" style="float: left; padding-right: 10px;"></div>
-            <div style="float: left">
-                <div id="border-buttons" style="float: top">
-                </div>
-                <div style="float: top">
-                    <div id="b_br_close" style="float: left; padding-right: 10px;"></div>
-                    <div id="b_br_open" style="float: left; padding-right: 10px;"></div>
-                    <div id="o_br_close" style="float: left; padding-right: 10px;"></div>
-                    <div id="o_br_open" style="float: left; padding-right: 10px;"></div>
+        <div style="background-color: azure; border: solid" id="placing-blocks">
+            Placing blocks:
+        </div>
+        <!--<div>-->
+        <!--block1(conctracts for a signal):-->
+        <!--<input type="text" id="block1-edit"><button id="update-block1">Update block1</button>-->
+        <!--<span id="block1"></span>-->
+        <!--</div>-->
+        <!--<div>-->
+        <!--block2(conctracts for a signal):-->
+        <!--<input type="text" id="block2-edit"><button id="update-block2">Update block2</button>-->
+        <!--<span id="block2"></span>-->
+        <!--</div>-->
+
+        <div style="background-color: azure; border: solid">Arbitrage version
+            <span id="select-arb-version"></span>
+            <div>Bitmex place orders type:<span id="bitmex-placing-type"></span></div>
+            <div>Okex place orders type:<span id="okex-placing-type"></span></div>
+        </div>
+
+        <div style="background-color: azure; border: solid">
+
+            <div id="borders-main-settings"></div>
+
+            <div>
+                delta_historical_period started
+                <span id="deltaHistPerStarted"></span>
+                sec ago.
+                <span id="deltaSmaUpdateIn"></span>
+            </div>
+            <div>
+                b_delta_sma_calc:<span id="delta1EveryCalc"></span>; &#09;&#09;
+            </div>
+            <div>
+                o_delta_sma_calc:<span id="delta2EveryCalc"></span>; &#09;&#09;
+            </div>
+
+            <div id="borders-v1" style="background-color: azure; border: solid; margin-left: 3px; margin-bottom: 3px"></div>
+
+            <div id="borders-v2" style="background-color: ivory; border: solid; display: flex; margin-left: 3px">
+                <div id="borders-v2-params" style="float: left; padding-right: 10px;"></div>
+                <div style="float: left">
+                    <div id="border-buttons" style="float: top">
+                    </div>
+                    <div style="float: top">
+                        <div id="b_br_close" style="float: left; padding-right: 10px;"></div>
+                        <div id="b_br_open" style="float: left; padding-right: 10px;"></div>
+                        <div id="o_br_close" style="float: left; padding-right: 10px;"></div>
+                        <div id="o_br_open" style="float: left; padding-right: 10px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <br>
+        <div>
+            <button id="print-sum-bal">Print sum_bal</button>
+        </div>
+        <div id="cold-storage"></div>
+        <div id="e-best-min"></div>
+        <div id="usd-quote-type"></div>
+        <div id="bitmex-contract-type"></div>
+        <div id="okex-contract-type"></div>
+        <br>
+        <div>
+            reserveBtc1:
+            <input type="text" id="reserveBtc1-edit">
+            <button id="update-reserveBtc1">update reserveBtc1</button>
+            <span id="reserveBtc1"></span>
+        </div>
+        <div>
+            reserveBtc2:
+            <input type="text" id="reserveBtc2-edit">
+            <button id="update-reserveBtc2">update reserveBtc2</button>
+            <span id="reserveBtc2"></span>
+        </div>
+        <div>
+            Hedge amount:
+            <input type="text" id="hedgeAmount-edit">
+            <button id="update-hedgeAmount">update hedgeAmount</button>
+            <span id="hedgeAmount"></span>
+        </div>
+        <div id="correction">
+        </div>
+        <div>
+            Signal limit:
+            <input type="text" id="periodToCorrection-edit">
+            <button id="update-periodToCorrection">update Signal limit</button>
+            <span id="periodToCorrection"></span>
+        </div>
+        <div>
+            maxDiffCorr:
+            <input type="text" id="maxDiffCorr-edit">
+            <button id="update-maxDiffCorr">update maxDiffCorr</button>
+            <span id="maxDiffCorr"></span>
+        </div>
+        <div>
+            b_mr_liq:
+            <input type="text" id="b_mr_liq-edit">
+            <button id="update-b_mr_liq">update b_mr_liq</button>
+            <span id="b_mr_liq"></span>
+        </div>
+        <div>
+            o_mr_liq:
+            <input type="text" id="o_mr_liq-edit">
+            <button id="update-o_mr_liq">update o_mr_liq</button>
+            <span id="o_mr_liq"></span>
+        </div>
+        <div id="fee-settings"></div>
+        <div>
+            b_DQL_open_min:
+            <input type="text" id="b_DQL_open_min-edit">
+            <button id="update-b_DQL_open_min">update b_DQL_open_min</button>
+            <span id="b_DQL_open_min"></span>
+            <span style="font-style: italic; font-size: small">(new signals only if b_DQL >= b_DQL_open_min)</span>
+        </div>
+        <div>
+            o_DQL_open_min:
+            <input type="text" id="o_DQL_open_min-edit">
+            <button id="update-o_DQL_open_min">update o_DQL_open_min</button>
+            <span id="o_DQL_open_min"></span>
+            <span style="font-style: italic; font-size: small">(new signals only if o_DQL >= o_DQL_open_min)</span>
+        </div>
+        <div>
+            b_DQL_close_min:
+            <input type="text" id="b_DQL_close_min-edit">
+            <button id="update-b_DQL_close_min">update b_DQL_close_min</button>
+            <span id="b_DQL_close_min"></span>
+            <span style="font-style: italic; font-size: small">(#b_preliq correction when b_DQL <= b_DQL_close_min)</span>
+        </div>
+        <div>
+            o_DQL_close_min:
+            <input type="text" id="o_DQL_close_min-edit">
+            <button id="update-o_DQL_close_min">update o_DQL_close_min</button>
+            <span id="o_DQL_close_min"></span>
+            <span style="font-style: italic; font-size: small">(#o_preliq correction when o_DQL <= o_DQL_close_min)</span>
+        </div>
+        <div id="links-to-logs">
+        </div>
+        <br><br>
+
+        <h3>Monitoring:</h3>
+        <div id="deadlock-checker">
+        </div>
+        <br>
+        <div id="mon-calc-delta">
+        </div>
+        <br>
+        <div id="corr-monitoring">
+        </div>
+        <br>
+        <div id="restart-monitoring">
+        </div>
+
+        <br><br>
+        <div id="restart-div">
+        </div>
+        <div id="max-bitmex-reconnects"></div>
+
+        <br>
+        <div id="full-restart">
+        </div>
+
     </div>
 
-    <br>
-    <div>
-        <button id="print-sum-bal">Print sum_bal</button>
-    </div>
-    <div id="cold-storage"></div>
-    <div id="e-best-min"></div>
-    <div id="usd-quote-type"></div>
-    <div id="bitmex-contract-type"></div>
-    <div id="okex-contract-type"></div>
-    <br>
-    <div>
-        reserveBtc1:
-        <input type="text" id="reserveBtc1-edit"><button id="update-reserveBtc1">update reserveBtc1</button>
-        <span id="reserveBtc1"></span>
-    </div>
-    <div>
-        reserveBtc2:
-        <input type="text" id="reserveBtc2-edit"><button id="update-reserveBtc2">update reserveBtc2</button>
-        <span id="reserveBtc2"></span>
-    </div>
-    <div>
-        Hedge amount:
-        <input type="text" id="hedgeAmount-edit"><button id="update-hedgeAmount">update hedgeAmount</button>
-        <span id="hedgeAmount"></span>
-    </div>
-    <div id="correction">
-    </div>
-    <div>
-        Signal limit:
-        <input type="text" id="periodToCorrection-edit"><button id="update-periodToCorrection">update Signal limit</button>
-        <span id="periodToCorrection"></span>
-    </div>
-    <div>
-        maxDiffCorr:
-        <input type="text" id="maxDiffCorr-edit"><button id="update-maxDiffCorr">update maxDiffCorr</button>
-        <span id="maxDiffCorr"></span>
-    </div>
-    <div>
-        b_mr_liq:
-        <input type="text" id="b_mr_liq-edit"><button id="update-b_mr_liq">update b_mr_liq</button>
-        <span id="b_mr_liq"></span>
-    </div>
-    <div>
-        o_mr_liq:
-        <input type="text" id="o_mr_liq-edit"><button id="update-o_mr_liq">update o_mr_liq</button>
-        <span id="o_mr_liq"></span>
-    </div>
-    <div id="fee-settings"></div>
-    <div>
-        b_DQL_open_min:
-        <input type="text" id="b_DQL_open_min-edit"><button id="update-b_DQL_open_min">update b_DQL_open_min</button>
-        <span id="b_DQL_open_min"></span>
-        <span style="font-style: italic; font-size: small">(new signals only if b_DQL >= b_DQL_open_min)</span>
-    </div>
-    <div>
-        o_DQL_open_min:
-        <input type="text" id="o_DQL_open_min-edit"><button id="update-o_DQL_open_min">update o_DQL_open_min</button>
-        <span id="o_DQL_open_min"></span>
-        <span style="font-style: italic; font-size: small">(new signals only if o_DQL >= o_DQL_open_min)</span>
-    </div>
-    <div>
-        b_DQL_close_min:
-        <input type="text" id="b_DQL_close_min-edit"><button id="update-b_DQL_close_min">update b_DQL_close_min</button>
-        <span id="b_DQL_close_min"></span>
-        <span style="font-style: italic; font-size: small">(#b_preliq correction when b_DQL <= b_DQL_close_min)</span>
-    </div>
-    <div>
-        o_DQL_close_min:
-        <input type="text" id="o_DQL_close_min-edit"><button id="update-o_DQL_close_min">update o_DQL_close_min</button>
-        <span id="o_DQL_close_min"></span>
-        <span style="font-style: italic; font-size: small">(#o_preliq correction when o_DQL <= o_DQL_close_min)</span>
-    </div>
-    <div id="links-to-logs">
-    </div>
-    <br><br>
+</div> <!-- tabsWrap -->
 
-    <h3>Monitoring:</h3>
-    <div id="deadlock-checker">
-    </div>
-    <br>
-    <div id="mon-calc-delta">
-    </div>
-    <br>
-    <div id="corr-monitoring">
-    </div>
-    <br>
-    <div id="restart-monitoring">
-    </div>
-
-    <br><br>
-    <div id="restart-div">
-    </div>
-    <div id="max-bitmex-reconnects"></div>
-
-    <br>
-    <div id="full-restart">
-    </div>
 </body>
 </html>
