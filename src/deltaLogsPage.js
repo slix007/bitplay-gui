@@ -8,71 +8,67 @@ var exports = module.exports = {};
 
 exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
+    const URL = sprintf('%s/trade/list', baseUrl);
+
     const mainContainer = $('div[data-name="deltalogs-page"]');
     const mainCont = mainContainer.get()[0];
     // var elementBitmexAsk = document.getElementById('div[data-name="deltalogs-page"]');
 
-    mainContainer.html('here will be the tables');
+    let parseTradeLogs = function (trades) {
 
-    let parseOrderBook = function (orderBookJson) {
+        const logs = trades.map(item => item.deltaLog)[0];
 
-        let bidArray = [];
-        orderBookJson.bid
-        .slice(0, 5)
-        .forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
-        });
-        // bid
-        let askArray = [];
-        orderBookJson.ask
-        .slice(0, 5)
-        .reverse().forEach(ask => {
-            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp]);
-        });
-        let orderBook = {};
-        orderBook.bid = bidArray;
-        orderBook.ask = askArray;
+        // let bidArray = [];
+        // trades.bid
+        // .slice(0, 5)
+        // .forEach(bid => {
+        //     bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
+        // });
+        //
+        // let orderBook = {};
+        // orderBook.bid = bidArray;
 
-        return orderBook;
+        console.log(logs);
+
+        return logs;
     };
 
-    let fetchOrderBook = function (dataUrl) {
+    let fetchTradeLogs = function (dataUrl) {
 
         let inputData = JSON.parse(Http.httpGet(dataUrl));
 
-        return parseOrderBook(inputData);
+        return parseTradeLogs(inputData);
     };
 
 
-    function createTable(container, dataUrl, dataPartName) {
+    function createTable(container, dataUrl) {
         return new Handsontable(container, {
-            data: fetchOrderBook(dataUrl)[dataPartName],
-            colWidths: [100, 140, 100, 80, 90, 120, 140],
+            data: fetchTradeLogs(dataUrl),
+            colWidths: [100, 140, 300],
             rowHeaders: true,
-            colHeaders: ['currency', 'quote', 'contracts', 'amount', 'timestamp'],
+            colHeaders: ['level', 'time', 'details'],
             fixedRowsTop: 1,
             fixedColumnsLeft: 1,
             fixedRowsBottom: 1,
             manualColumnResize: true,
             columnSorting: true,
             sortIndicator: true,
+            stretchH: 'last',
             autoColumnSize: {
                 samplingRatio: 23
             }
         });
     }
 
-    let tradeTable = createTable(mainCont,
-            sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
+    let tradeTable = createTable(mainCont, URL);
 
 
 
-    Http.httpAsyncGet(sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), function (rawData) {
+    Http.httpAsyncGet(URL, function (rawData) {
         const jsonData = JSON.parse(rawData);
-        let orderBookP = parseOrderBook(jsonData);
-        console.log('orderBookP.ask');
-        console.log(orderBookP.ask);
-        tradeTable.loadData(orderBookP.ask);
+        let logs = parseTradeLogs(jsonData);
+
+        tradeTable.loadData(logs);
 
     });
 
