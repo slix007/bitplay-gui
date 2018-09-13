@@ -1,6 +1,12 @@
+/*handsontable*/
 .fixed-container {
     width: 584px;
     height: 320px;
     overflow: hidden;
+}
+
+/*jquery-tree*/
+.log-table {
+
 }
 

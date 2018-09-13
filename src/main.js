@@ -1,7 +1,7 @@
 'use strict';
 
 let $ = require('jquery');
-var sprintf = require('sprintf-js').sprintf;
+let sprintf = require('sprintf-js').sprintf;
 
 let userInfo = require('./userInfo');
 let tableVar = require('./table');
@@ -31,8 +31,6 @@ console.log('baseUrlWithPort:' + baseUrlWithPort);
 console.log('theUrl:' + theUrl);
 console.log('NODE_ENV ' + process.env.NODE_ENV);
 
-placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
-corrReset.showCorr(baseUrlWithPort);
 
 function getCurrentTabName() {
     const sp = window.location.href.split("#");
@@ -79,8 +77,7 @@ const afterLoginFunc = function (isAuthorized) {
     }
 };
 
-const registerRoutes = function pages() {
-    document.addEventListener('DOMContentLoaded', function (e) {
+const registerRoutes = function pages(e) {
         'use strict';
 
         function showPage(el) {
@@ -115,9 +112,19 @@ const registerRoutes = function pages() {
 
         tabListeners();
         showCurrentPage();
-    });
+    // });
 };
 
-registerRoutes();
+// $(document).ready(function (e) {
+document.addEventListener('DOMContentLoaded', function (e) {
 
-userInfo.fillUserInfo(baseUrlWithPort, afterLoginFunc);
+
+    placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
+    corrReset.showCorr(baseUrlWithPort);
+
+
+    registerRoutes(e);
+
+    userInfo.fillUserInfo(baseUrlWithPort, afterLoginFunc);
+
+});

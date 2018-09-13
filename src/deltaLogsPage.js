@@ -1,4 +1,6 @@
 var $ = require('jquery');
+global.jQuery = require('jquery');
+var $Tree = require('jquery-treetable');
 var Handsontable = require('handsontable');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
@@ -12,66 +14,112 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
     const mainContainer = $('div[data-name="deltalogs-page"]');
     const mainCont = mainContainer.get()[0];
-    // var elementBitmexAsk = document.getElementById('div[data-name="deltalogs-page"]');
 
-    let parseTradeLogs = function (trades) {
+    // let fetchTradeLogs = function (dataUrl) {
+    //     let inputData = JSON.parse(Http.httpGet(dataUrl));
+    //     return inputData.map(item => item.deltaLog)[0];
+    // };
+    //
+    // function createTable(container, dataUrl) {
+    //     return new Handsontable(container, {
+    //         data: fetchTradeLogs(dataUrl),
+    //         colWidths: [100, 140, 300],
+    //         rowHeaders: true,
+    //         colHeaders: ['level', 'time', 'details'],
+    //         fixedRowsTop: 1,
+    //         fixedColumnsLeft: 1,
+    //         fixedRowsBottom: 1,
+    //         manualColumnResize: true,
+    //         columnSorting: true,
+    //         sortIndicator: true,
+    //         stretchH: 'last',
+    //         autoColumnSize: {
+    //             samplingRatio: 23
+    //         }
+    //     });
+    // }
+    // let tradeTable = createTable(mainCont, URL);
+    // tradeTable.loadData(logs);
 
-        const logs = trades.map(item => item.deltaLog)[0];
+    // jquery-treetable experiment
+    function reCreateTable(trades) {
 
-        // let bidArray = [];
-        // trades.bid
-        // .slice(0, 5)
-        // .forEach(bid => {
-        //     bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
-        // });
-        //
-        // let orderBook = {};
-        // orderBook.bid = bidArray;
+        $("#logs-table").remove();
 
-        console.log(logs);
+        let $table = $('#logs-table');
+        $table = $('<table/>');
+        $table.prop('id', 'logs-table');
+        $table.addClass('treetable');
 
-        return logs;
-    };
+        const $thead = $('<thead/>');
+        $table.append($thead);
+        $thead.append('<tr>'
+                + '<td>counterName</td>'
+                + '<td>logLevel</td>'
+                + '<td>timestamp</td>'
+                + '<td>theLog</td>'
+                + '</tr>');
 
-    let fetchTradeLogs = function (dataUrl) {
+        const $tbody = $('<tbody/>');
+        $tbody.prop('id', 'logs-table-tbody');
+        $table.append($tbody);
 
-        let inputData = JSON.parse(Http.httpGet(dataUrl));
+        mainContainer.append($table);
 
-        return parseTradeLogs(inputData);
-    };
+        let rowNum = 0;
+        for (let i = 0; i < trades.length; i++) {
+            const trade = trades[i];
 
+            const logsCount = trade.deltaLog.length;
+            const logsStr = JSON.stringify(trade.deltaLog);
+            $tbody.append(sprintf('<tr data-tt-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>logs(%s): %s</td></tr>',
+                    rowNum,
+                    trade.counterName,
+                    '',
+                    trade.startTimestamp,
+                    logsCount,
+                    logsStr.substring(0, 120) + (logsStr.length > 120 ? '...' : '')
+            ));
 
-    function createTable(container, dataUrl) {
-        return new Handsontable(container, {
-            data: fetchTradeLogs(dataUrl),
-            colWidths: [100, 140, 300],
-            rowHeaders: true,
-            colHeaders: ['level', 'time', 'details'],
-            fixedRowsTop: 1,
-            fixedColumnsLeft: 1,
-            fixedRowsBottom: 1,
-            manualColumnResize: true,
-            columnSorting: true,
-            sortIndicator: true,
-            stretchH: 'last',
-            autoColumnSize: {
-                samplingRatio: 23
+            let parId = rowNum;
+            rowNum++;
+            for (let j = 0; j < logsCount; j++) {
+                const theLog = trade.deltaLog[j];
+
+                $tbody.append(sprintf('<tr data-tt-id="%s" data-tt-parent-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                        rowNum,
+                        parId,
+                        trade.counterName,
+                        theLog.logLevel,
+                        theLog.timestamp,
+                        theLog.theLog
+                ));
+
+                // $tbody.append('<tr data-tt-id="' + rowNum + '" data-tt-parent-id="' + parId + '">'
+                //         + '<td></td>'
+                //         + '<td>' + 'child for par' + parId + '</td></tr>');
+                rowNum++;
             }
+        }
+
+        $table.treetable({expandable: true});
+    }
+
+    function refreshTable() {
+        Http.httpAsyncGet(URL, function (rawData) {
+            const jsonData = JSON.parse(rawData);
+
+            reCreateTable(jsonData);
         });
     }
 
-    let tradeTable = createTable(mainCont, URL);
+    const $refreshBtn = $('<button/>')
+    .text('Refresh')
+    .click(() => refreshTable());
+    //     ;
+    // });
+    mainContainer.append($refreshBtn);
 
-
-
-    Http.httpAsyncGet(URL, function (rawData) {
-        const jsonData = JSON.parse(rawData);
-        let logs = parseTradeLogs(jsonData);
-
-        tradeTable.loadData(logs);
-
-    });
-
-
+    refreshTable();
 
 };
