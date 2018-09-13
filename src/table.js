@@ -2,6 +2,7 @@ var Handsontable = require('handsontable');
 var $ = require('jquery');
 var sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
+var restartVar = require('./restart');
 var Http = require('./http');
 let bordersVar = require('./components/borders-v2');
 let bitmexIndexVar = require('./components/comp/bitmex-index');
@@ -16,7 +17,8 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     Utils.fillLinksToLogs();
-    Utils.addRestartButton();
+    restartVar.addRestartButton();
+    restartVar.addReconnectButton();
 
     let container = document.getElementById('example1');
     let positions = document.getElementById('positions');

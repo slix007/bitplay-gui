@@ -72,13 +72,12 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
             const logsCount = trade.deltaLog.length;
             const logsStr = JSON.stringify(trade.deltaLog);
-            $tbody.append(sprintf('<tr data-tt-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>logs(%s): %s</td></tr>',
+            $tbody.append(sprintf('<tr data-tt-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>logs(%s)</td></tr>',
                     rowNum,
                     trade.counterName,
                     '',
                     trade.startTimestamp,
-                    logsCount,
-                    logsStr.substring(0, 120) + (logsStr.length > 120 ? '...' : '')
+                    logsCount
             ));
 
             let parId = rowNum;
