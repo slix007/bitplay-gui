@@ -13,8 +13,7 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
     const URL = sprintf('%s/trade/list', baseUrl);
 
     const mainContainer = $('div[data-name="deltalogs-page"]');
-    const mainCont = mainContainer.get()[0];
-
+    // const mainCont = mainContainer.get()[0];
     // let fetchTradeLogs = function (dataUrl) {
     //     let inputData = JSON.parse(Http.httpGet(dataUrl));
     //     return inputData.map(item => item.deltaLog)[0];
@@ -51,6 +50,23 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         $table.prop('id', 'logs-table');
         $table.addClass('treetable');
 
+        const $caption = $('<caption/>');
+        $table.append($caption);
+        $caption.append($('<a/>').text('Expand all')
+        // .css("fontSize", "14px")
+        .attr('href', window.location.hash)
+        .click(function () {
+            $table.treetable('expandAll');
+        }));
+        $caption.append($('<span/>').text(' '));
+        $caption.append($('<a/>').text('Collapse all')
+        .css("fontSize", "14px")
+        .attr('href', window.location.hash)
+        .click(function () {
+            $table.treetable('collapseAll');
+
+        }));
+
         const $thead = $('<thead/>');
         $table.append($thead);
         $thead.append('<tr>'
@@ -71,7 +87,7 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
             const trade = trades[i];
 
             const logsCount = trade.deltaLog.length;
-            const logsStr = JSON.stringify(trade.deltaLog);
+            // const logsStr = JSON.stringify(trade.deltaLog);
             $tbody.append(sprintf('<tr data-tt-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s</td></tr>',
                     rowNum,
                     trade.counterName,
@@ -87,18 +103,16 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
             for (let j = 0; j < logsCount; j++) {
                 const theLog = trade.deltaLog[j];
 
-                $tbody.append(sprintf('<tr data-tt-id="%s" data-tt-parent-id="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                $tbody.append(sprintf('<tr data-tt-id="%s" data-tt-parent-id="%s"><td title="%s">%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
                         rowNum,
                         parId,
+                        trade.id,
                         trade.counterName,
                         theLog.logLevel,
                         theLog.timestamp,
                         theLog.theLog
                 ));
 
-                // $tbody.append('<tr data-tt-id="' + rowNum + '" data-tt-parent-id="' + parId + '">'
-                //         + '<td></td>'
-                //         + '<td>' + 'child for par' + parId + '</td></tr>');
                 rowNum++;
             }
         }
@@ -109,16 +123,11 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
     function refreshTable() {
         Http.httpAsyncGet(URL, function (rawData) {
             const jsonData = JSON.parse(rawData);
-
             reCreateTable(jsonData);
         });
     }
 
-    const $refreshBtn = $('<button/>')
-    .text('Refresh')
-    .click(() => refreshTable());
-    //     ;
-    // });
+    const $refreshBtn = $('<button/>').text('Refresh').click(() => refreshTable());
     mainContainer.append($refreshBtn);
 
     refreshTable();

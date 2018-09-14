@@ -11,9 +11,11 @@ table.treetable {
 }
 
 table.treetable caption {
-  font-size: .12em;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: .2em;
+  margin-bottom: 2px;
+  /*margin-left: 50px;*/
+  /*text-align: left;*/
 }
 
 table.treetable thead {
