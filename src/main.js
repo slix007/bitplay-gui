@@ -33,10 +33,10 @@ console.log('NODE_ENV ' + process.env.NODE_ENV);
 
 
 function getCurrentTabName() {
-    const sp = window.location.href.split("#");
+    const hash = window.location.hash;
     let tabName = '#tab1';
-    if (sp.length > 1) {
-        tabName = '#' + sp[1];
+    if (hash.length > 1) {
+        tabName = hash;
     }
     return tabName;
 }

@@ -8,6 +8,34 @@ var Http = require('./http');
 
 var exports = module.exports = {};
 
+function getCurrentDate() {
+    var today = new Date();
+    return convertDate(today);
+}
+
+function getTomorrowDate() {
+    var date = new Date();
+    date.setDate(date.getDate() + 1);
+    return convertDate(date);
+}
+
+function convertDate(today) {
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    today = sprintf('%s-%s-%s', yyyy, mm, dd);
+    return today;
+}
+
 exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
     const URL = sprintf('%s/trade/list', baseUrl);
@@ -45,24 +73,18 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
         $("#logs-table").remove();
 
-        let $table = $('#logs-table');
-        $table = $('<table/>');
+        // let $table = $('#logs-table');
+        let $table = $('<table/>');
         $table.prop('id', 'logs-table');
         $table.addClass('treetable');
 
         const $caption = $('<caption/>');
         $table.append($caption);
-        $caption.append($('<a/>').text('Expand all')
-        // .css("fontSize", "14px")
-        .attr('href', window.location.hash)
-        .click(function () {
+        $caption.append($('<a/>').text('Expand all').attr('href', window.location.hash).click(function () {
             $table.treetable('expandAll');
         }));
         $caption.append($('<span/>').text(' '));
-        $caption.append($('<a/>').text('Collapse all')
-        .css("fontSize", "14px")
-        .attr('href', window.location.hash)
-        .click(function () {
+        $caption.append($('<a/>').text('Collapse all').attr('href', window.location.hash).click(function () {
             $table.treetable('collapseAll');
 
         }));
@@ -121,16 +143,41 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         $table.treetable({expandable: true});
     }
 
-    function refreshTable() {
-        Http.httpAsyncGet(URL, function (rawData) {
+    function refreshTable(from, to) {
+        let refreshUrl = URL + '?';
+        if (from && from.length > 0) {
+            refreshUrl += '&from=' + from;
+        }
+        if (to && to.length > 0) {
+            refreshUrl += '&to=' + to;
+        }
+
+        Http.httpAsyncGet(refreshUrl, function (rawData) {
             const jsonData = JSON.parse(rawData);
             reCreateTable(jsonData);
         });
     }
 
-    const $refreshBtn = $('<button/>').text('Refresh').click(() => refreshTable());
-    mainContainer.append($refreshBtn);
+    function createRefreshDiv() {
+        const $refreshDiv = $('<div/>');
+        $refreshDiv.append($('<span/>').text('From: '));
+        const from = $('<input/>').attr('placeholder', 'yyyy-MM-dd').val(getCurrentDate());
+        $refreshDiv.append(from);
+        $refreshDiv.append($('<span/>').text('To: '));
+        const to = $('<input/>').attr('placeholder', 'yyyy-MM-dd').val(getTomorrowDate());
 
-    refreshTable();
+        $refreshDiv.append(to);
+
+        const $refreshBtn = $('<button/>').text('Refresh').click(() =>
+                refreshTable(from.val(), to.val()));
+        $refreshDiv.append($refreshBtn);
+
+        refreshTable(from.val(), to.val());
+
+        return $refreshDiv;
+    }
+
+    mainContainer.append(createRefreshDiv());
+
 
 };
