@@ -81,12 +81,13 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         const $caption = $('<caption/>');
         $table.append($caption);
         $caption.append($('<a/>').text('Expand all').attr('href', window.location.hash).click(function () {
+            this.href = window.location.hash;
             $table.treetable('expandAll');
         }));
         $caption.append($('<span/>').text(' '));
         $caption.append($('<a/>').text('Collapse all').attr('href', window.location.hash).click(function () {
+            this.href = window.location.hash;
             $table.treetable('collapseAll');
-
         }));
 
         const $thead = $('<thead/>');
