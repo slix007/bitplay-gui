@@ -316,6 +316,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
             $('#okcoin-last-price').html(jsonData.lastPrice);
+            $('#okex-eth-bal').html(jsonData.ethBal);
         });
 
         fetch('/deadlock/check', function (resultJson) {
@@ -644,46 +645,6 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             if (element.name == 'sendToSocket') {
                 socket.send("test message");
             }
-
-            if (element.name == 'fetchPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook(
-                    sprintf('%s/market/%s/order-book-fetch', baseUrl, firstMarketName));
-                askPoloniexTable.loadData(orderBookP.ask);
-                bidPoloniexTable.loadData(orderBookP.bid);
-            }
-
-            if (element.name == 'cleanPoloniexOrderBook') {
-                const orderBookP = fetchOrderBook(
-                    sprintf('%s/market/%s/order-book-clean', baseUrl, firstMarketName));
-                askPoloniexTable.loadData(orderBookP.ask);
-                bidPoloniexTable.loadData(orderBookP.bid);
-            }
-
-            let showResponse = function (responseData, resultElement) {
-                console.log(responseData);
-                let responseObj = JSON.parse(responseData);
-
-                resultElement.innerHTML = 'Result orderId=' + responseObj.orderId;
-            };
-
-            let showPoloniexResponse = function (responseData, resultElement) {
-                console.log(responseData);
-                let responseObj = JSON.parse(responseData);
-
-                let trades;
-                if (responseObj.orderId !== null) {
-                    if (responseObj.details.poloniexPublicTrades.length === 0) {
-                        trades = 'just placed';
-                    } else {
-                        trades = responseObj.details.poloniexPublicTrades
-                            .map(trade => 'rate=' + trade.rate + ',amount=' + trade.amount)
-                            .reduce((a, b) => a + "; " + b);
-                    }
-                }
-
-                resultElement.innerHTML = 'Result orderId=' + responseObj.orderId + '. ' + trades;
-
-            };
 
             if (element.id == 'update-border1') {
                 let newBorderValue = document.getElementById('border1-edit').value;
