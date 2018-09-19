@@ -7,6 +7,10 @@ exports.toUsd = function(btc, quAvg) {
     return (btc * quAvg).toFixed(2);
 };
 
+exports.ethToBtc = function(eth, qu) {
+    return (eth * qu).toFixed(8);
+};
+
 exports.withSign = function(value) {
     return (value < 0) ? (value) : ('+' + value);
 };

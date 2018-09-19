@@ -369,20 +369,52 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
             let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
             if (marketAccount.btc === null) {
-                let quAvg = marketAccount.quAvg;
-                oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
-                                     + ', p' + marketAccount.position
-                                     + ', lv' + marketAccount.leverage
-                                     + ', lg' + Utils.withSign(marketAccount.availableForLong)
-                                     + ', st' + Utils.withSign(marketAccount.availableForShort)
-                                     + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                                     + ',<br> e_last_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
-                                     + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
-                                     + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
-                                     + ',<br> entry_price ' + marketAccount.entryPrice
-                                     + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
-                                     + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
-                                     + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
+                const quAvg = marketAccount.quAvg;
+                const ethBtcBid1 = marketAccount.ethBtcBid1;
+                if (ethBtcBid1 === null) {
+                    oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
+                            + ', p' + marketAccount.position
+                            + ', lv' + marketAccount.leverage
+                            + ', lg' + Utils.withSign(marketAccount.availableForLong)
+                            + ', st' + Utils.withSign(marketAccount.availableForShort)
+                            + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                            + ',<br> e_last_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                            + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
+                            + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
+                            + ',<br> entry_price ' + marketAccount.entryPrice
+                            + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
+                            + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
+                            + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
+                } else {
+                    const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1);
+                    const wUsd = Utils.toUsd(wBtc, quAvg);
+                    const eLastBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1);
+                    const eLastUsd = Utils.toUsd(eLastBtc, quAvg);
+                    const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1);
+                    const eBestUsd = Utils.toUsd(eBestBtc, quAvg);
+                    const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1);
+                    const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg);
+                    const uBtc = Utils.ethToBtc(marketAccount.upl, quAvg);
+                    const uUsd = Utils.toUsd(uBtc, quAvg);
+                    const mBtc = Utils.ethToBtc(marketAccount.margin, quAvg);
+                    const mUsd = Utils.toUsd(mBtc, quAvg);
+                    const aBtc = Utils.ethToBtc(marketAccount.available, quAvg);
+                    const aUsd = Utils.toUsd(aBtc, quAvg);
+                    oBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
+                            + ', p' + marketAccount.position
+                            + ', lv' + marketAccount.leverage
+                            + ', lg' + Utils.withSign(marketAccount.availableForLong)
+                            + ', st' + Utils.withSign(marketAccount.availableForShort)
+                            + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                            + ',<br> e_last_' + marketAccount.eLast + '_' + eLastBtc + '_' + eLastUsd
+                            + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
+                            + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
+                            + ',<br> entry_price ' + marketAccount.entryPrice
+                            + ',<br> u' + marketAccount.upl + '_' + uUsd
+                            + ',<br> m' + marketAccount.margin + '_' + mUsd
+                            + ',<br> a' + marketAccount.available + '_' + aUsd;
+
+                }
 
             } else {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
