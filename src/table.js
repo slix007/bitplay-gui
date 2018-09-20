@@ -309,6 +309,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             bidPoloniexTable.loadData(orderBookP.bid);
 
             $('#bitmex-last-price').html(jsonData.lastPrice);
+            $('#bitmex-bxbt-bal').html(jsonData.bxbtBal);
         });
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
@@ -316,7 +317,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
             $('#okcoin-last-price').html(jsonData.lastPrice);
-            $('#okex-eth-bal').html(jsonData.ethBal);
+            $('#okex-eth-bal').html(jsonData.ethBtcBal);
         });
 
         fetch('/deadlock/check', function (resultJson) {

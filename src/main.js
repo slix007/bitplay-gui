@@ -51,7 +51,11 @@ const afterLoginFunc = function (isAuthorized) {
 
             function fillMainPage(parsedResp) {
                 $('#bitmex-contract-type-label').text(parsedResp.firstFutureContractName);
-                $('#okex-contract-type-label').text(parsedResp.secondFutureContractName);
+                const okCt = parsedResp.secondFutureContractName;
+
+                $('#okex-contract-type-label').text(sprintf('(1 contract = $%s)[%s]',
+                        okCt.startsWith('BTC') ? '100' : '10',
+                        okCt));
 
                 tableVar.showMainInfo(parsedResp.first, parsedResp.second, baseUrlWithPort);
                 settingsVar.showArbVersion(parsedResp.first, parsedResp.second, baseUrlWithPort);
