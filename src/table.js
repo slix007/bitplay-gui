@@ -301,6 +301,16 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
     var updateFunction = function () {
 
+        function showPosDiff(posDiffJson) {
+            let posDiff = document.getElementById("pos-diff");
+            if (posDiffJson.equal) {
+                posDiff.style.color = "#008f00";
+            } else {
+                posDiff.style.color = "#bf0000";
+            }
+            posDiff.innerHTML = 'Pos diff = ' + posDiffJson.str;
+        }
+
         fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
             // console.log('orderBookP.ask');
@@ -308,16 +318,23 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askPoloniexTable.loadData(orderBookP.ask);
             bidPoloniexTable.loadData(orderBookP.bid);
 
+            bitmexIndexVar.fillComponents(document.getElementById('bitmex-future-index'), jsonData.futureIndex, baseUrl);
+
             $('#bitmex-last-price').html(jsonData.lastPrice);
-            $('#bitmex-bxbt-bal').html(jsonData.bxbtBal);
+            $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
+
+            // showPosDiff(jsonData.posDiff)
         });
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
             let orderBookO = parseOrderBook(jsonData);
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
+
+            okexIndexVar.fillComponents(document.getElementById('okcoin-future-index'), jsonData.futureIndex, baseUrl);
+
             $('#okcoin-last-price').html(jsonData.lastPrice);
-            $('#okex-eth-bal').html(jsonData.ethBtcBal);
+            $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal);
         });
 
         fetch('/deadlock/check', function (resultJson) {
@@ -334,14 +351,8 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             eBestMin.fillComponents(resultJson);
         });
 
-        fetch('/market/pos-diff', function (resultJson) {
-            let sumBal = document.getElementById("pos-diff");
-            if (resultJson.result == 0) {
-                sumBal.style.color = "#008f00";
-            } else {
-                sumBal.style.color = "#bf0000";
-            }
-            sumBal.innerHTML = 'Pos diff = ' + resultJson.description;
+        fetch('/market/pos-diff', function (posDiffJson) {
+            showPosDiff(posDiffJson);
         });
 
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
@@ -421,35 +432,6 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
                                      + ', usd=' + marketAccount.usd;
             }
-        });
-        fetch(sprintf('/market/%s/future-index', firstMarketName), function (futureIndex) {
-            let ind = document.getElementById('bitmex-future-index');
-            bitmexIndexVar.fillComponents(ind, futureIndex, baseUrl);
-
-            let fund = document.getElementById('bitmex-future-index-funding');
-            if (futureIndex.swapType === 'noSwap') {
-                fund.style.color = "#008f00";
-            } else {
-                fund.style.color = "#bf0000";
-            }
-            fund.innerHTML = 'fRate' + futureIndex.fundingRate + '%'
-                             + ' fCost' + futureIndex.fundingCost + 'XBT'
-                             + ' p' + Utils.withSign(futureIndex.position)
-                             + '(' + futureIndex.swapType + ')';
-
-            let fundTime = document.getElementById('bitmex-future-index-funding-time');
-            fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap
-                                 + ', swapTime=' + futureIndex.swapTime
-                                 + ', ';
-            let timeCompare = document.getElementById('timeCompare');
-            timeCompare.innerHTML = futureIndex.timeCompareString;
-            let timeCompareUpdating = document.getElementById('timeCompareUpdating');
-            timeCompareUpdating.innerHTML = futureIndex.timeCompareUpdating;
-
-        });
-        fetch(sprintf('/market/%s/future-index', secondMarketName), function (futureIndex) {
-            let oBalance = document.getElementById(sprintf('%s-future-index', secondMarketName));
-            okexIndexVar.fillComponents(oBalance, futureIndex, baseUrl);
         });
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));

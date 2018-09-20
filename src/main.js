@@ -50,7 +50,7 @@ const afterLoginFunc = function (isAuthorized) {
             console.log('first market=' + parsedResp.first);
 
             function fillMainPage(parsedResp) {
-                $('#bitmex-contract-type-label').text(parsedResp.firstFutureContractName);
+                $('#bitmex-contract-type-label').text(sprintf('(1 contract = $1)[%s]', parsedResp.firstFutureContractName));
                 const okCt = parsedResp.secondFutureContractName;
 
                 $('#okex-contract-type-label').text(sprintf('(1 contract = $%s)[%s]',

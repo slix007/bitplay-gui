@@ -1,6 +1,7 @@
 'use strict';
 var $ = require('jquery');
 var Http = require('../../http');
+var Utils = require('../../utils');
 
 var exports = module.exports = {};
 
@@ -26,7 +27,31 @@ exports.fillComponents = function (container, futureIndex, baseUrl) {
     if (futureIndex.limits != null) {
         updateLimits(futureIndex.limits);
     }
+
+    fillBitmexFunding(futureIndex);
 };
+
+function fillBitmexFunding(futureIndex) {
+    let fund = document.getElementById('bitmex-future-index-funding');
+    if (futureIndex.swapType === 'noSwap') {
+        fund.style.color = "#008f00";
+    } else {
+        fund.style.color = "#bf0000";
+    }
+    fund.innerHTML = 'fRate' + futureIndex.fundingRate + '%'
+            + ' fCost' + futureIndex.fundingCost + 'XBT'
+            + ' p' + Utils.withSign(futureIndex.position)
+            + '(' + futureIndex.swapType + ')';
+
+    let fundTime = document.getElementById('bitmex-future-index-funding-time');
+    fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap
+            + ', swapTime=' + futureIndex.swapTime
+            + ', ';
+    let timeCompare = document.getElementById('timeCompare');
+    timeCompare.innerHTML = futureIndex.timeCompareString;
+    let timeCompareUpdating = document.getElementById('timeCompareUpdating');
+    timeCompareUpdating.innerHTML = futureIndex.timeCompareUpdating;
+}
 
 function createLimitPrice(container, value, URL) {
     var label = document.createElement('span');
