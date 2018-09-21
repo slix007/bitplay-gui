@@ -33,6 +33,14 @@ exports.showPlacingBlocksVersion = function (baseUrl) {
     });
 };
 
+exports.updateBlocks = function (bl) {
+    var fixedBlocks = document.getElementById("fixedBlocks");
+    fixedBlocks.innerHTML = bl.fixedBlockOkex + ', fixedBlockBitmex:' + bl.fixedBlockBitmex;
+
+    var dynBlocks = document.getElementById("dynBlocks");
+    dynBlocks.innerHTML = bl.dynMaxBlockOkex + ', dynMaxBlockBitmex:' + bl.dynMaxBlockBitmex;
+};
+
 function createVerDropdown(container, placingBlocks, SETTINGS_URL, fixedCont, dynCont) {
 
     let select = document.createElement('select');
@@ -80,6 +88,7 @@ function createFixedBlocks(container, settingsData, SETTINGS_URL) {
     updateBtn.onclick = onBtnClick;
     updateBtn.innerHTML = 'update';
     let realValue = document.createElement('span');
+    realValue.setAttribute('id', 'fixedBlocks');
     let bl = settingsData.placingBlocks;
     realValue.innerHTML = bl.fixedBlockOkex + ', fixedBlockBitmex:' + bl.fixedBlockBitmex;
 
@@ -109,6 +118,7 @@ function createDynamicBlocks(container, settingsData, SETTINGS_URL) {
     updateBtn.onclick = onBtnClick;
     updateBtn.innerHTML = 'update';
     let realValue = document.createElement('span');
+    realValue.setAttribute('id', 'dynBlocks');
     let bl = settingsData.placingBlocks;
     realValue.innerHTML = bl.dynMaxBlockOkex + ', dynMaxBlockBitmex:' + bl.dynMaxBlockBitmex;
 

@@ -10,6 +10,7 @@ let okexIndexVar = require('./components/comp/okex-index');
 let marketState = require('./components/comp/market-states');
 let monCalcDelta = require('./components/comp/mon-calc-delta');
 let eBestMin = require('./components/comp/e-best-min');
+let placingBlocksVar = require('./components/placing-blocks');
 
 var exports = module.exports = {};
 
@@ -310,6 +311,10 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 posDiff.style.color = "#bf0000";
             }
             posDiff.innerHTML = 'Pos diff = ' + posDiffJson.str;
+
+            if (posDiffJson.placingBlocks != null) {
+                placingBlocksVar.updateBlocks(posDiffJson.placingBlocks);
+            }
         }
 
         fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {

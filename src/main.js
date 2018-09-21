@@ -10,7 +10,7 @@ let bordersVar = require('./components/borders-v2');
 let swapVar = require('./components/swap-v2');
 let settingsVar = require('./components/settings');
 let orderActionVar = require('./components/order-actions');
-let placingBlocks = require('./components/placing-blocks');
+let placingBlocksVar = require('./components/placing-blocks');
 let corrReset = require('./components/correction');
 let deltaLogsPage = require('./deltaLogsPage');
 
@@ -123,7 +123,7 @@ const registerRoutes = function pages(e) {
 document.addEventListener('DOMContentLoaded', function (e) {
 
 
-    placingBlocks.showPlacingBlocksVersion(baseUrlWithPort);
+    placingBlocksVar.showPlacingBlocksVersion(baseUrlWithPort);
     corrReset.showCorr(baseUrlWithPort);
 
 
