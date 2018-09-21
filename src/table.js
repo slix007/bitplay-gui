@@ -407,11 +407,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     const eBestUsd = Utils.toUsd(eBestBtc, quAvg);
                     const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1);
                     const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg);
-                    const uBtc = Utils.ethToBtc(marketAccount.upl, quAvg);
+                    const uBtc = Utils.ethToBtc(marketAccount.upl, ethBtcBid1);
                     const uUsd = Utils.toUsd(uBtc, quAvg);
-                    const mBtc = Utils.ethToBtc(marketAccount.margin, quAvg);
+                    const mBtc = Utils.ethToBtc(marketAccount.margin, ethBtcBid1);
                     const mUsd = Utils.toUsd(mBtc, quAvg);
-                    const aBtc = Utils.ethToBtc(marketAccount.available, quAvg);
+                    const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1);
                     const aUsd = Utils.toUsd(aBtc, quAvg);
                     oBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
                             + ', p' + marketAccount.position
@@ -423,9 +423,9 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
                             + ',<br> entry_price ' + marketAccount.entryPrice
-                            + ',<br> u' + marketAccount.upl + '_' + uUsd
-                            + ',<br> m' + marketAccount.margin + '_' + mUsd
-                            + ',<br> a' + marketAccount.available + '_' + aUsd;
+                            + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
+                            + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
+                            + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd;
 
                 }
 
