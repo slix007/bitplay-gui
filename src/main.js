@@ -11,6 +11,7 @@ let swapVar = require('./components/swap-v2');
 let settingsVar = require('./components/settings');
 let orderActionVar = require('./components/order-actions');
 let placingBlocksVar = require('./components/placing-blocks');
+let posAdjustmentVar = require('./components/pos-adjustment');
 let corrReset = require('./components/correction');
 let deltaLogsPage = require('./deltaLogsPage');
 
@@ -124,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
 
     placingBlocksVar.showPlacingBlocksVersion(baseUrlWithPort);
+    posAdjustmentVar.show(baseUrlWithPort);
     corrReset.showCorr(baseUrlWithPort);
 
 

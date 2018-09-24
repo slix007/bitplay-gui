@@ -7,7 +7,7 @@ var sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
-var URL, corrCountLabel, preliqCountLabel;
+var URL, corrCountLabel, adjCountLabel, preliqCountLabel;
 
 exports.showCorr = function (baseUrl) {
     URL = baseUrl + '/settings/corr';
@@ -19,6 +19,7 @@ exports.showCorr = function (baseUrl) {
 
         var corrMon = document.getElementById("corr-monitoring");
         corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
+        adjCountLabel = createMonitorCounter(corrMon, corrParams, 'adj');
         preliqCountLabel = createMonitorCounter(corrMon, corrParams, 'preliq');
         createResetBtn(corrMon, RESET_CORR_URL);
 
@@ -31,6 +32,12 @@ exports.showCorr = function (baseUrl) {
         createSetParam(main, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
         createSetParam(main, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
         createSetParamBlock(main, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=');
+
+        var mainAdj = document.getElementById("pos-adj-params");
+
+        createSetParam(mainAdj, URL, 'adj max attempts', corrParams, 'adj', 'maxErrorCount');
+        createSetParam(mainAdj, URL, 'adj max total', corrParams, 'adj', 'maxTotalCount');
+
     });
 };
 
@@ -48,7 +55,8 @@ function createResetBtn(mainContainer, RESET_URL) {
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
             console.log(res);
-            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(corrCountLabel, res, 'corr');
+            setMonitoringCount(adjCountLabel, res, 'adj');
             setMonitoringCount(preliqCountLabel, res, 'preliq');
             setBtn.disabled = false;
         });
@@ -89,7 +97,8 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
             const res = JSON.parse(rawRes);
             console.log(res);
             currValLabel.innerHTML = res[paramName1][paramName2];
-            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(corrCountLabel, res, 'corr');
+            setMonitoringCount(adjCountLabel, res, 'adj');
             setMonitoringCount(preliqCountLabel, res, 'preliq');
 
             setBtn.disabled = false;
@@ -129,7 +138,8 @@ function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramN
             const res = JSON.parse(rawRes);
             console.log(res);
             currValLabel.innerHTML = res[paramName1][paramName2] + getBBlockName(res);
-            setMonitoringCount(preliqCountLabel, res, 'corr');
+            setMonitoringCount(corrCountLabel, res, 'corr');
+            setMonitoringCount(adjCountLabel, res, 'adj');
             setMonitoringCount(preliqCountLabel, res, 'preliq');
 
             setBtn.disabled = false;
@@ -185,6 +195,7 @@ var updateMonitorFunction = function () {
     Http.httpAsyncGet(URL, function (rawData) {
         let res = JSON.parse(rawData);
         setMonitoringCount(corrCountLabel, res, 'corr');
+        setMonitoringCount(adjCountLabel, res, 'adj');
         setMonitoringCount(preliqCountLabel, res, 'preliq');
     });
 };
