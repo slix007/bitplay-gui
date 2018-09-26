@@ -399,11 +399,31 @@
         <div style="background-color: azure; border: solid" id="placing-blocks">
             Placing blocks:
         </div>
-        <div style="background-color: azure; border: solid">
-            Position adjustment:
-            <div id="pos-adjustment"></div>
-            <br>
-            <div id="pos-adj-params"></div>
+
+        <div style="background-color: azure; border: solid; display: flex;">
+            <div style="float: left; margin-left: 10px">
+                <div id="pos-adjustment"></div>
+                <br>
+                <div id="pos-adj-params"></div>
+            </div>
+            <div style="float: left; margin-left: 10px">
+                <div id="correction">
+                </div>
+            </div>
+            <div style="float: left; margin-left: 10px">
+                <div>
+                    Signal limit:
+                    <input type="text" id="periodToCorrection-edit">
+                    <button id="update-periodToCorrection">update Signal limit</button>
+                    <span id="periodToCorrection"></span>
+                </div>
+                <div>
+                    maxDiffCorr:
+                    <input type="text" id="maxDiffCorr-edit">
+                    <button id="update-maxDiffCorr">update maxDiffCorr</button>
+                    <span id="maxDiffCorr"></span>
+                </div>
+            </div>
         </div>
         <!--<div>-->
         <!--block1(conctracts for a signal):-->
@@ -484,20 +504,7 @@
             <button id="update-hedgeAmount">update hedgeAmount</button>
             <span id="hedgeAmount"></span>
         </div>
-        <div id="correction">
-        </div>
-        <div>
-            Signal limit:
-            <input type="text" id="periodToCorrection-edit">
-            <button id="update-periodToCorrection">update Signal limit</button>
-            <span id="periodToCorrection"></span>
-        </div>
-        <div>
-            maxDiffCorr:
-            <input type="text" id="maxDiffCorr-edit">
-            <button id="update-maxDiffCorr">update maxDiffCorr</button>
-            <span id="maxDiffCorr"></span>
-        </div>
+
         <div>
             b_mr_liq:
             <input type="text" id="b_mr_liq-edit">
