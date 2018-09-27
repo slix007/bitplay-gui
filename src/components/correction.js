@@ -29,9 +29,11 @@ exports.showCorr = function (baseUrl) {
         createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
         createSetParamBlock(main, URL, 'corr maxBlockOkex', corrParams, 'corr', 'maxVolCorrOkex', ' / maxBlockBitmex=');
 
-        createSetParam(main, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
-        createSetParam(main, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlock(main, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=');
+        var mainPreliq = document.getElementById("preliq");
+
+        createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
+        createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
+        createSetParamBlock(mainPreliq, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=');
 
         var mainAdj = document.getElementById("pos-adj-params");
 
