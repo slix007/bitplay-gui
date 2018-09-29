@@ -310,10 +310,17 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             } else {
                 posDiff.style.color = "#bf0000";
             }
-            posDiff.innerHTML = 'Pos diff = ' + posDiffJson.str;
+            posDiff.innerHTML = posDiffJson.str;//Notional
 
             if (posDiffJson.placingBlocks != null) {
                 placingBlocksVar.updateBlocks(posDiffJson.placingBlocks);
+            }
+            if (posDiffJson.notionalSource != null) {
+                let notional = document.getElementById("notionalSource");
+                notional.innerHTML = posDiffJson.notionalSource;
+            }
+            if (posDiffJson.btmUsdInContract != null) {
+                $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract);
             }
         }
 
@@ -328,8 +335,6 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
             $('#bitmex-last-price').html(jsonData.lastPrice);
             $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
-
-            // showPosDiff(jsonData.posDiff)
         });
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {

@@ -1,6 +1,8 @@
 'use strict';
 
 var Http = require('../http');
+var Utils = require('../utils');
+var $ = require('jquery');
 
 var exports = module.exports = {};
 
@@ -17,6 +19,12 @@ exports.show = function (baseUrl) {
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentMin');
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentMax');
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentDelaySec');
+
+        if (!settingsData.eth) {
+            Utils.disableElements($("#pos-adjustment"));
+            Utils.disableElements($("#pos-adj-params"));
+        }
+
         createNumberValue(container, settingsData, SETTINGS_URL, 'corrDelaySec');
 
     });

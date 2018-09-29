@@ -64,7 +64,7 @@
 
                 <div style="width: 800px; float: left; padding-right: 10px; border:1px solid gray; ">
                     <!--<div>-->
-                    <h3>Bitmex<span id="bitmex-contract-type-label"></span></h3>
+                    <h3>Bitmex(1 contract = $<span id="bitmex-contract-usd">x</span>)[<span id="bitmex-contract-type-label"></span>]</h3>
 
                     <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
                     <!--id="bitmex-trade-log">empty...</textarea>-->
@@ -204,8 +204,9 @@
             Sum bal
         </div>
         <div>
-            <span id="pos-diff">Pos diff =</span>
+            <span id="pos-diff">Notional:</span>
         </div>
+        <div id="notionalSource"></div>
         <br>
 
         <span id="limits-status">
