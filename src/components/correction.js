@@ -27,13 +27,13 @@ exports.showCorr = function (baseUrl) {
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
         createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
-        createSetParamBlock(main, URL, 'corr maxBlockOkex', corrParams, 'corr', 'maxVolCorrOkex', ' / maxBlockBitmex=');
+        createSetParamBlock(main, URL, 'corr maxBlockOkex', corrParams, 'corr', 'maxVolCorrOkex', ' / maxBlockBitmex=', 'maxVolCorrBitmex');
 
         var mainPreliq = document.getElementById("preliq");
 
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
         createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlock(mainPreliq, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=');
+        createSetParamBlock(mainPreliq, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=', 'preliqBlockBitmex');
 
         var mainAdj = document.getElementById("pos-adj-params");
 
@@ -112,9 +112,9 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
 }
 
 
-function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2, label2Val) {
+function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2, label2Val, btmParBlockName) {
     function getBBlockName(corrParams) {
-        const bBlock = corrParams[paramName1][paramName2] * 100;
+        const bBlock = corrParams[paramName1][btmParBlockName];
         return label2Val + bBlock;
     }
 
