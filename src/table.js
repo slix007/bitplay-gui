@@ -11,6 +11,7 @@ let marketState = require('./components/comp/market-states');
 let monCalcDelta = require('./components/comp/mon-calc-delta');
 let eBestMin = require('./components/comp/e-best-min');
 let placingBlocksVar = require('./components/placing-blocks');
+let monVar = require('./components/mon');
 
 var exports = module.exports = {};
 
@@ -348,9 +349,10 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal);
         });
 
-        fetch('/deadlock/check', function (resultJson) {
+        fetch('/mon/all', function (resultJson) {
             let pTicker = document.getElementById('deadlock-checker');
-            pTicker.innerHTML = resultJson.description;
+            pTicker.innerHTML = resultJson.allHtml;
+            monVar.showMonMoving(baseUrl, resultJson);
         });
         fetch('/mon/calc-delta', function (resultJson) {
             monCalcDelta.updateMonCalcDelta(baseUrl, resultJson);
