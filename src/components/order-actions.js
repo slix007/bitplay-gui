@@ -6,25 +6,28 @@ var sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
-exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl) {
+exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl, isEth) {
     const BITMEX_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName);
     const OKCOIN_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName);
 
-    let btmCont = document.getElementById("bitmex-orders");
-    createOrderActions(btmCont, 'bitmex', BITMEX_ORDER_URL);
+    let btmCont = document.getElementById("bitmex-order-actions");
+    createOrderActions(btmCont, 'Order', 'bitmex', BITMEX_ORDER_URL);
 
-    btmCont.appendChild(document.createElement('br'));
+    if (isEth) {
+        let btmCont_ETH_XBTUSD = document.getElementById("bitmex-order-actions-ETH-XBTUSD");
+        createOrderActions(btmCont_ETH_XBTUSD, 'XBTUSD Order', 'bitmex_ETH_XBTUSD', BITMEX_ORDER_URL, "XBTUSD");
+    }
 
-    let okCont = document.getElementById("okcoin-orders");
-    createOrderActions(okCont, 'okex', OKCOIN_ORDER_URL);
+    let okCont = document.getElementById("okcoin-order-actions");
+    createOrderActions(okCont, 'Order', 'okex', OKCOIN_ORDER_URL);
 };
 
-function createOrderActions(mainContainer, labelName, SETTINGS_URL) {
+function createOrderActions(mainContainer, labelName, idName, SETTINGS_URL, toolName) {
     var container = document.createElement('div');
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
-    label.innerHTML = 'Order';
+    label.innerHTML = labelName;
     var edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
@@ -35,7 +38,7 @@ function createOrderActions(mainContainer, labelName, SETTINGS_URL) {
     sellBtn.onclick =  function() { onBtnClick(this, 'SELL'); };
     sellBtn.innerHTML = 'sell';
 
-    let select = $('<select>', {id: labelName + '-placeType'});
+    let select = $('<select>', {id: idName + '-placeType'});
     select.append($('<option>').val('TAKER').text('TAKER'));
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
@@ -58,7 +61,7 @@ function createOrderActions(mainContainer, labelName, SETTINGS_URL) {
     container.appendChild(resultLabel);
 
     function onBtnClick(thisButton, actionType) {
-        const requestData = JSON.stringify({type: actionType, placementType: placementType, amount: edit.value});
+        const requestData = JSON.stringify({type: actionType, placementType: placementType, amount: edit.value, toolName: toolName});
         resultLabel.innerHTML = 'in progress...';
         thisButton.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {

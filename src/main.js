@@ -62,7 +62,7 @@ const afterLoginFunc = function (isAuthorized) {
                 settingsVar.showArbVersion(parsedResp.first, parsedResp.second, baseUrlWithPort);
                 bordersVar.showBordersV2(baseUrlWithPort);
                 swapVar.showSwapV2(parsedResp.first, parsedResp.second, baseUrlWithPort);
-                orderActionVar.showOrderActions(parsedResp.first, parsedResp.second, baseUrlWithPort);
+                orderActionVar.showOrderActions(parsedResp.first, parsedResp.second, baseUrlWithPort, parsedResp.eth);
             }
 
             function fillDeltaLogPage(parsedResp) {
