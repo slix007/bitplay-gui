@@ -582,6 +582,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
                             "#" + oo.arbId
                             + ": id='" + oo.id.substring(0, 9) + "...'"
+                            + ",c=" + oo.currency
                             + ",t=" + oo.orderType
                             + ",s=" + oo.status
                             + ",q=" + oo.price
