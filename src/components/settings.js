@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var Http = require('../http');
 var Utils = require('../utils');
+var sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
@@ -50,8 +51,9 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createUsdQuoteType(settingsData, SETTINGS_URL);
 
-        createBtmFutureContractType(settingsData, SETTINGS_URL);
-        createOkFutureContractType(settingsData, SETTINGS_URL);
+        // createBtmFutureContractType(settingsData, SETTINGS_URL);
+        // createOkFutureContractType(settingsData, SETTINGS_URL);
+        createContractModes(settingsData, SETTINGS_URL);
 
         maxBitmexReconnects(settingsData, SETTINGS_URL);
 
@@ -484,68 +486,30 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 
 }
 
-function createBtmFutureContractType(settingsData, SETTINGS_URL) {
+function createContractModes(settingsData, SETTINGS_URL) {
     var arr = [
-        'XBTUSD',
-        // 'XBT7D_D95',
-        // 'XBT7D_U105',
-        'XBTU18',
-        'XBTZ18',
-        'ETHUSD',
-        // 'ETHU18',
+        {txt: 'Mod #1', val: 'MODE1_SET_BU11', info: ' set_bu11', templ: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc '},
+        {txt: 'Mod #2', val: 'MODE2_SET_BU12', info: ' set_bu12', templ: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'},
+        {txt: 'Mod #3', val: 'MODE3_SET_BU23', info: ' set_bu23', templ: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'},
+        {txt: 'Mod #4', val: 'MODE4_SET_BU10_SET_EU11', info: ' set_eu11', templ: 'set_eu11: b = ETHUSD, o = ETH_W(%s), hedge_eth'},
+        {txt: 'Mod #5', val: 'MODE5_SET_BU10_SET_EU12', info: ' set_eu12', templ: 'set_eu12: b = ETHUSD, o = ETH_BW(%s), hedge_eth'},
     ];
-    const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Bitmex future contract type: ');
+    const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Contract mode: ');
+    const cnLabel = $('<span/>');
     const select = $('<select/>').html($.map(arr, function (item) {
-        return $('<option/>', {value: item, text: item});
-    })).val(settingsData.bitmexContractType);
-    select.on('change', onVerPick);
-
-    const warnLabel = $('<span/>').css('color', 'red');
-
-    function updateWarning(data) {
-        warnLabel.html(data.bitmexContractType === data.bitmexContractTypeCurrent ? ''
-                : 'warning: to apply the changes restart is needed');
-    }
-
-    updateWarning(settingsData);
-
-    $("#bitmex-contract-type").append(label).append(select).append(warnLabel);
-
-    function onVerPick() {
-        console.log(this.value);
-        const requestData = JSON.stringify({bitmexContractType: this.value});
-
-        Http.httpAsyncPost(SETTINGS_URL,
-                requestData, function (result) {
-                    let data = JSON.parse(result);
-                    updateWarning(data);
-                    alert('New value: ' + data.bitmexContractType);
-                });
-    }
-}
-
-function createOkFutureContractType(settingsData, SETTINGS_URL) {
-    var arr = [
-        'BTC_ThisWeek',
-        'BTC_NextWeek',
-        'BTC_Quarter',
-        'ETH_ThisWeek',
-        'ETH_NextWeek',
-        'ETH_Quarter',
-    ];
-    const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Okex future contract type: ');
-    const cnLabel = $('<span/>', {title: 'It is dynamicly calculated. Please compare it with the name in okex.com'});
-    const select = $('<select/>').html($.map(arr, function (item) {
-        return $('<option/>', {value: item, text: item});
-    })).val(settingsData.okexContractType);
+        return $('<option/>', {value: item.val, text: item.txt});
+    })).val(settingsData.contractMode);
     select.on('change', onVerPick);
 
     const warnLabel = $('<span/>').css('color', 'red');
 
     function updateLabels(data) {
-        warnLabel.html(data.okexContractType === data.okexContractTypeCurrent ? ''
+        warnLabel.html(data.contractMode === data.contractModeCurrent ? ''
                 : 'warning: to apply the changes restart is needed');
-        cnLabel.html(data.okexContractName);
+        let item = arr.find(item => item.val === data.contractMode);
+
+        cnLabel.html(item.info);
+        cnLabel.attr('title', sprintf(item.templ, data.okexContractName));
     }
 
     updateLabels(settingsData);
@@ -554,13 +518,13 @@ function createOkFutureContractType(settingsData, SETTINGS_URL) {
 
     function onVerPick() {
         console.log(this.value);
-        const requestData = JSON.stringify({okexContractType: this.value});
+        const requestData = JSON.stringify({contractMode: this.value});
 
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (result) {
                     let data = JSON.parse(result);
                     updateLabels(data);
-                    alert('New value: ' + data.okexContractType);
+                    alert('New value: ' + data.contractMode);
                 });
     }
 }
