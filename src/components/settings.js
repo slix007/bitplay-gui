@@ -491,8 +491,8 @@ function createContractModes(settingsData, SETTINGS_URL) {
         {txt: 'Mod #1', val: 'MODE1_SET_BU11', info: ' set_bu11', templ: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc '},
         {txt: 'Mod #2', val: 'MODE2_SET_BU12', info: ' set_bu12', templ: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'},
         {txt: 'Mod #3', val: 'MODE3_SET_BU23', info: ' set_bu23', templ: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'},
-        {txt: 'Mod #4', val: 'MODE4_SET_BU10_SET_EU11', info: ' set_eu11', templ: 'set_eu11: b = ETHUSD, o = ETH_W(%s), hedge_eth'},
-        {txt: 'Mod #5', val: 'MODE5_SET_BU10_SET_EU12', info: ' set_eu12', templ: 'set_eu12: b = ETHUSD, o = ETH_BW(%s), hedge_eth'},
+        {txt: 'Mod #4', val: 'MODE4_SET_BU10_SET_EU11', info: ' set_bu10 + set_eu11', templ: 'set_bu10 + set_eu11: b = ETHUSD, o = ETH_W(%s), hedge_eth'},
+        {txt: 'Mod #5', val: 'MODE5_SET_BU10_SET_EU12', info: ' set_bu10 + set_eu12', templ: 'set_bu10 + set_eu12: b = ETHUSD, o = ETH_BW(%s), hedge_eth'},
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Contract mode: ');
     const cnLabel = $('<span/>');
