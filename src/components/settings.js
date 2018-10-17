@@ -51,9 +51,8 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createUsdQuoteType(settingsData, SETTINGS_URL);
 
-        // createBtmFutureContractType(settingsData, SETTINGS_URL);
-        // createOkFutureContractType(settingsData, SETTINGS_URL);
         createContractModes(settingsData, SETTINGS_URL);
+        createHedgeSettings(settingsData, SETTINGS_URL);
 
         maxBitmexReconnects(settingsData, SETTINGS_URL);
 
@@ -514,7 +513,7 @@ function createContractModes(settingsData, SETTINGS_URL) {
 
     updateLabels(settingsData);
 
-    $("#okex-contract-type").append(label).append(select).append(cnLabel).append(warnLabel);
+    $("#contract-mode").append(label).append(select).append(cnLabel).append(warnLabel);
 
     function onVerPick() {
         console.log(this.value);
@@ -560,4 +559,82 @@ function maxBitmexReconnects(settingsData, SETTINGS_URL) {
     container.appendChild(edit);
     container.appendChild(setBtn);
     container.appendChild(resultLabel);
+}
+
+function createHedgeSettings(settingsData, SETTINGS_URL) {
+    // var container = document.getElementById("hedge-settings");
+
+    const parent = $('#hedge-settings').css('display', 'flex');
+    // const mainCont = $('#hedge-settings').css('border', 'solid #555555');
+    const mainCont = $('<div/>')
+    .css('border', 'solid #555555')
+    .css('padding', '3px')
+    .css('display', 'block').appendTo(parent);
+
+    /// auto
+    const checkboxCont = $('<div/>').appendTo(mainCont);
+    const checkbox = $('<input/>').attr('type', 'checkbox').html('auto').appendTo(checkboxCont);
+    $('<span/>').html('auto').appendTo(checkboxCont);
+    checkbox.change(function () {
+        checkbox.attr('disabled', true);
+        let requestData = JSON.stringify({hedgeAuto: checkbox.is(":checked")});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    const res = JSON.parse(rawResp);
+                    console.log(res.hedgeAuto);
+                    checkbox.attr("checked", res.hedgeAuto);
+                    if (checkbox.is(":checked")) {
+                        mainCont.find('*').attr('disabled', true);
+                    } else {
+                        mainCont.find('*').attr('disabled', false);
+                    }
+                    checkbox.attr('disabled', false);
+                }
+        );
+    });
+
+    /// BTC
+    const cont = $('<div/>').appendTo(mainCont);
+    $('<span/>').html('Hedge BTC: ').appendTo(cont);
+    const editHedgeBtc = $('<input>').width('80px').appendTo(cont);
+    const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc);
+    let updateBtn = $('<button>').text('Update')
+    .css('margin-left', '5px').css('margin-right', '5px')
+    .click(function () {
+        updateBtn.attr('disabled', true);
+
+        let requestData = JSON.stringify({hedgeBtc: editHedgeBtc.val()});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    const res = JSON.parse(rawResp);
+                    resLabelHedgeBtc.html(res.hedgeBtc);
+                    updateBtn.attr('disabled', false);
+                }
+        );
+    }).appendTo(cont);
+    resLabelHedgeBtc.appendTo(cont);
+
+    /// ETH
+    const contEth = $('<div/>').appendTo(mainCont);
+    $('<span/>').html('Hedge ETH: ').appendTo(contEth);
+    const editHedgeEth = $('<input>').width('80px').appendTo(contEth);
+    const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth);
+    let updateBtnEth = $('<button>').text('Update')
+    .css('margin-left', '5px').css('margin-right', '5px')
+    .click(function () {
+        updateBtnEth.attr('disabled', true);
+        let requestData = JSON.stringify({hedgeEth: editHedgeEth.val()});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    const res = JSON.parse(rawResp);
+                    resLabelHedgeEth.html(res.hedgeEth);
+                    updateBtnEth.attr('disabled', false);
+                }
+        );
+    }).appendTo(contEth);
+    resLabelHedgeEth.appendTo(contEth);
+
 }
