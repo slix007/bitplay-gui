@@ -486,15 +486,25 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 }
 
 function createContractModes(settingsData, SETTINGS_URL) {
+    const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
+    const set_bu10_1 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
+    const set_bu10_2 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
+    const set_bu12 = $('<span/>', {title: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'}).html('set_bu12');
+    const set_bu23 = $('<span/>', {title: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'}).html('set_bu23');
+    const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hedge_eth'}).addClass('templ').html('set_eu11');
+    const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
+    const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
+    const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
+
     var arr = [
-        {txt: 'Mod #1', val: 'MODE1_SET_BU11', info: ' set_bu11', templ: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc '},
-        {txt: 'Mod #2', val: 'MODE2_SET_BU12', info: ' set_bu12', templ: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'},
-        {txt: 'Mod #3', val: 'MODE3_SET_BU23', info: ' set_bu23', templ: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'},
-        {txt: 'Mod #4', val: 'MODE4_SET_BU10_SET_EU11', info: ' set_bu10 + set_eu11', templ: 'set_bu10 + set_eu11: b = ETHUSD, o = ETH_W(%s), hedge_eth'},
-        {txt: 'Mod #5', val: 'MODE5_SET_BU10_SET_EU12', info: ' set_bu10 + set_eu12', templ: 'set_bu10 + set_eu12: b = ETHUSD, o = ETH_BW(%s), hedge_eth'},
+        {txt: 'Mod #1', val: 'MODE1_SET_BU11', info: set_bu11},
+        {txt: 'Mod #2', val: 'MODE2_SET_BU12', info: set_bu12},
+        {txt: 'Mod #3', val: 'MODE3_SET_BU23', info: set_bu23},
+        {txt: 'Mod #4', val: 'MODE4_SET_BU10_SET_EU11', info: set_bu10_set_eu11},
+        {txt: 'Mod #5', val: 'MODE5_SET_BU10_SET_EU12', info: set_bu10_set_eu12},
     ];
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Contract mode: ');
-    const cnLabel = $('<span/>');
+    let detailsLabel = $('<span/>');
     const select = $('<select/>').html($.map(arr, function (item) {
         return $('<option/>', {value: item.val, text: item.txt});
     })).val(settingsData.contractMode);
@@ -504,16 +514,24 @@ function createContractModes(settingsData, SETTINGS_URL) {
 
     function updateLabels(data) {
         warnLabel.html(data.contractMode === data.contractModeCurrent ? ''
-                : 'warning: to apply the changes restart is needed');
+                : ' warning: to apply the changes restart is needed');
         let item = arr.find(item => item.val === data.contractMode);
 
-        cnLabel.html(item.info);
-        cnLabel.attr('title', sprintf(item.templ, data.okexContractName));
+        detailsLabel.replaceWith(item.info);
+        detailsLabel = item.info;
+        if (detailsLabel.children().length === 0) {
+            detailsLabel.attr('title', sprintf(detailsLabel.attr('title'), data.okexContractName));
+        } else {
+            detailsLabel.find('span.templ').each(function (idx, item) {
+                item.title = sprintf(item.title, data.okexContractName);
+            });
+        }
+
     }
 
     updateLabels(settingsData);
 
-    $("#contract-mode").append(label).append(select).append(cnLabel).append(warnLabel);
+    $("#contract-mode").append(label).append(select).append(detailsLabel).append(warnLabel);
 
     function onVerPick() {
         console.log(this.value);
