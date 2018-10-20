@@ -303,20 +303,28 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     var updateFunction = function () {
 
         function showPosDiff(posDiffJson) {
-            let posDiff = document.getElementById("pos-diff");
-            if (posDiffJson.equal) {
-                posDiff.style.color = "#008f00";
+            let mainSet = document.getElementById("main-set-string");
+            if (posDiffJson.mainSetEqual) {
+                mainSet.style.color = "#008f00";
             } else {
-                posDiff.style.color = "#bf0000";
+                mainSet.style.color = "#bf0000";
             }
-            posDiff.innerHTML = posDiffJson.str;//Notional
-
+            mainSet.innerHTML = posDiffJson.mainSetStr;//Notional
+            let mainSetSource = document.getElementById("main-set-source");
+            mainSetSource.innerHTML = posDiffJson.mainSetSource;
+            if (posDiffJson.extraSetStr != null) {
+                let extraSetStr = document.getElementById("extra-set-string");
+                if (posDiffJson.extraSetEqual) {
+                    extraSetStr.style.color = "#008f00";
+                } else {
+                    extraSetStr.style.color = "#bf0000";
+                }
+                extraSetStr.innerHTML = posDiffJson.extraSetStr;
+                let extraSetSource = document.getElementById("extra-set-source");
+                extraSetSource.innerHTML = posDiffJson.extraSetSource;
+            }
             if (posDiffJson.placingBlocks != null) {
                 placingBlocksVar.updateBlocks(posDiffJson.placingBlocks);
-            }
-            if (posDiffJson.notionalSource != null) {
-                let notional = document.getElementById("notionalSource");
-                notional.innerHTML = posDiffJson.notionalSource;
             }
             if (posDiffJson.btmUsdInContract != null) {
                 $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract);
