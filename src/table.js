@@ -352,6 +352,8 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         fetch('/mon/all', function (resultJson) {
             let pTicker = document.getElementById('deadlock-checker');
             pTicker.innerHTML = resultJson.allHtml;
+            let bitmexReconnectCount = document.getElementById('bitmex-reconnect-count');
+            bitmexReconnectCount.innerHTML = resultJson.bitmexReconnectCount;
             monVar.showMonMoving(baseUrl, resultJson);
         });
         fetch('/mon/calc-delta', function (resultJson) {

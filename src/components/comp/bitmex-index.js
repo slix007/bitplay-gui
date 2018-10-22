@@ -13,6 +13,7 @@ exports.fillComponents = function (container, futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
     ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
+    $('#index-diff').html(futureIndex.twoMarketsIndexDiff);
 
     if ($(container).children().length === 0) {
         container.appendChild(ind);
