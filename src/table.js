@@ -338,7 +338,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askPoloniexTable.loadData(orderBookP.ask);
             bidPoloniexTable.loadData(orderBookP.bid);
 
-            bitmexIndexVar.fillComponents(document.getElementById('bitmex-future-index'), jsonData.futureIndex, baseUrl);
+            bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl);
 
             $('#bitmex-last-price').html(jsonData.lastPrice);
             $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
@@ -349,7 +349,7 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askOkcoinTable.loadData(orderBookO.ask);
             bidOkcoinTable.loadData(orderBookO.bid);
 
-            okexIndexVar.fillComponents(document.getElementById('okcoin-future-index'), jsonData.futureIndex, baseUrl);
+            okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl);
 
             $('#okcoin-last-price').html(jsonData.lastPrice);
             $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal);

@@ -63,6 +63,12 @@ const afterLoginFunc = function (isAuthorized) {
                 bordersVar.showBordersV2(baseUrlWithPort);
                 swapVar.showSwapV2(parsedResp.first, parsedResp.second, baseUrlWithPort);
                 orderActionVar.showOrderActions(parsedResp.first, parsedResp.second, baseUrlWithPort, parsedResp.eth);
+                if (!parsedResp.eth) {
+                    document.getElementById('bitmex-order-actions-ETH-XBTUSD').style.display = 'none';
+                    document.getElementById('okcoin-order-actions-ETH-XBTUSD').style.display = 'none';
+                    // $("bitmex-order-actions-ETH-XBTUSD").hide();
+                    // $("okcoin-order-actions-ETH-XBTUSD").hide();
+                }
             }
 
             function fillDeltaLogPage(parsedResp) {

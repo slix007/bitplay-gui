@@ -92,12 +92,15 @@
                     <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
 
                     <div id="bitmex-open-orders" style="border:1px solid black;"></div>
+                    <div style="border: solid; height: 40px" id="bitmex-order-actions"></div>
+                    <div style="border: solid; height: 40px" id="bitmex-order-actions-ETH-XBTUSD"></div>
 
-                    <div style="border: solid; height: 40px" id="bitmex-order-actions">
+                    <div>
+                        <span id="bitmex-future-index"></span>
+                        <span id="bitmex-bxbt-bal"></span>
+                        <span id="bitmex-future-index2"></span>
                     </div>
 
-                    <div id="bitmex-future-index">
-                    </div>
 
                     <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
                     <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
@@ -111,9 +114,6 @@
                     <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
                         <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
-
-                    <div id="bitmex-order-actions-ETH-XBTUSD"></div>
-                    <div id="bitmex-bxbt-bal"></div>
 
                     <div style="background-color: azure; border: solid">
                         <div id="bitmex-reconnect-count"></div>
@@ -181,13 +181,14 @@
 
                     <div id="okcoin-open-orders" style="border:1px solid black;"></div>
 
-                    <div style="border: solid; height: 40px;" id="okcoin-order-actions">
+                    <div style="border: solid; height: 40px;" id="okcoin-order-actions"></div>
+                    <div style="border: solid; height: 40px;" id="okcoin-order-actions-ETH-XBTUSD"></div>
+
+                    <div>
+                        <span id="okcoin-future-index"></span>
+                        <span id="okex-eth-bal"></span>
+                        <span id="okcoin-future-index2"></span>
                     </div>
-
-
-                    <div id="okcoin-future-index">
-                    </div>
-
 
                     <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
                         <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
@@ -198,7 +199,6 @@
                         <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
-                    <div id="okex-eth-bal"></div>
                 </div>
                 <!--</div>-->
 
@@ -215,8 +215,8 @@
         <!--</div>-->
         <!--<div id="notionalSource"></div>-->
         <div id="main-set-string"></div>
-        <div id="main-set-source"></div>
         <div id="extra-set-string"></div>
+        <div id="main-set-source"></div>
         <div id="extra-set-source"></div>
         <div id="index-diff"></div>
         <br>

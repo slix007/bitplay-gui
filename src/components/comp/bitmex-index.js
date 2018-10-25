@@ -5,24 +5,26 @@ var Utils = require('../../utils');
 
 var exports = module.exports = {};
 
-const ind = document.createElement('div');
+const ind = document.createElement('span');
 const label = document.createElement('div');
 const label2 = document.createElement('div');
 
-exports.fillComponents = function (container, futureIndex, baseUrl) {
+exports.fillComponents = function (futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
-    ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp;
+    ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
     $('#index-diff').html(futureIndex.twoMarketsIndexDiff);
 
-    if ($(container).children().length === 0) {
-        container.appendChild(ind);
+    const indexCont = $('#bitmex-future-index');
+    const indexCont2 = $('#bitmex-future-index2');
+    if ($(indexCont).children().length === 0) {
+        indexCont.append(ind);
 
         const limitPrice = document.createElement('div');
-        container.append(limitPrice);
+        indexCont2.append(limitPrice);
         createLimitPrice(limitPrice, futureIndex.limits.limitPrice, URL);
-        container.append(label);
-        container.append(label2);
+        indexCont2.append(label);
+        indexCont2.append(label2);
     }
 
     if (futureIndex.limits != null) {
