@@ -485,27 +485,29 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 
 }
 
-function createContractModes(settingsData, SETTINGS_URL) {
-    const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
-    const set_bu10_1 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
-    const set_bu10_2 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
-    const set_bu12 = $('<span/>', {title: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'}).html('set_bu12');
-    const set_bu23 = $('<span/>', {title: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'}).html('set_bu23');
-    const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hedge_eth'}).addClass('templ').html('set_eu11');
-    const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
-    const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
-    const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
 
-    var arr = [
-        {txt: 'M10: set_bu11', val: 'MODE1_SET_BU11', info: set_bu11},
-        {txt: 'M11: set_bu12', val: 'MODE2_SET_BU12', info: set_bu12},
-        {txt: 'M20: set_bu23', val: 'MODE3_SET_BU23', info: set_bu23},
-        {txt: 'M21: set_bu10 + set_eu11', val: 'MODE4_SET_BU10_SET_EU11', info: set_bu10_set_eu11},
-        {txt: 'M22: set_bu10 + set_eu12', val: 'MODE5_SET_BU10_SET_EU12', info: set_bu10_set_eu12},
-    ];
+const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
+const set_bu10_1 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
+const set_bu10_2 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
+const set_bu12 = $('<span/>', {title: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'}).html('set_bu12');
+const set_bu23 = $('<span/>', {title: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'}).html('set_bu23');
+const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hedge_eth'}).addClass('templ').html('set_eu11');
+const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
+const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
+const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
+var arbModArr = [
+    {val: 'MODE1_SET_BU11', txt: 'M10: set_bu11', info: set_bu11, mod: "M10", mainSet: "set_bu11"},
+    {val: 'MODE2_SET_BU12', txt: 'M11: set_bu12', info: set_bu12, mod: "M11", mainSet: "set_bu12"},
+    {val: 'MODE3_SET_BU23', txt: 'M20: set_bu23', info: set_bu23, mod: "M23", mainSet: "set_bu23"},
+    {val: 'MODE4_SET_BU10_SET_EU11', txt: 'M21: set_bu10 + set_eu11', info: set_bu10_set_eu11, mod: "M21", mainSet: "set_eu11"},
+    {val: 'MODE5_SET_BU10_SET_EU12', txt: 'M22: set_bu10 + set_eu12', info: set_bu10_set_eu12, mod: "M22", mainSet: "set_eu12"},
+];
+
+function createContractModes(settingsData, SETTINGS_URL) {
+
     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Arbitrage mod: ');
     let detailsLabel = $('<span/>');
-    const select = $('<select/>').html($.map(arr, function (item) {
+    const select = $('<select/>').html($.map(arbModArr, function (item) {
         return $('<option/>', {value: item.val, text: item.txt});
     })).val(settingsData.contractMode);
     select.on('change', onVerPick);
@@ -515,7 +517,7 @@ function createContractModes(settingsData, SETTINGS_URL) {
     function updateLabels(data) {
         warnLabel.html(data.contractMode === data.contractModeCurrent ? ''
                 : ' warning: to apply the changes restart is needed');
-        let item = arr.find(item => item.val === data.contractMode);
+        let item = arbModArr.find(item => item.val === data.contractMode);
 
         detailsLabel.replaceWith(item.info);
         detailsLabel = item.info;
@@ -593,6 +595,17 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
     const checkboxCont = $('<div/>').appendTo(mainCont);
     const checkbox = $('<input/>').attr('type', 'checkbox').html('auto').appendTo(checkboxCont);
     $('<span/>').html('auto').appendTo(checkboxCont);
+
+    function setCheckBoxState(res) {
+        checkbox.attr("checked", res.hedgeAuto);
+        if (checkbox.is(":checked")) {
+            mainCont.find('*').attr('disabled', true);
+        } else {
+            mainCont.find('*').attr('disabled', false);
+        }
+        checkbox.attr('disabled', false);
+    }
+
     checkbox.change(function () {
         checkbox.attr('disabled', true);
         let requestData = JSON.stringify({hedgeAuto: checkbox.is(":checked")});
@@ -601,13 +614,7 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
                 function (rawResp) {
                     const res = JSON.parse(rawResp);
                     console.log(res.hedgeAuto);
-                    checkbox.attr("checked", res.hedgeAuto);
-                    if (checkbox.is(":checked")) {
-                        mainCont.find('*').attr('disabled', true);
-                    } else {
-                        mainCont.find('*').attr('disabled', false);
-                    }
-                    checkbox.attr('disabled', false);
+                    setCheckBoxState(res);
                 }
         );
     });
@@ -615,8 +622,10 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
     /// BTC
     function addBtcHedge() {
         let btcHedgeName = settingsData.eth ? settingsData.extraSetNameCurrent : settingsData.mainSetNameCurrent;
+        let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
+        const labelName = sprintf('%s, %s, hedge', arbMod.mod, btcHedgeName);
         const cont = $('<div/>').appendTo(mainCont);
-        $('<span/>').html('Hedge ' + btcHedgeName + ': ').appendTo(cont); // 'Hedge BTC: '
+        $('<span/>').html(labelName).appendTo(cont); // 'Hedge BTC: '
         const editHedgeBtc = $('<input>').width('80px').appendTo(cont);
         const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc);
         let updateBtn = $('<button>').text('Update')
@@ -640,8 +649,11 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
     /// ETH
     function addEthHedge() {
         let ethHedgeName = settingsData.mainSetNameCurrent;
+        let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
+        const labelName = sprintf('%s, %s, hedge', arbMod.mod, ethHedgeName);
+
         const contEth = $('<div/>').appendTo(mainCont);
-        $('<span/>').html('Hedge ' + ethHedgeName + ': ').appendTo(contEth);
+        $('<span/>').html(labelName).appendTo(contEth);
         const editHedgeEth = $('<input>').width('80px').appendTo(contEth);
         const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth);
         let updateBtnEth = $('<button>').text('Update')
@@ -665,5 +677,8 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
         addEthHedge();
     }
     addBtcHedge();
+
+    setCheckBoxState(settingsData);
+
 
 }
