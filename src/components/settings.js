@@ -613,46 +613,57 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
     });
 
     /// BTC
-    const cont = $('<div/>').appendTo(mainCont);
-    $('<span/>').html('Hedge BTC: ').appendTo(cont);
-    const editHedgeBtc = $('<input>').width('80px').appendTo(cont);
-    const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc);
-    let updateBtn = $('<button>').text('Update')
-    .css('margin-left', '5px').css('margin-right', '5px')
-    .click(function () {
-        updateBtn.attr('disabled', true);
+    function addBtcHedge() {
+        let btcHedgeName = settingsData.eth ? settingsData.extraSetNameCurrent : settingsData.mainSetNameCurrent;
+        const cont = $('<div/>').appendTo(mainCont);
+        $('<span/>').html('Hedge ' + btcHedgeName + ': ').appendTo(cont); // 'Hedge BTC: '
+        const editHedgeBtc = $('<input>').width('80px').appendTo(cont);
+        const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc);
+        let updateBtn = $('<button>').text('Update')
+        .css('margin-left', '5px').css('margin-right', '5px')
+        .click(function () {
+            updateBtn.attr('disabled', true);
 
-        let requestData = JSON.stringify({hedgeBtc: editHedgeBtc.val()});
-        console.log(requestData);
-        Http.httpAsyncPost(SETTINGS_URL, requestData,
-                function (rawResp) {
-                    const res = JSON.parse(rawResp);
-                    resLabelHedgeBtc.html(res.hedgeBtc);
-                    updateBtn.attr('disabled', false);
-                }
-        );
-    }).appendTo(cont);
-    resLabelHedgeBtc.appendTo(cont);
+            let requestData = JSON.stringify({hedgeBtc: editHedgeBtc.val()});
+            console.log(requestData);
+            Http.httpAsyncPost(SETTINGS_URL, requestData,
+                    function (rawResp) {
+                        const res = JSON.parse(rawResp);
+                        resLabelHedgeBtc.html(res.hedgeBtc);
+                        updateBtn.attr('disabled', false);
+                    }
+            );
+        }).appendTo(cont);
+        resLabelHedgeBtc.appendTo(cont);
+    }
 
     /// ETH
-    const contEth = $('<div/>').appendTo(mainCont);
-    $('<span/>').html('Hedge ETH: ').appendTo(contEth);
-    const editHedgeEth = $('<input>').width('80px').appendTo(contEth);
-    const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth);
-    let updateBtnEth = $('<button>').text('Update')
-    .css('margin-left', '5px').css('margin-right', '5px')
-    .click(function () {
-        updateBtnEth.attr('disabled', true);
-        let requestData = JSON.stringify({hedgeEth: editHedgeEth.val()});
-        console.log(requestData);
-        Http.httpAsyncPost(SETTINGS_URL, requestData,
-                function (rawResp) {
-                    const res = JSON.parse(rawResp);
-                    resLabelHedgeEth.html(res.hedgeEth);
-                    updateBtnEth.attr('disabled', false);
-                }
-        );
-    }).appendTo(contEth);
-    resLabelHedgeEth.appendTo(contEth);
+    function addEthHedge() {
+        let ethHedgeName = settingsData.mainSetNameCurrent;
+        const contEth = $('<div/>').appendTo(mainCont);
+        $('<span/>').html('Hedge ' + ethHedgeName + ': ').appendTo(contEth);
+        const editHedgeEth = $('<input>').width('80px').appendTo(contEth);
+        const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth);
+        let updateBtnEth = $('<button>').text('Update')
+        .css('margin-left', '5px').css('margin-right', '5px')
+        .click(function () {
+            updateBtnEth.attr('disabled', true);
+            let requestData = JSON.stringify({hedgeEth: editHedgeEth.val()});
+            console.log(requestData);
+            Http.httpAsyncPost(SETTINGS_URL, requestData,
+                    function (rawResp) {
+                        const res = JSON.parse(rawResp);
+                        resLabelHedgeEth.html(res.hedgeEth);
+                        updateBtnEth.attr('disabled', false);
+                    }
+            );
+        }).appendTo(contEth);
+        resLabelHedgeEth.appendTo(contEth);
+    }
+
+    if (settingsData.eth) {
+        addEthHedge();
+    }
+    addBtcHedge();
 
 }
