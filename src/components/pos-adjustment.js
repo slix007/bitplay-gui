@@ -20,11 +20,6 @@ exports.show = function (baseUrl) {
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentMax');
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentDelaySec');
 
-        if (!settingsData.eth) {
-            Utils.disableElements($("#pos-adjustment"));
-            Utils.disableElements($("#pos-adj-params"));
-        }
-
         createNumberValue(container, settingsData, SETTINGS_URL, 'corrDelaySec');
 
     });
