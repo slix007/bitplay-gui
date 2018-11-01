@@ -111,7 +111,7 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
 
             const logsCount = trade.deltaLog.length;
             // const logsStr = JSON.stringify(trade.deltaLog);
-            $tbody.append(sprintf('<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s; btm_ct=%s, ok_ct=%s</td></tr>',
+            $tbody.append(sprintf('<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s</td></tr>',
                     rowNum,
                     trade.id,
                     trade.counterName,
@@ -120,6 +120,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     logsCount,
                     trade.deltaName,
                     trade.tradeStatus,
+                    trade.bitmexStatus.toLowerCase(),
+                    trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
                     trade.okexContractType
             ));
