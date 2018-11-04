@@ -86,3 +86,10 @@ exports.enableChildren = function enableChildren(obj) {
     });
 };
 
+exports.setDocumentTitle = function documentTitle(modName) {
+    const hName = window.location.hostname;
+    const hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+    const modPart = modName !== undefined ? '-' + modName : '';
+    document.title = hostPart + modPart;
+};
+

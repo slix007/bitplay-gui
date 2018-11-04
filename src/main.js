@@ -2,6 +2,7 @@
 
 let $ = require('jquery');
 let sprintf = require('sprintf-js').sprintf;
+var Utils = require('./utils');
 
 let userInfo = require('./userInfo');
 let tableVar = require('./table');
@@ -128,7 +129,7 @@ const registerRoutes = function pages(e) {
 
 // $(document).ready(function (e) {
 document.addEventListener('DOMContentLoaded', function (e) {
-
+    Utils.setDocumentTitle();
 
     placingBlocksVar.showPlacingBlocksVersion(baseUrlWithPort);
     corrReset.showCorr(baseUrlWithPort);

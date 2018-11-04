@@ -680,5 +680,6 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     setCheckBoxState(settingsData);
 
-
+    let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
+    Utils.setDocumentTitle(arbMod.mod.toLowerCase());
 }
