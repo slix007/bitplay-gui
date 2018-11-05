@@ -120,8 +120,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     logsCount,
                     trade.deltaName,
                     trade.tradeStatus,
-                    trade.bitmexStatus.toLowerCase(),
-                    trade.okexStatus.toLowerCase(),
+                    !trade.bitmexStatus ? '' : trade.bitmexStatus.toLowerCase(),
+                    !trade.okexStatus ? '' : trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
                     trade.okexContractType
             ));
