@@ -33,9 +33,17 @@ exports.repaintStates = function (returnData) {
     updateState(btmReconId, returnData.bitmexReconnectState);
 
     const sigDeltay = returnData.signalDelay;
-    const timeToSig = '. Time to signal (ms): ' + returnData.timeToSignal;
+    const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);
     $('#signal-delay-label').html(sigDeltay + timeToSig);
 };
+
+function showTimeToSignal(timeToSignal) {
+    let text = timeToSignal;
+    if (timeToSignal === '_ready_') {
+        text = '<span style="color: orange; font-weight: bold;">' + timeToSignal + '</span>';
+    }
+    return text;
+}
 
 function updateState(id, text) {
     let el = document.getElementById(id);
