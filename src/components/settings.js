@@ -56,6 +56,8 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         maxBitmexReconnects(settingsData, SETTINGS_URL);
 
+        createOkexFakePriceDev(settingsData, SETTINGS_URL);
+
     });
 };
 
@@ -484,6 +486,32 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
     }
 
 }
+
+function createOkexFakePriceDev(settingsData, SETTINGS_URL) {
+    const cont = $("#okex-fake-taker-price-deviation");
+
+    const label = $('<span/>', {title: 'Fake taker price deviation'}).html('FTPD(usd) ');
+    const edit = $('<input>').width('80px');
+    const resLabel = $('<span/>').html(settingsData.okexFakeTakerDev);
+    let updateBtn = $('<button>').text('Update').css('margin-right', '5px');
+
+    cont.append(label).append(edit).append(updateBtn).append(resLabel);
+
+    updateBtn.click(function () {
+        updateBtn.attr('disabled', true);
+
+        let requestData = JSON.stringify({okexFakeTakerDev: edit.val()});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    const res = JSON.parse(rawResp);
+                    resLabel.html(res.okexFakeTakerDev);
+                    updateBtn.attr('disabled', false);
+                }
+        );
+    });
+}
+
 
 
 const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
