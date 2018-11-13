@@ -58,6 +58,7 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createOkexFakePriceDev(settingsData, SETTINGS_URL);
 
+        createAdjustByNtUsd(settingsData, SETTINGS_URL);
     });
 };
 
@@ -710,4 +711,33 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
     Utils.setDocumentTitle(arbMod.mod.toLowerCase());
+}
+
+function createAdjustByNtUsd(settingsData, SETTINGS_URL) {
+    let container = document.getElementById("adjust-by-nt-usd");
+
+    let checkbox = document.createElement('input');
+    checkbox.type = "checkbox";
+    checkbox.checked = settingsData.adjustByNtUsd;
+
+    checkbox.id = "adjust-by-nt-usd-checkbox";
+    checkbox.onchange = function (ev) {
+        checkbox.disabled = true;
+
+        let requestObj = {adjustByNtUsd: checkbox.checked};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            console.log(res);
+            checkbox.checked = res.adjustByNtUsd;
+            checkbox.disabled = false;
+        });
+    };
+
+    let label = document.createElement('label');
+    label.appendChild(document.createTextNode('Adjust by nt_usd on the fly'));
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
 }
