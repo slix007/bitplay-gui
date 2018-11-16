@@ -59,6 +59,7 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createOkexFakePriceDev(settingsData, SETTINGS_URL);
 
         createAdjustByNtUsd(settingsData, SETTINGS_URL);
+        createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL);
     });
 };
 
@@ -740,4 +741,39 @@ function createAdjustByNtUsd(settingsData, SETTINGS_URL) {
 
     container.appendChild(checkbox);
     container.appendChild(label);
+}
+
+function createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL) {
+    const $cont = $('#nt-usd-multiplicity-okex');
+
+    let label = $('<span>').html('nt_usd_multiplicity_okex').appendTo($cont);
+    let edit = $('<input>').width('60px').appendTo($cont);
+    let updateBtn = $('<button>').text('set')
+    .css('margin-right', '5px').appendTo($cont);
+    let resLabel = $('<span>').html(settingsData.ntUsdMultiplicityOkex).appendTo($cont);
+
+    updateBtn.click(function () {
+        updateBtn.attr('disabled', true);
+        let requestData = JSON.stringify({ntUsdMultiplicityOkex: edit.val()});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    const res = JSON.parse(rawResp);
+                    resLabel.html(res.ntUsdMultiplicityOkex);
+                    updateBtn.attr('disabled', false);
+                }
+        );
+    });
+
+    label.prop('title', ('Samples:\n'
+            + '    nt=237.65, mult=100 ==> 200\n'
+            + '    nt=237.65, mult=10  ==> 230\n'
+            + '    nt=237.65, mult=20  ==> 220\n'
+            + '    nt=237.65, mult=1   ==> 237\n'
+            + '    nt=237.65, mult=0   ==> 237.65\n'
+            + '    nt=237.65, mult=-1  ==> 237.65\n'
+            + '    nt=237.65, mult=-12 ==> 237.65\n'
+            + '    nt=237.65, mult=-100==> 237.65\n'
+    ));
+
 }
