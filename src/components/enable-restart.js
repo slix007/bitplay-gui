@@ -3,8 +3,9 @@
 var Http = require('../http');
 var sprintf = require('sprintf-js').sprintf;
 const settingsStore = require('../store/settings-store');
+const {mobxStore} = require('../store/settings-store');
 
-var URL, bTimestampDelayMax, oTimestampDelayMax;
+var bTimestampDelayMax, oTimestampDelayMax;
 
 var exports = module.exports = {};
 
@@ -21,7 +22,6 @@ exports.showRestartEnable = function (baseUrl) {
     createRestartDiv(btnC, settingsStore.allSettings, SETTINGS_URL);
     createMaxTimestampDelay(maxDelayC, settingsStore.allSettings, SETTINGS_URL);
 
-    URL = baseUrl + '/restart-monitoring-params';
     var restMonCont = document.getElementById("restart-monitoring");
     createRestartMonitoringLabels(restMonCont);
 };
@@ -100,6 +100,7 @@ function createRestartMonitoringLabels(container) {
         console.log('reset RestartMonitoring');
         const requestData = JSON.stringify({});
         resetBtn.disabled = true;
+        const URL = mobxStore.baseUrl + '/restart-monitoring-params';
         Http.httpAsyncPost(URL, requestData, function (result) {
             let data = JSON.parse(result);
             fillRestartMonitoringLabels(data);
@@ -113,11 +114,11 @@ function fillRestartMonitoringLabels(data) {
     oTimestampDelayMax.innerHTML = 'oTimestampDelayMax: ' + data.instantDelta.okDeltaMax;
 }
 
-
-var updateMonitorFunction = function () {
+let updateMonitorFunction = function () {
     if (userInfo === undefined || !userInfo.isAuthorized()) {
         return;
     }
+    const URL = mobxStore.baseUrl + '/restart-monitoring-params';
     Http.httpAsyncGet(URL, function (rawData) {
         let data = JSON.parse(rawData);
         fillRestartMonitoringLabels(data);

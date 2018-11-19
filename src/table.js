@@ -12,6 +12,7 @@ let monCalcDelta = require('./components/comp/mon-calc-delta');
 let eBestMin = require('./components/comp/e-best-min');
 let placingBlocksVar = require('./components/placing-blocks');
 let monVar = require('./components/mon');
+const {placingOrderObj, mobxStore} = require('./store/settings-store');
 
 var exports = module.exports = {};
 
@@ -328,6 +329,14 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
             if (posDiffJson.btmUsdInContract != null) {
                 $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract);
+            }
+            if (posDiffJson.isEth != null) {
+                placingOrderObj.isEth = posDiffJson.isEth;
+                mobxStore.isEth = posDiffJson.isEth;
+            }
+            if (posDiffJson.cm != null) {
+                placingOrderObj.cm = posDiffJson.cm;
+                mobxStore.cm = posDiffJson.cm;
             }
         }
 

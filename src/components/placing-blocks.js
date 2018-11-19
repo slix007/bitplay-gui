@@ -1,13 +1,28 @@
 'use strict';
 
 var Http = require('../http');
-const settingsStore = require('../store/settings-store');
+var $ = require('jquery');
+var sprintf = require('sprintf-js').sprintf;
+const {mobxStore, allSettings} = require('../store/settings-store');
+
 let enableRestart = require('../components/enable-restart');
 
 var exports = module.exports = {};
 
+var updateBlocks = function (bl) {
+    $('#fixedBlocks')
+    .prop('title', sprintf('cm=%s, isEth=%s', bl.cm, bl.eth))
+    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.fixedBlockUsd, bl.fixedBlockBitmex, bl.fixedBlockOkex));
+    $('#dynBlocks')
+    .prop('title', sprintf('cm=%s, isEth=%s', bl.cm, bl.eth))
+    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.fixedBlockUsd, bl.dynMaxBlockBitmex, bl.dynMaxBlockOkex));
+};
+
+exports.updateBlocks = updateBlocks;
+
 exports.showPlacingBlocksVersion = function (baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
+    mobxStore.baseUrl = baseUrl;
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
         let settingsData = JSON.parse(rawData);
@@ -23,23 +38,16 @@ exports.showPlacingBlocksVersion = function (baseUrl) {
         container.appendChild(document.createElement('p'));
         createFixedBlocks(fixedCont, settingsData, SETTINGS_URL);
         createDynamicBlocks(dynCont, settingsData, SETTINGS_URL);
+        updateBlocks(settingsData.placingBlocks);
 
         // TODO move it to the end. Using options
         // 1) data-binding with vanilla js https://namitamalik.github.io/2-way-data-binding-in-Plain-Vanilla-JavaScript/
         // 2) mobx for store ?
         // 3) vue binding + vuex store ?
-        settingsStore.allSettings.setRestartEnabled(settingsData.restartEnabled);
-        settingsStore.allSettings.setRestartSettings(settingsData.restartSettings);
+        allSettings.setRestartEnabled(settingsData.restartEnabled);
+        allSettings.setRestartSettings(settingsData.restartSettings);
         enableRestart.showRestartEnable(baseUrl);
     });
-};
-
-exports.updateBlocks = function (bl) {
-    var fixedBlocks = document.getElementById("fixedBlocks");
-    fixedBlocks.innerHTML = bl.fixedBlockOkex + ', fixedBlockBitmex:' + bl.fixedBlockBitmex;
-
-    var dynBlocks = document.getElementById("dynBlocks");
-    dynBlocks.innerHTML = bl.dynMaxBlockOkex + ', dynMaxBlockBitmex:' + bl.dynMaxBlockBitmex;
 };
 
 function createVerDropdown(container, placingBlocks, SETTINGS_URL, fixedCont, dynCont) {
@@ -82,7 +90,7 @@ function highlightActive(activeVersion, fixedCont, dynCont) {
 
 function createFixedBlocks(container, settingsData, SETTINGS_URL) {
     let label = document.createElement('span');
-    label.innerHTML = 'fixedBlockOkex';
+    label.innerHTML = 'fixedBlock_usd';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
@@ -90,8 +98,6 @@ function createFixedBlocks(container, settingsData, SETTINGS_URL) {
     updateBtn.innerHTML = 'update';
     let realValue = document.createElement('span');
     realValue.setAttribute('id', 'fixedBlocks');
-    let bl = settingsData.placingBlocks;
-    realValue.innerHTML = bl.fixedBlockOkex + ', fixedBlockBitmex:' + bl.fixedBlockBitmex;
 
     container.appendChild(label);
     container.appendChild(edit);
@@ -99,12 +105,12 @@ function createFixedBlocks(container, settingsData, SETTINGS_URL) {
     container.appendChild(realValue);
 
     function onBtnClick() {
-        const requestData = JSON.stringify({placingBlocks: {fixedBlockOkex: edit.value}});
+        const requestData = JSON.stringify({placingBlocks: {fixedBlockUsd: edit.value}});
         updateBtn.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             let bl = data.placingBlocks;
-            realValue.innerHTML = bl.fixedBlockOkex + ', fixedBlockBitmex:' + bl.fixedBlockBitmex;
+            updateBlocks(bl);
             updateBtn.disabled = false;
         });
     }
@@ -112,7 +118,7 @@ function createFixedBlocks(container, settingsData, SETTINGS_URL) {
 
 function createDynamicBlocks(container, settingsData, SETTINGS_URL) {
     let label = document.createElement('span');
-    label.innerHTML = 'dynMaxBlockOkex';
+    label.innerHTML = 'dynMaxBlock_usd';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
@@ -120,8 +126,6 @@ function createDynamicBlocks(container, settingsData, SETTINGS_URL) {
     updateBtn.innerHTML = 'update';
     let realValue = document.createElement('span');
     realValue.setAttribute('id', 'dynBlocks');
-    let bl = settingsData.placingBlocks;
-    realValue.innerHTML = bl.dynMaxBlockOkex + ', dynMaxBlockBitmex:' + bl.dynMaxBlockBitmex;
 
     container.appendChild(label);
     container.appendChild(edit);
@@ -129,12 +133,12 @@ function createDynamicBlocks(container, settingsData, SETTINGS_URL) {
     container.appendChild(realValue);
 
     function onBtnClick() {
-        const requestData = JSON.stringify({placingBlocks: {dynMaxBlockOkex: edit.value}});
+        const requestData = JSON.stringify({placingBlocks: {dynMaxBlockUsd: edit.value}});
         updateBtn.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             let bl = data.placingBlocks;
-            realValue.innerHTML = bl.dynMaxBlockOkex + ', dynMaxBlockBitmex:' + bl.dynMaxBlockBitmex;
+            updateBlocks(bl);
             updateBtn.disabled = false;
         });
     }
