@@ -1,9 +1,11 @@
 'use strict';
 
-var $ = require('jquery');
-var Http = require('../http');
-var Utils = require('../utils');
-var sprintf = require('sprintf-js').sprintf;
+let $ = require('jquery');
+let Http = require('../http');
+let utils = require('../utils');
+let sprintf = require('sprintf-js').sprintf;
+let mobx = require('mobx');
+const {mobxStore} = require('../store/settings-store');
 
 var exports = module.exports = {};
 
@@ -27,13 +29,12 @@ exports.showCorr = function (baseUrl) {
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
         createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
-        createSetParamBlock(main, URL, 'corr maxBlockOkex', corrParams, 'corr', 'maxVolCorrOkex', ' / maxBlockBitmex=', 'maxVolCorrBitmex');
+        createSetParamBlockUsd(main, URL, 'corr maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd');
 
         var mainPreliq = document.getElementById("preliq");
-
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
         createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlock(mainPreliq, URL, 'preliq blockOkex', corrParams, 'preliq', 'preliqBlockOkex', ' / blockBitmex=', 'preliqBlockBitmex');
+        createSetParamBlockUsd(mainPreliq, URL, 'preliq block_usd', corrParams, 'preliq', 'preliqBlockUsd');
 
         var mainAdj = document.getElementById("pos-adj-params");
 
@@ -111,6 +112,40 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
     $(container).append(label, edit, setBtn, currValLabel);
 }
 
+function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2) {
+    let resLabel1 = $('<span>');
+    mobx.autorun(function () {
+        utils.btmUsdToCont();
+        const usd = mobxStore.corrParams[paramName1][paramName2];
+        resLabel1.text(sprintf('%susd (b=%scont, o=%scont)',
+                usd,
+                utils.btmUsdToCont(usd, mobxStore.isEth, mobxStore.cm),
+                utils.okUsdToCont(usd, mobxStore.isEth)));
+    });
+
+    let cont = $('<div>').appendTo(mainContainer);
+    $('<span>').html(labelVal).appendTo(cont);
+    const edit = $('<input>').width('80px').appendTo(cont);
+    let setBtn = $('<button>').text('set').appendTo(cont);
+    setBtn.click(function () {
+        setBtn.disabled = true;
+        let requestObj = {[paramName1]: {[paramName2]: edit.val()}};
+        const requestData = JSON.stringify(requestObj);
+        console.log(requestData);
+
+        Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
+            const res = JSON.parse(rawRes);
+            mobxStore.corrParams = res;
+            setMonitoringCount(corrCountLabel, res, 'corr');
+            setMonitoringCount(adjCountLabel, res, 'adj');
+            setMonitoringCount(preliqCountLabel, res, 'preliq');
+
+            setBtn.disabled = false;
+        });
+    });
+    resLabel1.appendTo(cont);
+    mobxStore.corrParams = paramsObj;
+}
 
 function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2, label2Val, btmParBlockName) {
     function getBBlockName(corrParams) {

@@ -1,5 +1,6 @@
 'use strict';
 import {observable} from 'mobx';
+import utils from '../utils';
 
 class SettingsStore {
     // examples
@@ -32,6 +33,7 @@ export const mobxStore = observable({
     cm: 100,
     isEth: false,
     baseUrl: '',
+    corrParams: {},
 });
 
 export const placingOrderObj = observable({
@@ -43,9 +45,7 @@ export const placingOrderObj = observable({
         get amountCont() {
             let num = 0;
             if (this.isUsd) {
-                num = placingOrderObj.isEth
-                        ? (this.amount * placingOrderObj.cm / 10) // 10 / CM USD = 1 cont,
-                        : (this.amount); // 1 USD = 1 cont
+                num = utils.btmUsdToCont(this.amount, placingOrderObj.isEth, placingOrderObj.cm);
             } else {
                 num = this.amount;
             }
@@ -71,9 +71,7 @@ export const placingOrderObj = observable({
         get amountCont() {
             let num = 0;
             if (this.isUsd) {
-                num = placingOrderObj.isEth
-                        ? (this.amount / 10)
-                        : (this.amount / 100);
+                num = utils.okUsdToCont(this.amount, placingOrderObj.isEth);
             } else {
                 num = this.amount;
             }

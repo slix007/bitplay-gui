@@ -15,7 +15,7 @@ var updateBlocks = function (bl) {
     .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.fixedBlockUsd, bl.fixedBlockBitmex, bl.fixedBlockOkex));
     $('#dynBlocks')
     .prop('title', sprintf('cm=%s, isEth=%s', bl.cm, bl.eth))
-    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.fixedBlockUsd, bl.dynMaxBlockBitmex, bl.dynMaxBlockOkex));
+    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.dynMaxBlockUsd, bl.dynMaxBlockBitmex, bl.dynMaxBlockOkex));
 };
 
 exports.updateBlocks = updateBlocks;
