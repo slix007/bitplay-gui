@@ -224,6 +224,8 @@ exports.showBordersV2 = function (baseUrl) {
         autoBaseLvlChanged();
         // autoBaseLvl ---
 
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'plm');
+
         container.appendChild(document.createElement('br'));
 
         let tableData = borderData.bordersV2.borderTableList;
