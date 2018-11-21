@@ -21,6 +21,7 @@ exports.show = function (baseUrl) {
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentDelaySec');
 
         createNumberValue(container, settingsData, SETTINGS_URL, 'corrDelaySec');
+        createNumberValue(container, settingsData, SETTINGS_URL, 'preliqDelaySec');
 
     });
 };
