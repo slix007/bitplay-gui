@@ -29,7 +29,7 @@ exports.showCorr = function (baseUrl) {
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
         createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
-        createSetParamBlockUsd(main, URL, 'corr maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd');
+        createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd');
 
         var mainPreliq = document.getElementById("preliq");
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
