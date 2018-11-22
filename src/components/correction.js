@@ -34,7 +34,7 @@ exports.showCorr = function (baseUrl) {
         var mainPreliq = document.getElementById("preliq");
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
         createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlockUsd(mainPreliq, URL, 'preliq block_usd', corrParams, 'preliq', 'preliqBlockUsd');
+        createSetParamBlockUsdPreliq(mainPreliq, URL,corrParams);
 
         var mainAdj = document.getElementById("pos-adj-params");
 
@@ -112,7 +112,9 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
     $(container).append(label, edit, setBtn, currValLabel);
 }
 
-function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2) {
+function createSetParamBlockUsdPreliq(mainContainer, SET_URL, paramsObj) {
+    let paramName1 = 'preliq', paramName2 = 'preliqBlockUsd';
+    let labelVal = 'preliq block_usd';
     let resLabel1 = $('<span>');
     mobx.autorun(function () {
         utils.btmUsdToCont();
@@ -147,44 +149,39 @@ function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, par
     mobxStore.corrParams = paramsObj;
 }
 
-function createSetParamBlock(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2, label2Val, btmParBlockName) {
-    function getBBlockName(corrParams) {
-        const bBlock = corrParams[paramName1][btmParBlockName];
-        return label2Val + bBlock;
-    }
+function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2) {
+    let resLabel1 = $('<span>');
+    mobx.autorun(function () {
+        utils.btmUsdToContPure();
+        const usd = mobxStore.corrParams[paramName1][paramName2];
+        resLabel1.text(sprintf('%susd (b=%scont, o=%scont)',
+                usd,
+                utils.btmUsdToContPure(usd, mobxStore.isEth, mobxStore.cm),
+                utils.okUsdToCont(usd, mobxStore.isEth)));
+    });
 
-    var container = document.createElement('div');
-    $(mainContainer).append(container);
-
-    var label = document.createElement('span');
-    label.innerHTML = labelVal;
-    var edit = document.createElement('input');
-    edit.style.width = '80px';
-    var currValLabel = document.createElement('span');
-    currValLabel.innerHTML = paramsObj[paramName1][paramName2] + getBBlockName(paramsObj);
-
-    var setBtn = document.createElement('button');
-    setBtn.innerHTML = 'set';
-    $(setBtn).click(function () {
+    let cont = $('<div>').appendTo(mainContainer);
+    $('<span>').html(labelVal).appendTo(cont);
+    const edit = $('<input>').width('80px').appendTo(cont);
+    let setBtn = $('<button>').text('set').appendTo(cont);
+    setBtn.click(function () {
         setBtn.disabled = true;
-        let requestObj = {[paramName1]: {[paramName2]: edit.value}};
+        let requestObj = {[paramName1]: {[paramName2]: edit.val()}};
         const requestData = JSON.stringify(requestObj);
         console.log(requestData);
 
         Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
             const res = JSON.parse(rawRes);
-            console.log(res);
-            currValLabel.innerHTML = res[paramName1][paramName2] + getBBlockName(res);
+            mobxStore.corrParams = res;
             setMonitoringCount(corrCountLabel, res, 'corr');
             setMonitoringCount(adjCountLabel, res, 'adj');
             setMonitoringCount(preliqCountLabel, res, 'preliq');
 
             setBtn.disabled = false;
-            // alert(rawRes);
         });
-
     });
-    $(container).append(label, edit, setBtn, currValLabel);
+    resLabel1.appendTo(cont);
+    mobxStore.corrParams = paramsObj;
 }
 
 function createMonitorCounter(corrMon, corrParams, subParamName) {

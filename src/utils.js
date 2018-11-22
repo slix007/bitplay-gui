@@ -7,20 +7,28 @@ exports.toUsd = function(btc, quAvg) {
     return (btc * quAvg).toFixed(2);
 };
 
-exports.btmUsdToCont = function (usd, isEth, cm) {
+exports.btmUsdToContPure = function (usd, isEth, cm) {
     let num = isEth
             ? (usd * cm / 10)
             : (usd);
     return Number(num).toFixed(0);
 };
 
-exports.okUsdToCont = function (usd, isEth) {
+let okUsdToCont = function (usd, isEth) {
     let num = isEth
             ? (usd / 10)
             : (usd / 100);
     return Number(num).toFixed(0);
 };
+exports.okUsdToCont = okUsdToCont;
 
+exports.btmUsdToCont = function (usd, isEth, cm) {
+    const okCont = okUsdToCont(usd, isEth);
+    let num = isEth
+            ? (okCont * cm)
+            : (okCont * 100);
+    return Number(num).toFixed(0);
+};
 
 exports.ethToBtc = function(eth, qu) {
     return (eth * qu).toFixed(8);
