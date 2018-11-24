@@ -31,10 +31,10 @@ exports.updateAll = function (bl) {
     min.innerHTML = bl.posAdjustmentMin;
     let max = document.getElementById("posAdjustmentMax-id");
     max.innerHTML = bl.posAdjustmentMax;
-    let delay= document.getElementById("posAdjustmentDelaySec-id");
-    delay.innerHTML = bl.posAdjustmentDelaySec;
-    let corrDelaySec = document.getElementById("corrDelaySec-id");
-    corrDelaySec.innerHTML = bl.corrDelaySec;
+    // let delay= document.getElementById("posAdjustmentDelaySec-id");
+    // delay.innerHTML = bl.posAdjustmentDelaySec;
+    // let corrDelaySec = document.getElementById("corrDelaySec-id");
+    // corrDelaySec.innerHTML = bl.corrDelaySec;
 };
 
 function createPosAdjustmentPlacingType(parentCont, settingsData, SETTINGS_URL) {

@@ -45,7 +45,7 @@ export const placingOrderObj = observable({
         get amountCont() {
             let num = 0;
             if (this.isUsd) {
-                num = utils.btmUsdToCont(this.amount, placingOrderObj.isEth, placingOrderObj.cm);
+                num = utils.btmUsdToContPure(this.amount, placingOrderObj.isEth, placingOrderObj.cm);
             } else {
                 num = this.amount;
             }

@@ -35,7 +35,17 @@ exports.repaintStates = function (returnData) {
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);
     $('#signal-delay-label').html(sigDeltay + timeToSig);
+
+    updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
+    updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
+    updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
 };
+
+function updateDelayTimer(el, dt) {
+    el
+    .prop('title', dt.activeNames.reduce((a, b) => a + '\n' + b, ""))
+    .html(sprintf('%s. (%s)To signal(sec): %s', dt.delaySec, dt.activeCount, showTimeToSignal(dt.toSignalSec)));
+}
 
 function showTimeToSignal(timeToSignal) {
     let text = timeToSignal;
