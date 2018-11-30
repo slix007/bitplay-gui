@@ -13,6 +13,7 @@ let eBestMin = require('./components/comp/e-best-min');
 let placingBlocksVar = require('./components/placing-blocks');
 let monVar = require('./components/mon');
 const {placingOrderObj, mobxStore} = require('./store/settings-store');
+const lastPriceDevVar = require('./components/comp/last-price-deviation');
 
 var exports = module.exports = {};
 
@@ -339,6 +340,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 mobxStore.cm = posDiffJson.cm;
             }
         }
+
+
+        fetch(sprintf('/market/last-price-deviation', firstMarketName), function (jsonData) {
+            lastPriceDevVar.fillComponents(jsonData, baseUrl);
+        });
 
         fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
             let orderBookP = parseOrderBook(jsonData);
