@@ -208,17 +208,10 @@ function setMonitoringCount(label, corrParams, subParam) {
         label.style.color = 'black';
     }
 
-    if (subParam === 'preliq') {
-        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
-                subParam,
-                currErrorCount, maxErrorCount,
-                succeedCount, failedCount, currTotalCount, maxTotalCount);
-    } else {
-        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail=total / max): %s+%s=%s / %s',
-                subParam,
-                currErrorCount, maxErrorCount,
-                succeedCount, failedCount, currTotalCount, maxTotalCount);
-    }
+    label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
+            subParam,
+            currErrorCount, maxErrorCount,
+            succeedCount, failedCount, currTotalCount, maxTotalCount);
 
 }
 
