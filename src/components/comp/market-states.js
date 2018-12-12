@@ -81,9 +81,11 @@ function updateState(id, text) {
         case 'STOPPED':
         case 'FORBIDDEN':
         case 'SYSTEM_OVERLOADED':
+        case 'PRELIQ':
             el.style.color = 'red';
             break;
         default:
+            el.style.color = 'black';
     }
     el.style.fontWeight = 'bold';
     el.innerText = text;
