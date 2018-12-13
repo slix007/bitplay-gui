@@ -1,13 +1,13 @@
 'use strict';
 var $ = require('jquery');
 var Http = require('../../http');
+let sprintf = require('sprintf-js').sprintf;
 
 var exports = module.exports = {};
 
 // const resLabel = $('<span>');
 const resLabel = $('<span>');
 const lbBitmex = $('<span>');
-const lbBitmexExtra = $('<span>');
 const lbOkex = $('<span>');
 
 exports.fillComponents = function (jsonData, baseUrl) {
@@ -19,7 +19,7 @@ exports.fillComponents = function (jsonData, baseUrl) {
         let setBtn = $('<button>').text('set');
         setBtn.click(function () {
             setBtn.disabled = true;
-            let requestObj = {percentage: edit.val()};
+            let requestObj = {maxDevUsd: edit.val()};
             const requestData = JSON.stringify(requestObj);
             console.log(requestData);
 
@@ -51,34 +51,31 @@ exports.fillComponents = function (jsonData, baseUrl) {
         indexCont.append(fixCurrBtn);
         indexCont.append(lbBitmex);
         indexCont.append(lbOkex);
-        indexCont.append(lbBitmexExtra);
     }
 
     updateInfo(jsonData);
 };
 
-function showDev(label, isExceed, text, baseVal, currVal, description) {
+const getRoundVal = x => ((x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0));
+
+function showDev(label, isExceed, text, baseVal, currVal) {
     if (isExceed) {
         label.css('color', 'red');
     } else {
         label.css('color', 'black');
     }
-    label.html(text + baseVal);
-
     // abs(curr/base*100 - 100) == persentage
-    const dev = Math.abs(currVal / baseVal * 100 - 100).toFixed(2);
-    let info = 'current=' + currVal + '\ndev=' + dev + '%';
-    if (description) {
-        info += '\n(' + description + ')';
-    }
+    const devP = Math.abs(currVal / baseVal * 100 - 100).toFixed(2);
+    label.html(text + baseVal + '(' + devP + '%)');
+
+    const roundVal = getRoundVal(baseVal);
+    const devUsd = Math.abs(currVal - baseVal).toFixed(roundVal);
+    let info = sprintf('current=%s\ndev=%susd (%s%%)', currVal, devUsd, devP);
     label.prop('title', info);
 }
 
 function updateInfo(jsonData) {
-    resLabel.html(sprintf('%s %%  ', jsonData.percentage));
+    resLabel.html(sprintf('%s usd  ', jsonData.maxDevUsd));
     showDev(lbBitmex, jsonData.bitmexMainExceed, 'bitmex=', jsonData.bitmexMain, jsonData.bitmexMainCurr);
     showDev(lbOkex, jsonData.okexMainExceed, ', okex=', jsonData.okexMain, jsonData.okexMainCurr);
-    if (jsonData.bitmexExtra) {
-        showDev(lbBitmexExtra, jsonData.bitmexExtraExceed, ', bitmex_extraSet=', jsonData.bitmexExtra, jsonData.bitmexExtraCurr, 'bid[1]');
-    }
 }
