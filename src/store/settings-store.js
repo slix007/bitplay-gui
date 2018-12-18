@@ -1,39 +1,82 @@
 'use strict';
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import utils from '../utils';
 
-class SettingsStore {
-    // examples
-    // https://habrahabr.ru/post/282578/
-    // https://mobx.js.org/getting-started.html
+export const setAllSettings = function (settingsData) {
+    // function copyByLayer(from, to) {
+    //     for (let k in from) {
+    //         if (from.hasOwnProperty(k)) {
+    //             if ("object" == typeof from[k]) {
+    //                 const childObj = from[k];
+    //                 const copiedChildObj = {};
+    //                 copyByLayer(childObj, copiedChildObj);
+    //                 to[k] = copiedChildObj;
+    //             } else {
+    //                 to[k] = from[k];
+    //             }
+    //         }
+    //
+    //     }
+    // }
+    // copyByLayer(settingsData, allSettings);
 
-    // @observable amountType = 'CONT';
+    for (let k in settingsData) {
+        // if (null == k || "object" != typeof k) continue;
+        if (settingsData.hasOwnProperty(k)) {
+            allSettings[k] = settingsData[k];
+            if ("object" == typeof k) {
 
-    constructor() {
-        // this.restartEnabled;
+            }
+        }
     }
 
-    setRestartEnabled(restartEnabled) {
-        if (restartEnabled === undefined) restartEnabled = true;
-        this.restartEnabled = restartEnabled;
-    }
-    setRestartSettings(restartSettings) {
-        if (restartSettings === undefined) restartSettings = {};
-        this.restartSettings = restartSettings;
-    }
+    console.log('allSettings:');
+    console.log(toJS(allSettings));
 
-    report() {
-        return `restartEnabled=` + this.restartEnabled;
-    }
-}
+};
 
-export const allSettings = new SettingsStore();
+export const setAllSettingsRaw = function (result) {
+    let settingsData = JSON.parse(result);
+    setAllSettings(settingsData);
+    return settingsData;
+};
+
+export const allSettings = observable({
+    // restartEnabled: false,
+    tradingModeAuto: false,
+    restartSettings: {},
+    tradingModeState: {tradingMode: ''},
+    placingBlocks: {},
+    posAdjustment: {},
+    settingsVolatileMode: {
+        bitmexPlacingType: '',
+        activeFields: [],
+        placingBlocks: {},
+        posAdjustment: {}
+    },
+
+});
+
+export const isActive = function (field) {
+    const tmp = toJS(allSettings.settingsVolatileMode.activeFields);
+    if (tmp instanceof Array) {
+        return tmp.includes(field);
+    }
+    return false;
+};
+
+export const isActiveV = function (field) {
+    if (allSettings.tradingModeState.tradingMode === 'VOLATILE') {
+        return isActive(field);
+    }
+    return false;
+};
 
 export const mobxStore = observable({
     cm: 100,
     isEth: false,
     baseUrl: '',
-    corrParams: {},
+    corrParams: {corr: {}},
 });
 
 export const placingOrderObj = observable({

@@ -4,6 +4,7 @@ var Http = require('../http');
 var sprintf = require('sprintf-js').sprintf;
 const settingsStore = require('../store/settings-store');
 const {mobxStore} = require('../store/settings-store');
+let mobx = require('mobx');
 
 var bTimestampDelayMax, oTimestampDelayMax;
 
@@ -30,7 +31,9 @@ function createRestartDiv(container, allSettings, SETTINGS_URL) {
     let label = document.createElement('span');
     label.innerHTML = 'Restart enabled: ';
     let realValue = document.createElement('span');
-    realValue.innerHTML = allSettings.restartEnabled;
+    mobx.autorun(function () {
+        realValue.innerHTML = allSettings.restartEnabled;
+    });
 
     let updateBtn = document.createElement('button');
     updateBtn.onclick = onBtnClick;
@@ -46,7 +49,7 @@ function createRestartDiv(container, allSettings, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             settingsStore.allSettings.restartEnabled = data.restartEnabled;
-            realValue.innerHTML = data.restartEnabled;
+            // realValue.innerHTML = data.restartEnabled;
             updateBtn.disabled = false;
         });
     }
@@ -56,8 +59,9 @@ function createMaxTimestampDelay(container, allSettings, SETTINGS_URL) {
     let label = document.createElement('span');
     label.innerHTML = 'Max timestamp delay: ';
     let realValue = document.createElement('span');
-    realValue.innerHTML = allSettings.restartSettings.maxTimestampDelay;
-
+    mobx.autorun(function () {
+        realValue.innerHTML = allSettings.restartSettings.maxTimestampDelay;
+    });
     let inputBox = document.createElement('input');
 
     let updateBtn = document.createElement('button');
@@ -75,7 +79,7 @@ function createMaxTimestampDelay(container, allSettings, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             settingsStore.allSettings.restartSettings.maxTimestampDelay = data.restartSettings.maxTimestampDelay;
-            realValue.innerHTML = data.restartSettings.maxTimestampDelay;
+            // realValue.innerHTML = data.restartSettings.maxTimestampDelay;
             updateBtn.disabled = false;
         });
     }

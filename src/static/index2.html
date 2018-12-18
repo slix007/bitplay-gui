@@ -411,9 +411,14 @@
             <span id="is-stop-moving"></span>
         </div>
 
-        <div style="background-color: azure; border: solid" id="placing-blocks">
-            Placing blocks:
+        <div style="background-color: azure; border: solid; display: flex;">
+            <div id="volatile-mode-params" style="float: left; margin-left: 10px;"></div>
+            <div id="volatile-mode-params-1" style="float: left; margin-left: 10px;"></div>
+            <div id="volatile-mode-params-2" style="float: left; margin-left: 10px;"></div>
         </div>
+
+
+        <div style="background-color: azure; border: solid" id="placing-blocks"></div>
 
         <div style="background-color: azure; border: solid; display: flex;">
             <div style="float: left; margin-left: 10px">
@@ -458,10 +463,12 @@
         <!--<span id="block2"></span>-->
         <!--</div>-->
 
-        <div style="background-color: azure; border: solid">Arbitrage version
-            <span id="select-arb-version"></span>
-            <div>Bitmex place orders type:<span id="bitmex-placing-type"></span></div>
-            <div>Okex place orders type:<span id="okex-placing-type"></span></div>
+        <div style="background-color: azure; border: solid; display: flex;">
+            <div style="float: left; margin-left: 10px">
+                <div>Arbitrage version:<span id="select-arb-version"></span></div>
+                <div id="bitmex-placing-type"></div>
+                <div id="okex-placing-type"></div>
+            </div>
         </div>
 
         <div style="background-color: azure; border: solid">

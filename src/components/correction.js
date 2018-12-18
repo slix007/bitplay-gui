@@ -117,7 +117,6 @@ function createSetParamBlockUsdPreliq(mainContainer, SET_URL, paramsObj) {
     let labelVal = 'preliq block_usd';
     let resLabel1 = $('<span>');
     mobx.autorun(function () {
-        utils.btmUsdToCont();
         const usd = mobxStore.corrParams[paramName1][paramName2];
         resLabel1.text(sprintf('%susd (b=%scont, o=%scont)',
                 usd,

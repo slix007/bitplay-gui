@@ -1,28 +1,48 @@
 'use strict';
 
-var $ = require('jquery');
-var Http = require('../http');
-var Utils = require('../utils');
-var sprintf = require('sprintf-js').sprintf;
+import {createPlacingBlocksVolatile} from "../components/placing-blocks";
+import {createAdjVolatile} from "./pos-adjustment";
 
-var exports = module.exports = {};
+let $ = require('jquery');
+let Http = require('../http');
+let Utils = require('../utils');
+let sprintf = require('sprintf-js').sprintf;
+let mobx = require('mobx');
+const {allSettings, setAllSettings, setAllSettingsRaw, isActive, isActiveV} = require('../store/settings-store');
 
-exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
+const enableRestart = require('../components/enable-restart');
+
+export {showArbVersion};
+
+let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
     const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
         let settingsData = JSON.parse(rawData);
+        setAllSettings(settingsData);
+        enableRestart.showRestartEnable(baseUrl);
 
         // Arb version
         var container = document.getElementById("select-arb-version");
         createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL);
 
-        var bitmexPlacingCont = document.getElementById("bitmex-placing-type");
-        createBitmexPlacingType(bitmexPlacingCont, settingsData.bitmexPlacingType, SETTINGS_URL);
+        // Bitmex place orders type:
+        let $bitmexPlacingCont = $('#bitmex-placing-type');
+        const btmPlacingLb = $('<span>').text('Bitmex place orders type:');
+        btmPlacingLb.appendTo($bitmexPlacingCont);
+        createPlacingType($bitmexPlacingCont.get(0), SETTINGS_URL,
+                x => ({bitmexPlacingType: x}),
+                x => x.bitmexPlacingType,
+                btmPlacingLb, 'bitmexPlacingType', true);
 
-        var okexPlacingCont = document.getElementById("okex-placing-type");
-        createOkexPlacingType(okexPlacingCont, settingsData.okexPlacingType, SETTINGS_URL);
+        let okexPlacingCont = $('#okex-placing-type');
+        const okPlacingLb = $('<span>').text('Okex place orders type:');
+        okPlacingLb.appendTo(okexPlacingCont);
+        createPlacingType(okexPlacingCont.get(0), SETTINGS_URL,
+                x => ({okexPlacingType: x}),
+                x => x.okexPlacingType,
+                okPlacingLb, 'okexPlacingType', true);
 
         // System overload settings
         var overloadContainer = document.getElementById("sys-overload-settings");
@@ -44,7 +64,7 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         // Ignore limits
         createIgnoreLimitPrice(settingsData, SETTINGS_URL);
 
-        createSignalDelay(settingsData, SETTINGS_URL);
+        createSignalDelay($('#signal-delay'), SETTINGS_URL, x => ({signalDelayMs: x}), null, true);
 
         createColdStorage(settingsData, SETTINGS_ADMIN_URL);
         createEBestMin(settingsData, SETTINGS_ADMIN_URL);
@@ -58,10 +78,165 @@ exports.showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createOkexFakePriceDev(settingsData, SETTINGS_URL);
 
-        createAdjustByNtUsd(settingsData, SETTINGS_URL);
+        createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({adjustByNtUsd: x}), x => x.adjustByNtUsd, true);
         createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL);
+
     });
+
+    // Volatile mode
+    createTradingModeDropdown(SETTINGS_URL);
+
+    const $btmPlacingContV = $('<div>').appendTo($('#volatile-mode-params'));
+    createCheckboxV($btmPlacingContV, SETTINGS_URL, 'bitmexPlacingType');
+    const btmPlacingLbV = $('<span>').text('Bitmex place orders type:');
+    btmPlacingLbV.appendTo($btmPlacingContV);
+    createPlacingType($btmPlacingContV.get(0), SETTINGS_URL,
+            x => ({settingsVolatileMode: {bitmexPlacingType: x}}),
+            x => x.settingsVolatileMode.bitmexPlacingType,
+            btmPlacingLbV, 'bitmexPlacingType'
+    );
+
+    const $okPlacingContV = $('<div>').appendTo($('#volatile-mode-params'));
+    createCheckboxV($okPlacingContV, SETTINGS_URL, 'okexPlacingType');
+    const okPlacingLbV = $('<span>').text('Okex place orders type:');
+    okPlacingLbV.appendTo($okPlacingContV);
+    createPlacingType($okPlacingContV.get(0), SETTINGS_URL,
+            x => ({settingsVolatileMode: {okexPlacingType: x}}),
+            x => x.settingsVolatileMode.okexPlacingType,
+            okPlacingLbV, 'okexPlacingType'
+    );
+
+    const $signalDelayContV = $('<div>').appendTo($('#volatile-mode-params'));
+    createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs');
+
+    createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({settingsVolatileMode: {signalDelayMs: x}}),
+            x => x.settingsVolatileMode.signalDelayMs);
+
+    const $placingBlocksContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    createCheckboxV($placingBlocksContV, SETTINGS_URL, 'placingBlocks');
+    createPlacingBlocksVolatile($placingBlocksContV, SETTINGS_URL);
+
+    const $posAdjustmentContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    createCheckboxV($posAdjustmentContV, SETTINGS_URL, 'posAdjustment');
+    const posAdjLb = $('<span>').text('posAdjustment:').appendTo($posAdjustmentContV);
+    createPlacingType($posAdjustmentContV.get(0), SETTINGS_URL,
+            x => ({settingsVolatileMode: {posAdjustment: {posAdjustmentPlacingType: x}}}),
+            x => x.settingsVolatileMode.posAdjustment.posAdjustmentPlacingType,
+            posAdjLb, 'posAdjustment'
+    );
+    createAdjVolatile($posAdjustmentContV, SETTINGS_URL);
+
+    const $adjustByNtUsdContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    createCheckboxV($adjustByNtUsdContV, SETTINGS_URL, 'adjustByNtUsd');
+    $adjustByNtUsdContV.append($('<span>').text('adjustByNtUsd:'));
+    createAdjustByNtUsd($adjustByNtUsdContV, SETTINGS_URL, x => ({settingsVolatileMode: {adjustByNtUsd: x}}),
+            x => x.settingsVolatileMode.adjustByNtUsd);
+
+    //TODO
+    const $corr_adjContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    createCheckboxV($corr_adjContV, SETTINGS_URL, 'corr_adj');
+    $corr_adjContV.append($('<span>').text('corr_adj:'));
+    //TODO
+
+    const $column3Cont = $('#volatile-mode-params-2');
+    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'b_add_border',
+            x => ({settingsVolatileMode: {baddBorder: x}}),
+            x => x.settingsVolatileMode.baddBorder);
+    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'o_add_border',
+            x => ({settingsVolatileMode: {oaddBorder: x}}),
+            x => x.settingsVolatileMode.oaddBorder);
+    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'Volatile duration(sec)',
+            x => ({settingsVolatileMode: {volatileDurationSec: x}}),
+            x => x.settingsVolatileMode.volatileDurationSec,
+            x => false);
+    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'Border cross depth',
+            x => ({settingsVolatileMode: {borderCrossDepth: x}}),
+            x => x.settingsVolatileMode.borderCrossDepth,
+            x => x.tradingModeAuto);
+
 };
+
+function createSettingsV(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isActiveFunc) {
+    const lb = $('<span>').text(labelName).appendTo(container);
+    const edit = $('<input>').width('40px').appendTo(container);
+    const updateBtn = $('<button>').text('set').appendTo(container);
+    const realValue = $('<span>').appendTo(container);
+    updateBtn.click(() => {
+        const requestData = JSON.stringify(requestCreator(edit.val()));
+        updateBtn.prop('disabled', true);
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+            setAllSettingsRaw(result);
+            updateBtn.prop('disabled', false);
+        });
+    });
+    mobx.autorun(function () {
+        const value = valExtractor(allSettings);
+        realValue.text(value);
+        const isActive = isActiveFunc ? isActiveFunc(allSettings)
+                : allSettings.tradingModeState.tradingMode === 'VOLATILE';
+        if (isActive && value !== 0) {
+            lb.css('font-weight', 'bold').prop('title', '');
+        } else {
+            lb.css('font-weight', 'normal').prop('title', '');
+        }
+    });
+}
+
+function createCheckboxV(cont, SETTINGS_URL, fieldName) {
+    const checkbox = $('<input>').attr('type', 'checkbox').appendTo(cont);
+    mobx.autorun(function () {
+        checkbox.prop('checked', isActive(fieldName));
+    });
+    checkbox.click(function () {
+        Utils.disableElements(cont);
+
+        const req = checkbox.prop('checked')
+                ? {settingsVolatileMode: {fieldToAdd: fieldName}}
+                : {settingsVolatileMode: {fieldToRemove: fieldName}};
+        const requestData = JSON.stringify(req);
+
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (result) {
+                    setAllSettingsRaw(result);
+                    Utils.enableElements(cont);
+                });
+    });
+}
+
+function createTradingModeDropdown(SETTINGS_URL) {
+    let $cont = $('#volatile-mode-params');
+    let select = $('<select>', {id: 'tradingMode-id'});
+    select.append($('<option>').val('CURRENT').text('Current'));
+    select.append($('<option>').val('VOLATILE').text('Volatile'));
+    mobx.autorun(function () {
+        select.val(allSettings.tradingModeState.tradingMode);
+    });
+
+    $('<span>').text('Trading mode: ').appendTo($cont);
+    $cont.append(select);
+
+    select.change(() => Http.httpAsyncPost(SETTINGS_URL, JSON.stringify({tradingModeState: {tradingMode: select.val()}}),
+            json => {
+                const res = setAllSettingsRaw(json);
+                alert('New value: ' + res.tradingModeState.tradingMode);
+            }));
+    // checkbox auto
+    const autoCheckbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
+    const lb = $('<label>').text('auto select').appendTo($cont);
+    autoCheckbox.click(function () {
+        Http.httpAsyncPost(SETTINGS_URL, JSON.stringify({tradingModeAuto: autoCheckbox.prop('checked')}),
+                json => setAllSettingsRaw(json))
+    });
+
+    mobx.autorun(function () {
+        autoCheckbox.prop('checked', allSettings.tradingModeAuto);
+        if (allSettings.tradingModeAuto && allSettings.settingsVolatileMode.borderCrossDepth !== 0) {
+            lb.css('font-weight', 'bold').prop('title', 'Activated auto select mode');
+        } else {
+            lb.css('font-weight', 'normal').prop('title', '');
+        }
+    });
+}
 
 function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
 
@@ -83,13 +258,12 @@ function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
         const requestData = JSON.stringify({arbScheme: this.value});
 
         Http.httpAsyncPost(ARB_SETTINGS_URL,
-            requestData, function(result) {
-                let data = JSON.parse(result);
-                alert('New value: ' + data.arbScheme);
-            });
+                requestData, function (result) {
+                    let data = JSON.parse(result);
+                    alert('New value: ' + data.arbScheme);
+                });
     }
 }
-
 
 function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
     let container = document.createElement('div');
@@ -181,7 +355,7 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     }
 }
 
-function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
+function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
@@ -204,56 +378,34 @@ function createOkexPlacingType(mainContainer, ver, SETTINGS_URL) {
     select.appendChild(option4);
     select.appendChild(option5);
     select.addEventListener("change", onVerPick);
-    select.value = ver;
 
     mainContainer.appendChild(select);
 
-    function onVerPick() {
-        const requestData = JSON.stringify({okexPlacingType: this.value});
-
-        Http.httpAsyncPost(SETTINGS_URL,
-                           requestData, function(result) {
-                let data = JSON.parse(result);
-                alert('New value: ' + data.okexPlacingType);
-            });
-    }
-}
-
-function createBitmexPlacingType(mainContainer, ver, SETTINGS_URL) {
-    var select = document.createElement('select');
-    var option1 = document.createElement('option');
-    var option2 = document.createElement('option');
-    var option3 = document.createElement('option');
-    var option4 = document.createElement('option');
-    var option5 = document.createElement('option');
-    option1.setAttribute("value", "TAKER");
-    option2.setAttribute("value", "MAKER");
-    option3.setAttribute("value", "HYBRID");
-    option4.setAttribute("value", "MAKER_TICK");
-    option5.setAttribute("value", "HYBRID_TICK");
-    option1.innerHTML = 'TAKER';
-    option2.innerHTML = 'MAKER';
-    option3.innerHTML = 'HYBRID';
-    option4.innerHTML = 'MAKER_TICK';
-    option5.innerHTML = 'HYBRID_TICK';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.appendChild(option3);
-    select.appendChild(option4);
-    select.appendChild(option5);
-    select.addEventListener("change", onVerPick);
-    select.value = ver;
-
-    mainContainer.appendChild(select);
+    mobx.autorun(function () {
+        select.value = valExtractor(allSettings);
+        if (isActiveV(fieldName)) {
+            lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+        } else {
+            lb.css('font-weight', 'normal').prop('title', '');
+        }
+        if (isMain) {
+            if (isActiveV(fieldName)) {
+                select.disabled = true;
+            } else {
+                select.disabled = false;
+            }
+        }
+    });
 
     function onVerPick() {
-        const requestData = JSON.stringify({bitmexPlacingType: this.value});
+        const requestData = JSON.stringify(requestCreator(this.value));
 
         Http.httpAsyncPost(SETTINGS_URL,
-                           requestData, function(result) {
-                let data = JSON.parse(result);
-                alert('New value: ' + data.bitmexPlacingType);
-            });
+                requestData, function (result) {
+                    setAllSettingsRaw(result);
+                    let data = JSON.parse(result);
+                    alert('New value: ' + valExtractor(data));
+                });
     }
 }
 
@@ -316,12 +468,12 @@ function saveParamAsNumber(SETTINGS_URL, requestObj, el, setBtn, nestedObjName, 
     const requestData = JSON.stringify(requestObj);
     console.log(requestData);
     Http.httpAsyncPost(SETTINGS_URL,
-                       requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            el.innerHTML = res[nestedObjName][elName];
-            setBtn.disabled = false;
-            // alert(rawRes);
-        });
+            requestData, function (rawRes) {
+                const res = JSON.parse(rawRes);
+                el.innerHTML = res[nestedObjName][elName];
+                setBtn.disabled = false;
+                // alert(rawRes);
+            });
 }
 
 function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
@@ -331,8 +483,11 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     checkbox.type = "checkbox";
     checkbox.checked = settingsData.limits.ignoreLimits;
     let decorateLimitsStatus = function () {
-        if (checkbox.checked) $('#limits-status').css("text-decoration", "line-through");
-        else $('#limits-status').css("text-decoration", "initial");
+        if (checkbox.checked) {
+            $('#limits-status').css("text-decoration", "line-through");
+        } else {
+            $('#limits-status').css("text-decoration", "initial");
+        }
     };
     decorateLimitsStatus();
 
@@ -359,35 +514,45 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     container.appendChild(label);
 }
 
-function createSignalDelay(settingsData, SETTINGS_URL) {
-    var container = document.getElementById("signal-delay");
-
-    var label = document.createElement('span');
-    label.innerHTML = 'Signal delay (ms):';
-    var edit = document.createElement('input');
+function createSignalDelay(cont, SETTINGS_URL, requestCreator, valExtractor, isMain) {
+    let container = cont.get(0);
+    let label = $('<span>');
+    label.text('Signal delay (ms):');
+    let edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
-    // var resultLabel = document.createElement('span');
-    // resultLabel.innerHTML = settingsData.signalDelayMs;
-    var setBtn = document.createElement('button');
+    let resultLabel = document.createElement('span');
+    let setBtn = document.createElement('button');
     setBtn.onclick = function () {
         setBtn.disabled = true;
-        const requestData = JSON.stringify({signalDelayMs: edit.value});
-        console.log(requestData);
-        Http.httpAsyncPost(SETTINGS_URL,
-                requestData, function (rawRes) {
-                    const res = JSON.parse(rawRes);
-                    // resultLabel.innerHTML = res.signalDelayMs;
-                    setBtn.disabled = false;
-                    // alert(rawRes);
-                });
+        Http.httpAsyncPost(SETTINGS_URL, JSON.stringify(requestCreator(edit.value)), function (rawRes) {
+            setAllSettingsRaw(rawRes);
+            setBtn.disabled = false;
+        });
     };
     setBtn.innerHTML = 'set';
 
-    container.appendChild(label);
+    container.appendChild(label.get(0));
     container.appendChild(edit);
     container.appendChild(setBtn);
-    // container.appendChild(resultLabel);
+    container.appendChild(resultLabel);
+
+    mobx.autorun(function () {
+        if (valExtractor) {
+            resultLabel.innerText = valExtractor(allSettings);
+        }
+        if (isActiveV('signalDelayMs')) {
+            label.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+            if (isMain) {
+                setBtn.disabled = true;
+            }
+        } else {
+            label.css('font-weight', 'normal').prop('title', '');
+            if (isMain) {
+                setBtn.disabled = false;
+            }
+        }
+    });
 }
 
 function createColdStorage(settingsData, SETTINGS_ADMIN_URL) {
@@ -513,8 +678,6 @@ function createOkexFakePriceDev(settingsData, SETTINGS_URL) {
         );
     });
 }
-
-
 
 const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
 const set_bu10_1 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
@@ -714,33 +877,45 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
     Utils.setDocumentTitle(arbMod.mod.toLowerCase());
 }
 
-function createAdjustByNtUsd(settingsData, SETTINGS_URL) {
-    let container = document.getElementById("adjust-by-nt-usd");
+function createAdjustByNtUsd(cont, SETTINGS_URL, requestCreator, valExtractor, isMain) {
+    let container = cont.get(0);
+    let label = $('<span>').text('Adjust by nt_usd on the fly');
 
     let checkbox = document.createElement('input');
     checkbox.type = "checkbox";
-    checkbox.checked = settingsData.adjustByNtUsd;
+    mobx.autorun(function () {
+        checkbox.checked = valExtractor(allSettings);
+        if (isActiveV('adjustByNtUsd')) {
+            label.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+            cont.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+            if (isMain) {
+                checkbox.disabled = true;
+            }
+        } else {
+            label.css('font-weight', 'normal').prop('title', '');
+            cont.css('font-weight', 'normal').prop('title', '');
+            if (isMain) {
+                checkbox.disabled = false;
+            }
+        }
+    });
 
     checkbox.id = "adjust-by-nt-usd-checkbox";
     checkbox.onchange = function (ev) {
         checkbox.disabled = true;
 
-        let requestObj = {adjustByNtUsd: checkbox.checked};
-        const requestData = JSON.stringify(requestObj);
+        const requestData = JSON.stringify(requestCreator(checkbox.checked));
         console.log(requestData);
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            console.log(res);
-            checkbox.checked = res.adjustByNtUsd;
+            setAllSettingsRaw(rawRes);
             checkbox.disabled = false;
         });
     };
 
-    let label = document.createElement('label');
-    label.appendChild(document.createTextNode('Adjust by nt_usd on the fly'));
+    // label.appendChild(document.createTextNode('Adjust by nt_usd on the fly'));
 
     container.appendChild(checkbox);
-    container.appendChild(label);
+    container.appendChild(label.get(0));
 }
 
 function createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL) {
