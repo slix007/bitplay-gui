@@ -20,7 +20,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
         let settingsData = JSON.parse(rawData);
-        setAllSettings(settingsData);
+        setAllSettings(settingsData, SETTINGS_URL);
         enableRestart.showRestartEnable(baseUrl);
 
         // Arb version
@@ -86,7 +86,21 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     // Volatile mode
     createTradingModeDropdown(SETTINGS_URL);
 
-    const $btmPlacingContV = $('<div>').appendTo($('#volatile-mode-params'));
+    const $column1Cont = $('#volatile-mode-params-1');
+    // timer-Label
+    const contTimer = $('<div>').appendTo($column1Cont);
+    createSettingsV(contTimer, SETTINGS_URL, 'Volatile duration(sec)',
+            x => ({settingsVolatileMode: {volatileDurationSec: x}}),
+            x => x.settingsVolatileMode.volatileDurationSec,
+            x => false);
+    $('<span>').attr('id', 'timeToResetTradingMode-label').appendTo(contTimer);
+    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'Border cross depth',
+            x => ({settingsVolatileMode: {borderCrossDepth: x}}),
+            x => x.settingsVolatileMode.borderCrossDepth,
+            x => x.tradingModeAuto);
+
+    const $column2Cont = $('#volatile-mode-params-2');
+    const $btmPlacingContV = $('<div>').appendTo($column2Cont);
     createCheckboxV($btmPlacingContV, SETTINGS_URL, 'bitmexPlacingType');
     const btmPlacingLbV = $('<span>').text('Bitmex place orders type:');
     btmPlacingLbV.appendTo($btmPlacingContV);
@@ -96,7 +110,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
             btmPlacingLbV, 'bitmexPlacingType'
     );
 
-    const $okPlacingContV = $('<div>').appendTo($('#volatile-mode-params'));
+    const $okPlacingContV = $('<div>').appendTo($column2Cont);
     createCheckboxV($okPlacingContV, SETTINGS_URL, 'okexPlacingType');
     const okPlacingLbV = $('<span>').text('Okex place orders type:');
     okPlacingLbV.appendTo($okPlacingContV);
@@ -106,17 +120,23 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
             okPlacingLbV, 'okexPlacingType'
     );
 
-    const $signalDelayContV = $('<div>').appendTo($('#volatile-mode-params'));
+    const $signalDelayContV = $('<div>').appendTo($column2Cont);
     createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs');
-
     createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({settingsVolatileMode: {signalDelayMs: x}}),
             x => x.settingsVolatileMode.signalDelayMs);
+    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'b_add_border',
+            x => ({settingsVolatileMode: {baddBorder: x}}),
+            x => x.settingsVolatileMode.baddBorder);
+    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'o_add_border',
+            x => ({settingsVolatileMode: {oaddBorder: x}}),
+            x => x.settingsVolatileMode.oaddBorder);
 
-    const $placingBlocksContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    const $column3Cont = $('#volatile-mode-params-3');
+    const $placingBlocksContV = $('<div>').appendTo($column3Cont);
     createCheckboxV($placingBlocksContV, SETTINGS_URL, 'placingBlocks');
     createPlacingBlocksVolatile($placingBlocksContV, SETTINGS_URL);
 
-    const $posAdjustmentContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    const $posAdjustmentContV = $('<div>').appendTo($column3Cont);
     createCheckboxV($posAdjustmentContV, SETTINGS_URL, 'posAdjustment');
     const posAdjLb = $('<span>').text('posAdjustment:').appendTo($posAdjustmentContV);
     createPlacingType($posAdjustmentContV.get(0), SETTINGS_URL,
@@ -126,33 +146,17 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     );
     createAdjVolatile($posAdjustmentContV, SETTINGS_URL);
 
-    const $adjustByNtUsdContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    const $adjustByNtUsdContV = $('<div>').appendTo($column3Cont);
     createCheckboxV($adjustByNtUsdContV, SETTINGS_URL, 'adjustByNtUsd');
     $adjustByNtUsdContV.append($('<span>').text('adjustByNtUsd:'));
     createAdjustByNtUsd($adjustByNtUsdContV, SETTINGS_URL, x => ({settingsVolatileMode: {adjustByNtUsd: x}}),
             x => x.settingsVolatileMode.adjustByNtUsd);
 
     //TODO
-    const $corr_adjContV = $('<div>').appendTo($('#volatile-mode-params-1'));
+    const $corr_adjContV = $('<div>').appendTo($column3Cont);
     createCheckboxV($corr_adjContV, SETTINGS_URL, 'corr_adj');
     $corr_adjContV.append($('<span>').text('corr_adj:'));
     //TODO
-
-    const $column3Cont = $('#volatile-mode-params-2');
-    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'b_add_border',
-            x => ({settingsVolatileMode: {baddBorder: x}}),
-            x => x.settingsVolatileMode.baddBorder);
-    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'o_add_border',
-            x => ({settingsVolatileMode: {oaddBorder: x}}),
-            x => x.settingsVolatileMode.oaddBorder);
-    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'Volatile duration(sec)',
-            x => ({settingsVolatileMode: {volatileDurationSec: x}}),
-            x => x.settingsVolatileMode.volatileDurationSec,
-            x => false);
-    createSettingsV($('<div>').appendTo($column3Cont), SETTINGS_URL, 'Border cross depth',
-            x => ({settingsVolatileMode: {borderCrossDepth: x}}),
-            x => x.settingsVolatileMode.borderCrossDepth,
-            x => x.tradingModeAuto);
 
 };
 
@@ -204,7 +208,9 @@ function createCheckboxV(cont, SETTINGS_URL, fieldName) {
 }
 
 function createTradingModeDropdown(SETTINGS_URL) {
-    let $cont = $('#volatile-mode-params');
+    let $cont = $('#volatile-mode-params-1');
+
+    // select
     let select = $('<select>', {id: 'tradingMode-id'});
     select.append($('<option>').val('CURRENT').text('Current'));
     select.append($('<option>').val('VOLATILE').text('Volatile'));
@@ -220,9 +226,10 @@ function createTradingModeDropdown(SETTINGS_URL) {
                 const res = setAllSettingsRaw(json);
                 alert('New value: ' + res.tradingModeState.tradingMode);
             }));
+
     // checkbox auto
     const autoCheckbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
-    const lb = $('<label>').text('auto select').appendTo($cont);
+    const lb = $('<label>').text('auto').appendTo($cont);
     autoCheckbox.click(function () {
         Http.httpAsyncPost(SETTINGS_URL, JSON.stringify({tradingModeAuto: autoCheckbox.prop('checked')}),
                 json => setAllSettingsRaw(json))

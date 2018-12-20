@@ -2,7 +2,7 @@
 import {observable, toJS} from 'mobx';
 import utils from '../utils';
 
-export const setAllSettings = function (settingsData) {
+export const setAllSettings = function (settingsData, SETTINGS_URL) {
     // function copyByLayer(from, to) {
     //     for (let k in from) {
     //         if (from.hasOwnProperty(k)) {
@@ -19,6 +19,10 @@ export const setAllSettings = function (settingsData) {
     //     }
     // }
     // copyByLayer(settingsData, allSettings);
+
+    if (SETTINGS_URL) {
+        allSettings.SETTINGS_URL = SETTINGS_URL;
+    }
 
     for (let k in settingsData) {
         // if (null == k || "object" != typeof k) continue;

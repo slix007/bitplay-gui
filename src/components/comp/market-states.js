@@ -1,14 +1,16 @@
 'use strict';
-var $ = require('jquery');
+import {allSettings, setAllSettingsRaw} from "../../store/settings-store";
+import $ from "jquery";
+import Http from "../../http"
 
-var exports = module.exports = {};
+export {repaintStates};
 
 const btmReconId = 'btm-reconnect-state';
 const arbId = 'arb-state';
 const firstId = 'first-state';
 const secondId = 'second-state';
 
-exports.repaintStates = function (returnData) {
+let repaintStates = function (returnData) {
     let container = document.getElementById("markets-states");
 
     if ($(container).children().length === 0) {
@@ -43,11 +45,31 @@ exports.repaintStates = function (returnData) {
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);
     $('#signal-delay-label').html(sigDeltay + timeToSig);
+    $('#timeToResetTradingMode-label').text(convertTimeToReset(returnData.timeToResetTradingMode));
+    stateUpdateChecker(returnData.timeToResetTradingMode);
 
     updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
     updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
 };
+
+function convertTimeToReset(timeToResetTradingMode) {
+    return ', To reset(sec): ' + (timeToResetTradingMode === 0 ? "_none_" : timeToResetTradingMode);
+}
+
+function stateUpdateChecker(timeToResetTradingMode) {
+    const vGotReset = timeToResetTradingMode === 0
+            && allSettings.tradingModeState.tradingMode === 'VOLATILE'
+            && allSettings.settingsVolatileMode.volatileDurationSec > 0;
+    const vGotActivated = timeToResetTradingMode > 0
+            && allSettings.tradingModeState.tradingMode !== 'VOLATILE';
+
+    if (vGotReset || vGotActivated) {
+        Http.httpAsyncGet(allSettings.SETTINGS_URL, function (rawData) {
+            setAllSettingsRaw(rawData);
+        });
+    }
+}
 
 function updateDelayTimer(el, dt) {
     el
