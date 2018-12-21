@@ -3,23 +3,6 @@ import {observable, toJS} from 'mobx';
 import utils from '../utils';
 
 export const setAllSettings = function (settingsData, SETTINGS_URL) {
-    // function copyByLayer(from, to) {
-    //     for (let k in from) {
-    //         if (from.hasOwnProperty(k)) {
-    //             if ("object" == typeof from[k]) {
-    //                 const childObj = from[k];
-    //                 const copiedChildObj = {};
-    //                 copyByLayer(childObj, copiedChildObj);
-    //                 to[k] = copiedChildObj;
-    //             } else {
-    //                 to[k] = from[k];
-    //             }
-    //         }
-    //
-    //     }
-    // }
-    // copyByLayer(settingsData, allSettings);
-
     if (SETTINGS_URL) {
         allSettings.SETTINGS_URL = SETTINGS_URL;
     }
@@ -37,6 +20,7 @@ export const setAllSettings = function (settingsData, SETTINGS_URL) {
     console.log('allSettings:');
     console.log(toJS(allSettings));
 
+    updateCorrParams(allSettings.corrParams);
 };
 
 export const setAllSettingsRaw = function (result) {
@@ -59,6 +43,29 @@ export const allSettings = observable({
         posAdjustment: {}
     },
 
+    corrParams: {
+        corr: {},
+        adj: {},
+    }
+});
+
+export const updateCorrParams = function (corrData) {
+    for (let k in corrData) {
+        // if (null == k || "object" != typeof k) continue;
+        if (corrData.hasOwnProperty(k)) {
+            corrParams[k] = corrData[k];
+            if ("object" == typeof k) {
+
+            }
+        }
+    }
+    console.log('corrParams:');
+    console.log(toJS(corrParams));
+};
+
+export const corrParams = observable({
+    corr: {},
+    adj: {},
 });
 
 export const isActive = function (field) {

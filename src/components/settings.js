@@ -152,11 +152,16 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createAdjustByNtUsd($adjustByNtUsdContV, SETTINGS_URL, x => ({settingsVolatileMode: {adjustByNtUsd: x}}),
             x => x.settingsVolatileMode.adjustByNtUsd);
 
-    //TODO
     const $corr_adjContV = $('<div>').appendTo($column3Cont);
     createCheckboxV($corr_adjContV, SETTINGS_URL, 'corr_adj');
     $corr_adjContV.append($('<span>').text('corr_adj:'));
-    //TODO
+    createSettingsV($corr_adjContV, SETTINGS_URL, ' corr max total',
+            x => ({settingsVolatileMode: {corrMaxTotalCount: x}}),
+            x => x.settingsVolatileMode.corrMaxTotalCount);
+    createSettingsV($corr_adjContV, SETTINGS_URL, ', adj max total',
+            x => ({settingsVolatileMode: {adjMaxTotalCount: x}}),
+            x => x.settingsVolatileMode.adjMaxTotalCount);
+
 
 };
 

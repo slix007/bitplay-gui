@@ -1,5 +1,7 @@
 'use strict';
 
+import {corrParams, isActiveV, updateCorrParams} from "../store/settings-store";
+
 let $ = require('jquery');
 let Http = require('../http');
 let utils = require('../utils');
@@ -7,17 +9,19 @@ let sprintf = require('sprintf-js').sprintf;
 let mobx = require('mobx');
 const {mobxStore} = require('../store/settings-store');
 
-var exports = module.exports = {};
+// var exports = module.exports = {};
+export {showCorr};
 
 var URL, corrCountLabel, adjCountLabel, preliqCountLabel;
 
-exports.showCorr = function (baseUrl) {
+let showCorr = function (baseUrl) {
     URL = baseUrl + '/settings/corr';
     const RESET_CORR_URL = baseUrl + '/settings/corr/reset';
 
 
     Http.httpAsyncGet(URL, function (rawData) {
         let corrParams = JSON.parse(rawData);
+        updateCorrParams(corrParams);
 
         var corrMon = document.getElementById("corr-monitoring");
         corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
@@ -28,7 +32,11 @@ exports.showCorr = function (baseUrl) {
         var main = document.getElementById("correction");
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
-        createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
+        // createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
+        createSetParamVolatile(main, URL, 'corr max total: ',
+                x => ({corr: {maxTotalCount: x}}),
+                x => x.corr.maxTotalCount, true
+        );
         createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd');
 
         var mainPreliq = document.getElementById("preliq");
@@ -39,8 +47,11 @@ exports.showCorr = function (baseUrl) {
         var mainAdj = document.getElementById("pos-adj-params");
 
         createSetParam(mainAdj, URL, 'adj max attempts', corrParams, 'adj', 'maxErrorCount');
-        createSetParam(mainAdj, URL, 'adj max total', corrParams, 'adj', 'maxTotalCount');
-
+        // createSetParam(mainAdj, URL, 'adj max total', corrParams, 'adj', 'maxTotalCount');
+        createSetParamVolatile(mainAdj, URL, 'adj max total: ',
+                x => ({adj: {maxTotalCount: x}}),
+                x => x.adj.maxTotalCount, true
+        );
     });
 };
 
@@ -73,6 +84,44 @@ function getCurrTotalCount(corr) {
         return corr.totalCount;
     }
     return (corr.succeedCount + corr.failedCount);
+}
+
+function createSetParamVolatile(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isMain) {
+    {
+        const lb = $('<span>').text(labelName).appendTo(container);
+        const edit = $('<input>').width('40px').appendTo(container);
+        const updateBtn = $('<button>').text('set').appendTo(container);
+        const realValue = $('<span>').appendTo(container);
+        updateBtn.click(() => {
+            const requestData = JSON.stringify(requestCreator(edit.val()));
+            updateBtn.prop('disabled', true);
+            Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+                const res = JSON.parse(result);
+
+                console.log(res);
+                const value = valExtractor(res);
+                console.log(value);
+                const oneValObj = requestCreator(value);
+                updateCorrParams(oneValObj);
+                updateBtn.prop('disabled', false);
+            });
+        });
+
+        mobx.autorun(function () {
+            realValue.text(valExtractor(corrParams));
+            if (isActiveV('corr_adj')) {
+                lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+                if (isMain) {
+                    updateBtn.prop('disabled', true);
+                }
+            } else {
+                lb.css('font-weight', 'normal').prop('title', '');
+                if (isMain) {
+                    updateBtn.prop('disabled', false);
+                }
+            }
+        });
+    }
 }
 
 function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1, paramName2) {
