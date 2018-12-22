@@ -87,26 +87,28 @@ function addLPDDelay(SET_URL, baseUrl, indexCont) {
 
 const getRoundVal = x => ((x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0));
 
-function showDev(label, isExceed, text, baseVal, currVal) {
+function showDev(label, isExceed, text, baseVal, currVal, maxDevUsd) {
     if (isExceed) {
         label.css('color', 'red');
     } else {
         label.css('color', 'black');
     }
-    // abs(curr/base*100 - 100) == persentage
-    const devP = Math.abs(currVal / baseVal * 100 - 100).toFixed(2);
-    label.html(text + baseVal + '(' + devP + '%)');
+    // LPD% = LPD_usd / base_price *100;
+    const lpdP = Math.abs(maxDevUsd / baseVal * 100).toFixed(2);
+    label.html(text + baseVal + '(' + lpdP + '%)');
 
     const roundVal = getRoundVal(baseVal);
-    const devUsd = Math.abs(currVal - baseVal).toFixed(roundVal);
-    let info = sprintf('current=%s\ndev=%susd (%s%%)', currVal, devUsd, devP);
+    const minUsd = Math.abs(baseVal - maxDevUsd).toFixed(roundVal);
+    const maxUsd = Math.abs(baseVal + maxDevUsd).toFixed(roundVal);
+
+    let info = sprintf('current = %s\n min = %s\n max = %s', currVal, minUsd, maxUsd);
     label.prop('title', info);
 }
 
 function updateInfo(jsonData) {
     resLabel.html(sprintf('%s usd  ', jsonData.maxDevUsd));
-    showDev(lbBitmex, jsonData.bitmexMainExceed, 'bitmex=', jsonData.bitmexMain, jsonData.bitmexMainCurr);
-    showDev(lbOkex, jsonData.okexMainExceed, ', okex=', jsonData.okexMain, jsonData.okexMainCurr);
+    showDev(lbBitmex, jsonData.bitmexMainExceed, 'bitmex=', jsonData.bitmexMain, jsonData.bitmexMainCurr, jsonData.maxDevUsd);
+    showDev(lbOkex, jsonData.okexMainExceed, ', okex=', jsonData.okexMain, jsonData.okexMainCurr, jsonData.maxDevUsd);
 
     lbDelaySec.html(sprintf('%s sec. To fixCurrent(sec): %s', jsonData.delaySec, jsonData.toNextFix));
 }
