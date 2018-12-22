@@ -40,7 +40,9 @@ export const allSettings = observable({
         bitmexPlacingType: '',
         activeFields: [],
         placingBlocks: {},
-        posAdjustment: {}
+        posAdjustment: {},
+        baddBorder: 0,
+        oaddBorder: 0,
     },
 
     corrParams: {

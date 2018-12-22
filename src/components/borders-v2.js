@@ -1,5 +1,8 @@
 'use strict';
 
+import * as mobx from "mobx";
+import {allSettings} from "../store/settings-store";
+
 var Handsontable = require('handsontable');
 
 var sprintf = require('sprintf-js').sprintf;
@@ -15,9 +18,10 @@ let b_br_open;
 let o_br_close;
 let o_br_open;
 
-var exports = module.exports = {};
+// var exports = module.exports = {};
+export {updateTableHash, showBordersV2};
 
-exports.updateTableHash = function (newHashCode) {
+let updateTableHash = function (newHashCode) {
     if (newHashCode != borderTableHashCode) {
         borderTableHashCode = newHashCode;
 
@@ -64,7 +68,7 @@ function extractTableData(tableData, elementId) {
         .map(el => Utils.objectToArray(el));
 }
 
-exports.showBordersV2 = function (baseUrl) {
+let showBordersV2 = function (baseUrl) {
     BASE_URL = baseUrl;
     const MAIN_BORDERS_URL = baseUrl + '/borders/';
     const BORDERS_TABLES_URL = baseUrl + '/borders/tables';
@@ -128,8 +132,34 @@ exports.showBordersV2 = function (baseUrl) {
 
     function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
+        // suppress 0 rows
         if (instance.getData()[row][0] === 0) {
             td.style.color = 'grey';
+        }
+        // highlight unfilled cells
+        if (instance.getData()[row][0] !== 0 && instance.getData()[row][col] == null) {
+            td.style.background = '#ffb6c0';
+            // console.log(cellProperties);
+        }
+
+        // volatile mode highlight
+        if (col === 1) {
+            mobx.autorun(r => {
+                const tableSettings = cellProperties.settings;
+                const isActive = allSettings.tradingModeState.tradingMode === 'VOLATILE'
+                        && tableSettings != null
+                        && tableSettings.dataPartName != null
+                        && ((tableSettings.dataPartName.startsWith('b_') && allSettings.settingsVolatileMode.baddBorder > 0)
+                                || (tableSettings.dataPartName.startsWith('o_') && allSettings.settingsVolatileMode.oaddBorder > 0));
+
+                if (isActive) {
+                    td.style['font-weight'] = 'bold';
+                    td.setAttribute('title', 'Activated VOLATILE mode');
+                } else {
+                    td.style['font-weight'] = 'normal';
+                    td.setAttribute('title', '');
+                }
+            });
         }
     }
 
@@ -149,6 +179,9 @@ exports.showBordersV2 = function (baseUrl) {
                 samplingRatio: 23
             },
             contextMenu: true,
+            settings: {
+                dataPartName: dataPartName
+            },
             cells: function (row, col, prop) {
                 var cellProperties = {};
 
@@ -161,7 +194,8 @@ exports.showBordersV2 = function (baseUrl) {
 
     function createBorderTable(elementId) {
         var table = document.createElement('div');
-        var theTableRef = createTable(table, baseUrl + '/borders/list', elementId);
+        const dataUrl = baseUrl + '/borders/list';
+        var theTableRef = createTable(table, dataUrl, elementId);
 
         var container = document.getElementById(elementId);
 

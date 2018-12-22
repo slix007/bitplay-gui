@@ -1,3 +1,5 @@
+import {decorate_b_border, decorate_o_border} from "./components/settings-utils";
+
 var Handsontable = require('handsontable');
 var $ = require('jquery');
 var sprintf = require('sprintf-js').sprintf;
@@ -15,9 +17,9 @@ let monVar = require('./components/mon');
 const {placingOrderObj, mobxStore} = require('./store/settings-store');
 const lastPriceDevVar = require('./components/comp/last-price-deviation');
 
-var exports = module.exports = {};
+export {showMainInfo};
 
-exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
+let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     Utils.fillLinksToLogs();
@@ -58,15 +60,15 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     let parseOrderBook = function (orderBookJson) {
         let bidArray = [];
         orderBookJson.bid
-            .slice(0, 5)
-            .forEach(bid => {
-                bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
-            });
+        .slice(0, 5)
+        .forEach(bid => {
+            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
+        });
         // bid
         let askArray = [];
         orderBookJson.ask
-            .slice(0, 5)
-            .reverse().forEach(ask => {
+        .slice(0, 5)
+        .reverse().forEach(ask => {
             askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp]);
         });
         let orderBook = {};
@@ -108,13 +110,13 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     }
 
     var askPoloniexTable = createTable(elementBitmexAsk,
-                                       sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
+            sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
     var bidPoloniexTable = createTable(elementBitmexBid,
-                                       sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
+            sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
     var askOkcoinTable = createTable(elementOkcoinAsk,
-                                     sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
+            sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
     var bidOkcoinTable = createTable(elementOkcoinBid,
-                                     sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid');
+            sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid');
 
     this.b = 1;
     var that = this;
@@ -139,8 +141,8 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         let delta2EveryCalc = document.getElementById("delta2EveryCalc");
         let deltaHistPerStarted = document.getElementById("deltaHistPerStarted");
         let deltaSmaUpdateIn = document.getElementById("deltaSmaUpdateIn");
-        let border1 = document.getElementById("border1");
-        let border2 = document.getElementById("border2");
+        let border1 = $("#border1");
+        let border2 = $("#border2");
         let cumDelta = document.getElementById("cum-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
         let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
@@ -170,8 +172,12 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         deltaSmaUpdateIn.innerHTML = returnData.deltaSmaUpdateIn === '0'
                 ? ''
                 : 'Border_sma update in ' + returnData.deltaSmaUpdateIn + ' sec.';
-        border1.innerHTML = returnData.border1;
-        border2.innerHTML = returnData.border2;
+        border1.text(returnData.border1);
+        border2.text(returnData.border2);
+        decorate_b_border($('#border1-lb'));
+        decorate_b_border(border1);
+        decorate_o_border($('#border2-lb'));
+        decorate_o_border(border2);
         cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAstDelta);
         cumDeltaFact.innerHTML = sprintf('%s/%s', returnData.cumDeltaFact, returnData.cumAstDeltaFact);
         cumDiffFactBr.innerHTML = sprintf('%s', returnData.cumDiffFactBr);
@@ -280,9 +286,9 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             alert(responseData);
         };
         Http.httpAsyncPost(baseUrl + moveUrl,
-            requestData,
-            showResponse,
-            null);
+                requestData,
+                showResponse,
+                null);
     }
 
     function cancelOrder(orderId, marketName) {
@@ -297,9 +303,9 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             alert(responseData);
         };
         Http.httpAsyncPost(baseUrl + cancelUrl,
-            requestData,
-            showResponse,
-            null);
+                requestData,
+                showResponse,
+                null);
     }
 
     var updateFunction = function () {
@@ -340,7 +346,6 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 mobxStore.cm = posDiffJson.cm;
             }
         }
-
 
         fetch(sprintf('/market/last-price-deviation', firstMarketName), function (jsonData) {
             lastPriceDevVar.fillComponents(jsonData, baseUrl);
@@ -396,21 +401,21 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             if (poloniexAccount.btc === null) {
                 let quAvg = poloniexAccount.quAvg;
                 pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet, quAvg)
-                                     + ', p' + poloniexAccount.position
-                                     + ', lv' + poloniexAccount.leverage
-                                     + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
-                                     + ', st' + Utils.withSign(poloniexAccount.availableForShort)
-                                     + ', liq' + Utils.withSign(poloniexAccount.liqPrice)
-                                     + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
-                                     + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
-                                     + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
-                                     + ',<br> entry_price ' + poloniexAccount.entryPrice
-                                     + '<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
-                                     + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
-                                     + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg);
+                        + ', p' + poloniexAccount.position
+                        + ', lv' + poloniexAccount.leverage
+                        + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
+                        + ', st' + Utils.withSign(poloniexAccount.availableForShort)
+                        + ', liq' + Utils.withSign(poloniexAccount.liqPrice)
+                        + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
+                        + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
+                        + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
+                        + ',<br> entry_price ' + poloniexAccount.entryPrice
+                        + '<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
+                        + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
+                        + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg);
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
-                                     + ', usd=' + poloniexAccount.usd;
+                        + ', usd=' + poloniexAccount.usd;
             }
         });
 
@@ -466,20 +471,20 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
             } else {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
-                                     + ', usd=' + marketAccount.usd;
+                        + ', usd=' + marketAccount.usd;
             }
         });
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));
             liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-                                + '<br>b_' + marketAccount.mmDql
-                                + '<br>b_' + marketAccount.mmDmrl;
+                    + '<br>b_' + marketAccount.mmDql
+                    + '<br>b_' + marketAccount.mmDmrl;
         });
         fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName));
             liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
-                                + '<br>o_' + marketAccount.mmDql
-                                + '<br>o_' + marketAccount.mmDmrl;
+                    + '<br>o_' + marketAccount.mmDql
+                    + '<br>o_' + marketAccount.mmDmrl;
         });
         fetch('/delta-params', function (result) {
             let b = document.getElementById('b_delta_minmax');
@@ -531,9 +536,9 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         });
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
-              function (returnData) {
-                  repaintDeltasAndBorders(returnData);
-              });
+                function (returnData) {
+                    repaintDeltasAndBorders(returnData);
+                });
 
         // markets order is opposite for deltas
         fetch('/market/stop-moving', function (returnData) {
@@ -556,29 +561,29 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let area1 = document.getElementById(firstMarketName + '-trade-log');
                 area1.scrollTop = area1.scrollHeight;
                 area1.innerHTML = returnData.trades.length > 0
-                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                    : "";
+                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                        : "";
             });
             fetch('/market/trade-log/okcoin', function (returnData) {
                 let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName));
                 area1.scrollTop = area1.scrollHeight;
                 area1.innerHTML = returnData.trades.length > 0
-                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                    : "";
+                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                        : "";
             });
             fetch('/market/deltas-log', function (returnData) {
                 let area1 = document.getElementById('deltas-log');
                 area1.scrollTop = area1.scrollHeight;
                 area1.innerHTML = returnData.trades.length > 0
-                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                    : "";
+                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                        : "";
             });
             fetch('/market/warning-log', function (returnData) {
                 let area1 = document.getElementById('warning-log');
                 area1.scrollTop = area1.scrollHeight;
                 area1.innerHTML = returnData.trades.length > 0
-                    ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                    : "";
+                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                        : "";
             });
         }
 
@@ -705,11 +710,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-border2') {
@@ -719,11 +724,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -734,11 +739,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -749,11 +754,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -764,11 +769,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -779,11 +784,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -794,11 +799,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -809,11 +814,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -824,11 +829,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -839,11 +844,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -854,26 +859,26 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
-          if (element.id == 'update-slip') {
+            if (element.id == 'update-slip') {
                 let element = document.getElementById('slip-edit').value;
                 let request = {slip: element};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
-              Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -885,11 +890,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     console.log(requestData);
 
                     Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
+                            requestData,
+                            function (responseData, resultElement) {
+                                repaintDeltasAndBorders(responseData);
+                            },
+                            null
                     );
                 }
             }
@@ -900,11 +905,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintStopMoving(JSON.parse(responseData));
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintStopMoving(JSON.parse(responseData));
+                        },
+                        null
                 );
             }
 
@@ -914,11 +919,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/free-states',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintStates(JSON.parse(responseData));
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintStates(JSON.parse(responseData));
+                        },
+                        null
                 );
             }
 
@@ -928,11 +933,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/states',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintStates(JSON.parse(responseData));
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintStates(JSON.parse(responseData));
+                        },
+                        null
                 );
             }
 
@@ -942,11 +947,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-count2') {
@@ -955,11 +960,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-reserveBtc1') {
@@ -968,11 +973,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-reserveBtc2') {
@@ -981,11 +986,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -995,11 +1000,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/print-sum-bal',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintStates(JSON.parse(responseData));
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintStates(JSON.parse(responseData));
+                        },
+                        null
                 );
             }
 
@@ -1009,11 +1014,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintDeltasAndBorders(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
                 );
             }
 
@@ -1023,12 +1028,12 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
-                    requestData,
-                    function (responseData, resultElement) {
-                        let cst = document.getElementById("customSwapTime");
-                        cst.innerHTML = responseData.result;
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            let cst = document.getElementById("customSwapTime");
+                            cst.innerHTML = responseData.result;
+                        },
+                        null
                 );
             }
 
@@ -1038,15 +1043,14 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
-                    requestData,
-                    function (responseData, resultElement) {
-                        let timeCompareUpdating = document.getElementById('timeCompareUpdating');
-                        timeCompareUpdating.innerHTML = responseData.result;
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            let timeCompareUpdating = document.getElementById('timeCompareUpdating');
+                            timeCompareUpdating.innerHTML = responseData.result;
+                        },
+                        null
                 );
             }
-
 
             if (element.id == 'update-pos-corr') {
                 let posCorr = document.getElementById("pos-corr").innerHTML;
@@ -1060,11 +1064,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintPosCorr(JSON.parse(responseData));
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintPosCorr(JSON.parse(responseData));
+                        },
+                        null
                 );
             }
 
@@ -1074,11 +1078,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintPosCorr(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintPosCorr(responseData);
+                        },
+                        null
                 );
             }
 
@@ -1088,11 +1092,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintPosCorr(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintPosCorr(responseData);
+                        },
+                        null
                 );
             }
 
@@ -1102,11 +1106,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-o_mr_liq') {
@@ -1115,11 +1119,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-b_DQL_open_min') {
@@ -1128,11 +1132,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-o_DQL_open_min') {
@@ -1141,11 +1145,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-b_DQL_close_min') {
@@ -1154,11 +1158,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
             if (element.id == 'update-o_DQL_close_min') {
@@ -1167,11 +1171,11 @@ exports.showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                    requestData,
-                    function (responseData, resultElement) {
-                        repaintLiqParams(responseData);
-                    },
-                    null
+                        requestData,
+                        function (responseData, resultElement) {
+                            repaintLiqParams(responseData);
+                        },
+                        null
                 );
             }
 
