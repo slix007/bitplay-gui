@@ -109,9 +109,9 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         });
     }
 
-    var askPoloniexTable = createTable(elementBitmexAsk,
+    var askBitmexTable = createTable(elementBitmexAsk,
             sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
-    var bidPoloniexTable = createTable(elementBitmexBid,
+    var bidBitmexTable = createTable(elementBitmexBid,
             sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
     var askOkcoinTable = createTable(elementOkcoinAsk,
             sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
@@ -355,13 +355,19 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             let orderBookP = parseOrderBook(jsonData);
             // console.log('orderBookP.ask');
             // console.log(orderBookP.ask);
-            askPoloniexTable.loadData(orderBookP.ask);
-            bidPoloniexTable.loadData(orderBookP.bid);
+            askBitmexTable.loadData(orderBookP.ask);
+            bidBitmexTable.loadData(orderBookP.bid);
 
             bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl);
 
             $('#bitmex-last-price').html(jsonData.lastPrice);
             $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
+
+            // mobxStore.b_bid_1 = orderBookP.bid[0][2];
+            // mobxStore.b_ask_1 = orderBookP.ask[4][2];
+            mobxStore.b_bid_1 = Number(jsonData.bid[0].price);
+            mobxStore.b_ask_1 = Number(jsonData.ask[0].price);
+            // mobxStore.bxbtBal = jsonData.futureIndex.contractExtraJson.bxbtBal;
         });
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
@@ -401,7 +407,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             if (poloniexAccount.btc === null) {
                 let quAvg = poloniexAccount.quAvg;
                 pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet, quAvg)
-                        + ', p' + poloniexAccount.position
+                        + ', p' + poloniexAccount.positionStr
                         + ', lv' + poloniexAccount.leverage
                         + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
                         + ', st' + Utils.withSign(poloniexAccount.availableForShort)
@@ -426,7 +432,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 const ethBtcBid1 = marketAccount.ethBtcBid1;
                 if (ethBtcBid1 === null) {
                     oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
-                            + ', p' + marketAccount.position
+                            + ', p' + marketAccount.positionStr
                             + ', lv' + marketAccount.leverage
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)
@@ -454,7 +460,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1);
                     const aUsd = Utils.toUsd(aBtc, quAvg);
                     oBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
-                            + ', p' + marketAccount.position
+                            + ', p' + marketAccount.positionStr
                             + ', lv' + marketAccount.leverage
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)

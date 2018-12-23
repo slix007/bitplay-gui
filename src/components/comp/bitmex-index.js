@@ -1,15 +1,17 @@
 'use strict';
-var $ = require('jquery');
-var Http = require('../../http');
-var Utils = require('../../utils');
+import * as mobx from "mobx";
+import $ from "jquery";
+import Http from "../../http";
+import Utils from "../../utils";
+import {mobxStore} from "../../store/settings-store";
 
-var exports = module.exports = {};
+export {fillComponents};
 
 const ind = document.createElement('span');
 const label = document.createElement('div');
 const label2 = document.createElement('div');
 
-exports.fillComponents = function (futureIndex, baseUrl) {
+let fillComponents = function (futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
     ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
@@ -34,6 +36,33 @@ exports.fillComponents = function (futureIndex, baseUrl) {
     fillBitmexFunding(futureIndex);
 };
 
+function countFCostUsd(mobxStore, fRate, pos_bitmex_cont) {
+    let fcost_USD;
+    if (mobxStore.isEth) {
+// для ETHUSD (m21, m22): fcost_USD= -(fRate /100 * eth_mark_price * 0.000001 * .BXBT_price * pos_bitmex_cont);
+// Упрощенная формула для ETH: fcost_USD = -(fRate /100 * (10 / cm * pos_bitmex));
+        // let eth_mark_price = ???
+        // let BXBT_price = mobxStore.bxbtBal;
+        let cm = mobxStore.cm;
+        fcost_USD = (-(fRate / 100 * (10 / cm * pos_bitmex_cont))).toFixed(2);
+    } else {
+// для XBTUSD (m10, m11, m20): fcost_USD = -(fRate /100 * pos_bitmex_cont);
+        fcost_USD = (-(fRate / 100 * pos_bitmex_cont)).toFixed(2);
+    }
+    return fcost_USD;
+}
+
+function countFCostPts(mobxStore, fRate) {
+    if (!mobxStore.b_bid_1 || !mobxStore.b_ask_1) {
+        return '?';
+    }
+//для XBTUSD, ETHUSD: fcost_Pts = fRate / 100 b_avg_price;
+// b_avg_price = (b_bid[1] + b_ask[1]) / 2;
+    let b_avg_price = (mobxStore.b_bid_1 + mobxStore.b_ask_1) / 2;
+    const fcost_Pts = (fRate / 100 * b_avg_price);
+    return fcost_Pts.toFixed(2);
+}
+
 function fillBitmexFunding(futureIndex) {
     let fund = document.getElementById('bitmex-future-index-funding');
     if (futureIndex.swapType === 'noSwap') {
@@ -41,10 +70,17 @@ function fillBitmexFunding(futureIndex) {
     } else {
         fund.style.color = "#bf0000";
     }
-    fund.innerHTML = 'fRate' + futureIndex.fundingRate + '%'
-            + ' fCost' + futureIndex.fundingCost + 'XBT'
-            + ' p' + Utils.withSign(futureIndex.position)
-            + '(' + futureIndex.swapType + ')';
+    mobx.autorun(r => {
+        let fCostUsd = countFCostUsd(mobxStore, futureIndex.fundingRate, futureIndex.position);
+        let fcost_Pts = countFCostPts(mobxStore, futureIndex.fundingRate);
+        fund.innerHTML = 'fRate' + futureIndex.fundingRate + '%'
+                + ' fCost' + futureIndex.fundingCost + 'XBT'
+                + ' (' + fCostUsd + 'usd)'
+                + ' (' + fcost_Pts + 'pts)'
+                + ' p' + Utils.withSign(futureIndex.position)
+                + '(' + futureIndex.swapType + ')';
+        // fund.setAttribute('title', mobxStore.b_bid_1 + ', ' + mobxStore.b_ask_1);
+    });
 
     let fundTime = document.getElementById('bitmex-future-index-funding-time');
     fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap

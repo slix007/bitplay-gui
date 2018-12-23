@@ -1,13 +1,12 @@
 'use strict';
 
-import {corrParams, isActiveV, updateCorrParams} from "../store/settings-store";
+import {isActiveV, mobxStore, setCorrParams, updateCorrParams} from "../store/settings-store";
 
 let $ = require('jquery');
 let Http = require('../http');
 let utils = require('../utils');
 let sprintf = require('sprintf-js').sprintf;
 let mobx = require('mobx');
-const {mobxStore} = require('../store/settings-store');
 
 // var exports = module.exports = {};
 export {showCorr};
@@ -21,7 +20,7 @@ let showCorr = function (baseUrl) {
 
     Http.httpAsyncGet(URL, function (rawData) {
         let corrParams = JSON.parse(rawData);
-        updateCorrParams(corrParams);
+        setCorrParams(corrParams);
 
         var corrMon = document.getElementById("corr-monitoring");
         corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
@@ -42,7 +41,7 @@ let showCorr = function (baseUrl) {
         var mainPreliq = document.getElementById("preliq");
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
         createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlockUsdPreliq(mainPreliq, URL,corrParams);
+        createSetParamBlockUsdPreliq(mainPreliq, URL, corrParams);
 
         var mainAdj = document.getElementById("pos-adj-params");
 
@@ -108,7 +107,7 @@ function createSetParamVolatile(container, SETTINGS_URL, labelName, requestCreat
         });
 
         mobx.autorun(function () {
-            realValue.text(valExtractor(corrParams));
+            realValue.text(valExtractor(mobxStore.corrParams));
             if (isActiveV('corr_adj')) {
                 lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
                 if (isMain) {

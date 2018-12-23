@@ -17,10 +17,10 @@ export const setAllSettings = function (settingsData, SETTINGS_URL) {
         }
     }
 
-    console.log('allSettings:');
-    console.log(toJS(allSettings));
+    // console.log('allSettings: (see nextLine)');
+    // console.log(toJS(allSettings));
 
-    updateCorrParams(allSettings.corrParams);
+    setCorrParams(toJS(allSettings.corrParams));
 };
 
 export const setAllSettingsRaw = function (result) {
@@ -48,27 +48,28 @@ export const allSettings = observable({
     corrParams: {
         corr: {},
         adj: {},
+        preliq: {}
     }
 });
 
 export const updateCorrParams = function (corrData) {
+    // console.log('corrParams update: (see nextLine)');
+    // console.log(corrData);
     for (let k in corrData) {
-        // if (null == k || "object" != typeof k) continue;
         if (corrData.hasOwnProperty(k)) {
-            corrParams[k] = corrData[k];
-            if ("object" == typeof k) {
-
-            }
+            mobxStore.corrParams[k] = corrData[k];
         }
     }
-    console.log('corrParams:');
-    console.log(toJS(corrParams));
+    // console.log('corrParams update: (see nextLine)');
+    // console.log(toJS(mobxStore.corrParams));
 };
-
-export const corrParams = observable({
-    corr: {},
-    adj: {},
-});
+export const setCorrParams = function (corrData) {
+    // console.log('corrParams set: (see nextLine)');
+    // console.log(corrData);
+    mobxStore.corrParams = corrData;
+    // console.log('corrParams set: (see nextLine)');
+    // console.log(toJS(mobxStore.corrParams));
+};
 
 export const isActive = function (field) {
     const tmp = toJS(allSettings.settingsVolatileMode.activeFields);
@@ -89,7 +90,22 @@ export const mobxStore = observable({
     cm: 100,
     isEth: false,
     baseUrl: '',
-    corrParams: {corr: {}},
+    // bitmex swap params
+    //bxbtBal: 0,
+    b_bid_1: 0,
+    b_ask_1: 0,
+    // position: {
+    //     pos_bitmex_cont: 0,
+    //     pos_okex_cont_long: 0,
+    //     pos_okex_cont_short: 0,
+    // },
+
+    
+    corrParams: {
+        corr: {},
+        adj: {},
+        preliq: {}
+    },
 });
 
 export const placingOrderObj = observable({
