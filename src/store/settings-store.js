@@ -17,8 +17,8 @@ export const setAllSettings = function (settingsData, SETTINGS_URL) {
         }
     }
 
-    // console.log('allSettings: (see nextLine)');
-    // console.log(toJS(allSettings));
+    console.log('allSettings: (see nextLine)');
+    console.log(toJS(allSettings));
 
     setCorrParams(toJS(allSettings.corrParams));
 };
@@ -36,6 +36,7 @@ export const allSettings = observable({
     tradingModeState: {tradingMode: ''},
     placingBlocks: {},
     posAdjustment: {},
+
     settingsVolatileMode: {
         bitmexPlacingType: '',
         activeFields: [],
@@ -43,6 +44,10 @@ export const allSettings = observable({
         posAdjustment: {},
         baddBorder: 0,
         oaddBorder: 0,
+    },
+
+    bitmexChangeOnSo: {
+        secToReset: 0
     },
 
     corrParams: {

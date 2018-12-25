@@ -2,6 +2,7 @@
 
 import {createPlacingBlocksVolatile} from "../components/placing-blocks";
 import {createAdjVolatile} from "./pos-adjustment";
+import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -124,10 +125,11 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs');
     createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({settingsVolatileMode: {signalDelayMs: x}}),
             x => x.settingsVolatileMode.signalDelayMs);
-    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'b_add_border',
+
+    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'b_add_border',
             x => ({settingsVolatileMode: {baddBorder: x}}),
             x => x.settingsVolatileMode.baddBorder);
-    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'o_add_border',
+    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'o_add_border',
             x => ({settingsVolatileMode: {oaddBorder: x}}),
             x => x.settingsVolatileMode.oaddBorder);
 
@@ -163,6 +165,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
             x => x.settingsVolatileMode.adjMaxTotalCount);
 
 
+    fillBitmexChangeOnSo();
 };
 
 function createSettingsV(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isActiveFunc) {

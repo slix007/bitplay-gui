@@ -2,6 +2,7 @@
 import {allSettings, setAllSettingsRaw} from "../../store/settings-store";
 import $ from "jquery";
 import Http from "../../http"
+import * as mobx from "mobx";
 
 export {repaintStates};
 
@@ -33,6 +34,10 @@ let repaintStates = function (returnData) {
 
         $('<span>').text(', okex=').appendTo(markets);
         $('<span>', {id: 'okexPreliqQueueId'}).text(returnData.okexPreliqQueue).appendTo(markets);
+
+        const bitmexSoState = $('<span>').appendTo(markets);
+        mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
+
     }
 
     updateState(firstId, returnData.firstMarket);
@@ -47,6 +52,7 @@ let repaintStates = function (returnData) {
     $('#signal-delay-label').html(sigDeltay + timeToSig);
     $('#timeToResetTradingMode-label').text(convertTimeToReset(returnData.timeToResetTradingMode));
     stateUpdateChecker(returnData.timeToResetTradingMode);
+    allSettings.bitmexChangeOnSo.secToReset = returnData.timeToResetBitmexChangeOnSo;
 
     updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
     updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
@@ -55,6 +61,18 @@ let repaintStates = function (returnData) {
 
 function convertTimeToReset(timeToResetTradingMode) {
     return ', To reset(sec): ' + (timeToResetTradingMode === 0 ? "_none_" : timeToResetTradingMode);
+}
+
+function showBitmexSoState(lb, allSettings) {
+    if (allSettings.bitmexChangeOnSo.secToReset > 0) {
+        lb.text(', Bitmex SO: always TAKER');
+        lb.css('color', 'darkgoldenrod');
+        lb.css('font-weight', 'bold');
+    } else {
+        lb.text(', Bitmex SO: NONE');
+        lb.css('color', 'black');
+        lb.css('font-weight', 'normal');
+    }
 }
 
 function stateUpdateChecker(timeToResetTradingMode) {
