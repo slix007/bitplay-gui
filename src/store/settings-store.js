@@ -97,8 +97,16 @@ export const mobxStore = observable({
     baseUrl: '',
     // bitmex swap params
     //bxbtBal: 0,
+    futureIndex: {
+        b_index: 0,
+        o_index: 0,
+        twoMarketsIndexDiff: '',
+    },
     b_bid_1: 0,
     b_ask_1: 0,
+    o_bid_1: 0,
+    o_ask_1: 0,
+    o_delivery: 0,
     // position: {
     //     pos_bitmex_cont: 0,
     //     pos_okex_cont_long: 0,

@@ -15,7 +15,6 @@ let fillComponents = function (futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
     ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
-    $('#index-diff').html(futureIndex.twoMarketsIndexDiff);
 
     const indexCont = $('#bitmex-future-index');
     const indexCont2 = $('#bitmex-future-index2');
@@ -27,6 +26,9 @@ let fillComponents = function (futureIndex, baseUrl) {
         createLimitPrice(limitPrice, futureIndex.limits.limitPrice, URL);
         indexCont2.append(label);
         indexCont2.append(label2);
+
+        createIndexDiff();
+        createDelivery();
     }
 
     if (futureIndex.limits != null) {
@@ -35,6 +37,60 @@ let fillComponents = function (futureIndex, baseUrl) {
 
     fillBitmexFunding(futureIndex);
 };
+
+function createIndexDiff() {
+    // indexDiff
+    const $cont = $('#index-best-sam');
+    $('<span>').text('; ').appendTo($cont);
+    const b_sam = $('<span>').prop('title', 'b_best_sam - b_index').appendTo($cont);
+    $('<span>').text('; ').appendTo($cont);
+    const o_sam = $('<span>').prop('title', 'o_best_sam - o_index').appendTo($cont);
+
+    mobx.autorun(r => {
+        $('#index-diff').text(mobxStore.futureIndex.twoMarketsIndexDiff);
+        // b_best_sam = (b_ask[1] + b_bid[1]) / 2;
+        // o_best_sam = (o_ask[1] + o_bid[1]) / 2;
+        const b_best_sam = ((mobxStore.b_ask_1 + mobxStore.b_bid_1) / 2).toFixed(3);
+        const o_best_sam = ((mobxStore.o_ask_1 + mobxStore.o_bid_1) / 2).toFixed(3);
+
+        const ind_b = (b_best_sam - mobxStore.futureIndex.b_index);
+        const ind_o = o_best_sam - mobxStore.futureIndex.o_index;
+        b_sam.text(ind_b.toFixed(2))
+        .prop('title', 'b_best_sam - b_index\n' + sprintf('%s - %s', b_best_sam, mobxStore.futureIndex.b_index));
+        o_sam.text(ind_o.toFixed(2))
+        .prop('title', 'o_best_sam - o_index\n' + sprintf('%s - %s', o_best_sam, mobxStore.futureIndex.o_index));
+    });
+}
+
+function createDelivery() {
+    const $cont = $('#delivery').addClass('blueText');
+
+    // Delivery: etm_b_delta = n; etm_o_delta = k; delivery_diff = i;
+    $('<span>').text('Delivery: etm_b_delta = ').appendTo($cont);
+    const etm_b_delta_lb = $('<span>').text('n').appendTo($cont);
+    $('<span>').text('; etm_o_delta = ').appendTo($cont);
+    const etm_o_delta_lb = $('<span>').text('k').appendTo($cont);
+    $('<span>').text('; delivery_diff = ').appendTo($cont);
+    const delivery_diff_lb = $('<span>').text('i').appendTo($cont);
+
+    mobx.autorun(r => {
+        if (mobxStore.o_delivery !== 0) {
+            $cont.show();
+            const etm_b_delta = mobxStore.b_bid_1 - mobxStore.o_delivery;
+            const etm_o_delta = mobxStore.o_delivery - mobxStore.b_ask_1;
+            const delivery_diff = mobxStore.futureIndex.b_index - mobxStore.o_delivery;
+
+            etm_b_delta_lb.text(etm_b_delta)
+            .prop('title', 'b_bid[1] - o_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
+            etm_o_delta_lb.text(etm_o_delta)
+            .prop('title', 'o_delivery - b_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
+            delivery_diff_lb.text(delivery_diff)
+            .prop('title', 'b_index - o_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
+        } else {
+            $cont.hide();
+        }
+    });
+}
 
 function countFCostUsd(mobxStore, fRate, pos_bitmex_cont) {
     let fcost_USD;

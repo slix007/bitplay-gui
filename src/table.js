@@ -363,8 +363,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             $('#bitmex-last-price').html(jsonData.lastPrice);
             $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
 
-            // mobxStore.b_bid_1 = orderBookP.bid[0][2];
-            // mobxStore.b_ask_1 = orderBookP.ask[4][2];
+            mobxStore.futureIndex.twoMarketsIndexDiff = jsonData.futureIndex.twoMarketsIndexDiff;
+            mobxStore.futureIndex.b_index = Number(jsonData.futureIndex.indexVal);
             mobxStore.b_bid_1 = Number(jsonData.bid[0].price);
             mobxStore.b_ask_1 = Number(jsonData.ask[0].price);
             // mobxStore.bxbtBal = jsonData.futureIndex.contractExtraJson.bxbtBal;
@@ -379,6 +379,11 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
             $('#okcoin-last-price').html(jsonData.lastPrice);
             $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal);
+
+            mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal);
+            mobxStore.o_bid_1 = Number(jsonData.bid[0].price);
+            mobxStore.o_ask_1 = Number(jsonData.ask[0].price);
+            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice);
         });
 
         fetch('/mon/all', function (resultJson) {
