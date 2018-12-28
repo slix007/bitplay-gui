@@ -890,6 +890,7 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
     Utils.setDocumentTitle(arbMod.mod.toLowerCase());
+    mobxStore.arbMod = arbMod;
 }
 
 function createAdjustByNtUsd(cont, SETTINGS_URL, requestCreator, valExtractor, isMain) {

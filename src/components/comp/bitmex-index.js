@@ -74,11 +74,14 @@ function createDelivery() {
     const delivery_diff_lb = $('<span>').text('i').appendTo($cont);
 
     mobx.autorun(r => {
-        if (mobxStore.o_delivery !== 0) {
+        // only m10, m21
+        const rightMod = mobxStore.arbMod.mod === 'M10' || mobxStore.arbMod.mod === 'M21';
+        // noinspection EqualityComparisonWithCoercionJS
+        if (rightMod && mobxStore.o_delivery != 0) { // it could be 0.000
             $cont.show();
-            const etm_b_delta = mobxStore.b_bid_1 - mobxStore.o_delivery;
-            const etm_o_delta = mobxStore.o_delivery - mobxStore.b_ask_1;
-            const delivery_diff = mobxStore.futureIndex.b_index - mobxStore.o_delivery;
+            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);;
+            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(mobxStore.o_delivery_round);;
+            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);;
 
             etm_b_delta_lb.text(etm_b_delta)
             .prop('title', 'b_bid[1] - o_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));

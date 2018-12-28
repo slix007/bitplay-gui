@@ -107,6 +107,10 @@ export const mobxStore = observable({
     o_bid_1: 0,
     o_ask_1: 0,
     o_delivery: 0,
+    get o_delivery_round() {
+        return this.isEth ? 3 : 2;
+    },
+    arbMod: {},
     // position: {
     //     pos_bitmex_cont: 0,
     //     pos_okex_cont_long: 0,

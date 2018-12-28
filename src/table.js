@@ -383,7 +383,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal);
             mobxStore.o_bid_1 = Number(jsonData.bid[0].price);
             mobxStore.o_ask_1 = Number(jsonData.ask[0].price);
-            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice);
+            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(mobxStore.o_delivery_round);
         });
 
         fetch('/mon/all', function (resultJson) {
