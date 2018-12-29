@@ -50,8 +50,8 @@ function createIndexDiff() {
         $('#index-diff').text(mobxStore.futureIndex.twoMarketsIndexDiff);
         // b_best_sam = (b_ask[1] + b_bid[1]) / 2;
         // o_best_sam = (o_ask[1] + o_bid[1]) / 2;
-        const b_best_sam = ((mobxStore.b_ask_1 + mobxStore.b_bid_1) / 2).toFixed(3);
-        const o_best_sam = ((mobxStore.o_ask_1 + mobxStore.o_bid_1) / 2).toFixed(3);
+        const b_best_sam = mobxStore.b_best_sam;
+        const o_best_sam = mobxStore.o_best_sam;
 
         const ind_b = (b_best_sam - mobxStore.futureIndex.b_index);
         const ind_o = o_best_sam - mobxStore.futureIndex.o_index;

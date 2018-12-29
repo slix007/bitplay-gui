@@ -9,7 +9,7 @@ let Http = require('../http');
 let Utils = require('../utils');
 let sprintf = require('sprintf-js').sprintf;
 let mobx = require('mobx');
-const {allSettings, setAllSettings, setAllSettingsRaw, isActive, isActiveV} = require('../store/settings-store');
+const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isActiveV} = require('../store/settings-store');
 
 const enableRestart = require('../components/enable-restart');
 
@@ -56,11 +56,20 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL);
 
         // Fee settings
-        var feeSettings = document.getElementById("fee-settings");
-        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'bTakerComRate');
-        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'bMakerComRate');
-        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oTakerComRate');
-        createNumberParam(feeSettings, settingsData, 'feeSettings', SETTINGS_URL, 'oMakerComRate');
+        // const $feeCont = $('#fee-settings');
+        const $feeCont = $('#fee-settings').css('display', 'flex');
+        const comParamsCont = $('<div>').css('float', 'left').appendTo($feeCont);
+        const table = $('<table>').css('border-spacing', 'unset').appendTo(comParamsCont);
+        const tbody = $('<tbody>').appendTo(table);
+        createComParam(tbody, x => ({feeSettings: {bTakerComRate: x}}), x => x.feeSettings.bTakerComRate,
+                'b_taker_com_rate', 'b_best_sam', 'b_taker_com_');
+        createComParam(tbody, x => ({feeSettings: {bMakerComRate: x}}), x => x.feeSettings.bMakerComRate,
+                'b_maker_com_rate', 'b_best_sam', 'b_maker_com_');
+        createComParam(tbody, x => ({feeSettings: {oTakerComRate: x}}), x => x.feeSettings.oTakerComRate,
+                'o_taker_com_rate', 'o_best_sam', 'o_taker_com_');
+        createComParam(tbody, x => ({feeSettings: {oMakerComRate: x}}), x => x.feeSettings.oMakerComRate,
+                'o_maker_com_rate', 'o_best_sam', 'o_maker_com_');
+        createComPtsSum($feeCont);
 
         // Ignore limits
         createIgnoreLimitPrice(settingsData, SETTINGS_URL);
@@ -454,42 +463,67 @@ function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
     }
 }
 
-function createNumberParam(mainContainer, mainObj, nestedObjName, SETTINGS_URL, elName) {
-    var container = document.createElement('div');
-    mainContainer.appendChild(container);
+function createComParam(tbody, requestCreator, valExtractor, label_rate, best_sam_name, el_name_part) {
+    const container = $('<tr>').appendTo(tbody);
 
-    var label = document.createElement('span');
-    label.innerHTML = Utils.camelToUnderscore(elName);
-    var edit = document.createElement('input');
-    edit.style.width = '80px';
-    edit.innerHTML = '';
-    var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = mainObj[nestedObjName][elName];
-    var setBtn = document.createElement('button');
-    setBtn.onclick = function () {
-        setBtn.disabled = true;
-        mainObj[nestedObjName][elName] = Number(edit.value);
-        saveParamAsNumber(SETTINGS_URL, mainObj, resultLabel, setBtn, nestedObjName, elName);
-    };
-    setBtn.innerHTML = 'set';
+    $('<span>').text(label_rate).appendTo($('<td>').appendTo(container));
+    const edit = $('<input>').width('80px').appendTo($('<td>').appendTo(container));
+    const updateBtn = $('<button>').text('set').appendTo($('<td>').appendTo(container));
+    const realVal = $('<span>').text(';').prop('title', '%').appendTo($('<td>').appendTo(container));
+    const realValPts = $('<span>').text(';').css('margin-left', '20px').appendTo($('<td>').appendTo(container));
+    const realValPts2 = $('<span>').text(';').prop('title', 'pts * 2').appendTo($('<td>').appendTo(container));
+    updateBtn.click(() => {
+        const requestData = JSON.stringify(requestCreator(edit.val()));
+        updateBtn.prop('disabled', true);
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData, function (result) {
+            setAllSettingsRaw(result);
+            updateBtn.prop('disabled', false);
+        });
+    });
 
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(setBtn);
-    container.appendChild(resultLabel);
+    mobx.autorun(r => {
+        const realRate = valExtractor(allSettings);
+        const best_sam = mobxStore[best_sam_name];
+        const pts = (realRate / 100 * best_sam).toFixed(3);
+        realVal.text(realRate);
+        realValPts.text('pts = ' + pts);
+        realValPts2.text(' /  ' + pts * 2);
+
+        realValPts.prop('title', sprintf('%s_pts = %s_rate / 100 * %s\n' +
+                '%s = %s / 100 * %s',
+                el_name_part, el_name_part, best_sam_name,
+                pts, realRate, best_sam
+        ));
+
+    });
 }
 
-function saveParamAsNumber(SETTINGS_URL, requestObj, el, setBtn, nestedObjName, elName) {
-    const requestData = JSON.stringify(requestObj);
-    console.log(requestData);
-    Http.httpAsyncPost(SETTINGS_URL,
-            requestData, function (rawRes) {
-                const res = JSON.parse(rawRes);
-                el.innerHTML = res[nestedObjName][elName];
-                setBtn.disabled = false;
-                // alert(rawRes);
-            });
+function createComPtsSum($feeCont) {
+    const comParamsCont2 = $('<div>').css('float', 'left').css('margin-left', '20px').appendTo($feeCont);
+    const table2 = $('<table>').appendTo(comParamsCont2);
+    const tbody2 = $('<tbody>').appendTo(table2);
+    const sumMaker = $('<span>').text('b_maker + o_maker = ');
+    sumMaker.appendTo($('<td>').appendTo($('<tr>').appendTo(tbody2)));
+    const sumTaker = $('<span>').text('b_taker + o_taker = ');
+    sumTaker.appendTo($('<td>').appendTo($('<tr>').appendTo(tbody2)));
+    mobx.autorun(r => {
+        // b_maker + o_maker;
+        // b_taker + o_taker.
+        const b_taker_com_pts = Number((allSettings.feeSettings.bTakerComRate / 100 * mobxStore.b_best_sam).toFixed(3));
+        const b_maker_com_pts = Number((allSettings.feeSettings.bMakerComRate / 100 * mobxStore.b_best_sam).toFixed(3));
+        const o_taker_com_pts = Number((allSettings.feeSettings.oTakerComRate / 100 * mobxStore.o_best_sam).toFixed(3));
+        const o_maker_com_pts = Number((allSettings.feeSettings.oMakerComRate / 100 * mobxStore.o_best_sam).toFixed(3));
+        // const sumM = (Number(b_maker_com_pts) + Number(o_maker_com_pts));
+        const sumM = Number((b_maker_com_pts + o_maker_com_pts).toFixed(3));
+        const sumM2 = (sumM * 2).toFixed(3);
+        sumMaker.text('b_maker + o_maker = ' + sumM + ' / ' + sumM2);
+        const sumT = Number((b_taker_com_pts + o_taker_com_pts).toFixed(3));
+        const sumT2 = (sumT * 2).toFixed(3);
+        sumTaker.text('b_taker + o_taker = ' + sumT + ' / ' + sumT2);
+    });
+
 }
+
 
 function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     var container = document.getElementById("ignore-limits");

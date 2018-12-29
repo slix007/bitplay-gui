@@ -50,6 +50,8 @@ export const allSettings = observable({
         secToReset: 0
     },
 
+    feeSettings: {},
+
     corrParams: {
         corr: {},
         adj: {},
@@ -58,11 +60,13 @@ export const allSettings = observable({
 });
 
 export const updateCorrParams = function (corrData) {
-    // console.log('corrParams update: (see nextLine)');
-    // console.log(corrData);
     for (let k in corrData) {
         if (corrData.hasOwnProperty(k)) {
-            mobxStore.corrParams[k] = corrData[k];
+            for (let m in corrData[k]) {
+                if (corrData[k].hasOwnProperty(m)) {
+                    mobxStore.corrParams[k][m] = corrData[k][m];
+                }
+            }
         }
     }
     // console.log('corrParams update: (see nextLine)');
@@ -110,6 +114,13 @@ export const mobxStore = observable({
     get o_delivery_round() {
         return this.isEth ? 3 : 2;
     },
+    get b_best_sam() {
+        return ((this.b_ask_1 + this.b_bid_1) / 2).toFixed(3);
+    },
+    get o_best_sam() {
+        return ((this.o_ask_1 + this.o_bid_1) / 2).toFixed(3);
+    },
+
     arbMod: {},
     // position: {
     //     pos_bitmex_cont: 0,

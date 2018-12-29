@@ -96,10 +96,7 @@ function createSetParamVolatile(container, SETTINGS_URL, labelName, requestCreat
             updateBtn.prop('disabled', true);
             Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
                 const res = JSON.parse(result);
-
-                console.log(res);
                 const value = valExtractor(res);
-                console.log(value);
                 const oneValObj = requestCreator(value);
                 updateCorrParams(oneValObj);
                 updateBtn.prop('disabled', false);
