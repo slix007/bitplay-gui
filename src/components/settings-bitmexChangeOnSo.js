@@ -45,7 +45,17 @@ let fillBitmexChangeOnSo = function () {
     });
 
     const timer = $('<span>').appendTo($contTimer);
-    mobx.autorun(() => timer.text('To reset(sec): ' + allSettings.bitmexChangeOnSo.secToReset));
+    mobx.autorun(() => {
+        timer.text('To reset(sec): ' + allSettings.bitmexChangeOnSo.secToReset);
+        const select = $('#bitmex-place-order-type-select-id');
+        if (allSettings.bitmexChangeOnSo.secToReset > 0) {
+            select.prop('disabled', true);
+            select.val('TAKER');
+        } else {
+            select.prop('disabled', false);
+            select.val(allSettings.bitmexPlacingType);
+        }
+    });
 
     testingSystemOverloaded();
 };

@@ -36,6 +36,7 @@ export const allSettings = observable({
     tradingModeState: {tradingMode: ''},
     placingBlocks: {},
     posAdjustment: {},
+    bitmexPlacingType: '',
 
     settingsVolatileMode: {
         bitmexPlacingType: '',

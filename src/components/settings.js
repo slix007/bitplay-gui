@@ -35,7 +35,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createPlacingType($bitmexPlacingCont.get(0), SETTINGS_URL,
                 x => ({bitmexPlacingType: x}),
                 x => x.bitmexPlacingType,
-                btmPlacingLb, 'bitmexPlacingType', true);
+                btmPlacingLb, 'bitmexPlacingType', true, 'bitmex-place-order-type-select-id');
 
         let okexPlacingCont = $('#okex-placing-type');
         const okPlacingLb = $('<span>').text('Okex place orders type:');
@@ -379,8 +379,11 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     }
 }
 
-function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
+function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain, selectId) {
     var select = document.createElement('select');
+    if (selectId) {
+        select.setAttribute('id', selectId);
+    }
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
