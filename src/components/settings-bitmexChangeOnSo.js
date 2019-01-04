@@ -64,7 +64,8 @@ function testingSystemOverloaded() {
     const $cont = $('#bitmex-change-on-so-testing');
     // checkbox auto
     const autoCheckbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
-    const lb = $('<label>').text('throw SYSTEM_OVERLOADED for testing on each moving/placing with 1 sec delay')
+    const lb = $('<label>').text('throw SYSTEM_OVERLOADED for testing with 1 sec delay')
+    .prop('title', 'on each moving/placing')
     .css('font-style', 'italic')
     // .css('font-variant', 'small-caps')
     .css('text-decoration', 'underline')
