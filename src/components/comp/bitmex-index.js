@@ -65,30 +65,41 @@ function createIndexDiff() {
 function createDelivery() {
     const $cont = $('#delivery').addClass('blueText');
 
-    // Delivery: etm_b_delta = n; etm_o_delta = k; delivery_diff = i;
-    $('<span>').text('Delivery: etm_b_delta = ').appendTo($cont);
-    const etm_b_delta_lb = $('<span>').text('n').appendTo($cont);
-    $('<span>').text('; etm_o_delta = ').appendTo($cont);
-    const etm_o_delta_lb = $('<span>').text('k').appendTo($cont);
-    $('<span>').text('; delivery_diff = ').appendTo($cont);
+    // // Delivery: etm_b_delta = n; etm_o_delta = k; delivery_diff = i;
+    // Delivery: b_index (n) - o_delivery (k) = i; j; l
+    // n = значение b_index, k = значение o_delivery, j = etm_b_delta, l = etm_o_delta.
+    $('<span>').text('Delivery: b_index (').appendTo($cont);
+    const b_index_lb = $('<span>').text('n').appendTo($cont);
+    $('<span>').text(') - o_delivery (').appendTo($cont);
+    const o_delivery_lb = $('<span>').text('k').appendTo($cont);
+    $('<span>').text(') = ').appendTo($cont);
     const delivery_diff_lb = $('<span>').text('i').appendTo($cont);
+    $('<span>').text('; ').appendTo($cont);
+    const etm_b_delta_lb = $('<span>').text('j').appendTo($cont);
+    $('<span>').text('; ').appendTo($cont);
+    const etm_o_delta_lb = $('<span>').text('l').appendTo($cont);
 
     mobx.autorun(r => {
         // only m10, m21
         const rightMod = mobxStore.arbMod.mod === 'M10' || mobxStore.arbMod.mod === 'M21';
         // noinspection EqualityComparisonWithCoercionJS
         if (rightMod && mobxStore.o_delivery != 0) { // it could be 0.000
+        // if (true) { // it could be 0.000
             $cont.show();
-            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);;
-            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(mobxStore.o_delivery_round);;
-            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);;
+            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);
+            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);
+            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(mobxStore.o_delivery_round);
 
-            etm_b_delta_lb.text(etm_b_delta)
-            .prop('title', 'b_bid[1] - o_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
-            etm_o_delta_lb.text(etm_o_delta)
-            .prop('title', 'o_delivery - b_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
+            b_index_lb.text(mobxStore.futureIndex.b_index);
+            o_delivery_lb.text(mobxStore.o_delivery);
+
             delivery_diff_lb.text(delivery_diff)
             .prop('title', 'b_index - o_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
+
+            etm_b_delta_lb.text(etm_b_delta)
+            .prop('title', 'etm_b_delta = b_bid[1] - o_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
+            etm_o_delta_lb.text(etm_o_delta)
+            .prop('title', 'etm_o_delta = o_delivery - b_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
         } else {
             $cont.hide();
         }
