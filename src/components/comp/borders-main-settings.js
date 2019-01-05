@@ -1,4 +1,7 @@
 'use strict';
+import * as mobx from "mobx";
+import {allSettings} from "../../store/settings-store";
+
 let $ = require('jquery');
 let Http = require('../../http');
 let bordersUtils = require('./borders-utils');
@@ -14,11 +17,16 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
     let main = $('#borders-main-settings').html('<b>Borders common:</b>');
     let container = $('<div>').css('display', 'flex').appendTo(main);
 
+    allSettings.borderParams.onlyOpen = borderData.onlyOpen;
+    allSettings.borderParams.maxBorder = borderData.maxBorder;
+
     if ($(container).children().length === 0) {
         const firstPart = $('<div>').attr('id', 'first-part').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaMinPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
+        createMaxBorder(firstPart, borderData, BORDERS_SETTINGS_URL);
+        createOnlyOpen(firstPart, borderData, BORDERS_SETTINGS_URL);
 
         const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
         createDeltaCalcTypeDropdown(firstPart, secondPart, borderData, BORDERS_SETTINGS_URL);
@@ -306,3 +314,56 @@ function deltaSavePerSec(parent, borderData, BORDERS_SETTINGS_URL) {
     container.append(setBtn);
     container.append(resultLabel);
 }
+
+function createMaxBorder(cont, borderData, BORDERS_SETTINGS_URL) {
+    // let cont = $('<div>').appendTo(part4);
+    let lb = $('<span>').text('Max_border: ').appendTo(cont);
+    let edit = $('<input>').width('80px').appendTo(cont);
+    let setBtn = $('<button>').text('set').appendTo(cont);
+    let resLb = $('<span>').text('').appendTo(cont);
+
+    mobx.autorun(r => resLb.text(allSettings.borderParams.maxBorder));
+
+    setBtn.click(function () {
+        setBtn.disabled = true;
+        const requestData = JSON.stringify({maxBorder: edit.val()});
+        console.log(requestData);
+
+        Http.httpAsyncPost(BORDERS_SETTINGS_URL, requestData, function (rawRes) {
+            console.log(rawRes);
+            allSettings.borderParams.maxBorder = edit.val();
+            // const res = JSON.parse(rawRes);
+            // allSettings.borderParams.maxBorder =
+            setBtn.disabled = false;
+        });
+    });
+
+}
+
+function createOnlyOpen(cont, borderData, BORDERS_SETTINGS_URL) {
+    // let cont = $('<div>').appendTo(part4);
+    const checkbox = $('<input>').attr('type', 'checkbox').appendTo(cont);
+    let lb = $('<span>').text('OnlyOpen').appendTo(cont);
+
+    mobx.autorun(r => {
+        // const isChecked = allSettings.borderParams.onlyOpen;
+        const isChecked = allSettings.borderParams.onlyOpen;
+        checkbox.prop('checked', isChecked);
+        lb.css('color', isChecked ? 'black' : 'grey');
+    });
+
+    checkbox.click(function () {
+        checkbox.attr('disabled', true);
+        const requestData = JSON.stringify({onlyOpen: checkbox.prop('checked')});
+        console.log(requestData);
+
+        Http.httpAsyncPost(BORDERS_SETTINGS_URL,
+                requestData, function (result) {
+                    console.log(result);
+                    lb.css('color', checkbox.prop('checked') ? 'black' : 'grey');
+                    checkbox.attr('disabled', false);
+                });
+    });
+}
+
+

@@ -57,7 +57,12 @@ export const allSettings = observable({
         corr: {},
         adj: {},
         preliq: {}
-    }
+    },
+
+    borderParams: {
+        maxBorder: '',
+        onlyOpen: false
+    },
 });
 
 export const updateCorrParams = function (corrData) {
