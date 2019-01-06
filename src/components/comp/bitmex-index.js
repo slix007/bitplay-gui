@@ -4,6 +4,7 @@ import $ from "jquery";
 import Http from "../../http";
 import Utils from "../../utils";
 import {mobxStore} from "../../store/settings-store";
+import moment from "moment";
 
 export {fillComponents};
 
@@ -82,13 +83,30 @@ function createDelivery() {
     mobx.autorun(r => {
         // only m10, m21
         const rightMod = mobxStore.arbMod.mod === 'M10' || mobxStore.arbMod.mod === 'M21';
-        // noinspection EqualityComparisonWithCoercionJS
-        if (rightMod && mobxStore.o_delivery != 0) { // it could be 0.000
+
+        let showDeliveryTime = moment().day("Friday")
+        .utc(true)
+        .set('hour', 5)
+        .set('minute', 0)
+        .set('second', 0)
+        .set('millisecond', 0);
+        let deliveryTime = moment().day("Friday")
+        .utc(true)
+        .set('hour', 8)
+        .set('minute', 0)
+        .set('second', 0)
+        .set('millisecond', 0);
+        let currDate = moment();
+        const isAfterThreeHours = moment(currDate).isAfter(moment(showDeliveryTime));
+        const isBeforeDelivery = moment(currDate).isBefore(moment(deliveryTime));
+
+        if (rightMod && isAfterThreeHours && isBeforeDelivery) { // it could be 0.000
         // if (true) { // it could be 0.000
             $cont.show();
-            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);
-            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(mobxStore.o_delivery_round);
-            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(mobxStore.o_delivery_round);
+            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(2);
+            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(2);
+            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(2);
+
 
             b_index_lb.text(mobxStore.futureIndex.b_index);
             o_delivery_lb.text(mobxStore.o_delivery);
