@@ -91,6 +91,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({adjustByNtUsd: x}), x => x.adjustByNtUsd, true);
         createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL);
 
+        createOkexEbestElast(settingsData, SETTINGS_URL);
     });
 
     // Volatile mode
@@ -1004,4 +1005,28 @@ function createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL) {
             + '    nt=237.65, mult=-100==> 237.65\n'
     ));
 
+}
+
+function createOkexEbestElast() {
+    const $cont = $('#okex_e_best_e_last');
+
+    let checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
+    let label = $('<span>').html('e_best=e_last').appendTo($cont);
+
+    mobx.autorun(r => {
+        checkbox.prop('checked', allSettings.okexEbestElast);
+        label.css('color', checkbox.prop('checked') ? 'black' : 'grey');
+    });
+
+    checkbox.click(function () {
+        checkbox.attr('disabled', true);
+        let requestData = JSON.stringify({okexEbestElast: checkbox.prop('checked')});
+        console.log(requestData);
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
+                function (result) {
+                    setAllSettingsRaw(result);
+                    checkbox.attr('disabled', false);
+                }
+        );
+    });
 }

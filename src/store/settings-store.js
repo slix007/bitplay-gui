@@ -51,6 +51,9 @@ export const allSettings = observable({
         secToReset: 0
     },
 
+    okexEbestElast: false,
+
+    // other settings
     feeSettings: {},
 
     corrParams: {
