@@ -62,9 +62,20 @@ function updateLimits(limits) {
     label.innerHTML = 'Limit ask / Max price = ' + limits.limitAsk + ' / ' + limits.maxPrice;
     label2.innerHTML = 'Limit bid / Min price = ' + limits.limitBid + ' / ' + limits.minPrice;
 
-    if (limits.insideLimits) {
-        $('#okex-limits-status').css('color', 'green').html('Inside limits');
+    decorateLimits($('#okex-limits-status'), limits.insideLimits);
+    decorateLimits($('#okex-limits-status-b-delta'), limits.insideLimitsEx.btmDelta);
+    decorateLimits($('#okex-limits-status-o-delta'), limits.insideLimitsEx.okDelta);
+    decorateLimits($('#okex-limits-status-adj-buy'), limits.insideLimitsEx.adjBuy);
+    decorateLimits($('#okex-limits-status-adj-sell'), limits.insideLimitsEx.adjSell);
+    decorateLimits($('#okex-limits-status-corr-buy'), limits.insideLimitsEx.corrBuy);
+    decorateLimits($('#okex-limits-status-corr-sell'), limits.insideLimitsEx.corrSell);
+
+}
+
+function decorateLimits(el, insideLimits) {
+    if (insideLimits) {
+        el.css('color', 'green').html('Inside limits');
     } else {
-        $('#okex-limits-status').css('color', 'red').html('Outside limits');
+        el.css('color', 'red').html('Outside limits');
     }
 }

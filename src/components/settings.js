@@ -537,9 +537,11 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     checkbox.checked = settingsData.limits.ignoreLimits;
     let decorateLimitsStatus = function () {
         if (checkbox.checked) {
-            $('#limits-status').css("text-decoration", "line-through");
+            $('#limits-status-btm').css("text-decoration", "line-through");
+            $('#limits-status-ok').css("text-decoration", "line-through");
         } else {
-            $('#limits-status').css("text-decoration", "initial");
+            $('#limits-status-btm').css("text-decoration", "initial");
+            $('#limits-status-ok').css("text-decoration", "initial");
         }
     };
     decorateLimitsStatus();

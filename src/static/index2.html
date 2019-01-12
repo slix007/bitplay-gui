@@ -116,6 +116,12 @@
                         <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
+                    <div>
+                        <span id="limits-status-btm">
+                            Bitmex: <span id="bitmex-limits-status"></span>
+                        </span>
+                    </div>
+
                     <div style="background-color: azure; border: solid; display: flex;">
                         <div style="float: left;">
                             <div id="bitmex-reconnect-count"></div>
@@ -203,6 +209,16 @@
                         <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
+                    <div id="limits-status-ok">
+                        <div>Okex: <span id="okex-limits-status"></span></div>
+                        <div>b_delta: <span id="okex-limits-status-b-delta"></span></div>
+                        <div>o_delta: <span id="okex-limits-status-o-delta"></span></div>
+                        <div>adj_buy: <span id="okex-limits-status-adj-buy"></span></div>
+                        <div>adj_sell: <span id="okex-limits-status-adj-sell"></span></div>
+                        <div>corr/preliq_buy: <span id="okex-limits-status-corr-buy"></span></div>
+                        <div>corr/preliq_sell: <span id="okex-limits-status-corr-sell"></span></div>
+                    </div>
+
                 </div>
                 <!--</div>-->
 
@@ -226,10 +242,6 @@
         <div id="delivery"></div>
         <br>
 
-        <span id="limits-status">
-        Bitmex: <span id="bitmex-limits-status"></span>,
-        Okex: <span id="okex-limits-status"></span>;
-    </span>
         <span id="markets-states"></span>
         <div>
             <span id="ignore-limits"></span>
