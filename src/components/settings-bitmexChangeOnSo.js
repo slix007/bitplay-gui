@@ -71,7 +71,14 @@ function testingSystemOverloaded() {
     .css('text-decoration', 'underline')
     // .css('text-decoration', 'line-through')
     .appendTo($cont);
-    mobx.autorun(() => autoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.testingSo));
+    mobx.autorun(() => {
+        autoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.testingSo);
+        if (allSettings.bitmexChangeOnSo.testingSo) {
+            lb.css('background-color', 'tomato');
+        } else {
+            lb.css('background-color', 'white');
+        }
+    });
     autoCheckbox.click(() => {
         autoCheckbox.prop('disabled', true);
         Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({bitmexChangeOnSo: {testingSo: autoCheckbox.prop('checked')}}),
