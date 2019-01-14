@@ -102,7 +102,7 @@ function createOrderActions(container, labelName, idName, SETTINGS_URL, toolName
     select.append($('<option>').val('HYBRID').text('HYBRID'));
     select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
     select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
-    select.val('TAKER');
+    select.val('MAKER');
     let placementType = select.val();
     select.change(function () {
         placementType = select.val();

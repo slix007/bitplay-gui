@@ -9,7 +9,7 @@ export function saveBordersSettings(BORDERS_SETTINGS_URL, key, value, el) {
 
     Http.httpAsyncPost(BORDERS_SETTINGS_URL,
             requestData, function (result) {
-                alert('Result' + result);
+                // alert('Result' + result);
                 el.disabled = false;
             });
 }
