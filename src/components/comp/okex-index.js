@@ -99,7 +99,6 @@ function updateLimits(limits) {
         label2.setAttribute('style', 'background-color:white');
     }
 
-    decorateLimits($('#okex-limits-status'), limits.insideLimits);
     decorateLimits($('#okex-limits-status-b-delta'), limits.insideLimitsEx.btmDelta);
     decorateLimits($('#okex-limits-status-o-delta'), limits.insideLimitsEx.okDelta);
     decorateLimits($('#okex-limits-status-adj-buy'), limits.insideLimitsEx.adjBuy);
