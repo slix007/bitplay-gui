@@ -1,6 +1,7 @@
 'use strict';
-var $ = require('jquery');
-var Http = require('../../http');
+const $ = require('jquery');
+const Http = require('../../http');
+const Utils = require('../../utils');
 
 var exports = module.exports = {};
 
@@ -24,9 +25,13 @@ exports.fillComponents = function (futureIndex, baseUrl) {
         const line1 = $('<div>').appendTo(indexCont2);
         const line2 = $('<div>').appendTo(indexCont2);
         line1.append(label);
-        createPriceForTest(line1, x => ({limits: {okexMaxPriceForTest: x}}));
+        if (Utils.isNonProdHost()) {
+            createPriceForTest(line1, x => ({limits: {okexMaxPriceForTest: x}}));
+        }
         line2.append(label2);
-        createPriceForTest(line2, x => ({limits: {okexMinPriceForTest: x}}));
+        if (Utils.isNonProdHost()) {
+            createPriceForTest(line2, x => ({limits: {okexMinPriceForTest: x}}));
+        }
     }
 
     updateLimits(futureIndex.limits);

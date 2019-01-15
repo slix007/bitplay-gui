@@ -116,3 +116,19 @@ exports.setDocumentTitle = function documentTitle(modName) {
     document.title = modPart + hostPart;
 };
 
+function getHostShortName() {
+    const hName = window.location.hostname;
+    return hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+}
+
+function isProdHost() {
+    const host = getHostShortName();
+    return host === '659'
+            || host === '662'
+            || host === '667'
+            || host === '668'
+            || host === '669';
+}
+
+exports.isProdHost = isProdHost;
+exports.isNonProdHost = () => !isProdHost();
