@@ -66,6 +66,11 @@ export const allSettings = observable({
         maxBorder: '',
         onlyOpen: false
     },
+
+    // MarketStatesJson, /market/states
+    marketStates: {
+        signalParts: {},
+    },
 });
 
 export const updateCorrParams = function (corrData) {

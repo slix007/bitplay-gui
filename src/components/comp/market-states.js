@@ -38,6 +38,7 @@ let repaintStates = function (returnData) {
         const bitmexSoState = $('<span>').appendTo(markets);
         mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
 
+        createSignalStatusBar();
     }
 
     updateState(firstId, returnData.firstMarket);
@@ -57,6 +58,8 @@ let repaintStates = function (returnData) {
     updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
     updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
+
+    allSettings.marketStates = returnData;
 };
 
 function convertTimeToReset(timeToResetTradingMode) {
@@ -130,3 +133,59 @@ function updateState(id, text) {
     el.style.fontWeight = 'bold';
     el.innerText = text;
 }
+
+function createSignalStatusBar() {
+    const my_css_class = {'margin': '10px'};
+
+    const contMain = $('#signal-status-bar').css('display', 'flex');
+    const cont = $('<div>')
+    .css('background-color', 'azure')
+    .css('border-radius', '10px')
+    .css('border', '1px dotted black')
+    .appendTo(contMain);
+
+    const signalDelay = $('<span>').text('signal_delay').css(my_css_class).appendTo(cont);
+    const btmMaxDelta = $('<span>').text('b_max_delta').css(my_css_class).appendTo(cont);
+    const okMaxDelta = $('<span>').text('o_max_delta').css(my_css_class).appendTo(cont);
+    const ntUsd = $('<span>').text('nt_usd').css(my_css_class).appendTo(cont);
+    const states = $('<span>').text('states').css(my_css_class).appendTo(cont);
+    const btmDqlOpen = $('<span>').text('bitmex_dql_open').css(my_css_class).appendTo(cont);
+    const okDqlOpen = $('<span>').text('okex_dql_open').css(my_css_class).appendTo(cont);
+    const btmAffordable = $('<span>').text('bitmex_affordable').css(my_css_class).appendTo(cont);
+    const okAffordable = $('<span>').text('okex_affordable').css(my_css_class).appendTo(cont);
+    const priceLimits = $('<span>').text('price_limits').css(my_css_class).appendTo(cont);
+
+    function showPart(el, status) {
+        el.prop('title', status);
+        switch (status) {
+            case 'OK':
+                el.css('color', 'green');
+                break;
+            case 'WRONG':
+                el.css('color', 'red');
+                break;
+            case 'STARTED':
+                el.css('color', 'orange');
+                break;
+            default:
+                el.css('color', 'black');
+        }
+    }
+
+    mobx.autorun(r => {
+        const sp = allSettings.marketStates.signalParts;
+        showPart(signalDelay, sp.signalDelay);
+        showPart(btmMaxDelta, sp.btmMaxDelta);
+        showPart(okMaxDelta, sp.okMaxDelta);
+        showPart(ntUsd, sp.ntUsd);
+        showPart(states, sp.states);
+        showPart(btmDqlOpen, sp.btmDqlOpen);
+        showPart(okDqlOpen, sp.okDqlOpen);
+        showPart(btmAffordable, sp.btmAffordable);
+        showPart(okAffordable, sp.okAffordable);
+        showPart(priceLimits, sp.priceLimits);
+    });
+}
+
+
+

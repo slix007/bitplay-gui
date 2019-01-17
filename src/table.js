@@ -403,10 +403,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             eBestMin.fillComponents(resultJson);
         });
 
-        fetch('/market/pos-diff', function (posDiffJson) {
-            showPosDiff(posDiffJson);
-        });
-
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
             let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
             if (poloniexAccount.btc === null) {
@@ -557,6 +553,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         });
         fetch('/market/states', function (returnData) {
             repaintStates(returnData);
+            showPosDiff(returnData.posDiffJson);
         });
         fetch('/market/pos-corr', function (returnData) {
             repaintPosCorr(returnData);
