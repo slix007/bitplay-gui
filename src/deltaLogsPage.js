@@ -106,12 +106,26 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         mainContainer.append($table);
 
         let rowNum = 0;
+        let hasCorr = false;
+        let hasAdj = false;
         for (let i = 0; i < trades.length; i++) {
             const trade = trades[i];
 
             const logsCount = trade.deltaLog.length;
             // const logsStr = JSON.stringify(trade.deltaLog);
-            $tbody.append(sprintf('<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s</td></tr>',
+            for (let j = 0; j < logsCount; j++) {
+                const theLog = trade.deltaLog[j];
+                if (!hasCorr && theLog.theLog.indexOf('_corr') !== -1) {
+                    hasCorr = true;
+                }
+                if (!hasAdj && theLog.theLog.indexOf('_adj') !== -1) {
+                    hasAdj = true;
+                }
+            }
+            let corrAdjStr = hasCorr ? ', with corr' : '';
+            corrAdjStr += hasAdj ? ', with adj' : '';
+            $tbody.append(sprintf(
+                    '<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s %s</td></tr>',
                     rowNum,
                     trade.id,
                     trade.counterName,
@@ -123,7 +137,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     !trade.bitmexStatus ? '' : trade.bitmexStatus.toLowerCase(),
                     !trade.okexStatus ? '' : trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
-                    trade.okexContractType
+                    trade.okexContractType,
+                    corrAdjStr
             ));
 
             let parId = rowNum;
