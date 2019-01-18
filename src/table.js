@@ -448,8 +448,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 } else {
                     const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1);
                     const wUsd = Utils.toUsd(wBtc, quAvg);
-                    const eLastBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1);
-                    const eLastUsd = Utils.toUsd(eLastBtc, quAvg);
+                    const eMarkBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1);
+                    const eMarkUsd = Utils.toUsd(eMarkBtc, quAvg);
                     const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1);
                     const eBestUsd = Utils.toUsd(eBestBtc, quAvg);
                     const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1);
@@ -466,7 +466,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)
                             + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                            + ',<br> e_last_' + marketAccount.eLast + '_' + eLastBtc + '_' + eLastUsd
+                            + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
                             + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
                             + ',<br> entry_price ' + marketAccount.entryPrice

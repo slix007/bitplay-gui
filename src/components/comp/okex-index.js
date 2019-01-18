@@ -12,7 +12,7 @@ const label2 = document.createElement('span');
 exports.fillComponents = function (futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
-    ind.innerHTML = 'Index: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
+    ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
 
     const indexCont = $('#okcoin-future-index');
     const indexCont2 = $('#okcoin-future-index2');
