@@ -15,15 +15,16 @@ exports.fillComponents = function (futureIndex, baseUrl) {
     ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
 
     const indexCont = $('#okcoin-future-index');
-    const indexCont2 = $('#okcoin-future-index2');
+    // const indexCont2 = $('#okcoin-future-index2');
+    const indexCont3 = $('#okcoin-future-index3');
     if (indexCont.children().length === 0) {
         indexCont.append(ind);
 
-        const limitPrice = document.createElement('div');
-        indexCont2.append(limitPrice);
-        createLimitPrice(limitPrice, futureIndex.limits.limitPrice, URL);
-        const line1 = $('<div>').appendTo(indexCont2);
-        const line2 = $('<div>').appendTo(indexCont2);
+        // const limitPrice = document.createElement('div');
+        // indexCont2.append(limitPrice);
+        // createLimitPrice(limitPrice, futureIndex.limits.limitPrice, URL);
+        const line1 = $('<div>').appendTo(indexCont3);
+        const line2 = $('<div>').appendTo(indexCont3);
         line1.append(label);
         if (Utils.isNonProdHost()) {
             createPriceForTest(line1, x => ({limits: {okexMaxPriceForTest: x}}));

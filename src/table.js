@@ -438,7 +438,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)
                             + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                            + ',<br> e_last_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                            + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
                             + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
                             + ',<br> entry_price ' + marketAccount.entryPrice
