@@ -106,13 +106,13 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         mainContainer.append($table);
 
         let rowNum = 0;
-        let hasCorr = false;
-        let hasAdj = false;
         for (let i = 0; i < trades.length; i++) {
             const trade = trades[i];
 
             const logsCount = trade.deltaLog.length;
             // const logsStr = JSON.stringify(trade.deltaLog);
+            let hasCorr = false;
+            let hasAdj = false;
             for (let j = 0; j < logsCount; j++) {
                 const theLog = trade.deltaLog[j];
                 if (!hasCorr && theLog.theLog.indexOf('_corr') !== -1) {

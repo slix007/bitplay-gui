@@ -144,6 +144,7 @@ function createSignalStatusBar() {
     .css('border', '1px dotted black')
     .appendTo(contMain);
 
+    const deltaName = $('<span>').text('_').css(my_css_class).appendTo(cont);
     const signalDelay = $('<span>').text('signal_delay').css(my_css_class).appendTo(cont);
     const btmMaxDelta = $('<span>').text('b_max_delta').css(my_css_class).appendTo(cont);
     const okMaxDelta = $('<span>').text('o_max_delta').css(my_css_class).appendTo(cont);
@@ -174,6 +175,7 @@ function createSignalStatusBar() {
 
     mobx.autorun(r => {
         const sp = allSettings.marketStates.signalParts;
+        deltaName.text(sp.deltaName);
         showPart(signalDelay, sp.signalDelay);
         showPart(btmMaxDelta, sp.btmMaxDelta);
         showPart(okMaxDelta, sp.okMaxDelta);
