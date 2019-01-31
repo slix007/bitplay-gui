@@ -15,6 +15,8 @@ let placingBlocksVar = require('./components/placing-blocks');
 let posAdjustmentVar = require('./components/pos-adjustment');
 let corrReset = require('./components/correction');
 let deltaLogsPage = require('./deltaLogsPage');
+let settingsStore = require('./store/settings-store');
+let settingsPreset = require('./components/settings-preset');
 
 // let firstMarketName = document.getElementById('first-market-name');
 // var firstMarketName = document.getElementsByTagName("title")[0];
@@ -140,4 +142,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     userInfo.fillUserInfo(baseUrlWithPort, afterLoginFunc);
 
+    settingsStore.allSettings.BASE_URL = baseUrlWithPort;
+    settingsPreset.showPresets(baseUrlWithPort);
 });

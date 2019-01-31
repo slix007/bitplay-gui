@@ -30,6 +30,9 @@ export const setAllSettingsRaw = function (result) {
 };
 
 export const allSettings = observable({
+    SETTINGS_URL: '',
+    BASE_URL: '',
+
     // restartEnabled: false,
     tradingModeAuto: false,
     restartSettings: {},
