@@ -3,10 +3,12 @@
 import {allSettings} from '../store/settings-store';
 import $ from 'jquery';
 import {httpAsyncGet, httpAsyncPost} from "../http";
+import * as mobx from "mobx";
 
 export {showPresets};
 
 let select = $('<select>');
+const NONE = "--Custom--";
 
 let showPresets = function (baseUrl) {
     const cont = $('#settings-preset');
@@ -21,15 +23,11 @@ let showPresets = function (baseUrl) {
 
 function updateCurrentList() {
     const get_url = allSettings.BASE_URL + '/settings/preset-all';
-    select.empty();
 
     httpAsyncGet(get_url, rawData => {
         const data = JSON.parse(rawData);
-        const presets = data.settingsPresets;
-        console.log('Presets: ' + presets.reduce((sum, curr) => sum + curr.name + ', ', ''));
-        for (const preset of presets) {
-            select.append($('<option>').val(preset.name).text(preset.name));
-        }
+        allSettings.currentPreset = data.currentPreset;
+        allSettings.settingsPresets = data.settingsPresets;
     });
 }
 
@@ -39,10 +37,31 @@ function createPresetList(baseUrl, cont) {
 
     $('<span>').text('Presets: ').appendTo(cont);
     select.appendTo(cont);
-    const btnSet = $('<button>').text('set').appendTo(cont);
+    const btnSet = $('<button>').text('load').appendTo(cont);
     const btnDel = $('<button>').text('remove').appendTo(cont);
 
     updateCurrentList();
+
+    mobx.autorun(r => {
+        const presets = allSettings.settingsPresets;
+        const currentPreset = allSettings.currentPreset;
+        console.log('Presets: ' + presets.reduce((sum, curr) => sum + curr.name + ', ', ''));
+        console.log('currentPreset: ' + currentPreset);
+
+        // recreate list
+        select.empty();
+        for (const preset of presets) {
+            select.append($('<option>').val(preset.name).text(preset.name));
+        }
+        select.append($('<option>').val(NONE).text(NONE));
+        // recreate list end
+
+        if (currentPreset !== undefined && currentPreset !== "") {
+            select.val(currentPreset);
+        } else {
+            select.val(NONE);
+        }
+    });
 
     btnSet.click(() => {
         btnSet.prop('disabled', true);
@@ -74,11 +93,12 @@ function createPresetSaver(url, cont) {
     const btn = $('<button>').text('save').appendTo(cont);
     btn.click(() => {
         btn.prop('disabled', true);
-        const data = inputName.val();
+        const newName = inputName.val();
         // console.log('sending: ' + data);
-        httpAsyncPost(url, data, (rawRes) => {
+        httpAsyncPost(url, newName, (rawRes) => {
             btn.prop('disabled', false);
             updateCurrentList();
+            allSettings.currentPreset = newName;
         });
 
     });

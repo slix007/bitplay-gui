@@ -74,6 +74,10 @@ export const allSettings = observable({
     marketStates: {
         signalParts: {},
     },
+
+    ///settings/preset-all
+    settingsPresets: [],
+
 });
 
 export const updateCorrParams = function (corrData) {
