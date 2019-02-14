@@ -106,6 +106,15 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
         mainContainer.append($table);
 
         let rowNum = 0;
+
+        function getTradingModeStr(tradingMode) {
+            if (tradingMode && tradingMode !== 'CURRENT') {
+                return ', TradingMode=' +
+                        (tradingMode === 'CURRENT_VOLATILE' ? 'current-volatile' : 'volatile');
+            }
+            return '';
+        }
+
         for (let i = 0; i < trades.length; i++) {
             const trade = trades[i];
 
@@ -124,8 +133,9 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
             }
             let corrAdjStr = hasCorr ? ', with corr' : '';
             corrAdjStr += hasAdj ? ', with adj' : '';
+            const tradingModeStr = getTradingModeStr(trade.tradingMode);
             $tbody.append(sprintf(
-                    '<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s %s</td></tr>',
+                    '<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s %s %s</td></tr>',
                     rowNum,
                     trade.id,
                     trade.counterName,
@@ -138,7 +148,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     !trade.okexStatus ? '' : trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
                     trade.okexContractType,
-                    corrAdjStr
+                    corrAdjStr,
+                    tradingModeStr,
             ));
 
             let parId = rowNum;
