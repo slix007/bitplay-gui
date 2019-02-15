@@ -92,6 +92,8 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL);
 
         createOkexEbestElast(settingsData, SETTINGS_URL);
+
+        createDqlLevel(SETTINGS_URL);
     });
 
     // Volatile mode
@@ -1028,6 +1030,38 @@ function createOkexEbestElast() {
                 function (result) {
                     setAllSettingsRaw(result);
                     checkbox.attr('disabled', false);
+                }
+        );
+    });
+}
+
+function createDqlLevel(SETTINGS_URL) {
+    const $cont = $('#dql-level');
+
+    let label = $('<span>').html('DQL_level: ').appendTo($cont);
+    label.prop('title', 'Preliq выполняется при уловиях:\n'
+            + 'b_DQL <= b_DQL_close_min && b_DQL >= DQL_level, или\n'
+            + 'o_DQL <= o_DQL_close_min && o_DQL >= DQL_level.');
+
+    let edit = $('<input>').width('60px').appendTo($cont);
+    let updateBtn = $('<button>').text('set')
+    .css('margin-right', '5px').appendTo($cont);
+    let resLabel = $('<span>').appendTo($cont);
+
+    mobx.autorun(r => {
+        resLabel.text(allSettings.dql.dqlLevel);
+    });
+
+    updateBtn.click(function () {
+        updateBtn.attr('disabled', true);
+        let requestData = JSON.stringify({dql: {dqlLevel: edit.val()}});
+        console.log(requestData);
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                function (rawResp) {
+                    setAllSettingsRaw(rawResp);
+                    // const res = JSON.parse(rawResp);
+                    // resLabel.html(res.ntUsdMultiplicityOkex);
+                    updateBtn.attr('disabled', false);
                 }
         );
     });
