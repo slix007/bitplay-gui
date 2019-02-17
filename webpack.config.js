@@ -15,11 +15,12 @@ const typescriptLoader = {
     exclude: /(node_modules|bower_components)/
 };
 
-function getDevelopmentEnv(envName) {
-    const NODE_ENV = envName;
-    const myConfig = YAML.load('config.yml')[NODE_ENV];
-    const baseUrl = myConfig.baseUrl;
-    const backendUrl = myConfig.backendUrl;
+function getDevelopmentEnv(NODE_ENV, hostname) {
+    const allConfigs = YAML.load('config.yml');
+    const envConfig = allConfigs[NODE_ENV];
+    const backendUrl = hostname && hostname !== 'use-window.location.hostname' && allConfigs.hosts[hostname]
+            ? allConfigs.hosts[hostname]
+            : 'use-window.location.hostname';
     console.log('dev webpack.config.js NODE_ENV ' + NODE_ENV);
 
 // module.exports = {
@@ -33,16 +34,16 @@ function getDevelopmentEnv(envName) {
                                  filename: './bundle.js',
                                  library: 'home'
                              },
-                             watch: NODE_ENV == 'development',
+        watch: NODE_ENV === 'development',
                              // devtool: 'eval-source-map',
 
-                             devtool: NODE_ENV == 'development' ? 'source-map' : 'source-map',
+        devtool: NODE_ENV === 'development' ? 'source-map' : 'source-map',
 
                              plugins: [
                                  new webpack.DefinePlugin({
                                                               'process.env': {
                                                                   NODE_ENV: JSON.stringify(NODE_ENV),
-                                                                  baseUrl: JSON.stringify(baseUrl),
+                                                                  portNumber: JSON.stringify(envConfig.port),
                                                                   backendUrl: JSON.stringify(backendUrl)
                                                               }
                                                           })
@@ -69,11 +70,13 @@ function getDevelopmentEnv(envName) {
                          });
 }
 
-function getProductionEnv(envName) {
-    const NODE_ENV = envName;
-    const myConfig = YAML.load('config.yml')[NODE_ENV];
-    const baseUrl = myConfig.baseUrl;
-    const backendUrl = myConfig.backendUrl;
+function getProductionEnv(NODE_ENV, hostname) {
+    const allConfigs = YAML.load('config.yml');
+    const envConfig = allConfigs[NODE_ENV];
+    const backendUrl = hostname && hostname !== 'use-window.location.hostname' && allConfigs.hosts[hostname]
+            ? allConfigs.hosts[hostname]
+            : 'use-window.location.hostname';
+
     console.log('prod webpack.config.js NODE_ENV ' + NODE_ENV);
 
     return Object.assign({
@@ -90,7 +93,7 @@ function getProductionEnv(envName) {
                                  new webpack.DefinePlugin({
                                                               'process.env': {
                                                                   NODE_ENV: JSON.stringify(NODE_ENV),
-                                                                  baseUrl: JSON.stringify(baseUrl),
+                                                                  portNumber: JSON.stringify(envConfig.port),
                                                                   backendUrl: JSON.stringify(backendUrl)
                                                               }
                                                           })
@@ -119,4 +122,4 @@ function getProductionEnv(envName) {
 
 module.exports.getProductionEnv = getProductionEnv;
 module.exports.getDevelopmentEnv = getDevelopmentEnv;
-module.exports.default = getDevelopmentEnv('development');
+module.exports.default = getDevelopmentEnv('development', 'use-window.location.hostname');

@@ -1,11 +1,18 @@
 development:
   name: "development"
-  baseUrl: "http://664-vuld.fplay.io"
-  backendUrl: "http://664-vuld.fplay.io:4031"
+  port: 4031
+#  baseUrl: "http://664-vuld.fplay.io"
+#  backendUrl: "http://664-vuld.fplay.io:4031"
 
 production:
   name: "production"
+  port: 4031
 #  baseUrl: "http://bp.magsto.com"
-  baseUrl: "http://665-vuff.magsto.com"
-  backendUrl: "http://665-vuff.magsto.com:4031"
+#  baseUrl: "http://665-vuff.magsto.com"
+#  backendUrl: "http://665-vuff.magsto.com:4031"
 #  baseUrl: "http://localhost:4030"
+
+hosts:
+  658: "http://658-vupa.fplay.io:4031"
+  660: "http://660-vuam.fplay.io:4031"
+

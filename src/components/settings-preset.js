@@ -45,8 +45,8 @@ function createPresetList(baseUrl, cont) {
     mobx.autorun(r => {
         const presets = allSettings.settingsPresets;
         const currentPreset = allSettings.currentPreset;
-        console.log('Presets: ' + presets.reduce((sum, curr) => sum + curr.name + ', ', ''));
-        console.log('currentPreset: ' + currentPreset);
+        // console.log('Presets: ' + presets.reduce((sum, curr) => sum + curr.name + ', ', ''));
+        // console.log('currentPreset: ' + currentPreset);
 
         // recreate list
         select.empty();

@@ -7,12 +7,13 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const isDeveloping = NODE_ENV === 'development';
 const port = 8081;
 
-console.log('server.js ' + NODE_ENV);
+const HOST = process.env.HOST || 'localhost';
+console.log('server.js NODE_ENV=' + NODE_ENV + ', HOST=' + HOST);
 
 if (isDeveloping) {
     const webpack = require('webpack');
-    const webpackConfig = require('./webpack.config.js').getDevelopmentEnv('development');
-    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+    const webpackConfig = require('./webpack.config.js').getDevelopmentEnv('development', HOST);
+    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
     const webpackMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');

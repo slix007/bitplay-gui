@@ -4,8 +4,9 @@ const
   clc = require('cli-color'),
   webpack = require('webpack'),
   argv = require('yargs').argv,
-  envName = argv._[0] || 'development',
-  config = require('./webpack.config.js').getProductionEnv(envName);;
+  envName = argv._[0] || 'production',
+  config = require('./webpack.config.js').getProductionEnv(envName);
+  // config = require('./webpack.config.js').getDevelopmentEnv(envName);
 
 console.log(clc.bold('BUILD ', clc.green(envName)));
 // console.table(APP_CONFIG);

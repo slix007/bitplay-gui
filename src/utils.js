@@ -39,9 +39,9 @@ exports.withSign = function(value) {
 };
 
 exports.fillLinksToLogs = function () {
-    console.log("Fill links");
-    console.log(window.location.host);
-    console.log(window.location.hostname);
+    // console.log("Fill links");
+    // console.log(window.location.host);
+    // console.log(window.location.hostname);
 
     addLink('/market/trade-log/bitmex');
     addLink('/market/trade-log/okcoin');
@@ -110,9 +110,15 @@ exports.enableChildren = function enableChildren(obj) {
 };
 
 exports.setDocumentTitle = function documentTitle(modName) {
-    const hName = window.location.hostname;
     const modPart = modName !== undefined ? modName + '-' : '';
-    const hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+    let hostPart;
+    if (process.env.backendUrl === 'use-window.location.hostname') {
+        const hName = window.location.hostname;
+        hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+    } else {
+        const hName = process.env.backendUrl.slice(7, 13); // http://658-.....
+        hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+    }
     document.title = modPart + hostPart;
 };
 

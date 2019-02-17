@@ -53,7 +53,7 @@ function createSmaCheckbox(container, borderData, BORDERS_SETTINGS_URL) {
     const label = $('<label>').appendTo(smaOffCont);
 
     function updateLabel(val) {
-        console.log('use ' + val);
+        // console.log('use ' + val);
         let valName;
         if (val === 'false' || val === false) {
             valName = 'OFF';

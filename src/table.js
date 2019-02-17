@@ -20,7 +20,7 @@ const lastPriceDevVar = require('./components/comp/last-price-deviation');
 export {showMainInfo};
 
 let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
-    console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
+    // console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
     Utils.fillLinksToLogs();
     restartVar.addRestartButton();

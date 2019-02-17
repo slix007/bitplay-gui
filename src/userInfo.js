@@ -55,6 +55,7 @@ exports.fillUserInfo = function (baseUrl, afterLoginFunc) {
                     + loginPage.logoutButton;
             afterLoginFunc(true);
         }
+
     };
 
     getUserInfo(baseUrl, handleUserInfo);

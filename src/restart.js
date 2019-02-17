@@ -4,7 +4,7 @@ var Http = require('./http');
 
 
 exports.addRestartButton = function () {
-    console.log("Add restart button");
+    // console.log("Add restart button");
 
     // 1. Create the button
     let button = document.createElement('button');
@@ -29,7 +29,7 @@ exports.addRestartButton = function () {
 };
 
 exports.addReconnectButton = function () {
-    console.log("Add reconnect button");
+    // console.log("Add reconnect button");
 
     // 1. Create the button
     let button = document.createElement('button');
@@ -54,7 +54,7 @@ exports.addReconnectButton = function () {
 };
 
 exports.addResubscribeButton = function () {
-    console.log("Add resubscribe button");
+    // console.log("Add resubscribe button");
 
     // 1. Create the button
     let button = document.createElement('button');

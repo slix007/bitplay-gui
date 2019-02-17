@@ -34,7 +34,9 @@
   "scripts": {
     "start": "node server.js",
     "build": "rimraf output && cp -pr ./src/static/ ./output/ && node build ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf output",
+    "cleanAll": "rimraf output && rimraf node_modules"
   },
   "author": "SergeyS",
   "license": "ISC",

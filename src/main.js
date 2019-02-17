@@ -18,22 +18,18 @@ let deltaLogsPage = require('./deltaLogsPage');
 let settingsStore = require('./store/settings-store');
 let settingsPreset = require('./components/settings-preset');
 
-// let firstMarketName = document.getElementById('first-market-name');
-// var firstMarketName = document.getElementsByTagName("title")[0];
+// let portNumber = "4031";
 
-let portNumber = "4031";
-//TODO
-// if (firstMarketName !== null) {
-//     portNumber = "4031";
-// }
+console.log('NODE_ENV=' + process.env.NODE_ENV);
+console.log('backendUrl=' + process.env.backendUrl);
 
-// let baseUrlWithPort = sprintf('%s:%s', process.env.baseUrl, portNumber);
-// let baseUrlWithPort = 'http://664-vuld.fplay.io:4031';
-let baseUrlWithPort = sprintf('http://%s:%s', window.location.hostname, portNumber);
-let theUrl = sprintf('%s/market/list', baseUrlWithPort);
+// let baseUrlWithPort = sprintf('http://%s:%s', window.location.hostname, portNumber);
+let baseUrlWithPort = process.env.backendUrl === 'use-window.location.hostname'
+        ? sprintf('http://%s:%s', window.location.hostname, process.env.portNumber)
+        : process.env.backendUrl;
+let marketsUrl = sprintf('%s/market/list', baseUrlWithPort);
 console.log('baseUrlWithPort:' + baseUrlWithPort);
-console.log('theUrl:' + theUrl);
-console.log('NODE_ENV ' + process.env.NODE_ENV);
+
 
 
 function getCurrentTabName() {
@@ -48,10 +44,11 @@ function getCurrentTabName() {
 const afterLoginFunc = function (isAuthorized) {
     // baseUrl = baseUrlWithPort;
     if (isAuthorized) {
-        httpVar.httpAsyncGet(theUrl, function (response) {
+        httpVar.httpAsyncGet(marketsUrl, function (response) {
             console.log(response);
             let parsedResp = JSON.parse(response);
-            console.log('first market=' + parsedResp.first);
+
+            // console.log('first market=' + parsedResp.first);
 
             function fillMainPage(parsedResp) {
                 $('#bitmex-contract-type-label').text(parsedResp.firstFutureContractName);
@@ -85,9 +82,9 @@ const afterLoginFunc = function (isAuthorized) {
 
         });
 
-        if (process.env.NODE_ENV == 'development') {
-            console.log('Hello from Webpack');
-        }
+        // if (process.env.NODE_ENV == 'development') {
+        // console.log('Hello from Webpack');
+        // }
     }
 };
 
