@@ -10,18 +10,32 @@ export {fillBitmexChangeOnSo};
 let fillBitmexChangeOnSo = function () {
     const $cont = $('#bitmex-change-on-so');
     $('<span>').text('Bitmex change on ').appendTo($cont);
-    $('<span>').text('SO').prop('title', 'SYSTEM OVERLOAD').appendTo($cont);
+    $('<span>').text('SO:').prop('title', 'SYSTEM OVERLOAD').appendTo($cont);
 
-    // checkbox auto
-    const autoCheckbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
-    const lb = $('<label>').text('auto').appendTo($cont);
-    mobx.autorun(() => autoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.auto));
-    autoCheckbox.click(() => {
-        autoCheckbox.prop('disabled', true);
-        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({bitmexChangeOnSo: {auto: autoCheckbox.prop('checked')}}),
+    // checkbox toTaker
+    const toTakerCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
+    $('<label>').text('to taker').appendTo($cont);
+    mobx.autorun(() => toTakerCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toTaker));
+    toTakerCheckbox.click(() => {
+        toTakerCheckbox.prop('disabled', true);
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({bitmexChangeOnSo: {toTaker: toTakerCheckbox.prop('checked')}}),
                 json => {
                     setAllSettingsRaw(json);
-                    autoCheckbox.prop('disabled', false);
+                    toTakerCheckbox.prop('disabled', false);
+                }
+        )
+    });
+
+    // checkbox toConBo
+    const toConBoCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
+    $('<label>').text('to CON_B_O').appendTo($cont);
+    mobx.autorun(() => toConBoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toConBo));
+    toConBoCheckbox.click(() => {
+        toConBoCheckbox.prop('disabled', true);
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({bitmexChangeOnSo: {toConBo: toConBoCheckbox.prop('checked')}}),
+                json => {
+                    setAllSettingsRaw(json);
+                    toConBoCheckbox.prop('disabled', false);
                 }
         )
     });
