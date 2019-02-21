@@ -51,6 +51,7 @@ let repaintStates = function (returnData) {
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);
     $('#signal-delay-label').html(sigDeltay + timeToSig);
+    $('#delayVM-label').text(convertTimeToReset((returnData.timeToVolatileMode / 1000).toFixed())); // ms to sec
     $('#timeToResetTradingMode-label').text(convertTimeToReset(returnData.timeToResetTradingMode));
     stateUpdateChecker(returnData.timeToResetTradingMode);
     allSettings.bitmexChangeOnSo.secToReset = returnData.timeToResetBitmexChangeOnSo;
@@ -63,7 +64,7 @@ let repaintStates = function (returnData) {
 };
 
 function convertTimeToReset(timeToResetTradingMode) {
-    return ', To reset(sec): ' + (timeToResetTradingMode === 0 ? "_none_" : timeToResetTradingMode);
+    return ', To reset(sec): ' + (Number(timeToResetTradingMode) === Number(0) ? "_none_" : timeToResetTradingMode);
 }
 
 function showBitmexSoState(lb, allSettings) {

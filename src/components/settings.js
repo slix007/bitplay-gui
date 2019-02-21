@@ -100,7 +100,14 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createTradingModeDropdown(SETTINGS_URL);
 
     const $column1Cont = $('#volatile-mode-params-1');
-    // timer-Label
+    // delay-timer-Label
+    const contDelayTimer = $('<div>').appendTo($column1Cont);
+    createSettingsV(contDelayTimer, SETTINGS_URL, 'Time to start VM(sec)',
+            x => ({settingsVolatileMode: {volatileDelayMs: x * 1000}}),
+            x => (x.settingsVolatileMode.volatileDelayMs / 1000).toFixed(),
+            x => false);
+    $('<span>').attr('id', 'delayVM-label').appendTo(contDelayTimer);
+    // reset-timer-Label
     const contTimer = $('<div>').appendTo($column1Cont);
     createSettingsV(contTimer, SETTINGS_URL, 'Volatile duration(sec)',
             x => ({settingsVolatileMode: {volatileDurationSec: x}}),
