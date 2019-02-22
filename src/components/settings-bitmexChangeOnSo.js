@@ -14,7 +14,7 @@ let fillBitmexChangeOnSo = function () {
 
     // checkbox toTaker
     const toTakerCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
-    $('<label>').text('to taker').appendTo($cont);
+    $('<label>').text('to_TAKER').appendTo($cont);
     mobx.autorun(() => toTakerCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toTaker));
     toTakerCheckbox.click(() => {
         toTakerCheckbox.prop('disabled', true);
@@ -28,7 +28,7 @@ let fillBitmexChangeOnSo = function () {
 
     // checkbox toConBo
     const toConBoCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
-    $('<label>').text('to CON_B_O').appendTo($cont);
+    $('<label>').text('to_CON_B_O').appendTo($cont);
     mobx.autorun(() => toConBoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toConBo));
     toConBoCheckbox.click(() => {
         toConBoCheckbox.prop('disabled', true);
@@ -61,13 +61,21 @@ let fillBitmexChangeOnSo = function () {
     const timer = $('<span>').appendTo($contTimer);
     mobx.autorun(() => {
         timer.text('To reset(sec): ' + allSettings.bitmexChangeOnSo.secToReset);
-        const select = $('#bitmex-place-order-type-select-id');
-        if (allSettings.bitmexChangeOnSo.secToReset > 0) {
-            select.prop('disabled', true);
-            select.val('TAKER');
+        const selectToTaker = $('#bitmex-place-order-type-select-id');
+        if (allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toTaker) {
+            selectToTaker.prop('disabled', true);
+            selectToTaker.val('TAKER');
         } else {
-            select.prop('disabled', false);
-            select.val(allSettings.bitmexPlacingType);
+            selectToTaker.prop('disabled', false);
+            selectToTaker.val(allSettings.bitmexPlacingType);
+        }
+        const selectToConBo = $('#select-arb-version-id');
+        if (allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toConBo) {
+            selectToConBo.prop('disabled', true);
+            selectToConBo.val('CON_B_O');
+        } else {
+            selectToConBo.prop('disabled', false);
+            selectToConBo.val(allSettings.arbScheme);
         }
     });
 

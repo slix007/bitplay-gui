@@ -51,7 +51,9 @@ export const allSettings = observable({
     },
 
     bitmexChangeOnSo: {
-        secToReset: 0
+        secToReset: 0,
+        toTaker: false,
+        toConBo: false,
     },
 
     okexEbestElast: false,

@@ -69,7 +69,11 @@ function convertTimeToReset(timeToResetTradingMode) {
 
 function showBitmexSoState(lb, allSettings) {
     if (allSettings.bitmexChangeOnSo.secToReset > 0) {
-        lb.text(', Bitmex SO: always TAKER');
+        let flags = [];
+        flags.push(allSettings.bitmexChangeOnSo.toTaker ? 'ALWAYS_TAKER' : '');
+        flags.push(allSettings.bitmexChangeOnSo.toConBo ? 'CON_B_O' : '');
+        const flag = flags.filter(value => value !== '').join(", ");
+        lb.text(', Bitmex SO: ' + flag);
         lb.css('color', 'darkgoldenrod');
         lb.css('font-weight', 'bold');
     } else {

@@ -26,7 +26,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         // Arb version
         var container = document.getElementById("select-arb-version");
-        createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL);
+        createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL, 'select-arb-version-id');
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type');
@@ -272,9 +272,12 @@ function createTradingModeDropdown(SETTINGS_URL) {
     });
 }
 
-function createVerDropdown(container, ver, ARB_SETTINGS_URL) {
+function createVerDropdown(container, ver, ARB_SETTINGS_URL, selectId) {
 
     var select = document.createElement('select');
+    if (selectId) {
+        select.setAttribute('id', selectId);
+    }
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     option1.setAttribute("value", "SIM");
