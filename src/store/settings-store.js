@@ -34,6 +34,7 @@ export const allSettings = observable({
     BASE_URL: '',
 
     // restartEnabled: false,
+    eth: false,
     tradingModeAuto: false,
     restartSettings: {},
     tradingModeState: {tradingMode: ''},

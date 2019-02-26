@@ -76,7 +76,10 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createSignalDelay($('#signal-delay'), SETTINGS_URL, x => ({signalDelayMs: x}), null, true);
 
-        createColdStorage(settingsData, SETTINGS_ADMIN_URL);
+        createColdStorage('btc', settingsData, SETTINGS_ADMIN_URL, x => ({coldStorageBtc: x}), x => x.coldStorageBtc);
+        if (settingsData.eth) {
+            createColdStorage('eth', settingsData, SETTINGS_ADMIN_URL, x => ({coldStorageEth: x}), x => x.coldStorageEth);
+        }
         createEBestMin(settingsData, SETTINGS_ADMIN_URL);
 
         createUsdQuoteType(settingsData, SETTINGS_URL);
@@ -622,30 +625,29 @@ function createSignalDelay(cont, SETTINGS_URL, requestCreator, valExtractor, isM
     });
 }
 
-function createColdStorage(settingsData, SETTINGS_ADMIN_URL) {
-    var container = document.getElementById("cold-storage");
+function createColdStorage(coldStorageType, settingsData, SETTINGS_ADMIN_URL, requestCreator, valExtractor) {
+    let container = document.getElementById("cold-storage-" + coldStorageType);
 
-    var label = document.createElement('span');
-    label.innerHTML = 'Cold Storage(btc):';
-    var edit = document.createElement('input');
+    let label = document.createElement('span');
+    label.innerHTML = sprintf('Cold Storage(%s):', coldStorageType);
+    let edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
-    var resultLabel = document.createElement('span');
-    resultLabel.innerHTML = settingsData.coldStorageBtc;
-    var setBtn = document.createElement('button');
+    let resultLabel = document.createElement('span');
+    let setBtn = document.createElement('button');
+    setBtn.innerHTML = 'set';
     setBtn.onclick = function () {
         setBtn.disabled = true;
-        const requestData = JSON.stringify({coldStorageBtc: edit.value});
-        console.log(requestData);
+        const requestData = JSON.stringify(requestCreator(edit.value));
         Http.httpAsyncPost(SETTINGS_ADMIN_URL,
                 requestData, function (rawRes) {
-                    const res = JSON.parse(rawRes);
-                    resultLabel.innerHTML = res.coldStorageBtc;
+                    setAllSettingsRaw(rawRes);
                     setBtn.disabled = false;
-                    // alert(rawRes);
                 });
     };
-    setBtn.innerHTML = 'set';
+    mobx.autorun(function () {
+        resultLabel.innerHTML = valExtractor(allSettings);
+    });
 
     container.appendChild(label);
     container.appendChild(edit);

@@ -8,7 +8,10 @@ let responseLabel = document.createElement('span');
 
 exports.fillComponents = function (resultJson) {
 
-    $("#cold-storage-label").html('Cold Storage(btc)=' + resultJson.cold_storage);
+    $("#cold-storage-btc-label").html('Cold Storage(btc)=' + resultJson.cold_storage_btc);
+    if (resultJson.cold_storage_eth) {
+        $("#cold-storage-eth-label").html('Cold Storage(eth)=' + resultJson.cold_storage_eth);
+    }
     $("#s_e_best_min_time_to_forbidden").html('Forbidden in ' + resultJson.s_e_best_min_time_to_forbidden + ' sec');
 
     let eBestMinDiv = document.getElementById("s_e_best_min");
