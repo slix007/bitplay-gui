@@ -151,6 +151,12 @@ function createSignalStatusBar() {
 
     const deltaName = $('<span>').text('_').css(my_css_class).appendTo(cont);
     const signalDelay = $('<span>').text('signal_delay').css(my_css_class).appendTo(cont);
+    const b_order_book = $('<span>').text('b_order_book').css(my_css_class).appendTo(cont);
+    const b_order_book_XBTUSD = $('<span>').text('b_order_book_xbtusd').css(my_css_class);
+    if (allSettings.eth) {
+        b_order_book_XBTUSD.appendTo(cont);
+    }
+    const o_order_book = $('<span>').text('o_order_book').css(my_css_class).appendTo(cont);
     const btmMaxDelta = $('<span>').text('b_max_delta').css(my_css_class).appendTo(cont);
     const okMaxDelta = $('<span>').text('o_max_delta').css(my_css_class).appendTo(cont);
     const ntUsd = $('<span>').text('nt_usd').css(my_css_class).appendTo(cont);
@@ -182,6 +188,13 @@ function createSignalStatusBar() {
         const sp = allSettings.marketStates.signalParts;
         deltaName.text(sp.deltaName);
         showPart(signalDelay, sp.signalDelay);
+        showPart(b_order_book, sp.btmOrderBook);
+        if (allSettings.eth) {
+            showPart(b_order_book_XBTUSD, sp.btmOrderBookXBTUSD);
+        } else {
+            b_order_book_XBTUSD.text('');
+        }
+        showPart(o_order_book, sp.okOrderBook);
         showPart(btmMaxDelta, sp.btmMaxDelta);
         showPart(okMaxDelta, sp.okMaxDelta);
         showPart(ntUsd, sp.ntUsd);
