@@ -14,7 +14,7 @@ let monCalcDelta = require('./components/comp/mon-calc-delta');
 let eBestMin = require('./components/comp/e-best-min');
 let placingBlocksVar = require('./components/placing-blocks');
 let monVar = require('./components/mon');
-const {placingOrderObj, mobxStore} = require('./store/settings-store');
+const {placingOrderObj, mobxStore, allSettings} = require('./store/settings-store');
 const lastPriceDevVar = require('./components/comp/last-price-deviation');
 
 export {showMainInfo};
@@ -720,6 +720,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
                         requestData,
                         function (responseData, resultElement) {
+                            allSettings.currentPreset = "";
                             repaintDeltasAndBorders(responseData);
                         },
                         null
@@ -734,6 +735,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
                         requestData,
                         function (responseData, resultElement) {
+                            allSettings.currentPreset = "";
                             repaintDeltasAndBorders(responseData);
                         },
                         null
