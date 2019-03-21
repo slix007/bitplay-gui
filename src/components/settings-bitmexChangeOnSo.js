@@ -61,22 +61,6 @@ let fillBitmexChangeOnSo = function () {
     const timer = $('<span>').appendTo($contTimer);
     mobx.autorun(() => {
         timer.text('To reset(sec): ' + allSettings.bitmexChangeOnSo.secToReset);
-        const selectToTaker = $('#bitmex-place-order-type-select-id');
-        if (allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toTaker) {
-            selectToTaker.prop('disabled', true);
-            selectToTaker.val('TAKER');
-        } else {
-            selectToTaker.prop('disabled', false);
-            selectToTaker.val(allSettings.bitmexPlacingType);
-        }
-        const selectToConBo = $('#select-arb-version-id');
-        if (allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toConBo) {
-            selectToConBo.prop('disabled', true);
-            selectToConBo.val('CON_B_O');
-        } else {
-            selectToConBo.prop('disabled', false);
-            selectToConBo.val(allSettings.arbScheme);
-        }
     });
 
     testingSystemOverloaded();

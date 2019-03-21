@@ -207,4 +207,11 @@ export const placingOrderObj = observable({
     },
 });
 
+export const bitmexChangeOnSoToTaker = function bitmexChangeOnSoToTaker() {
+    return allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toTaker;
+};
+
+export const bitmexChangeOnSoToConBo = function bitmexChangeOnSoToConBo() {
+    return allSettings.bitmexChangeOnSo.secToReset > 0 && allSettings.bitmexChangeOnSo.toConBo;
+};
 

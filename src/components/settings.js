@@ -3,6 +3,7 @@
 import {createPlacingBlocksVolatile} from "../components/placing-blocks";
 import {createAdjVolatile} from "./pos-adjustment";
 import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
+import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/settings-store";
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -25,17 +26,20 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         enableRestart.showRestartEnable(baseUrl);
 
         // Arb version
-        var container = document.getElementById("select-arb-version");
-        createVerDropdown(container, settingsData.arbScheme, SETTINGS_URL, 'select-arb-version-id');
+        let container = document.getElementById("select-arb-version");
+        createArbScheme(container, SETTINGS_URL,
+                x => ({arbScheme: x}),
+                x => x.arbScheme,
+                true);
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type');
         const btmPlacingLb = $('<span>').text('Bitmex place orders type:');
         btmPlacingLb.appendTo($bitmexPlacingCont);
-        createPlacingType($bitmexPlacingCont.get(0), SETTINGS_URL,
+        createPlacingTypeWithBtmChangeOnSo($bitmexPlacingCont.get(0), SETTINGS_URL,
                 x => ({bitmexPlacingType: x}),
                 x => x.bitmexPlacingType,
-                btmPlacingLb, 'bitmexPlacingType', true, 'bitmex-place-order-type-select-id');
+                btmPlacingLb, 'bitmexPlacingType', true);
 
         let okexPlacingCont = $('#okex-placing-type');
         const okPlacingLb = $('<span>').text('Okex place orders type:');
@@ -186,6 +190,13 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
             x => ({settingsVolatileMode: {adjMaxTotalCount: x}}),
             x => x.settingsVolatileMode.adjMaxTotalCount);
 
+    const $arbSchemeV = $('<div>').appendTo($column3Cont);
+    createCheckboxV($arbSchemeV, SETTINGS_URL, 'arb_scheme');
+    createArbScheme($arbSchemeV, SETTINGS_URL,
+            x => ({settingsVolatileMode: {arbScheme: x}}),
+            x => x.settingsVolatileMode.arbScheme,
+            false);
+
 
     fillBitmexChangeOnSo();
 };
@@ -273,36 +284,6 @@ function createTradingModeDropdown(SETTINGS_URL) {
             lb.css('font-weight', 'normal').prop('title', '');
         }
     });
-}
-
-function createVerDropdown(container, ver, ARB_SETTINGS_URL, selectId) {
-
-    var select = document.createElement('select');
-    if (selectId) {
-        select.setAttribute('id', selectId);
-    }
-    var option1 = document.createElement('option');
-    var option2 = document.createElement('option');
-    option1.setAttribute("value", "SIM");
-    option2.setAttribute("value", "CON_B_O");
-    option1.innerHTML = 'SIM';
-    option2.innerHTML = 'CON_B_O';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.addEventListener("change", onVerPick);
-    select.value = ver;
-
-    container.appendChild(select);
-
-    function onVerPick() {
-        const requestData = JSON.stringify({arbScheme: this.value});
-
-        Http.httpAsyncPost(ARB_SETTINGS_URL,
-                requestData, function (result) {
-                    let data = JSON.parse(result);
-                    alert('New value: ' + data.arbScheme);
-                });
-    }
 }
 
 function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
@@ -395,11 +376,8 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     }
 }
 
-function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain, selectId) {
+function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
     var select = document.createElement('select');
-    if (selectId) {
-        select.setAttribute('id', selectId);
-    }
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
@@ -450,6 +428,99 @@ function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtra
                     alert('New value: ' + valExtractor(data));
                 });
     }
+}
+
+function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
+    var select = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    var option3 = document.createElement('option');
+    var option4 = document.createElement('option');
+    var option5 = document.createElement('option');
+    option1.setAttribute("value", "TAKER");
+    option2.setAttribute("value", "MAKER");
+    option3.setAttribute("value", "HYBRID");
+    option4.setAttribute("value", "MAKER_TICK");
+    option5.setAttribute("value", "HYBRID_TICK");
+    option1.innerHTML = 'TAKER';
+    option2.innerHTML = 'MAKER';
+    option3.innerHTML = 'HYBRID';
+    option4.innerHTML = 'MAKER_TICK';
+    option5.innerHTML = 'HYBRID_TICK';
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.appendChild(option3);
+    select.appendChild(option4);
+    select.appendChild(option5);
+    select.addEventListener("change", onVerPick);
+
+    mainContainer.appendChild(select);
+
+    mobx.autorun(function () {
+        select.value = valExtractor(allSettings);
+        if (isMain) {
+            let extraTitle = '';
+            if (bitmexChangeOnSoToTaker()) {
+                extraTitle += 'BitmexChangeOnSo:ALWAYS_TAKER';
+                select.value = 'TAKER';
+            }
+            if (isActiveV(fieldName)) {
+                extraTitle += '\nActivated VOLATILE mode';
+            }
+            if (extraTitle.length > 0) {
+                lb.css('font-weight', 'bold').prop('title', extraTitle);
+                select.disabled = true;
+            } else {
+                lb.css('font-weight', 'normal').prop('title', '');
+                select.disabled = false;
+            }
+        }
+    });
+
+    function onVerPick() {
+        const requestData = JSON.stringify(requestCreator(this.value));
+        Http.httpAsyncPost(SETTINGS_URL,
+                requestData, function (result) {
+                    setAllSettingsRaw(result);
+                    let data = JSON.parse(result);
+                    alert('New value: ' + valExtractor(data));
+                });
+    }
+}
+
+function createArbScheme(container, SETTINGS_URL, requestCreator, valExtractor, isMain) {
+    const lb = $('<span>').text('Arbitrage version:').appendTo(container);
+    let select = $('<select>').appendTo(container);
+    select.append($('<option>').val('SIM').text('SIM'));
+    select.append($('<option>').val('CON_B_O').text('CON_B_O'));
+    select.change(function () {
+        const requestData = JSON.stringify(requestCreator(this.value));
+        select.disabled = true;
+        Http.httpAsyncPost(SETTINGS_URL, requestData, result => {
+            setAllSettingsRaw(result);
+            select.attr('disabled', false);
+        });
+    });
+    mobx.autorun(function () {
+        select.val(valExtractor(allSettings));
+        if (isMain) {
+            let extraTitle = '';
+            if (bitmexChangeOnSoToConBo()) {
+                extraTitle += 'BitmexChangeOnSo:CON_B_O';
+                select.val('CON_B_O');
+            }
+            if (isActiveV('arb_scheme')) {
+                extraTitle += '\nActivated VOLATILE mode';
+            }
+            if (extraTitle.length > 0) {
+                lb.css('font-weight', 'bold').prop('title', extraTitle);
+                select.attr('disabled', true);
+            } else {
+                lb.css('font-weight', 'normal').prop('title', '');
+                select.attr('disabled', false);
+            }
+        }
+    });
 }
 
 function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
