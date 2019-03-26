@@ -39,6 +39,8 @@ function createPresetList(baseUrl, cont) {
     select.appendTo(cont);
     const btnSet = $('<button>').text('load').appendTo(cont);
     const btnDel = $('<button>').text('remove').appendTo(cont);
+    const checkBoxNoExeptions = $('<input>').attr('type', 'checkbox').appendTo(cont);
+    $('<span>').text('load with No exceptions').attr('title', 'borders V1, sum_delta V1, borders V2, b_add_delta, ok_add_delta.').appendTo(cont);
 
     updateCurrentList();
 
@@ -65,9 +67,11 @@ function createPresetList(baseUrl, cont) {
 
     btnSet.click(() => {
         btnSet.prop('disabled', true);
-        const data = select.val();
-        console.log('sending: ' + data);
-        httpAsyncPost(set_url, data, rawData => {
+        const theName = select.val();
+        const noEx = checkBoxNoExeptions.prop('checked');
+        const requestData = JSON.stringify({presetName: theName, noExceptions: noEx});
+        console.log('sending: ' + requestData);
+        httpAsyncPost(set_url, requestData, rawData => {
             btnSet.prop('disabled', false);
             updateCurrentList();
             // update the page

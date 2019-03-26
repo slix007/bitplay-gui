@@ -757,10 +757,14 @@ const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hed
 const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
 const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
 const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
+
+const set_tmp = $('<span/>').html('set_tmp (BitmexContractType.XBTH19, OkexContractType.BTC_Quarter)');
+
 var arbModArr = [
     {val: 'MODE1_SET_BU11', txt: 'M10: set_bu11', info: set_bu11, mod: "M10", mainSet: "set_bu11"},
     {val: 'MODE2_SET_BU12', txt: 'M11: set_bu12', info: set_bu12, mod: "M11", mainSet: "set_bu12"},
     {val: 'MODE3_SET_BU23', txt: 'M20: set_bu23', info: set_bu23, mod: "M20", mainSet: "set_bu23"},
+    {val: 'MODE_TMP', txt: 'set_tmp', info: set_tmp, mod: "TMP", mainSet: "set_tmp"},
     {val: 'MODE4_SET_BU10_SET_EU11', txt: 'M21: set_bu10 + set_eu11', info: set_bu10_set_eu11, mod: "M21", mainSet: "set_eu11"},
     {val: 'MODE5_SET_BU10_SET_EU12', txt: 'M22: set_bu10 + set_eu12', info: set_bu10_set_eu12, mod: "M22", mainSet: "set_eu12"},
 ];
