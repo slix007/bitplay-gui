@@ -146,6 +146,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         let cumDelta = document.getElementById("cum-delta");
         let cumDeltaFact = document.getElementById("cum-delta-fact");
         let cumDiffFactBr = document.getElementById("cum-diff-fact-br");
+        let cumDiff2Pre = document.getElementById("cum-diff2-pre");
+        let cumDiff2Post = document.getElementById("cum-diff2-post");
         let cumDiff1 = document.getElementById("cum-diff1");
         let cumDiff2 = document.getElementById("cum-diff2");
         let cumDiff = document.getElementById("cum-diff");
@@ -181,6 +183,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         cumDelta.innerHTML = sprintf('%s/%s', returnData.cumDelta, returnData.cumAstDelta);
         cumDeltaFact.innerHTML = sprintf('%s/%s', returnData.cumDeltaFact, returnData.cumAstDeltaFact);
         cumDiffFactBr.innerHTML = sprintf('%s', returnData.cumDiffFactBr);
+        cumDiff2Pre.innerHTML = sprintf('%s', returnData.cumDiff2Pre);
+        cumDiff2Post.innerHTML = sprintf('%s', returnData.cumDiff2Post);
         cumDiff1.innerHTML = sprintf('%s/%s', returnData.cumDiffFact1, returnData.cumAstDiffFact1);
         cumDiff2.innerHTML = sprintf('%s/%s', returnData.cumDiffFact2, returnData.cumAstDiffFact2);
         cumDiff.innerHTML = sprintf('%s/%s', returnData.cumDiffFact, returnData.cumAstDiffFact);
@@ -781,6 +785,31 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
                         requestData,
                         function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
+                );
+            }
+
+            if (element.id == 'update-cum-diff2-pre') {
+                let newVal = document.getElementById('cum-diff2-pre-edit').value;
+                let request = {cumDiff2Pre: newVal};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                        requestData, function (responseData, resultElement) {
+                            repaintDeltasAndBorders(responseData);
+                        },
+                        null
+                );
+            }
+            if (element.id == 'update-cum-diff2-post') {
+                let newVal = document.getElementById('cum-diff2-post-edit').value;
+                let request = {cumDiff2Post: newVal};
+                let requestData = JSON.stringify(request);
+                console.log(requestData);
+                Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
+                        requestData, function (responseData, resultElement) {
                             repaintDeltasAndBorders(responseData);
                         },
                         null
