@@ -5,21 +5,26 @@ import {cumParams, getOneCumParams, setCumParams} from "../store/cum-params-stor
 import Http from "../http";
 import $ from "jquery";
 
+let URL;
 let URL_RESET;
 let URL_UPDATE;
 
+export function updateCumParams() {
+    Http.httpAsyncGet(URL, function (rawData) {
+        let data = JSON.parse(rawData);
+        setCumParams(data);
+    });
+}
+
 export function showCumParams(baseUrl) {
-    const URL = baseUrl + '/market/cum-params';
+    URL = baseUrl + '/market/cum-params';
     URL_RESET = baseUrl + '/market/cum-params/reset';
     URL_UPDATE = baseUrl + '/market/cum-params/update';
 
     const cumParamsCont = $('#cum-params-block');
     createCumParamsBlock(cumParamsCont);
 
-    Http.httpAsyncGet(URL, function (rawData) {
-        let data = JSON.parse(rawData);
-        setCumParams(data);
-    });
+    updateCumParams();
 
 }
 
@@ -89,20 +94,30 @@ function createCumParams(cont, cumType) {
     });
 
     function updateCumValues(p) {
-        const cumAstDelta = (p.cumAstDelta1 + p.cumAstDelta2).toFixed(4);
+        let cumAstDelta = (p.cumAstDelta1 + p.cumAstDelta2);
+        cumAstDelta = cumAstDelta !== 0 ? cumAstDelta.toFixed(4) : 0;
         cum_delta_ast.text(sprintf('%s/%s', p.cumDelta, cumAstDelta));
-        const cumAstDeltaFact = (p.cumAstDeltaFact1 + p.cumAstDeltaFact2).toFixed(4);
+        let cumAstDeltaFact = (p.cumAstDeltaFact1 + p.cumAstDeltaFact2);
+        cumAstDeltaFact = cumAstDeltaFact !== 0 ? cumAstDeltaFact.toFixed(4) : 0;
         cum_delta_fact_ast.text(sprintf('%s/%s', p.cumDeltaFact, cumAstDeltaFact));
         cum_diff_fact_br.text(sprintf('%s', p.cumDiffFactBr));
-        cum_diff1_ast.text(sprintf('%s/%s', p.cumDiffFact1, p.cumAstDiffFact1));
-        cum_diff2_ast.text(sprintf('%s/%s', p.cumDiffFact2, p.cumAstDiffFact2));
+        const cumAstDiffFact1 = p.cumAstDiffFact1 !== 0 ? p.cumAstDiffFact1.toFixed(4) : 0;
+        cum_diff1_ast.text(sprintf('%s/%s', p.cumDiffFact1, cumAstDiffFact1));
+        const cumAstDiffFact2 = p.cumAstDiffFact2 !== 0 ? p.cumAstDiffFact2.toFixed(4) : 0;
+        cum_diff2_ast.text(sprintf('%s/%s', p.cumDiffFact2, cumAstDiffFact2));
         cum_diff2_pre.text(sprintf('%s', p.cumDiff2Pre));
         cum_diff2_post.text(sprintf('%s', p.cumDiff2Post));
-        cum_diff_ast.text(sprintf('%s/%s', p.cumDiffFact, p.cumAstDiffFact));
-        cum_com1_ast.text(sprintf('%s/%s', p.cumCom1, p.cumAstCom1));
-        cum_com2_ast.text(sprintf('%s/%s', p.cumCom2, p.cumAstCom2));
-        cum_bitmex_m_com_ast.text(sprintf('%s/%s', p.cumBitmexMCom, p.cumAstBitmexMCom));
-        slip.text(sprintf('%s/%s', p.slipBr, p.slip));
+        const cumAstDiffFact = p.cumAstDiffFact !== 0 ? p.cumAstDiffFact.toFixed(4) : 0;
+        cum_diff_ast.text(sprintf('%s/%s', p.cumDiffFact, cumAstDiffFact));
+        const cumAstCom1 = p.cumAstCom1 !== 0 ? p.cumAstCom1.toFixed(4) : 0;
+        cum_com1_ast.text(sprintf('%s/%s', p.cumCom1, cumAstCom1));
+        const cumAstCom2 = p.cumAstCom2 !== 0 ? p.cumAstCom2.toFixed(4) : 0;
+        cum_com2_ast.text(sprintf('%s/%s', p.cumCom2, cumAstCom2));
+        const cumAstBitmexMCom = p.cumAstBitmexMCom !== 0 ? p.cumAstBitmexMCom.toFixed(4) : 0;
+        cum_bitmex_m_com_ast.text(sprintf('%s/%s', p.cumBitmexMCom, cumAstBitmexMCom));
+        const slipBr = p.slipBr !== 0 ? p.slipBr.toFixed(2) : 0;
+        const slip1 = p.slip !== 0 ? p.slip.toFixed(2) : 0;
+        slip.text(sprintf('%s/%s', slipBr, slip1));
         count1.text(sprintf('%s/%s', p.completedCounter1, p.counter1));
         count2.text(sprintf('%s/%s', p.completedCounter2, p.counter2));
     }

@@ -1,4 +1,5 @@
 import {decorate_b_border, decorate_o_border} from "./components/settings-utils";
+import {updateCumParams} from "./components/cum-params";
 
 var Handsontable = require('handsontable');
 var $ = require('jquery');
@@ -651,6 +652,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 }
             });
         });
+
+        updateCumParams();
 
     };
     var updateData = setInterval(updateFunction, 1000);
