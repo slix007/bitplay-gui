@@ -4,8 +4,8 @@ import {observable, toJS} from 'mobx';
 export const setCumParams = function (data) {
     cumParams.cumParamsArr = data;
 
-    console.log('cumParams: (see nextLine)');
-    console.log(toJS(cumParams));
+    // console.log('cumParams: (see nextLine)');
+    // console.log(toJS(cumParams));
 };
 
 export const cumParams = observable({
