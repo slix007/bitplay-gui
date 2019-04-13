@@ -9,11 +9,14 @@ let createCloseAllPos = function (baseUrl) {
     const URL_CLOSE_ALL_POS = baseUrl + '/market/bitmex/close-all-pos';
 
     const cont = $('#bitmex-close-all-pos');
-    const checkbox = $('<input>').attr('type', 'checkbox').appendTo(cont);
+    const checkbox = $('<input>').css('margin-left', '10px').attr('type', 'checkbox').appendTo(cont);
+    const lbInfo = $('<span>').text('close all pos ').appendTo(cont);
     const btn = $('<button>').text('mkt').appendTo(cont);
     const lb = $('<span>').appendTo(cont);
 
+    lbInfo.css('color', 'grey');
     btn.prop('disabled', true);
+
     btn.click(() => {
         let confirmation = window.confirm("Bitmex: close all positions\n\nAre you sure?");
         if (confirmation) {
@@ -36,9 +39,11 @@ let createCloseAllPos = function (baseUrl) {
 
     checkbox.click(function () {
         if (checkbox.prop('checked')) {
+            lbInfo.css('color', 'black');
             btn.prop('disabled', false);
             btn.addClass('redBtn');
         } else {
+            lbInfo.css('color', 'grey');
             btn.prop('disabled', true);
             btn.removeClass('redBtn');
         }
