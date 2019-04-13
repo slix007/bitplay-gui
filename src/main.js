@@ -18,6 +18,7 @@ let deltaLogsPage = require('./deltaLogsPage');
 let settingsStore = require('./store/settings-store');
 let settingsPreset = require('./components/settings-preset');
 let cumParams = require('./components/cum-params');
+let closeAllPos = require('./components/close-all-pos');
 
 // let portNumber = "4031";
 
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     corrReset.showCorr(baseUrlWithPort);
     posAdjustmentVar.show(baseUrlWithPort);
     cumParams.showCumParams(baseUrlWithPort);
+    closeAllPos.createCloseAllPos(baseUrlWithPort);
 
     registerRoutes(e);
 

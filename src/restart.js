@@ -8,8 +8,7 @@ exports.addRestartButton = function () {
 
     // 1. Create the button
     let button = document.createElement('button');
-    button.style.background = 'DarkRed';
-    button.style.color = 'White';
+    button.classList.add("redBtn");
     button.innerHTML = 'Full Restart';
 
     // 2. Append somewhere
