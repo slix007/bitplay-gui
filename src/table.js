@@ -414,6 +414,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ', lv' + marketAccount.leverage
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)
+                            + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                            + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
                             + ', liq' + Utils.withSign(marketAccount.liqPrice)
                             + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
                             + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
@@ -442,6 +444,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ', lv' + marketAccount.leverage
                             + ', lg' + Utils.withSign(marketAccount.availableForLong)
                             + ', st' + Utils.withSign(marketAccount.availableForShort)
+                            + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                            + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
                             + ', liq' + Utils.withSign(marketAccount.liqPrice)
                             + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
                             + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
