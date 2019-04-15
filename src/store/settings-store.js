@@ -158,6 +158,19 @@ export const mobxStore = observable({
         adj: {},
         preliq: {}
     },
+
+    // okex: close-all-pos: button mkt
+    secondMarketAccount: {
+        positionStr : "+0-0",
+        longAvailToClose: 0,
+        shortAvailToClose: 0,
+    },
+    okexMktActive: false,
+
+    get secondMarketAccountJs() {
+        return toJS(this.secondMarketAccount);
+    }
+
 });
 
 export const placingOrderObj = observable({

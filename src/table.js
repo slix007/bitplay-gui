@@ -408,6 +408,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             if (marketAccount.btc === null) {
                 const quAvg = marketAccount.quAvg;
                 const ethBtcBid1 = marketAccount.ethBtcBid1;
+                mobxStore.secondMarketAccount = marketAccount;
                 if (ethBtcBid1 === null) {
                     oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
                             + ', p' + marketAccount.positionStr

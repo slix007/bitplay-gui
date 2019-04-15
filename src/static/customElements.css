@@ -2,3 +2,8 @@ button.redBtn {
   background: DarkRed;
   color: White;
 }
+
+button.yellowBtn {
+  background: darkgoldenrod;
+  color: White;
+}
