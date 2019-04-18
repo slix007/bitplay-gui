@@ -105,8 +105,10 @@ function okexCloseAllPos(baseUrl) {
 
             if (fullAvailable) {
                 btn.addClass('redBtn');
+                btn.removeClass('yellowBtn');
             } else {
                 btn.addClass('yellowBtn');
+                btn.removeClass('redBtn');
             }
         } else {
             lbInfo.css('color', 'grey');
