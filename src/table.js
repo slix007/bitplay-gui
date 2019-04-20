@@ -171,16 +171,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         reserveBtc2.innerHTML = returnData.reserveBtc2;
         fundingRateFee.innerHTML = returnData.fundingRateFee;
     };
-    let repaintStopMoving = function (returnData) {
-        let isStopMoving = document.getElementById("is-stop-moving");
-        let isEnabled = 'stopped';
-        if (returnData.firstMarket) {
-            isEnabled = 'stopped';
-        } else {
-            isEnabled = 'moving enabled';
-        }
-        isStopMoving.innerHTML = isEnabled;
-    };
     let repaintPosCorr = function (returnData) {
         let periodToCorrection = document.getElementById("periodToCorrection");
         periodToCorrection.innerHTML = returnData.periodToCorrection + ' sec';
@@ -529,10 +519,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     repaintDeltasAndBorders(returnData);
                 });
 
-        // markets order is opposite for deltas
-        fetch('/market/stop-moving', function (returnData) {
-            repaintStopMoving(returnData);
-        });
         fetch('/market/states', function (returnData) {
             repaintStates(returnData);
             showPosDiff(returnData.posDiffJson);
@@ -918,40 +904,12 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 }
             }
 
-            if (element.id == 'toggle-stop-moving') {
-                let request = {firstMarket: true, secondMarket: true};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                Http.httpAsyncPost(baseUrl + '/market/toggle-stop-moving',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintStopMoving(JSON.parse(responseData));
-                        },
-                        null
-                );
-            }
-
             if (element.id == 'free-markets-states') {
                 let request = {firstMarket: true, secondMarket: true};
                 let requestData = JSON.stringify(request);
                 console.log(requestData);
 
                 Http.httpAsyncPost(baseUrl + '/market/free-states',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintStates(JSON.parse(responseData));
-                        },
-                        null
-                );
-            }
-
-            if (element.id == 'stop-markets') {
-                let request = {firstMarket: 'STOPPED', secondMarket: 'STOPPED'};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
-
-                Http.httpAsyncPost(baseUrl + '/market/states',
                         requestData,
                         function (responseData, resultElement) {
                             repaintStates(JSON.parse(responseData));

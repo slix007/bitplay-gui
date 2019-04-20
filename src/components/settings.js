@@ -18,6 +18,7 @@ export {showArbVersion};
 
 let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
+    const TOGGLE_STOP_MOVING_URL = baseUrl + '/settings/toggle-stop-moving';
     const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
@@ -77,6 +78,9 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         // Ignore limits
         createIgnoreLimitPrice(settingsData, SETTINGS_URL);
+
+        createManageType(settingsData, SETTINGS_URL);
+        createStopMoving(settingsData, TOGGLE_STOP_MOVING_URL);
 
         createSignalDelay($('#signal-delay'), SETTINGS_URL, x => ({signalDelayMs: x}), null, true);
 
@@ -616,7 +620,7 @@ function createComPtsSum($feeCont) {
 
 
 function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
-    var container = document.getElementById("ignore-limits");
+    let container = document.getElementById("ignore-limits");
 
     let checkbox = document.createElement('input');
     checkbox.type = "checkbox";
@@ -653,6 +657,59 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
 
     container.appendChild(checkbox);
     container.appendChild(label);
+}
+
+function createManageType(settingsData, SETTINGS_URL) {
+    const $cont = $('#manage-type');
+    $('<span>').text('Manage type: ').appendTo($cont);
+    const manageTypeEl = $('<span>').text('Manage type: ').css('font-weight', 'bold').appendTo($cont);
+    let btn = $('<button>').appendTo($cont);
+
+    mobx.autorun(function () {
+        manageTypeEl.text(allSettings.manageType);
+        if (allSettings.manageType === 'AUTO') {
+            manageTypeEl.css('color', 'green');
+            btn.text('Switch to MANUAL');
+        } else { // MANUAL
+            manageTypeEl.css('color', 'red');
+            btn.text('Switch to AUTO');
+        }
+    });
+    btn.click(() => {
+        btn.prop('disabled', true);
+        const val = allSettings.manageType === 'AUTO' ? 'MANUAL' : 'AUTO';
+        const data = JSON.stringify({manageType: val});
+        Http.httpAsyncPost(SETTINGS_URL, data,
+                json => {
+                    btn.prop('disabled', false);
+                    const res = setAllSettingsRaw(json);
+                    // alert('New value: ' + res.manageType);
+                })
+    });
+}
+
+function createStopMoving(settingsData, TOGGLE_STOP_MOVING_URL) {
+    const $cont = $('#manage-type'); // add after.
+    const stopMovingCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
+    const stopMovingLb = $('<span>').text('moving ...').appendTo($cont);
+    mobx.autorun(function () {
+        if (allSettings.movingStopped) {
+            stopMovingLb.text('moving disabled').css('color', 'red');;
+            stopMovingCheckbox.prop('checked', true);
+        } else {
+            stopMovingLb.text('disable moving').css('color', 'black');;
+            stopMovingCheckbox.prop('checked', false);
+        }
+    });
+    stopMovingCheckbox.click(() => {
+        stopMovingCheckbox.prop('disabled', true);
+        Http.httpAsyncPost(TOGGLE_STOP_MOVING_URL, "",
+                json => {
+                    stopMovingCheckbox.prop('disabled', false);
+                    const res = setAllSettingsRaw(json);
+                    // alert('New value: ' + res.manageType);
+                })
+    });
 }
 
 function createSignalDelay(cont, SETTINGS_URL, requestCreator, valExtractor, isMain) {

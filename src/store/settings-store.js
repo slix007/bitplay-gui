@@ -33,6 +33,7 @@ export const allSettings = observable({
     SETTINGS_URL: '',
     BASE_URL: '',
 
+    movingStopped: false,
     // restartEnabled: false,
     eth: false,
     tradingModeAuto: false,
