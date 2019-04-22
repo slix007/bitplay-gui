@@ -72,7 +72,7 @@ function okexCloseAllPos(baseUrl) {
     btn.prop('disabled', true);
 
     btn.click(() => {
-        let confirmation = window.confirm('Okex: close the bigger position.\n\nAre you sure?');
+        let confirmation = window.confirm('Okex: close the all positions.\n\nAre you sure?');
         if (confirmation) {
             // console.log('request to ' + URL_CLOSE_ALL_POS);
             btn.prop('disabled', true);
