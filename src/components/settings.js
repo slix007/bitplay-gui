@@ -693,7 +693,7 @@ function createStopMoving(settingsData, TOGGLE_STOP_MOVING_URL) {
     const stopMovingCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
     const stopMovingLb = $('<span>').text('moving ...').appendTo($cont);
     mobx.autorun(function () {
-        if (allSettings.movingStopped) {
+        if (allSettings.extraFlags.includes('STOP_MOVING')) {
             stopMovingLb.text('moving disabled').css('color', 'red');;
             stopMovingCheckbox.prop('checked', true);
         } else {
