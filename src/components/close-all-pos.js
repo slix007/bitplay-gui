@@ -82,8 +82,9 @@ function okexCloseAllPos(baseUrl) {
 
             Http.httpAsyncPost(URL_CLOSE_ALL_POS, requestData, function (rawData) {
                 const result = JSON.parse(rawData);
+                console.log(result);
                 if (result.orderId && result.orderId.length > 0) {
-                    lb.text('orderId: ' + result.orderId + ' ' + result.details);
+                    lb.text('orderId: ' + result.orderId + ' ' + (result.details ? result.details : ''));
                 } else {
                     lb.text('Error: ' + result.details);
                 }
