@@ -78,6 +78,7 @@ export const allSettings = observable({
     // MarketStatesJson, /market/states
     marketStates: {
         signalParts: {},
+        orderPortionsJson: {},
     },
 
     ///settings/preset-all

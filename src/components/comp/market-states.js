@@ -18,10 +18,12 @@ let repaintStates = function (returnData) {
         let markets = $('#markets-states');
         $('<span>').text('Bitmex state: ').appendTo(markets);
         $('<span>',{id:firstId}).text(returnData.firstMarket).appendTo(markets);
-        $('<span>').text((returnData.firstTimeToReset.length === 0 ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))).appendTo(markets);
+        $('<span>').text((returnData && returnData.firstTimeToReset && returnData.firstTimeToReset.length === 0
+                ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))).appendTo(markets);
         $('<span>').text(', Okex state: ').appendTo(markets);
         $('<span>',{id:secondId}).text(returnData.secondMarket).appendTo(markets);
-        $('<span>').text((returnData.secondTimeToReset.length === 0 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'))).appendTo(markets);
+        $('<span>').text((returnData && returnData.secondTimeToReset && returnData.secondTimeToReset.length === 0
+                ? '' : ('(' + returnData.secondTimeToReset + 'sec)'))).appendTo(markets);
 
         $('<span>').text('; Arbitrage state: ').appendTo(markets);
         $('<span>', {id: arbId}).text(returnData.arbState).appendTo(markets);

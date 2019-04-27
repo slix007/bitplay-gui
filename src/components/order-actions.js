@@ -1,5 +1,7 @@
 'use strict';
 
+import {allSettings} from "../store/settings-store";
+
 let $ = require('jquery');
 let _ = require('lodash');
 let Http = require('../http');
@@ -32,14 +34,18 @@ let mobx = require('mobx');
 //
 // let exports = module.exports = {};
 
-exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl, isEth) {
+export {showOrderActions};
+
+let showOrderActions = function (firstMarketName, secondMarketName, baseUrl, isEth) {
     const BITMEX_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName);
     const OKCOIN_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName);
+    const BITMEX_CNL_ALL = sprintf('%s/market/%s/open-orders/cancel-all', baseUrl, firstMarketName);
+    const OKCOIN_CNL_ALL = sprintf('%s/market/%s/open-orders/cancel-all', baseUrl, secondMarketName);
 
     let btmCont = document.getElementById("bitmex-order-actions");
     // createAmountType(btmCont, btmLabelCont);
     // createOrderActions(btmCont, btmLabelCont.get()[0], 'bitmex', BITMEX_ORDER_URL);
-    createOrderActions(btmCont, 'Order ', 'btm', BITMEX_ORDER_URL);
+    createOrderActions(btmCont, 'Order ', 'btm', BITMEX_ORDER_URL, null, BITMEX_CNL_ALL);
 
     if (isEth) {
         let btmCont_ETH_XBTUSD = document.getElementById("bitmex-order-actions-ETH-XBTUSD");
@@ -49,7 +55,7 @@ exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl,
 
     let okCont = document.getElementById("okcoin-order-actions");
     // createOrderActions(okCont, okLabelCont.get()[0], 'okex', OKCOIN_ORDER_URL);
-    createOrderActions(okCont, 'Order ', 'ok', OKCOIN_ORDER_URL);
+    createOrderActions(okCont, 'Order ', 'ok', OKCOIN_ORDER_URL, null, OKCOIN_CNL_ALL);
 };
 
 // function createAmountType(mainCont, label) {
@@ -66,7 +72,7 @@ exports.showOrderActions = function (firstMarketName, secondMarketName, baseUrl,
 //     });
 // }
 
-function createOrderActions(container, labelName, idName, SETTINGS_URL, toolName) {
+function createOrderActions(container, labelName, idName, ORDER_URL, toolName, CNL_ALL_URL) {
     const checkboxLabel = $('<span>').appendTo(container);
     const checkbox = $('<input>')
     .prop('title', 'Use USD')
@@ -118,7 +124,6 @@ function createOrderActions(container, labelName, idName, SETTINGS_URL, toolName
     container.appendChild(buyBtn.get()[0]);
     container.appendChild(sellBtn.get()[0]);
     container.append(select.get(0));
-    container.appendChild(resultLabel);
 
     function renderContLabel() {
         placingOrderObj[idName].isUsd = checkbox.prop('checked');
@@ -134,18 +139,54 @@ function createOrderActions(container, labelName, idName, SETTINGS_URL, toolName
         renderContLabel();
     });
 
+    let pt_edit = $('<input>').width('30px').prop('title', 'portions_qty').prop('disabled', true).val('1');
+
+    if (!(toolName && toolName === 'XBTUSD')) {
+        const pt_checkbox = $('<input>')
+        .prop('title', 'portion_qty')
+        .prop('type', 'checkbox')
+        .prop('checked', false).appendTo(container);
+        pt_edit.appendTo(container);
+
+        pt_checkbox.click(() => {
+            pt_edit.prop('disabled', !pt_checkbox.prop('checked'));
+        });
+        let pt_lb = $('<span>').text('0').appendTo(container);
+        mobx.autorun(r => {
+            pt_lb.text(allSettings.marketStates.orderPortionsJson[idName]);
+        });
+
+        let cnlAllBtn = $('<button>').text('cnlAll').appendTo(container)
+        cnlAllBtn.click(function () {
+            cnlAllBtn.prop('disabled', true);
+            Http.httpAsyncPost(CNL_ALL_URL, "", function (result) {
+                cnlAllBtn.prop('disabled', false);
+                resultLabel.innerHTML = result;
+            });
+        });
+    }
+
+    container.appendChild(resultLabel);
+
     function onBtnClick(thisButton, actionType) {
-        let amount = placingOrderObj[idName].amountCont;
         // let amountType = checkbox.prop('checked') ? 'USD' : 'CONT';
-        let amountType = 'CONT'; // always converted
-        const requestData = JSON.stringify({type: actionType, placementType: placementType, amount: amount, toolName: toolName, amountType: amountType});
+        const requestData = JSON.stringify({
+            type: actionType,
+            placementType: placementType,
+            amount: placingOrderObj[idName].amountCont,
+            toolName: toolName,
+            amountType: 'CONT', // always converted
+            portionsQty: pt_edit.val()
+        });
         resultLabel.innerHTML = 'in progress...';
+        console.log(requestData);
         thisButton.disabled = true;
-        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+        Http.httpAsyncPost(ORDER_URL, requestData, function (result) {
             resultLabel.innerHTML = result; // JSON.parse(result);
             thisButton.disabled = false;
         });
     }
+
 }
 
 
