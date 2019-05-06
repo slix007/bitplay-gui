@@ -55,6 +55,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
+        createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
 
         // Bitmex price workaround (for testing)
         var bitmexPriceCont = document.getElementById("bitmex-price");
@@ -375,6 +376,36 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
             realValue.innerHTML = data.bitmexSysOverloadArgs.overloadTimeSec;
+            updateBtn.disabled = false;
+        });
+    }
+}
+
+function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
+    let container = document.createElement('div');
+    mainContainer.appendChild(container);
+
+    let label = document.createElement('span');
+    label.innerHTML = 'betweenAttemptsMs';
+    let edit = document.createElement('input');
+    edit.innerHTML = '';
+    let updateBtn = document.createElement('button');
+    updateBtn.onclick = onBtnClick;
+    updateBtn.innerHTML = 'update';
+    let realValue = document.createElement('span');
+    realValue.innerHTML = obj.betweenAttemptsMs;
+
+    container.appendChild(label);
+    container.appendChild(edit);
+    container.appendChild(updateBtn);
+    container.appendChild(realValue);
+
+    function onBtnClick() {
+        const requestData = JSON.stringify({bitmexSysOverloadArgs: {betweenAttemptsMs: edit.value}});
+        updateBtn.disabled = true;
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+            let data = JSON.parse(result);
+            realValue.innerHTML = data.bitmexSysOverloadArgs.betweenAttemptsMs;
             updateBtn.disabled = false;
         });
     }
