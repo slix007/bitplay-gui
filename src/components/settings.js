@@ -57,6 +57,18 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
         createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
 
+        // okex postOnly settings
+        let postOnlyContainer = $('#post-only-settings');
+        createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL);
+        createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL);
+        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'attempts',
+                x => ({okexPostOnlyArgs: {postOnlyAttempts: x}}),
+                x => (x.okexPostOnlyArgs.postOnlyAttempts));
+        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenAttemptsMs',
+                x => ({okexPostOnlyArgs: {postOnlyBetweenAttemptsMs: x}}),
+                x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
+
+
         // Bitmex price workaround (for testing)
         var bitmexPriceCont = document.getElementById("bitmex-price");
         createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL);
@@ -409,6 +421,66 @@ function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
             updateBtn.disabled = false;
         });
     }
+}
+
+function createPostOnlyCheckbox(mainCont, obj, SETTINGS_URL) {
+    const $cont = $('<div>').appendTo(mainCont);
+    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
+    const label = $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont);
+    checkbox.click(function () {
+        checkbox.prop('disabled', true);
+        const requestData = JSON.stringify({okexPostOnlyArgs: {postOnlyEnabled: checkbox.prop('checked')}});
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                json => {
+                    checkbox.prop('disabled', false);
+                    const res = setAllSettingsRaw(json);
+                    // alert('New value: ' + res.manageType);
+                });
+
+    });
+    mobx.autorun(r => {
+        checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyEnabled);
+    })
+}
+
+function createPostOnlyWithoutLastCheckbox(mainCont, obj, SETTINGS_URL) {
+    const $cont = $('<div>').appendTo(mainCont);
+    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
+    const label = $('<span>').text('the last is NORMAL').prop('title', 'the last attempt is always NORMAL').appendTo($cont);
+    checkbox.click(function () {
+        checkbox.prop('disabled', true);
+        const requestData = JSON.stringify({okexPostOnlyArgs: {postOnlyWithoutLast: checkbox.prop('checked')}});
+        Http.httpAsyncPost(SETTINGS_URL, requestData,
+                json => {
+                    checkbox.prop('disabled', false);
+                    const res = setAllSettingsRaw(json);
+                    // alert('New value: ' + res.manageType);
+                });
+
+    });
+    mobx.autorun(r => {
+        checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyWithoutLast);
+    })
+}
+
+function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor) {
+    const container = $('<div>').appendTo(mainCont);
+    const lb = $('<span>').text(labelName).appendTo(container);
+    const edit = $('<input>').width('40px').appendTo(container);
+    const updateBtn = $('<button>').text('set').appendTo(container);
+    const realValue = $('<span>').appendTo(container);
+    updateBtn.click(() => {
+        const requestData = JSON.stringify(requestCreator(edit.val()));
+        updateBtn.prop('disabled', true);
+        Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
+            setAllSettingsRaw(result);
+            updateBtn.prop('disabled', false);
+        });
+    });
+    mobx.autorun(function () {
+        const value = valExtractor(allSettings);
+        realValue.text(value);
+    });
 }
 
 function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
