@@ -356,14 +356,14 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     mainContainer.appendChild(container);
 
     let label = document.createElement('span');
-    label.innerHTML = 'overloadTimeSec';
+    label.innerHTML = 'overloadTimeMs';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
     updateBtn.onclick = onBtnClick;
     updateBtn.innerHTML = 'update';
     let realValue = document.createElement('span');
-    realValue.innerHTML = obj.overloadTimeSec;
+    realValue.innerHTML = obj.overloadTimeMs;
 
     container.appendChild(label);
     container.appendChild(edit);
@@ -371,11 +371,11 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     container.appendChild(realValue);
 
     function onBtnClick() {
-        const requestData = JSON.stringify({bitmexSysOverloadArgs: {overloadTimeSec: edit.value}});
+        const requestData = JSON.stringify({bitmexSysOverloadArgs: {overloadTimeMs: edit.value}});
         updateBtn.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             let data = JSON.parse(result);
-            realValue.innerHTML = data.bitmexSysOverloadArgs.overloadTimeSec;
+            realValue.innerHTML = data.bitmexSysOverloadArgs.overloadTimeMs;
             updateBtn.disabled = false;
         });
     }
