@@ -308,7 +308,7 @@ function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
     mainContainer.appendChild(container);
 
     let label = document.createElement('span');
-    label.innerHTML = 'placeAttempts';
+    label.innerHTML = 'placeTry';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
@@ -398,7 +398,7 @@ function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
     mainContainer.appendChild(container);
 
     let label = document.createElement('span');
-    label.innerHTML = 'betweenAttemptsMs';
+    label.innerHTML = 'betweenTryMs';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
