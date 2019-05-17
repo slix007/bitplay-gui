@@ -93,53 +93,39 @@ function createAdjMinMax(container, SETTINGS_URL, labelName, requestCreator, val
 }
 
 function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
-    let mainContainer = document.createElement('div');
-    parentCont.appendChild(mainContainer);
+    let mainContainer = $('<div>');
+    parentCont.appendChild(mainContainer.get(0));
 
-    const select = document.createElement('select');
-    const option1 = document.createElement('option');
-    const option2 = document.createElement('option');
-    const option3 = document.createElement('option');
-    const option4 = document.createElement('option');
-    const option5 = document.createElement('option');
-    option1.setAttribute("value", "TAKER");
-    option2.setAttribute("value", "MAKER");
-    option3.setAttribute("value", "HYBRID");
-    option4.setAttribute("value", "MAKER_TICK");
-    option5.setAttribute("value", "HYBRID_TICK");
-    option1.innerHTML = 'TAKER';
-    option2.innerHTML = 'MAKER';
-    option3.innerHTML = 'HYBRID';
-    option4.innerHTML = 'MAKER_TICK';
-    option5.innerHTML = 'HYBRID_TICK';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.appendChild(option3);
-    select.appendChild(option4);
-    select.appendChild(option5);
-    select.addEventListener("change", onVerPick);
+    const select = $('<select>');
+    select.append($('<option>').val('TAKER').text('TAKER'));
+    select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
+    select.append($('<option>').val('MAKER').text('MAKER'));
+    select.append($('<option>').val('HYBRID').text('HYBRID'));
+    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
+    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
+    select.change(onVerPick);
 
     let lb = $('<span>').text('posAdjustment placing type: ');
-    mainContainer.appendChild(lb.get(0));
-    mainContainer.appendChild(select);
+    mainContainer.append(lb);
+    mainContainer.append(select);
 
     function onVerPick() {
-        const requestData = JSON.stringify({posAdjustment: {posAdjustmentPlacingType: this.value}});
+        const requestData = JSON.stringify({posAdjustment: {posAdjustmentPlacingType: select.val()}});
+        select.get(0).disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             setAllSettingsRaw(result);
-            let data = JSON.parse(result);
-            alert('New value: ' + data.posAdjustment.posAdjustmentPlacingType);
+            select.get(0).disabled = false;
         });
     }
 
     mobx.autorun(r => {
-        select.value = allSettings.posAdjustment.posAdjustmentPlacingType;
+        select.val(allSettings.posAdjustment.posAdjustmentPlacingType);
         if (isActiveV('posAdjustment')) {
             lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
-            select.disabled = true;
+            select.prop('disabled', true);
         } else {
             lb.css('font-weight', 'normal').prop('title', '');
-            select.disabled = false;
+            select.prop('disabled', false);
         }
     });
 }

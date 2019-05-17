@@ -84,6 +84,8 @@ export const allSettings = observable({
     ///settings/preset-all
     settingsPresets: [],
 
+    okexPostOnlyArgs: {},
+
 });
 
 export const updateCorrParams = function (corrData) {

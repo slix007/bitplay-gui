@@ -68,10 +68,13 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
                 x => ({okexPostOnlyArgs: {postOnlyBetweenAttemptsMs: x}}),
                 x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
 
-
+        // createBitmexFillOrKillMaxDiff(settingsData, SETTINGS_URL);
+        const $FOK_cont = $('#FOK_max_diff');
+        createSettingsInput($FOK_cont, SETTINGS_URL, 'FOK_max_diff',
+                x => ({bitmexFokMaxDiff: x}),
+                x => (x.bitmexFokMaxDiff));
         // Bitmex price workaround (for testing)
-        var bitmexPriceCont = document.getElementById("bitmex-price");
-        createBitmexSpecialPrice(bitmexPriceCont, settingsData.bitmexPrice, SETTINGS_URL);
+        createBitmexSpecialPrice(settingsData.bitmexPrice, SETTINGS_URL);
 
         // Fee settings
         // const $feeCont = $('#fee-settings');
@@ -151,7 +154,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createPlacingType($btmPlacingContV.get(0), SETTINGS_URL,
             x => ({settingsVolatileMode: {bitmexPlacingType: x}}),
             x => x.settingsVolatileMode.bitmexPlacingType,
-            btmPlacingLbV, 'bitmexPlacingType'
+            btmPlacingLbV, 'bitmexPlacingType', false, true
     );
 
     const $okPlacingContV = $('<div>').appendTo($column2Cont);
@@ -187,7 +190,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createPlacingType($posAdjustmentContV.get(0), SETTINGS_URL,
             x => ({settingsVolatileMode: {posAdjustment: {posAdjustmentPlacingType: x}}}),
             x => x.settingsVolatileMode.posAdjustment.posAdjustmentPlacingType,
-            posAdjLb, 'posAdjustment'
+            posAdjLb, 'posAdjustment', false, true
     );
     createAdjVolatile($posAdjustmentContV, SETTINGS_URL);
 
@@ -483,34 +486,22 @@ function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, 
     });
 }
 
-function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
-    var select = document.createElement('select');
-    var option1 = document.createElement('option');
-    var option2 = document.createElement('option');
-    var option3 = document.createElement('option');
-    var option4 = document.createElement('option');
-    var option5 = document.createElement('option');
-    option1.setAttribute("value", "TAKER");
-    option2.setAttribute("value", "MAKER");
-    option3.setAttribute("value", "HYBRID");
-    option4.setAttribute("value", "MAKER_TICK");
-    option5.setAttribute("value", "HYBRID_TICK");
-    option1.innerHTML = 'TAKER';
-    option2.innerHTML = 'MAKER';
-    option3.innerHTML = 'HYBRID';
-    option4.innerHTML = 'MAKER_TICK';
-    option5.innerHTML = 'HYBRID_TICK';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.appendChild(option3);
-    select.appendChild(option4);
-    select.appendChild(option5);
-    select.addEventListener("change", onVerPick);
+function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain, withTakerFok) {
+    const select = $('<select>');
+    select.append($('<option>').val('TAKER').text('TAKER'));
+    if (withTakerFok) {
+        select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
+    }
+    select.append($('<option>').val('MAKER').text('MAKER'));
+    select.append($('<option>').val('HYBRID').text('HYBRID'));
+    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
+    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
+    select.change(onVerPick);
 
-    mainContainer.appendChild(select);
+    mainContainer.appendChild(select.get(0));
 
     mobx.autorun(function () {
-        select.value = valExtractor(allSettings);
+        select.val(valExtractor(allSettings));
         if (isActiveV(fieldName)) {
             lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
         } else {
@@ -518,79 +509,63 @@ function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtra
         }
         if (isMain) {
             if (isActiveV(fieldName)) {
-                select.disabled = true;
+                select.get(0).disabled = true;
             } else {
-                select.disabled = false;
+                select.get(0).disabled = false;
             }
         }
     });
 
     function onVerPick() {
         const requestData = JSON.stringify(requestCreator(this.value));
-
+        select.get(0).disabled = true;
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (result) {
                     setAllSettingsRaw(result);
-                    let data = JSON.parse(result);
-                    alert('New value: ' + valExtractor(data));
+                    select.get(0).disabled = false;
                 });
     }
 }
 
 function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
-    var select = document.createElement('select');
-    var option1 = document.createElement('option');
-    var option2 = document.createElement('option');
-    var option3 = document.createElement('option');
-    var option4 = document.createElement('option');
-    var option5 = document.createElement('option');
-    option1.setAttribute("value", "TAKER");
-    option2.setAttribute("value", "MAKER");
-    option3.setAttribute("value", "HYBRID");
-    option4.setAttribute("value", "MAKER_TICK");
-    option5.setAttribute("value", "HYBRID_TICK");
-    option1.innerHTML = 'TAKER';
-    option2.innerHTML = 'MAKER';
-    option3.innerHTML = 'HYBRID';
-    option4.innerHTML = 'MAKER_TICK';
-    option5.innerHTML = 'HYBRID_TICK';
-    select.appendChild(option1);
-    select.appendChild(option2);
-    select.appendChild(option3);
-    select.appendChild(option4);
-    select.appendChild(option5);
-    select.addEventListener("change", onVerPick);
-
-    mainContainer.appendChild(select);
+    const select = $('<select>');
+    select.append($('<option>').val('TAKER').text('TAKER'));
+    select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
+    select.append($('<option>').val('MAKER').text('MAKER'));
+    select.append($('<option>').val('HYBRID').text('HYBRID'));
+    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
+    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
+    select.change(onVerPick);
+    mainContainer.appendChild(select.get(0));
 
     mobx.autorun(function () {
-        select.value = valExtractor(allSettings);
+        select.val(valExtractor(allSettings));
         if (isMain) {
             let extraTitle = '';
             if (bitmexChangeOnSoToTaker()) {
                 extraTitle += 'BitmexChangeOnSo:ALWAYS_TAKER';
-                select.value = 'TAKER';
+                select.val('TAKER');
             }
             if (isActiveV(fieldName)) {
                 extraTitle += '\nActivated VOLATILE mode';
             }
             if (extraTitle.length > 0) {
                 lb.css('font-weight', 'bold').prop('title', extraTitle);
-                select.disabled = true;
+                select.get(0).disabled = true;
             } else {
                 lb.css('font-weight', 'normal').prop('title', '');
-                select.disabled = false;
+                select.get(0).disabled = false;
             }
         }
     });
 
     function onVerPick() {
-        const requestData = JSON.stringify(requestCreator(this.value));
+        const requestData = JSON.stringify(requestCreator(select.val()));
+        select.get(0).disabled = true;
         Http.httpAsyncPost(SETTINGS_URL,
                 requestData, function (result) {
                     setAllSettingsRaw(result);
-                    let data = JSON.parse(result);
-                    alert('New value: ' + valExtractor(data));
+                    select.get(0).disabled = false;
                 });
     }
 }
@@ -630,7 +605,10 @@ function createArbScheme(container, SETTINGS_URL, requestCreator, valExtractor, 
     });
 }
 
-function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
+function createBitmexSpecialPrice(obj, SETTINGS_URL) {
+    let mainContainer = document.getElementById("bitmex-price");
+    $('#bitmex-price').css('font-style', 'italic').css('text-decoration', 'underline')
+    .prop('title', 'the testing price for non-taker or taker-fill-or-kill orders');
     let container = document.createElement('div');
     mainContainer.appendChild(container);
 
@@ -653,11 +631,19 @@ function createBitmexSpecialPrice(mainContainer, obj, SETTINGS_URL) {
         const requestData = JSON.stringify({bitmexPrice: edit.value});
         updateBtn.disabled = true;
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
-            let data = JSON.parse(result);
-            realValue.innerHTML = data.bitmexPrice;
+            setAllSettingsRaw(result);
             updateBtn.disabled = false;
         });
     }
+
+    mobx.autorun(() => {
+        realValue.innerHTML = allSettings.bitmexPrice;
+        if (!allSettings.bitmexPrice || allSettings.bitmexPrice === 0) {
+            label.style.backgroundColor = 'white';
+        } else {
+            label.style.backgroundColor = 'tomato';
+        }
+    });
 }
 
 function createComParam(tbody, requestCreator, valExtractor, label_rate, best_sam_name, el_name_part) {
