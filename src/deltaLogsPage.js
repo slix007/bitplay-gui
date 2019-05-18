@@ -203,7 +203,7 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                 refreshTable(from.val(), to.val()));
         $refreshDiv.append($refreshBtn);
 
-        refreshTable(from.val(), to.val());
+        // refreshTable(from.val(), to.val());
 
         return $refreshDiv;
     }
