@@ -104,7 +104,7 @@ function createOrderActions(container, labelName, idName, ORDER_URL, toolName, C
 
     let select = $('<select>', {id: idName + '-placeType'});
     select.append($('<option>').val('TAKER').text('TAKER'));
-    if (idName === 'btm') {
+    if (idName.startsWith('btm')) {
         select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
     }
     select.append($('<option>').val('MAKER').text('MAKER'));
