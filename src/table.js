@@ -571,14 +571,28 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
         }
 
+        function ooComparator() {
+            return (a, b) => {
+                let comparison = 0;
+                if (a.timestamp > b.timestamp) {
+                    comparison = -1;
+                } else if (a.timestamp < b.timestamp) {
+                    comparison = 1;
+                }
+                return comparison;
+            };
+        }
+
         fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
             var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName));
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild);
             }
             setOpenOrdersHeight(myNode);
-            returnData.forEach(function (oo) {
-
+            returnData
+            .sort(ooComparator)
+            .forEach(function (oo) {
+                console.log(oo.timestamp);
                 let existedOrder = document.getElementById("p-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
@@ -614,7 +628,9 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 myNode.removeChild(myNode.firstChild);
             }
             setOpenOrdersHeight(myNode);
-            returnData.forEach(function (oo) {
+            returnData
+            .sort(ooComparator)
+            .forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "o-span-" + oo.id},
