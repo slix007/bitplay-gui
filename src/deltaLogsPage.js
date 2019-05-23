@@ -135,7 +135,7 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
             corrAdjStr += hasAdj ? ', with adj' : '';
             const tradingModeStr = getTradingModeStr(trade.tradingMode);
             $tbody.append(sprintf(
-                    '<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; status=%s(b=%s,o=%s); btm_ct=%s, ok_ct=%s %s %s</td></tr>',
+                    '<tr data-tt-id="%s"><td title="trade_id=%s">%s</td><td>%s</td><td>%s</td><td>logs(%s); delta=%s; s=%s(b=%s,o=%s); ct(b=%s,o=%s); placingMaxMs(b=%s,o=%s); %s %s</td></tr>',
                     rowNum,
                     trade.id,
                     trade.counterName,
@@ -148,6 +148,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     !trade.okexStatus ? '' : trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
                     trade.okexContractType,
+                    trade.fplayTradeMon.bitmexPlacingMaxMs,
+                    trade.fplayTradeMon.okexPlacingMaxMs,
                     corrAdjStr,
                     tradingModeStr,
             ));
