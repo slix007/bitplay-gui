@@ -592,7 +592,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             returnData
             .sort(ooComparator)
             .forEach(function (oo) {
-                console.log(oo.timestamp);
+                // console.log(oo.timestamp);
                 let existedOrder = document.getElementById("p-span-" + oo.id);
                 if (existedOrder === null) {
                     let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
