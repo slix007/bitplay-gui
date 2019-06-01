@@ -571,15 +571,9 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
         }
 
-        function ooComparator() {
-            return (a, b) => {
-                let comparison = 0;
-                if (a.timestamp > b.timestamp) {
-                    comparison = -1;
-                } else if (a.timestamp < b.timestamp) {
-                    comparison = 1;
-                }
-                return comparison;
+        function timestampSorter() {
+            return function (a, b) {
+                return ('' + b.timestamp).localeCompare(a.timestamp);
             };
         }
 
@@ -590,7 +584,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
             setOpenOrdersHeight(myNode);
             returnData
-            .sort(ooComparator)
+            .sort((a, b) => ('' + b.timestamp).localeCompare(a.timestamp))
             .forEach(function (oo) {
                 // console.log(oo.timestamp);
                 let existedOrder = document.getElementById("p-span-" + oo.id);
@@ -629,7 +623,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
             setOpenOrdersHeight(myNode);
             returnData
-            .sort(ooComparator)
+            .sort((a, b) => ('' + b.timestamp).localeCompare(a.timestamp))
             .forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
