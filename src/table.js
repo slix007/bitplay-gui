@@ -564,11 +564,11 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         }
 
         function setOpenOrdersHeight(ordersContainer) {
-            if (ordersContainer.childNodes.length > 4) {
-                ordersContainer.style.height = 'auto';
-            } else {
+            // if (ordersContainer.childNodes.length > 4) {
+            //     ordersContainer.style.height = 'auto';
+            // } else {
                 ordersContainer.style.height = '80px';
-            }
+            // }
         }
 
         function timestampSorter() {
