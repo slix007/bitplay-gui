@@ -148,8 +148,8 @@ exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
                     !trade.okexStatus ? '' : trade.okexStatus.toLowerCase(),
                     trade.bitmexContractType,
                     trade.okexContractType,
-                    trade.fplayTradeMon.bitmexPlacingMaxMs,
-                    trade.fplayTradeMon.okexPlacingMaxMs,
+                    !trade.fplayTradeMon ? '' : trade.fplayTradeMon.bitmexPlacingMaxMs,
+                    !trade.fplayTradeMon ? '' : trade.fplayTradeMon.okexPlacingMaxMs,
                     corrAdjStr,
                     tradingModeStr,
             ));
