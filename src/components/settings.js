@@ -4,6 +4,7 @@ import {createPlacingBlocksVolatile} from "../components/placing-blocks";
 import {createAdjVolatile} from "./pos-adjustment";
 import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
 import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/settings-store";
+import {showBitmexOrderBookType} from "./settings/bitmex-custom";
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -14,7 +15,14 @@ const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isAc
 
 const enableRestart = require('../components/enable-restart');
 
-export {showArbVersion};
+export {showArbVersion, updateAllSettings};
+
+let updateAllSettings = function () {
+    Http.httpAsyncGet(allSettings.SETTINGS_URL, function (rawData) {
+        let settingsData = JSON.parse(rawData);
+        setAllSettings(settingsData, allSettings.SETTINGS_URL);
+    });
+};
 
 let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
@@ -121,6 +129,8 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createOkexEbestElast(settingsData, SETTINGS_URL);
 
         createDqlLevel(SETTINGS_URL);
+
+        showBitmexOrderBookType(SETTINGS_URL);
     });
 
     // Volatile mode

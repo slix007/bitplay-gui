@@ -1,6 +1,10 @@
 // var exports = module.exports = {};
+// import {updateAllSettings} from "./components/settings";
+
 var sprintf = require('sprintf-js').sprintf;
 var Http = require('./http');
+
+const {updateAllSettings} = require('./components/settings');
 
 
 exports.addRestartButton = function () {
@@ -47,6 +51,7 @@ exports.addReconnectButton = function () {
             let theUrl = sprintf('http://%s:4031/bitmex-reconnect', window.location.hostname);
             Http.httpAsyncGet(theUrl, function (responseData) {
                 alert('Response: ' + responseData);
+                updateAllSettings();
             });
         }
     });
@@ -72,6 +77,7 @@ exports.addResubscribeButton = function () {
             let theUrl = sprintf('http://%s:4031/bitmex-ob-resubscribe', window.location.hostname);
             Http.httpAsyncGet(theUrl, function (responseData) {
                 alert('Response: ' + responseData);
+                updateAllSettings();
             });
         }
     });
