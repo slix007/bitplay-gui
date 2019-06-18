@@ -5,6 +5,7 @@ import {createAdjVolatile} from "./pos-adjustment";
 import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
 import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/settings-store";
 import {showBitmexOrderBookType} from "./settings/bitmex-custom";
+import {showPreSignalObReFetch} from "./settings/pre-signal";
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -130,7 +131,9 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createDqlLevel(SETTINGS_URL);
 
-        showBitmexOrderBookType(SETTINGS_URL);
+        showBitmexOrderBookType();
+
+        showPreSignalObReFetch();
     });
 
     // Volatile mode
