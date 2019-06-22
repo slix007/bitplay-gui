@@ -6,6 +6,7 @@ import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
 import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/settings-store";
 import {showBitmexOrderBookType} from "./settings/bitmex-custom";
 import {showPreSignalObReFetch} from "./settings/pre-signal";
+import {showBitmexFokMaxDiff} from "./settings/FOK_max_diff";
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -77,11 +78,8 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
                 x => ({okexPostOnlyArgs: {postOnlyBetweenAttemptsMs: x}}),
                 x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
 
-        // createBitmexFillOrKillMaxDiff(settingsData, SETTINGS_URL);
-        const $FOK_cont = $('#FOK_max_diff');
-        createSettingsInput($FOK_cont, SETTINGS_URL, 'FOK_max_diff',
-                x => ({bitmexFokMaxDiff: x}),
-                x => (x.bitmexFokMaxDiff));
+        showBitmexFokMaxDiff();
+
         // Bitmex price workaround (for testing)
         createBitmexSpecialPrice(settingsData.bitmexPrice, SETTINGS_URL);
 
