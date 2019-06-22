@@ -17,7 +17,7 @@ const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isAc
 
 const enableRestart = require('../components/enable-restart');
 
-export {showArbVersion, updateAllSettings};
+export {showArbVersion, updateAllSettings, createSettingsInput};
 
 let updateAllSettings = function () {
     Http.httpAsyncGet(allSettings.SETTINGS_URL, function (rawData) {
