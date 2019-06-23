@@ -477,8 +477,8 @@ function createPostOnlyWithoutLastCheckbox(mainCont, obj, SETTINGS_URL) {
     })
 }
 
-function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor) {
-    const container = $('<div>').appendTo(mainCont);
+function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor, sameCont) {
+    const container = sameCont ? mainCont : $('<div>').appendTo(mainCont);
     const lb = $('<span>').text(labelName).appendTo(container);
     const edit = $('<input>').width('40px').appendTo(container);
     const updateBtn = $('<button>').text('set').appendTo(container);
