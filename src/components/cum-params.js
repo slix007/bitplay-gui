@@ -1,9 +1,13 @@
 'use strict';
 
-import * as mobx from "mobx";
-import {cumParams, getOneCumParams, setCumParams} from "../store/cum-params-store";
-import Http from "../http";
-import $ from "jquery";
+import * as mobx from 'mobx'
+import {
+    cumParams,
+    getOneCumParams,
+    setCumParams,
+} from '../store/cum-params-store'
+import Http from '../http'
+import $ from 'jquery'
 
 let URL;
 let URL_RESET;
@@ -79,8 +83,10 @@ function createCumParams(cont, cumType) {
     const cum_com2_ast = createParam('cum_com2/ast:');
     const cum_bitmex_m_com_ast = createParam('cum_bitmex_M_com/ast:');
     const slip = createParam('slip_br/slip:');
-    const count1 = createParam('CompletedCount1/Count1:');
-    const count2 = createParam('CompletedCount2/Count2:');
+    const vert1 = createParam('CompletedVert1/Vert1:')
+    const vert2 = createParam('CompletedVert2/Vert2:')
+    const unstartedVert1 = createParam('unstartedVert1:')
+    const unstartedVert2 = createParam('unstartedVert2:')
 
     const btnReset = $('<button>').text('Reset cum values').appendTo(cont);
     btnReset.click(() => {
@@ -118,8 +124,10 @@ function createCumParams(cont, cumType) {
         const slipBr = p.slipBr && p.slipBr !== 0 ? p.slipBr.toFixed(2) : 0;
         const slip1 = p.slip && p.slip !== 0 ? p.slip.toFixed(2) : 0;
         slip.text(sprintf('%s/%s', slipBr, slip1));
-        count1.text(sprintf('%s/%s', p.completedCounter1, p.counter1));
-        count2.text(sprintf('%s/%s', p.completedCounter2, p.counter2));
+        vert1.text(sprintf('%s/%s', p.completedVert1, p.vert1))
+        vert2.text(sprintf('%s/%s', p.completedVert2, p.vert2))
+        unstartedVert1.text(sprintf('%s', p.unstartedVert1))
+        unstartedVert2.text(sprintf('%s', p.unstartedVert2))
     }
 
     mobx.autorun(r => {
