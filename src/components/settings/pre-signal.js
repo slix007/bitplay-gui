@@ -11,11 +11,12 @@ export {showPreSignalObReFetch};
 let showPreSignalObReFetch = function () {
     const label = $('<span/>', {title: ''}).html('Pre-signal recheck orderBook: ');
     const checkbox = $('<input>').attr('type', 'checkbox');
-    checkbox.click(onChangeVal());
+    checkbox.click(onChangeVal);
 
     mobx.autorun(r => {
         checkbox.val(allSettings.preSignalObReFetch);
         checkbox.attr('title', allSettings.preSignalObReFetch ? 'enabled' : 'disabled');
+        checkbox.prop('checked', allSettings.preSignalObReFetch)
     });
 
     $("#pre-signal-ob-recheck").append(label).append(checkbox);

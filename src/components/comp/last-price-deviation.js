@@ -85,7 +85,8 @@ function addLPDDelay(SET_URL, baseUrl, indexCont) {
     indexCont.append(lbDelaySec);
 }
 
-const getRoundVal = x => ((x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0));
+const getRoundVal = x => (x && (x.toString().includes('.'))
+  ? (x.toString().split('.').pop().length) : (0));
 
 function showDev(label, isExceed, text, baseVal, currVal, maxDevUsd) {
     if (isExceed) {
