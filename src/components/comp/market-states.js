@@ -31,12 +31,6 @@ let repaintStates = function (returnData) {
         $('<span>').text('; Bitmex reconnect state: ').appendTo(markets);
         $('<span>', {id: btmReconId}).text(returnData.bitmexReconnectState).appendTo(markets);
 
-        $('<span>').text('; preliq_queue_size: bitmex=').appendTo(markets);
-        $('<span>', {id: 'btmPreliqQueueId'}).text(returnData.btmPreliqQueue).appendTo(markets);
-
-        $('<span>').text(', okex=').appendTo(markets);
-        $('<span>', {id: 'okexPreliqQueueId'}).text(returnData.okexPreliqQueue).appendTo(markets);
-
         const bitmexSoState = $('<span>').appendTo(markets);
         mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
 
@@ -47,8 +41,6 @@ let repaintStates = function (returnData) {
     updateState(secondId, returnData.secondMarket);
     updateState(arbId, returnData.arbState);
     updateState(btmReconId, returnData.bitmexReconnectState);
-    $('#btmPreliqQueueId').html(returnData.btmPreliqQueue);
-    $('#okexPreliqQueueId').html(returnData.okexPreliqQueue);
 
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);
