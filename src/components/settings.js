@@ -7,6 +7,7 @@ import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/setting
 import {showBitmexOrderBookType} from "./settings/bitmex-custom";
 import {showPreSignalObReFetch} from "./settings/pre-signal";
 import {showBitmexFokMaxDiff} from "./settings/FOK_max_diff";
+import { createSetttingsOkexLeverage } from './okex/leverage';
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -77,6 +78,8 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenAttemptsMs',
                 x => ({okexPostOnlyArgs: {postOnlyBetweenAttemptsMs: x}}),
                 x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
+        // okex leverage
+        createSetttingsOkexLeverage();
 
         showBitmexFokMaxDiff();
 
