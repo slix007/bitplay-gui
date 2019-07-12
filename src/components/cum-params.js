@@ -87,6 +87,8 @@ function createCumParams(cont, cumType) {
     const vert2 = createParam('CompletedVert2/Vert2:')
     const unstartedVert1 = createParam('unstartedVert1:')
     const unstartedVert2 = createParam('unstartedVert2:')
+    const obRecheckUnstartedVert1 = createParam('PreSignalReCheck-UnstartedVert1:')
+    const obRecheckUnstartedVert2 = createParam('PreSignalReCheck-UnstartedVert2:')
 
     const btnReset = $('<button>').text('Reset cum values').appendTo(cont);
     btnReset.click(() => {
@@ -128,6 +130,8 @@ function createCumParams(cont, cumType) {
         vert2.text(sprintf('%s/%s', p.completedVert2, p.vert2 - p.unstartedVert2))
         unstartedVert1.text(sprintf('%s', p.unstartedVert1))
         unstartedVert2.text(sprintf('%s', p.unstartedVert2))
+        obRecheckUnstartedVert1.text(sprintf('%s', p.obRecheckUnstartedVert1))
+        obRecheckUnstartedVert2.text(sprintf('%s', p.obRecheckUnstartedVert2))
     }
 
     mobx.autorun(r => {
