@@ -9,7 +9,7 @@ const mobx = require('mobx');
 export {showPreSignalObReFetch};
 
 let showPreSignalObReFetch = function () {
-    const label = $('<span/>', {title: ''}).html('Pre-signal recheck orderBook: ');
+    const label = $('<span/>', {title: 'Recheck orderBook after Signal Delay'}).html('Recheck OB after SD: ');
     const checkbox = $('<input>').attr('type', 'checkbox');
     checkbox.click(onChangeVal);
 
