@@ -1,8 +1,8 @@
 'use strict';
-import {allSettings, setAllSettingsRaw} from "../../store/settings-store";
-import $ from "jquery";
-import Http from "../../http"
-import * as mobx from "mobx";
+import { allSettings, setAllSettingsRaw } from '../../store/settings-store'
+import $ from 'jquery'
+import Http from '../../http'
+import * as mobx from 'mobx'
 
 export {repaintStates};
 
@@ -34,6 +34,9 @@ let repaintStates = function (returnData) {
         const bitmexSoState = $('<span>').appendTo(markets);
         mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
 
+        const okexSettlement = $('<span>').appendTo(markets)
+        mobx.autorun(r => showOkexSettlement(okexSettlement, allSettings))
+
         createSignalStatusBar();
     }
 
@@ -55,6 +58,8 @@ let repaintStates = function (returnData) {
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
 
     allSettings.marketStates = returnData;
+    allSettings.okexSettlementMode = returnData.okexSettlementMode;
+    allSettings.okexSettlementModeEnding = returnData.okexSettlementModeEnding;
 };
 
 function convertTimeToReset(timeToResetTradingMode) {
@@ -74,6 +79,16 @@ function showBitmexSoState(lb, allSettings) {
         lb.text(', Bitmex SO: NONE');
         lb.css('color', 'black');
         lb.css('font-weight', 'normal');
+    }
+}
+
+function showOkexSettlement (lb, allSettings) {
+    if (allSettings.okexSettlementMode) {
+        lb.text(', Okex settlement! ' + allSettings.okexSettlementModeEnding)
+        lb.css('color', 'darkgoldenrod')
+        lb.css('font-weight', 'bold')
+    } else {
+        lb.text('')
     }
 }
 

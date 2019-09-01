@@ -218,7 +218,6 @@ let showBordersV2 = function (baseUrl) {
 
         bordersMainSettingsComp.repaint(borderData, BORDERS_SETTINGS_URL);
 
-
         // BorderV1
         var container = document.getElementById("borders-v1");
         var label1 = document.createElement('div');

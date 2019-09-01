@@ -1,13 +1,16 @@
 'use strict';
 
-import {createPlacingBlocksVolatile} from "../components/placing-blocks";
-import {createAdjVolatile} from "./pos-adjustment";
-import {fillBitmexChangeOnSo} from "./settings-bitmexChangeOnSo";
-import {bitmexChangeOnSoToConBo, bitmexChangeOnSoToTaker} from "../store/settings-store";
-import {showBitmexOrderBookType} from "./settings/bitmex-custom";
-import {showPreSignalObReFetch} from "./settings/pre-signal";
-import {showBitmexFokMaxDiff} from "./settings/FOK_max_diff";
-import { createSetttingsOkexLeverage } from './okex/leverage';
+import { createPlacingBlocksVolatile } from '../components/placing-blocks'
+import { createAdjVolatile } from './pos-adjustment'
+import { fillBitmexChangeOnSo } from './settings-bitmexChangeOnSo'
+import {
+    bitmexChangeOnSoToConBo,
+    bitmexChangeOnSoToTaker
+} from '../store/settings-store'
+import { showBitmexOrderBookType } from './settings/bitmex-custom'
+import { showPreSignalObReFetch } from './settings/pre-signal'
+import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
+import { createSetttingsOkexLeverage } from './okex/leverage'
 
 let $ = require('jquery');
 let Http = require('../http');

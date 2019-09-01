@@ -59,6 +59,13 @@ export const allSettings = observable({
         toConBo: false,
     },
 
+    okexSettlementMode: false,
+    okexSettlement: {
+        active: false,
+        startAtTime: '',
+        period: -1
+    },
+
     okexEbestElast: false,
 
     // other settings
@@ -157,7 +164,6 @@ export const mobxStore = observable({
     //     pos_okex_cont_short: 0,
     // },
 
-    
     corrParams: {
         corr: {},
         adj: {},

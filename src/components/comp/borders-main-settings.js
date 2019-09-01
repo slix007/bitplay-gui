@@ -1,6 +1,7 @@
 'use strict';
-import * as mobx from "mobx";
-import {allSettings} from "../../store/settings-store";
+import * as mobx from 'mobx'
+import { allSettings } from '../../store/settings-store'
+import { fillOkexSettlement } from '../settings-okexSettlement'
 
 let $ = require('jquery');
 let Http = require('../../http');
@@ -14,15 +15,18 @@ let deltaSaveDevId = 'delta-save-dev-id';
 let deltaSavePerSecId = 'delta-save-per-sec-id';
 
 export function repaint(borderData, BORDERS_SETTINGS_URL) {
-    let main = $('#borders-main-settings').html('<b>Borders common:</b>');
-    let container = $('<div>').css('display', 'flex').appendTo(main);
+    let container = $('#borders-main-settings-cont') //$('<div>').css('display', 'flex').appendTo(main);
 
     allSettings.borderParams = borderData;
     // allSettings.borderParams.onlyOpen = borderData.onlyOpen;
     // allSettings.borderParams.maxBorder = borderData.maxBorder;
 
     if ($(container).children().length === 0) {
-        const firstPart = $('<div>').attr('id', 'first-part').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        const firstPart = $('<div>').
+        attr('id', 'first-part').
+        css('float', 'left').
+        css('margin', '10px').
+        appendTo(container)
         createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaMinPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
@@ -32,7 +36,10 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         createMaxDelta('o_max_delta', firstPart1, borderData, BORDERS_SETTINGS_URL, x => ({okMaxDelta: x}), x => x.borderParams.okMaxDelta);
         createOnlyOpen(firstPart1, borderData, BORDERS_SETTINGS_URL, true);
 
-        const secondPart = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(container);
+        const secondPart = $('<div>').
+        css('float', 'left').
+        css('margin', '10px').
+        appendTo(container)
         createDeltaCalcTypeDropdown(firstPart, secondPart, borderData, BORDERS_SETTINGS_URL);
         createSmaCheckbox(secondPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaCalcPast(secondPart, borderData, BORDERS_SETTINGS_URL);
@@ -44,6 +51,8 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         deltaSaveDev(thirdPart, borderData, BORDERS_SETTINGS_URL);
         deltaSavePerSec(thirdPart, borderData, BORDERS_SETTINGS_URL);
         deltaSaveChanged();
+
+        fillOkexSettlement()
     }
 }
 
