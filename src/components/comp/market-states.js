@@ -3,6 +3,7 @@ import { allSettings, setAllSettingsRaw } from '../../store/settings-store'
 import $ from 'jquery'
 import Http from '../../http'
 import * as mobx from 'mobx'
+import { fillOkexSettlementEnding } from '../settings-okexSettlement'
 
 export {repaintStates};
 
@@ -59,7 +60,8 @@ let repaintStates = function (returnData) {
 
     allSettings.marketStates = returnData;
     allSettings.okexSettlementMode = returnData.okexSettlementMode;
-    allSettings.okexSettlementModeEnding = returnData.okexSettlementModeEnding;
+    allSettings.nowMomentStr = returnData.nowMomentStr
+    fillOkexSettlementEnding(allSettings)
 };
 
 function convertTimeToReset(timeToResetTradingMode) {
@@ -85,7 +87,7 @@ function showBitmexSoState(lb, allSettings) {
 function showOkexSettlement (lb, allSettings) {
     if (allSettings.okexSettlementMode) {
         lb.text(', Okex settlement! ' + allSettings.okexSettlementModeEnding)
-        lb.css('color', 'darkgoldenrod')
+        lb.css('color', 'orange')
         lb.css('font-weight', 'bold')
     } else {
         lb.text('')

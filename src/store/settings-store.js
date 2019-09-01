@@ -1,6 +1,6 @@
 'use strict';
-import {observable, toJS} from 'mobx';
-import utils from '../utils';
+import { observable, toJS } from 'mobx'
+import utils from '../utils'
 
 export const setAllSettings = function (settingsData, SETTINGS_URL) {
     if (SETTINGS_URL) {
@@ -60,9 +60,11 @@ export const allSettings = observable({
     },
 
     okexSettlementMode: false,
+    okexSettlementModeEnding: '',
+    nowMomentStr: '',
     okexSettlement: {
         active: false,
-        startAtTime: '',
+        startAtTimeStr: '',
         period: -1
     },
 

@@ -4,8 +4,24 @@ import { allSettings, setAllSettingsRaw } from '../store/settings-store'
 import $ from 'jquery'
 import Http from '../http'
 import * as mobx from 'mobx'
+import moment from 'moment'
 
-export { fillOkexSettlement }
+export { fillOkexSettlement, fillOkexSettlementEnding }
+
+function fillOkexSettlementEnding (allSettings) {
+  if (allSettings.okexSettlementMode) {
+    const startAt = moment(allSettings.okexSettlement.startAtTimeStr,
+      'HH:mm:ss')
+    const nowMoment = moment(allSettings.nowMomentStr, 'HH:mm:ss')
+    const endAt = startAt.add(allSettings.okexSettlement.period, 'm')
+    let secToEnd = endAt.diff(nowMoment, 's')
+    allSettings.okexSettlementModeEnding =
+      'ends at ' + endAt.format('HH:mm:ss')
+      + ' in ' + secToEnd + ' sec'
+  } else {
+    allSettings.okexSettlementModeEnding = ''
+  }
+}
 
 const fillOkexSettlement = function () {
   const $cont = $('#okex-settlement')
