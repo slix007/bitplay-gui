@@ -1,9 +1,9 @@
 'use strict';
 
-import {allSettings, setAllSettingsRaw} from "../store/settings-store";
-import $ from "jquery";
-import Http from "../http"
-import * as mobx from "mobx";
+import { allSettings, setAllSettingsRaw } from '../store/settings-store'
+import $ from 'jquery'
+import Http from '../http'
+import * as mobx from 'mobx'
 
 export {fillBitmexChangeOnSo};
 
@@ -11,20 +11,6 @@ let fillBitmexChangeOnSo = function () {
     const $cont = $('#bitmex-change-on-so');
     $('<span>').text('Bitmex change on ').appendTo($cont);
     $('<span>').text('SO:').prop('title', 'SYSTEM OVERLOAD').appendTo($cont);
-
-    // checkbox toTaker
-    const toTakerCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
-    $('<label>').text('to_TAKER').appendTo($cont);
-    mobx.autorun(() => toTakerCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toTaker));
-    toTakerCheckbox.click(() => {
-        toTakerCheckbox.prop('disabled', true);
-        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({bitmexChangeOnSo: {toTaker: toTakerCheckbox.prop('checked')}}),
-                json => {
-                    setAllSettingsRaw(json);
-                    toTakerCheckbox.prop('disabled', false);
-                }
-        )
-    });
 
     // checkbox toConBo
     const toConBoCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
@@ -39,6 +25,30 @@ let fillBitmexChangeOnSo = function () {
                 }
         )
     });
+
+    // checkbox toTaker
+    const toTakerCheckbox = $('<input>').
+    css('margin-left', '15px').
+    attr('type', 'checkbox').
+    appendTo($cont)
+    $('<label>').text('Adj_to_TAKER').appendTo($cont)
+    mobx.autorun(() => toTakerCheckbox.prop('checked',
+      allSettings.bitmexChangeOnSo.adjToTaker))
+    toTakerCheckbox.click(() => {
+        toTakerCheckbox.prop('disabled', true)
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify({
+              bitmexChangeOnSo: {
+                  adjToTaker: toTakerCheckbox.prop('checked')
+              }
+          }),
+          json => {
+              setAllSettingsRaw(json)
+              toTakerCheckbox.prop('disabled', false)
+          }
+        )
+    })
+
+    _createSignalTo_($cont)
 
     createSettingsParam($('<div>').appendTo($cont), 'countToActivate: ',
             x => ({bitmexChangeOnSo: {countToActivate: x}}),
@@ -65,6 +75,50 @@ let fillBitmexChangeOnSo = function () {
 
     testingSystemOverloaded();
 };
+
+function _createSignalTo_ ($cont) {
+    // checkbox signal_to_[TAKER,TAKER_FOK]
+    const signalCheckbox = $('<input>').
+    css('margin-left', '15px').
+    attr('type', 'checkbox').
+    appendTo($cont)
+    $('<label>').text('Signal_to_').appendTo($cont)
+    signalCheckbox.click(() => {
+        signalCheckbox.prop('disabled', true)
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify(
+          { bitmexChangeOnSo: { signalTo: signalCheckbox.prop('checked') } }),
+          json => {
+              setAllSettingsRaw(json)
+              signalCheckbox.prop('disabled', false)
+          }
+        )
+    })
+
+    let select = $('<select>', { id: 'btmChangeOnSoPlacingType' })
+    select.append($('<option>').val('TAKER').text('TAKER'))
+    select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'))
+    select.change(function () {
+        select.prop('disabled', true)
+        const requestData = JSON.stringify({ bitmexChangeOnSo: { signalPlacingType: this.value } })
+        console.log(requestData)
+
+        Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
+          json => {
+              setAllSettingsRaw(json)
+              select.prop('disabled', false)
+          }
+        )
+    })
+    mobx.autorun(() => {
+        signalCheckbox.prop('checked', allSettings.bitmexChangeOnSo.signalTo)
+        select.val(
+          allSettings.bitmexChangeOnSo.signalPlacingType !== null
+            ? allSettings.bitmexChangeOnSo.signalPlacingType
+            : '')
+        select.prop('disabled', !allSettings.bitmexChangeOnSo.signalTo)
+    })
+    select.appendTo($cont)
+}
 
 function testingSystemOverloaded() {
     const $cont = $('#bitmex-change-on-so-testing');
