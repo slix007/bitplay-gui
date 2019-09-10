@@ -69,19 +69,20 @@ function convertTimeToReset(timeToResetTradingMode) {
 }
 
 function showBitmexSoState(lb, allSettings) {
-    if (allSettings.bitmexChangeOnSo.secToReset > 0) {
-        let flags = [];
-        flags.push(allSettings.bitmexChangeOnSo.toTaker ? 'ALWAYS_TAKER' : '');
-        flags.push(allSettings.bitmexChangeOnSo.toConBo ? 'CON_B_O' : '');
-        const flag = flags.filter(value => value !== '').join(", ");
-        lb.text(', Bitmex SO: ' + flag);
-        lb.css('color', 'darkgoldenrod');
-        lb.css('font-weight', 'bold');
-    } else {
-        lb.text(', Bitmex SO: NONE');
-        lb.css('color', 'black');
-        lb.css('font-weight', 'normal');
-    }
+  if (allSettings.bitmexChangeOnSo.secToReset > 0) {
+    let flags = []
+    flags.push(allSettings.bitmexChangeOnSo.toConBo ? 'CON_B_O' : '')
+    flags.push(allSettings.bitmexChangeOnSo.adjToTaker ? 'Adj_to_TAKER' : '')
+    flags.push(allSettings.bitmexChangeOnSo.signalTo ? 'Signal_to_' + allSettings.bitmexChangeOnSo.signalPlacingType : '')
+    const flag = flags.filter(value => value !== '').join(', ')
+    lb.text(', Bitmex SO: ' + flag)
+    lb.css('color', 'darkgoldenrod')
+    lb.css('font-weight', 'bold')
+  } else {
+    lb.text(', Bitmex SO: NONE')
+    lb.css('color', 'black')
+    lb.css('font-weight', 'normal')
+  }
 }
 
 function showOkexSettlement (lb, allSettings) {

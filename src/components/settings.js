@@ -5,7 +5,7 @@ import { createAdjVolatile } from './pos-adjustment'
 import { fillBitmexChangeOnSo } from './settings-bitmexChangeOnSo'
 import {
     bitmexChangeOnSoToConBo,
-    bitmexChangeOnSoToTaker
+    bitmexSignalChangeOnSo,
 } from '../store/settings-store'
 import { showBitmexOrderBookType } from './settings/bitmex-custom'
 import { showPreSignalObReFetch } from './settings/pre-signal'
@@ -559,9 +559,10 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
         select.val(valExtractor(allSettings));
         if (isMain) {
             let extraTitle = '';
-            if (bitmexChangeOnSoToTaker()) {
-                extraTitle += 'BitmexChangeOnSo:ALWAYS_TAKER';
-                select.val('TAKER');
+            const bitmexChangeOnSoSignalType = bitmexSignalChangeOnSo()
+            if (bitmexChangeOnSoSignalType) {
+                extraTitle += 'BitmexChangeOnSo: Signal_to_' + bitmexChangeOnSoSignalType;
+                select.val(bitmexChangeOnSoSignalType);
             }
             if (isActiveV(fieldName)) {
                 extraTitle += '\nActivated VOLATILE mode';

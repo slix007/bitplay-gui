@@ -1,6 +1,11 @@
 'use strict';
 
-import {allSettings, isActiveV, setAllSettingsRaw} from "../store/settings-store";
+import {
+    allSettings,
+    bitmexChangeOnSoToTaker,
+    isActiveV,
+    setAllSettingsRaw
+} from '../store/settings-store'
 import * as mobx from "mobx";
 
 var Http = require('../http');
@@ -120,8 +125,16 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
 
     mobx.autorun(r => {
         select.val(allSettings.posAdjustment.posAdjustmentPlacingType);
+        let extraTitle = '';
+        if (bitmexChangeOnSoToTaker()) {
+            extraTitle += 'BitmexChangeOnSo: Adj_to_TAKER';
+            select.val('TAKER');
+        }
         if (isActiveV('posAdjustment')) {
-            lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+            extraTitle += '\nActivated VOLATILE mode';
+        }
+        if (extraTitle.length > 0) {
+            lb.css('font-weight', 'bold').prop('title', extraTitle);
             select.prop('disabled', true);
         } else {
             lb.css('font-weight', 'normal').prop('title', '');
