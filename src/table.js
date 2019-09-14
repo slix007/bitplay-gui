@@ -384,11 +384,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                         + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
                         + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
                         + ',<br> entry_price ' + poloniexAccount.entryPrice
-                  + '<br> '
-                  + '<br> '
-                  + '<br> '
-                  + '<br> '
-                  + '<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
+                        + '<br>'
+                        + ',<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
                         + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
                         + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg);
             } else {
@@ -416,11 +413,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
                             + ',<br> entry_price ' + marketAccount.entryPrice
-                      + '<br> longPnl=' + marketAccount.longPnl
-                      + '<br> longUnrealisedPnl=' + marketAccount.longUnrealisedPnl
-                      + '<br> shortPnl=' + marketAccount.shortPnl
-                      + '<br> shortUnrealisedPnl=' + marketAccount.shortUnrealisedPnl
-                            + '<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
+                            + ',<br> pos_pnl_' + marketAccount.posPnl
+                            + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
                             + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                             + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
                 } else {
@@ -450,11 +444,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
                             + ',<br> entry_price ' + marketAccount.entryPrice
-                      + '<br> longPnl=' + marketAccount.longPnl
-                      + '<br> longUnrealisedPnl=' + marketAccount.longUnrealisedPnl
-                      + '<br> shortPnl=' + marketAccount.shortPnl
-                      + '<br> shortUnrealisedPnl=' + marketAccount.shortUnrealisedPnl
-                      + '<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
+                            + ',<br> pos_pnl_' + marketAccount.posPnl
+                            + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
                             + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
                             + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd;
 
