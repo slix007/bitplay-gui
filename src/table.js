@@ -413,7 +413,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
                             + ',<br> entry_price ' + marketAccount.entryPrice
-                            + ',<br> pos_pnl_' + marketAccount.posPnl
+                            + ',<br> pl_pos_' + marketAccount.plPos
                             + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
                             + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                             + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
@@ -444,7 +444,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
                             + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
                             + ',<br> entry_price ' + marketAccount.entryPrice
-                            + ',<br> pos_pnl_' + marketAccount.posPnl
+                            + ',<br> pl_pos_' + marketAccount.plPos
                             + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
                             + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
                             + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd;
