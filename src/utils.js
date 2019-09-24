@@ -14,7 +14,7 @@ exports.btmUsdToContPure = function (usd, isEth, cm) {
     return Number(num).toFixed(0);
 };
 
-let okUsdToCont = function (usd, isEth) {
+const okUsdToCont = function (usd, isEth) {
     let num = isEth
             ? (usd / 10)
             : (usd / 100);

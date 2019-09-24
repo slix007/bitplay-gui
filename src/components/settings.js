@@ -11,6 +11,7 @@ import { showBitmexOrderBookType } from './settings/bitmex-custom'
 import { showPreSignalObReFetch } from './settings/pre-signal'
 import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
 import { createSetttingsOkexLeverage } from './okex/leverage'
+import { createPortions } from './settings-conBoPortions'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -46,6 +47,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
                 x => ({arbScheme: x}),
                 x => x.arbScheme,
                 true);
+        createPortions(container);
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type');
@@ -593,6 +595,7 @@ function createArbScheme(container, SETTINGS_URL, requestCreator, valExtractor, 
     let select = $('<select>').appendTo(container);
     select.append($('<option>').val('SIM').text('SIM'));
     select.append($('<option>').val('CON_B_O').text('CON_B_O'));
+    select.append($('<option>').val('CON_B_O_PORTIONS').text('CON_B_O_PORTIONS'));
     select.change(function () {
         const requestData = JSON.stringify(requestCreator(this.value));
         select.disabled = true;
