@@ -1,5 +1,5 @@
-import {decorate_b_border, decorate_o_border} from "./components/settings-utils";
-import {updateCumParams} from "./components/cum-params";
+import { decorate_b_border, decorate_o_border } from './components/settings-utils'
+import { updateCumParams } from './components/cum-params'
 
 var Handsontable = require('handsontable');
 var $ = require('jquery');
@@ -592,7 +592,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 // console.log(oo.timestamp);
                 let existedOrder = document.getElementById("p-span-" + oo.id);
                 if (existedOrder === null) {
-                    let labelOrder = createElement("span", {"id": "p-span-" + oo.id},
+                    let labelOrder = createElement("span", {"id": "p-span-" + oo.id, "style": "font-size:small"},
                             "#" + oo.arbId
                             + ": id='" + oo.id.substring(0, 9) + "...'"
                             + ",c=" + oo.currency
@@ -600,13 +600,14 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + ",s=" + oo.status
                             + ",q=" + oo.price
                             + ",a=" + oo.amount
+                            + "(f=" + oo.filledAmount + ")"
                             + ",time=" + oo.timestamp
                     );
-                    let move = createElement("button", {"id": "p-move-" + oo.id}, "Try move");
+                    let move = createElement("button", {"id": "p-move-" + oo.id, "title": "Try move"}, "mv");
                     move.addEventListener("click", function () {
                         moveOrderP(oo.id, oo.orderType);
                     }, false);
-                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "Cancel");
+                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "cnl");
                     cancel.addEventListener("click", function () {
                         cancelOrder(oo.id, firstMarketName);
                     }, oo.id);
@@ -630,21 +631,22 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             .forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
-                    let labelOrder = createElement("span", {"id": "o-span-" + oo.id},
+                    let labelOrder = createElement("span", {"id": "o-span-" + oo.id, "style": "font-size:small"},
                             "#" + oo.arbId
                             + ": id='" + oo.id + "'"
                             + ",t=" + oo.orderType
                             + ",s=" + oo.status
                             + ",q=" + oo.price
                             + ",a=" + oo.amount
+                            + "(f=" + oo.filledAmount + ")"
                             + ",time=" + oo.timestamp
                     );
-                    let move = createElement("button", {"id": "o-move-" + oo.id}, "Try move");
+                    let move = createElement("button", {"id": "o-move-" + oo.id, "title": "Try move"}, "mv");
                     move.addEventListener("click", function () {
                         moveOrderO(oo.id, oo.orderType);
                     }, false);
 
-                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "Cancel");
+                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "cnl");
                     cancel.addEventListener("click", function () {
                         cancelOrder(oo.id, secondMarketName);
                     }, oo.id);
