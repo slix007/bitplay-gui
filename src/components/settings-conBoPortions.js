@@ -1,6 +1,6 @@
 'use strict'
 
-import { allSettings, setAllSettingsRaw } from '../store/settings-store'
+import { allSettings, setAllSettingsRaw, mobxStore } from '../store/settings-store'
 import { okUsdToCont } from '../utils'
 import $ from 'jquery'
 import Http from '../http'
@@ -14,11 +14,11 @@ const createPortions = function () {
 
   _createSettingsParam($('<div>').appendTo($cont), 'Min nt_usd to start Okex: ',
     x => ({ conBoPortions: { minNtUsdToStartOkex: x } }),
-    x => x.conBoPortions.minNtUsdToStartOkex + 'usd=' + okUsdToCont(x.conBoPortions.minNtUsdToStartOkex) + 'cont',
+    x => x.conBoPortions.minNtUsdToStartOkex + 'usd=' + okUsdToCont(x.conBoPortions.minNtUsdToStartOkex, mobxStore.isEth) + 'cont',
     x => x.arbScheme === 'CON_B_O_PORTIONS')
   _createSettingsParam($('<div>').appendTo($cont), 'Okex Max portion_usd: ',
     x => ({ conBoPortions: { maxPortionUsdOkex: x } }),
-    x => x.conBoPortions.maxPortionUsdOkex + 'usd=' + okUsdToCont(x.conBoPortions.maxPortionUsdOkex) + 'cont',
+    x => x.conBoPortions.maxPortionUsdOkex + 'usd=' + okUsdToCont(x.conBoPortions.maxPortionUsdOkex, mobxStore.isEth) + 'cont',
     x => x.arbScheme === 'CON_B_O_PORTIONS')
 }
 
