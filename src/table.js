@@ -627,7 +627,10 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
             setOpenOrdersHeight(myNode);
             returnData
-            .sort((a, b) => ('' + b.timestamp).localeCompare(a.timestamp))
+            .sort((a, b) => {
+                if (a.status === 'WAITING') return -1
+                return ('' + b.timestamp).localeCompare(a.timestamp)
+            })
             .forEach(function (oo) {
                 let existedOrder = document.getElementById("o-span-" + oo.id);
                 if (existedOrder === null) {
@@ -641,17 +644,22 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                             + "(f=" + oo.filledAmount + ")"
                             + ",time=" + oo.timestamp
                     );
-                    let move = createElement("button", {"id": "o-move-" + oo.id, "title": "Try move"}, "mv");
-                    move.addEventListener("click", function () {
-                        moveOrderO(oo.id, oo.orderType);
-                    }, false);
+                    let openOrderDiv;
+                    if (oo.status !== 'WAITING') {
+                        let move = createElement("button", { "id": "o-move-" + oo.id, "title": "Try move" }, "mv");
+                        move.addEventListener("click", function () {
+                            moveOrderO(oo.id, oo.orderType);
+                        }, false);
 
-                    let cancel = createElement("button", {"id": "o-cancel-" + oo.id}, "cnl");
-                    cancel.addEventListener("click", function () {
-                        cancelOrder(oo.id, secondMarketName);
-                    }, oo.id);
+                        let cancel = createElement("button", { "id": "o-cancel-" + oo.id }, "cnl");
+                        cancel.addEventListener("click", function () {
+                            cancelOrder(oo.id, secondMarketName);
+                        }, oo.id);
 
-                    let openOrderDiv = createElement("div", {"id": "o-links"}, [labelOrder, move, cancel]);
+                        openOrderDiv = createElement("div", { "id": "o-links" }, [labelOrder, move, cancel]);
+                    } else {
+                        openOrderDiv = createElement("div", { "id": "o-links" }, labelOrder);
+                    }
                     const ordersContainer = document.getElementById("okcoin-open-orders");
                     ordersContainer.appendChild(openOrderDiv);
                     setOpenOrdersHeight(ordersContainer);
