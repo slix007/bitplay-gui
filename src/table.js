@@ -658,7 +658,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
                         openOrderDiv = createElement("div", { "id": "o-links" }, [labelOrder, move, cancel]);
                     } else {
-                        openOrderDiv = createElement("div", { "id": "o-links" }, labelOrder);
+                        labelOrder.style = 'font-size:small; background-color:lightgrey'
+                        openOrderDiv = createElement("div", { "id": "o-links", "background-color": "lightgrey" }, labelOrder);
                     }
                     const ordersContainer = document.getElementById("okcoin-open-orders");
                     ordersContainer.appendChild(openOrderDiv);
