@@ -12,6 +12,7 @@ import { showPreSignalObReFetch } from './settings/pre-signal'
 import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
 import { createSetttingsOkexLeverage } from './okex/leverage'
 import { createPortions } from './settings-conBoPortions'
+import { createAbortSignal } from './settings-abortSignal'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -48,6 +49,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
                 x => x.arbScheme,
                 true);
         createPortions(container);
+        createAbortSignal(container);
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type');
