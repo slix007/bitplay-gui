@@ -21,6 +21,9 @@ const createAbortSignal = function () {
       })
 
   })
+  mobx.autorun(function () {
+    ch.prop('checked', allSettings.abortSignal.abortSignalPtsEnabled)
+  })
 
   _createSettingsParam($cont, 'abort_signal_pts: ',
     x => ({ abortSignal: { abortSignalPts: x } }),

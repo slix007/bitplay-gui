@@ -89,6 +89,8 @@ function createCumParams(cont, cumType) {
     const unstartedVert2 = createParam('unstartedVert2:')
     const obRecheckUnstartedVert1 = createParam('Recheck OB after SD-UnstartedVert1:')
     const obRecheckUnstartedVert2 = createParam('Recheck OB after SD-UnstartedVert2:')
+    const abortedSignalUnstartedVert1 = createParam('Aborted_signal UnstartedVert1:')
+    const abortedSignalUnstartedVert2 = createParam('Aborted_signal UnstartedVert2:')
 
     const btnReset = $('<button>').text('Reset cum values').appendTo(cont);
     btnReset.click(() => {
@@ -132,6 +134,8 @@ function createCumParams(cont, cumType) {
         unstartedVert2.text(sprintf('%s', p.unstartedVert2))
         obRecheckUnstartedVert1.text(sprintf('%s', p.obRecheckUnstartedVert1))
         obRecheckUnstartedVert2.text(sprintf('%s', p.obRecheckUnstartedVert2))
+        abortedSignalUnstartedVert1.text(sprintf('%s', p.abortedSignalUnstartedVert1))
+        abortedSignalUnstartedVert2.text(sprintf('%s', p.abortedSignalUnstartedVert2))
     }
 
     mobx.autorun(r => {
