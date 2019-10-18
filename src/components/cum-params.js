@@ -128,8 +128,8 @@ function createCumParams(cont, cumType) {
         const slipBr = p.slipBr && p.slipBr !== 0 ? p.slipBr.toFixed(2) : 0;
         const slip1 = p.slip && p.slip !== 0 ? p.slip.toFixed(2) : 0;
         slip.text(sprintf('%s/%s', slipBr, slip1));
-        vert1.text(sprintf('%s/%s', p.completedVert1, p.vert1 - p.unstartedVert1))
-        vert2.text(sprintf('%s/%s', p.completedVert2, p.vert2 - p.unstartedVert2))
+        vert1.text(sprintf('%s/%s', p.completedVert1, p.vert1Val))
+        vert2.text(sprintf('%s/%s', p.completedVert2, p.vert2Val))
         unstartedVert1.text(sprintf('%s', p.unstartedVert1))
         unstartedVert2.text(sprintf('%s', p.unstartedVert2))
         obRecheckUnstartedVert1.text(sprintf('%s', p.obRecheckUnstartedVert1))
