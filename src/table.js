@@ -356,6 +356,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         fetch('/mon/all', function (resultJson) {
             let pTicker = document.getElementById('deadlock-checker');
             pTicker.innerHTML = resultJson.allHtml;
+            mobxStore.allMon.xrateLimitBtm = resultJson.xrateLimitBtm;
+            mobxStore.allMon.xrateLimitBtmUpdated = resultJson.xrateLimitBtmUpdated;
             let bitmexReconnectCount = document.getElementById('bitmex-reconnect-count');
             bitmexReconnectCount.innerHTML = resultJson.bitmexReconnectCount;
             monVar.showMonMoving(baseUrl, resultJson);

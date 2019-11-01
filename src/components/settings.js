@@ -3,10 +3,7 @@
 import { createPlacingBlocksVolatile } from '../components/placing-blocks'
 import { createAdjVolatile } from './pos-adjustment'
 import { fillBitmexChangeOnSo } from './settings-bitmexChangeOnSo'
-import {
-    bitmexChangeOnSoToConBo,
-    bitmexSignalChangeOnSo,
-} from '../store/settings-store'
+import { bitmexChangeOnSoToConBo, bitmexSignalChangeOnSo } from '../store/settings-store'
 import { showBitmexOrderBookType } from './settings/bitmex-custom'
 import { showPreSignalObReFetch } from './settings/pre-signal'
 import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
@@ -64,26 +61,27 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         const okPlacingLb = $('<span>').text('Okex place orders type:');
         okPlacingLb.appendTo(okexPlacingCont);
         createPlacingType(okexPlacingCont.get(0), SETTINGS_URL,
-                x => ({okexPlacingType: x}),
-                x => x.okexPlacingType,
-                okPlacingLb, 'okexPlacingType', true);
+          x => ({ okexPlacingType: x }),
+          x => x.okexPlacingType,
+          okPlacingLb, 'okexPlacingType', true)
 
         // System overload settings
-        var overloadContainer = document.getElementById("sys-overload-settings");
-        createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
-        createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
-        createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
-        createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL);
+        var overloadContainer = document.getElementById('sys-overload-settings')
+        createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+        createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+        createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+        createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+        createXRateLimitBtm(overloadContainer)
 
         // okex postOnly settings
-        let postOnlyContainer = $('#post-only-settings');
-        createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL);
-        createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL);
+        let postOnlyContainer = $('#post-only-settings')
+        createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
+        createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
         createSettingsInput(postOnlyContainer, SETTINGS_URL, 'attempts',
-                x => ({okexPostOnlyArgs: {postOnlyAttempts: x}}),
-                x => (x.okexPostOnlyArgs.postOnlyAttempts));
+          x => ({ okexPostOnlyArgs: { postOnlyAttempts: x } }),
+          x => (x.okexPostOnlyArgs.postOnlyAttempts))
         createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenAttemptsMs',
-                x => ({okexPostOnlyArgs: {postOnlyBetweenAttemptsMs: x}}),
+          x => ({ okexPostOnlyArgs: { postOnlyBetweenAttemptsMs: x } }),
                 x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
         // okex leverage
         createSetttingsOkexLeverage();
@@ -426,40 +424,55 @@ function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
-    updateBtn.onclick = onBtnClick;
-    updateBtn.innerHTML = 'update';
-    let realValue = document.createElement('span');
-    realValue.innerHTML = obj.betweenAttemptsMs;
+    updateBtn.onclick = onBtnClick
+    updateBtn.innerHTML = 'update'
+    let realValue = document.createElement('span')
+    realValue.innerHTML = obj.betweenAttemptsMs
 
-    container.appendChild(label);
-    container.appendChild(edit);
-    container.appendChild(updateBtn);
-    container.appendChild(realValue);
+    container.appendChild(label)
+    container.appendChild(edit)
+    container.appendChild(updateBtn)
+    container.appendChild(realValue)
 
-    function onBtnClick() {
-        const requestData = JSON.stringify({bitmexSysOverloadArgs: {betweenAttemptsMs: edit.value}});
-        updateBtn.disabled = true;
+    function onBtnClick () {
+        const requestData = JSON.stringify({ bitmexSysOverloadArgs: { betweenAttemptsMs: edit.value } })
+        updateBtn.disabled = true
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
-            let data = JSON.parse(result);
-            realValue.innerHTML = data.bitmexSysOverloadArgs.betweenAttemptsMs;
-            updateBtn.disabled = false;
-        });
+            let data = JSON.parse(result)
+            realValue.innerHTML = data.bitmexSysOverloadArgs.betweenAttemptsMs
+            updateBtn.disabled = false
+        })
     }
 }
 
-function createPostOnlyCheckbox(mainCont, obj, SETTINGS_URL) {
-    const $cont = $('<div>').appendTo(mainCont);
-    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
-    const label = $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont);
+function createXRateLimitBtm (mainCont) {
+    const $cont = $('<div>').appendTo(mainCont)
+    const label = $('<span>').appendTo($cont)
+    mobx.autorun(r => {
+        const lim = mobxStore.allMon.xrateLimitBtm
+        const t = mobxStore.allMon.xrateLimitBtmUpdated
+        label.text(`xRateLimit=${lim}; timestamp:${t}`)
+        if (lim < 5) {
+            label.css('color', 'red')
+        } else {
+            label.css('color', 'black')
+        }
+    })
+}
+
+function createPostOnlyCheckbox (mainCont, obj, SETTINGS_URL) {
+    const $cont = $('<div>').appendTo(mainCont)
+    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont)
+    const label = $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont)
     checkbox.click(function () {
-        checkbox.prop('disabled', true);
-        const requestData = JSON.stringify({okexPostOnlyArgs: {postOnlyEnabled: checkbox.prop('checked')}});
+        checkbox.prop('disabled', true)
+        const requestData = JSON.stringify({ okexPostOnlyArgs: { postOnlyEnabled: checkbox.prop('checked') } })
         Http.httpAsyncPost(SETTINGS_URL, requestData,
-                json => {
-                    checkbox.prop('disabled', false);
-                    const res = setAllSettingsRaw(json);
-                    // alert('New value: ' + res.manageType);
-                });
+          json => {
+              checkbox.prop('disabled', false)
+              const res = setAllSettingsRaw(json)
+              // alert('New value: ' + res.manageType);
+          })
 
     });
     mobx.autorun(r => {

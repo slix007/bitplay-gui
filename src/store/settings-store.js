@@ -182,7 +182,9 @@ export const mobxStore = observable({
 
     get secondMarketAccountJs() {
         return toJS(this.secondMarketAccount);
-    }
+    },
+
+    allMon: {}
 
 });
 
