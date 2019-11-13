@@ -77,10 +77,10 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         let postOnlyContainer = $('#post-only-settings')
         createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
         createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
-        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'attempts',
+        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'placeTry',
           x => ({ okexPostOnlyArgs: { postOnlyAttempts: x } }),
           x => (x.okexPostOnlyArgs.postOnlyAttempts))
-        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenAttemptsMs',
+        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenTryMs',
           x => ({ okexPostOnlyArgs: { postOnlyBetweenAttemptsMs: x } }),
                 x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
         // okex leverage
