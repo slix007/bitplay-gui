@@ -1,6 +1,6 @@
 'use strict';
 
-import {isActiveV, mobxStore, setCorrParams, updateCorrParams} from "../store/settings-store";
+import { isActiveV, mobxStore, setCorrParams, updateCorrParams } from '../store/settings-store'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -36,7 +36,8 @@ let showCorr = function (baseUrl) {
                 x => ({corr: {maxTotalCount: x}}),
                 x => x.corr.maxTotalCount, true
         );
-        createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd');
+        createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd')
+        createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock_usd', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
 
         var mainPreliq = document.getElementById("preliq");
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
