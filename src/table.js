@@ -1,40 +1,40 @@
 import { decorate_b_border, decorate_o_border } from './components/settings-utils'
 import { updateCumParams } from './components/cum-params'
 
-var Handsontable = require('handsontable');
-var $ = require('jquery');
-var sprintf = require('sprintf-js').sprintf;
-var Utils = require('./utils');
-var restartVar = require('./restart');
-var Http = require('./http');
-let bordersVar = require('./components/borders-v2');
-let bitmexIndexVar = require('./components/comp/bitmex-index');
-let okexIndexVar = require('./components/comp/okex-index');
-let marketState = require('./components/comp/market-states');
-let monCalcDelta = require('./components/comp/mon-calc-delta');
-let eBestMin = require('./components/comp/e-best-min');
-let placingBlocksVar = require('./components/placing-blocks');
-let monVar = require('./components/mon');
-const {placingOrderObj, mobxStore, allSettings} = require('./store/settings-store');
-const lastPriceDevVar = require('./components/comp/last-price-deviation');
+var Handsontable = require('handsontable')
+var $ = require('jquery')
+var sprintf = require('sprintf-js').sprintf
+var Utils = require('./utils')
+var restartVar = require('./restart')
+var Http = require('./http')
+let bordersVar = require('./components/borders-v2')
+let bitmexIndexVar = require('./components/comp/bitmex-index')
+let okexIndexVar = require('./components/comp/okex-index')
+let marketState = require('./components/comp/market-states')
+let monCalcDelta = require('./components/comp/mon-calc-delta')
+let eBestMin = require('./components/comp/e-best-min')
+let placingBlocksVar = require('./components/placing-blocks')
+let monVar = require('./components/mon')
+const { placingOrderObj, mobxStore, allSettings } = require('./store/settings-store')
+const lastPriceDevVar = require('./components/comp/last-price-deviation')
 
-export {showMainInfo};
+export { showMainInfo }
 
 let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     // console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
 
-    Utils.fillLinksToLogs();
-    restartVar.addRestartButton();
-    restartVar.addReconnectButton();
-    restartVar.addResubscribeButton();
+    Utils.fillLinksToLogs()
+    restartVar.addRestartButton()
+    restartVar.addReconnectButton()
+    restartVar.addResubscribeButton()
 
-    let container = document.getElementById('example1');
-    let positions = document.getElementById('positions');
-    let hot;
-    var elementBitmexBid = document.getElementById(sprintf('%s-bid', firstMarketName));
-    var elementBitmexAsk = document.getElementById(sprintf('%s-ask', firstMarketName));
-    var elementOkcoinBid = document.getElementById(sprintf('%s-bid', secondMarketName));
-    var elementOkcoinAsk = document.getElementById(sprintf('%s-ask', secondMarketName));
+    let container = document.getElementById('example1')
+    let positions = document.getElementById('positions')
+    let hot
+    var elementBitmexBid = document.getElementById(sprintf('%s-bid', firstMarketName))
+    var elementBitmexAsk = document.getElementById(sprintf('%s-ask', firstMarketName))
+    var elementOkcoinBid = document.getElementById(sprintf('%s-bid', secondMarketName))
+    var elementOkcoinAsk = document.getElementById(sprintf('%s-ask', secondMarketName))
 
     //var socket = new WebSocket("ws://localhost:4030/market/socket");
     // alert("Socket created");
@@ -59,40 +59,36 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     // socket.send("Привет");
 
     let parseOrderBook = function (orderBookJson) {
-        let bidArray = [];
-        orderBookJson.bid
-        .slice(0, 5)
-        .forEach(bid => {
-            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp]);
-        });
+        let bidArray = []
+        orderBookJson.bid.slice(0, 5).forEach(bid => {
+            bidArray.push([bid.currency, bid.price, bid.amount, bid.amountInBtc, bid.timestamp])
+        })
         // bid
-        let askArray = [];
-        orderBookJson.ask
-        .slice(0, 5)
-        .reverse().forEach(ask => {
-            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp]);
-        });
-        let orderBook = {};
-        orderBook.bid = bidArray;
-        orderBook.ask = askArray;
+        let askArray = []
+        orderBookJson.ask.slice(0, 5).reverse().forEach(ask => {
+            askArray.push([ask.currency, ask.price, ask.amount, ask.amountInBtc, ask.timestamp])
+        })
+        let orderBook = {}
+        orderBook.bid = bidArray
+        orderBook.ask = askArray
 
-        return orderBook;
-    };
+        return orderBook
+    }
 
     let fetchOrderBook = function (dataUrl) {
 
-        let inputData = JSON.parse(Http.httpGet(dataUrl));
+        let inputData = JSON.parse(Http.httpGet(dataUrl))
 
         if (dataUrl.includes('bitmex')) {
-            $('#bitmex-last-price').html(inputData.lastPrice);
+            $('#bitmex-last-price').html(inputData.lastPrice)
         } else {
-            $('#okcoin-last-price').html(inputData.lastPrice);
+            $('#okcoin-last-price').html(inputData.lastPrice)
         }
 
-        return parseOrderBook(inputData);
-    };
+        return parseOrderBook(inputData)
+    }
 
-    function createTable(container, dataUrl, dataPartName) {
+    function createTable (container, dataUrl, dataPartName) {
         return new Handsontable(container, {
             data: fetchOrderBook(dataUrl)[dataPartName],
             colWidths: [100, 140, 100, 80, 90, 120, 140],
@@ -107,118 +103,118 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             autoColumnSize: {
                 samplingRatio: 23
             }
-        });
+        })
     }
 
     var askBitmexTable = createTable(elementBitmexAsk,
-            sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask');
+      sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask')
     var bidBitmexTable = createTable(elementBitmexBid,
-            sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid');
+      sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid')
     var askOkcoinTable = createTable(elementOkcoinAsk,
-            sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask');
+      sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask')
     var bidOkcoinTable = createTable(elementOkcoinBid,
-            sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid');
+      sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid')
 
-    this.b = 1;
-    var that = this;
+    this.b = 1
+    var that = this
 
     let fetch = function (url, callback) {
         Http.httpAsyncGet(baseUrl + url, function (rawData) {
-            const jsonData = JSON.parse(rawData);
-            callback(jsonData);
-        });
-    };
+            const jsonData = JSON.parse(rawData)
+            callback(jsonData)
+        })
+    }
 
     let repaintDeltasAndBorders = function (returnData) {
-        let delta1 = document.getElementById("delta1");
-        let delta2 = document.getElementById("delta2");
-        let delta1Sma = document.getElementById("delta1Sma");
-        let delta2Sma = document.getElementById("delta2Sma");
-        let delta1MinFixed = document.getElementById("delta1MinFixed");
-        let delta2MinFixed = document.getElementById("delta2MinFixed");
-        let delta1MinInstant = document.getElementById("delta1MinInstant");
-        let delta2MinInstant = document.getElementById("delta2MinInstant");
-        let delta1EveryCalc = document.getElementById("delta1EveryCalc");
-        let delta2EveryCalc = document.getElementById("delta2EveryCalc");
-        let deltaHistPerStarted = document.getElementById("deltaHistPerStarted");
-        let deltaSmaUpdateIn = document.getElementById("deltaSmaUpdateIn");
-        let border1 = $("#border1");
-        let border2 = $("#border2");
-        let reserveBtc1 = document.getElementById("reserveBtc1");
-        let reserveBtc2 = document.getElementById("reserveBtc2");
-        let fundingRateFee = document.getElementById("fundingRateFee");
-        delta1.innerHTML = Utils.withSign(returnData.delta1);
-        delta2.innerHTML = Utils.withSign(returnData.delta2);
-        delta1Sma.innerHTML = Utils.withSign(returnData.delta1Sma);
-        delta2Sma.innerHTML = Utils.withSign(returnData.delta2Sma);
-        delta1MinFixed.innerHTML = Utils.withSign(returnData.delta1MinFixed);
-        delta2MinFixed.innerHTML = Utils.withSign(returnData.delta2MinFixed);
-        delta1MinInstant.innerHTML = 'b_delta_min_current=' + Utils.withSign(returnData.delta1MinInstant);
-        delta2MinInstant.innerHTML = 'o_delta_min_current=' + Utils.withSign(returnData.delta2MinInstant);
-        delta1EveryCalc.innerHTML = returnData.delta1EveryCalc;
-        delta2EveryCalc.innerHTML = returnData.delta2EveryCalc;
-        deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted;
+        let delta1 = document.getElementById('delta1')
+        let delta2 = document.getElementById('delta2')
+        let delta1Sma = document.getElementById('delta1Sma')
+        let delta2Sma = document.getElementById('delta2Sma')
+        let delta1MinFixed = document.getElementById('delta1MinFixed')
+        let delta2MinFixed = document.getElementById('delta2MinFixed')
+        let delta1MinInstant = document.getElementById('delta1MinInstant')
+        let delta2MinInstant = document.getElementById('delta2MinInstant')
+        let delta1EveryCalc = document.getElementById('delta1EveryCalc')
+        let delta2EveryCalc = document.getElementById('delta2EveryCalc')
+        let deltaHistPerStarted = document.getElementById('deltaHistPerStarted')
+        let deltaSmaUpdateIn = document.getElementById('deltaSmaUpdateIn')
+        let border1 = $('#border1')
+        let border2 = $('#border2')
+        let reserveBtc1 = document.getElementById('reserveBtc1')
+        let reserveBtc2 = document.getElementById('reserveBtc2')
+        let fundingRateFee = document.getElementById('fundingRateFee')
+        delta1.innerHTML = Utils.withSign(returnData.delta1)
+        delta2.innerHTML = Utils.withSign(returnData.delta2)
+        delta1Sma.innerHTML = Utils.withSign(returnData.delta1Sma)
+        delta2Sma.innerHTML = Utils.withSign(returnData.delta2Sma)
+        delta1MinFixed.innerHTML = Utils.withSign(returnData.delta1MinFixed)
+        delta2MinFixed.innerHTML = Utils.withSign(returnData.delta2MinFixed)
+        delta1MinInstant.innerHTML = 'b_delta_min_current=' + Utils.withSign(returnData.delta1MinInstant)
+        delta2MinInstant.innerHTML = 'o_delta_min_current=' + Utils.withSign(returnData.delta2MinInstant)
+        delta1EveryCalc.innerHTML = returnData.delta1EveryCalc
+        delta2EveryCalc.innerHTML = returnData.delta2EveryCalc
+        deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted
         deltaSmaUpdateIn.innerHTML = returnData.deltaSmaUpdateIn === '0'
-                ? ''
-                : 'Border_sma update in ' + returnData.deltaSmaUpdateIn + ' sec.';
-        border1.text(returnData.border1);
-        border2.text(returnData.border2);
-        decorate_b_border($('#border1-lb'));
-        decorate_b_border(border1);
-        decorate_o_border($('#border2-lb'));
-        decorate_o_border(border2);
-        reserveBtc1.innerHTML = returnData.reserveBtc1;
-        reserveBtc2.innerHTML = returnData.reserveBtc2;
-        fundingRateFee.innerHTML = returnData.fundingRateFee;
-    };
+          ? ''
+          : 'Border_sma update in ' + returnData.deltaSmaUpdateIn + ' sec.'
+        border1.text(returnData.border1)
+        border2.text(returnData.border2)
+        decorate_b_border($('#border1-lb'))
+        decorate_b_border(border1)
+        decorate_o_border($('#border2-lb'))
+        decorate_o_border(border2)
+        reserveBtc1.innerHTML = returnData.reserveBtc1
+        reserveBtc2.innerHTML = returnData.reserveBtc2
+        fundingRateFee.innerHTML = returnData.fundingRateFee
+    }
     let repaintPosCorr = function (returnData) {
-        let periodToCorrection = document.getElementById("periodToCorrection");
-        periodToCorrection.innerHTML = returnData.periodToCorrection + ' sec';
-        let maxDiffCorr = document.getElementById("maxDiffCorr");
-        maxDiffCorr.innerHTML = returnData.maxDiffCorr;
-    };
+        let periodToCorrection = document.getElementById('periodToCorrection')
+        periodToCorrection.innerHTML = returnData.periodToCorrection + ' sec'
+        let maxDiffCorr = document.getElementById('maxDiffCorr')
+        maxDiffCorr.innerHTML = returnData.maxDiffCorr
+    }
     let repaintLiqParams = function (returnData) {
-        let bMrLiq = document.getElementById("b_mr_liq");
-        let oMrLiq = document.getElementById("o_mr_liq");
-        let bDQLOpenMin = document.getElementById("b_DQL_open_min");
-        let oDQLOpenMin = document.getElementById("o_DQL_open_min");
-        let bDQLCloseMin = document.getElementById("b_DQL_close_min");
-        let oDQLCloseMin = document.getElementById("o_DQL_close_min");
-        bMrLiq.innerHTML = returnData.bMrLiq;
-        oMrLiq.innerHTML = returnData.oMrLiq;
-        bDQLOpenMin.innerHTML = returnData.bDQLOpenMin;
-        oDQLOpenMin.innerHTML = returnData.oDQLOpenMin;
-        bDQLCloseMin.innerHTML = returnData.bDQLCloseMin;
-        oDQLCloseMin.innerHTML = returnData.oDQLCloseMin;
-    };
+        let bMrLiq = document.getElementById('b_mr_liq')
+        let oMrLiq = document.getElementById('o_mr_liq')
+        let bDQLOpenMin = document.getElementById('b_DQL_open_min')
+        let oDQLOpenMin = document.getElementById('o_DQL_open_min')
+        let bDQLCloseMin = document.getElementById('b_DQL_close_min')
+        let oDQLCloseMin = document.getElementById('o_DQL_close_min')
+        bMrLiq.innerHTML = returnData.bMrLiq
+        oMrLiq.innerHTML = returnData.oMrLiq
+        bDQLOpenMin.innerHTML = returnData.bDQLOpenMin
+        oDQLOpenMin.innerHTML = returnData.oDQLOpenMin
+        bDQLCloseMin.innerHTML = returnData.bDQLCloseMin
+        oDQLCloseMin.innerHTML = returnData.oDQLCloseMin
+    }
     let repaintStates = function (returnData) {
-        marketState.repaintStates(returnData);
-    };
+        marketState.repaintStates(returnData)
+    }
 
-    function createElement(element, attribute, inner) {
-        if (typeof(element) === "undefined") {
-            return false;
+    function createElement (element, attribute, inner) {
+        if (typeof (element) === 'undefined') {
+            return false
         }
-        if (typeof(inner) === "undefined") {
-            inner = "";
+        if (typeof (inner) === 'undefined') {
+            inner = ''
         }
-        var el = document.createElement(element);
-        if (typeof(attribute) === 'object') {
+        var el = document.createElement(element)
+        if (typeof (attribute) === 'object') {
             for (var key in attribute) {
-                el.setAttribute(key, attribute[key]);
+                el.setAttribute(key, attribute[key])
             }
         }
         if (!Array.isArray(inner)) {
-            inner = [inner];
+            inner = [inner]
         }
         for (var k = 0; k < inner.length; k++) {
             if (inner[k].tagName) {
-                el.appendChild(inner[k]);
+                el.appendChild(inner[k])
             } else {
-                el.appendChild(document.createTextNode(inner[k]));
+                el.appendChild(document.createTextNode(inner[k]))
             }
         }
-        return el;
+        return el
     }
 
 // var google = createElement("a",{"href":"http://google.com"},"google"),
@@ -233,975 +229,993 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 //     <a href="http://facebook.com">facebook</a>
 // </div>
 
-    function moveOrderP(orderId, orderType) {
-        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', firstMarketName));
+    function moveOrderP (orderId, orderType) {
+        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', firstMarketName))
     }
 
-    function moveOrderO(orderId, orderType) {
-        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', secondMarketName));
+    function moveOrderO (orderId, orderType) {
+        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', secondMarketName))
     }
 
-    function moveOrder(orderId, orderType, moveUrl) {
-        console.log("moveorder");
+    function moveOrder (orderId, orderType, moveUrl) {
+        console.log('moveorder')
 
-        let request = {id: orderId, orderType: orderType};
-        let requestData = JSON.stringify(request);
-        console.log(requestData);
+        let request = { id: orderId, orderType: orderType }
+        let requestData = JSON.stringify(request)
+        console.log(requestData)
 
         let showResponse = function (responseData, resultElement) {
-            console.log(responseData);
-            alert(responseData);
-        };
+            console.log(responseData)
+            alert(responseData)
+        }
         Http.httpAsyncPost(baseUrl + moveUrl,
-                requestData,
-                showResponse,
-                null);
+          requestData,
+          showResponse,
+          null)
     }
 
-    function cancelOrder(orderId, marketName) {
-        console.log("cancelOrder" + orderId);
-        let cancelUrl = sprintf('/market/%s/open-orders/cancel', marketName);
-        let request = {id: orderId};
-        let requestData = JSON.stringify(request);
-        console.log(requestData);
+    function cancelOrder (orderId, marketName) {
+        console.log('cancelOrder' + orderId)
+        let cancelUrl = sprintf('/market/%s/open-orders/cancel', marketName)
+        let request = { id: orderId }
+        let requestData = JSON.stringify(request)
+        console.log(requestData)
 
         let showResponse = function (responseData, resultElement) {
-            console.log(responseData);
-            alert(responseData);
-        };
+            console.log(responseData)
+            alert(responseData)
+        }
         Http.httpAsyncPost(baseUrl + cancelUrl,
-                requestData,
-                showResponse,
-                null);
+          requestData,
+          showResponse,
+          null)
+    }
+
+    function lgst (long, short) {
+        const lg = Utils.withSign(long)
+        const st = Utils.withSign(short)
+        const rawDataStr = ', lg' + lg + ', st' + st
+        let styleStr = ''
+        let titleStr = ''
+        if (long === "0" && short === "0") {
+            styleStr = 'font-weight: bold; color: red'
+            titleStr = 'If balance>0 try create order by button(and cancel it then)'
+        }
+        return `<span style="${styleStr}" title="${titleStr}">${rawDataStr}</span>`
     }
 
     var updateFunction = function () {
 
-        function showPosDiff(posDiffJson) {
-            let mainSet = document.getElementById("main-set-string");
+        function showPosDiff (posDiffJson) {
+            let mainSet = document.getElementById('main-set-string')
             if (posDiffJson.mainSetEqual) {
-                mainSet.style.color = "#008f00";
+                mainSet.style.color = '#008f00'
             } else {
-                mainSet.style.color = "#bf0000";
+                mainSet.style.color = '#bf0000'
             }
-            mainSet.innerHTML = posDiffJson.mainSetStr;//Notional
-            let mainSetSource = document.getElementById("main-set-source");
-            mainSetSource.innerHTML = posDiffJson.mainSetSource;
+            mainSet.innerHTML = posDiffJson.mainSetStr//Notional
+            let mainSetSource = document.getElementById('main-set-source')
+            mainSetSource.innerHTML = posDiffJson.mainSetSource
             if (posDiffJson.extraSetStr != null) {
-                let extraSetStr = document.getElementById("extra-set-string");
+                let extraSetStr = document.getElementById('extra-set-string')
                 if (posDiffJson.extraSetEqual) {
-                    extraSetStr.style.color = "#008f00";
+                    extraSetStr.style.color = '#008f00'
                 } else {
-                    extraSetStr.style.color = "#bf0000";
+                    extraSetStr.style.color = '#bf0000'
                 }
-                extraSetStr.innerHTML = posDiffJson.extraSetStr;
-                let extraSetSource = document.getElementById("extra-set-source");
-                extraSetSource.innerHTML = posDiffJson.extraSetSource;
+                extraSetStr.innerHTML = posDiffJson.extraSetStr
+                let extraSetSource = document.getElementById('extra-set-source')
+                extraSetSource.innerHTML = posDiffJson.extraSetSource
             }
             if (posDiffJson.placingBlocks != null) {
-                placingBlocksVar.updateBlocks(posDiffJson.placingBlocks);
+                placingBlocksVar.updateBlocks(posDiffJson.placingBlocks)
             }
             if (posDiffJson.btmUsdInContract != null) {
-                $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract);
+                $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract)
             }
             if (posDiffJson.isEth != null) {
-                placingOrderObj.isEth = posDiffJson.isEth;
-                mobxStore.isEth = posDiffJson.isEth;
+                placingOrderObj.isEth = posDiffJson.isEth
+                mobxStore.isEth = posDiffJson.isEth
             }
             if (posDiffJson.cm != null) {
-                placingOrderObj.cm = posDiffJson.cm;
-                mobxStore.cm = posDiffJson.cm;
+                placingOrderObj.cm = posDiffJson.cm
+                mobxStore.cm = posDiffJson.cm
             }
         }
 
         fetch(sprintf('/market/last-price-deviation', firstMarketName), function (jsonData) {
-            lastPriceDevVar.fillComponents(jsonData, baseUrl);
-        });
+            lastPriceDevVar.fillComponents(jsonData, baseUrl)
+        })
 
         fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
-            let orderBookP = parseOrderBook(jsonData);
+            let orderBookP = parseOrderBook(jsonData)
             // console.log('orderBookP.ask');
             // console.log(orderBookP.ask);
-            askBitmexTable.loadData(orderBookP.ask);
-            bidBitmexTable.loadData(orderBookP.bid);
+            askBitmexTable.loadData(orderBookP.ask)
+            bidBitmexTable.loadData(orderBookP.bid)
 
-            bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl);
+            bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
 
-            $('#bitmex-last-price').html(jsonData.lastPrice);
-            $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal);
+            $('#bitmex-last-price').html(jsonData.lastPrice)
+            $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal)
 
-            mobxStore.futureIndex.twoMarketsIndexDiff = jsonData.futureIndex.twoMarketsIndexDiff;
-            mobxStore.futureIndex.b_index = Number(jsonData.futureIndex.indexVal);
-            mobxStore.b_bid_1 = Number(jsonData.bid[0].price);
-            mobxStore.b_ask_1 = Number(jsonData.ask[0].price);
+            mobxStore.futureIndex.twoMarketsIndexDiff = jsonData.futureIndex.twoMarketsIndexDiff
+            mobxStore.futureIndex.b_index = Number(jsonData.futureIndex.indexVal)
+            mobxStore.b_bid_1 = Number(jsonData.bid[0].price)
+            mobxStore.b_ask_1 = Number(jsonData.ask[0].price)
             // mobxStore.bxbtBal = jsonData.futureIndex.contractExtraJson.bxbtBal;
-        });
+        })
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
-            let orderBookO = parseOrderBook(jsonData);
-            askOkcoinTable.loadData(orderBookO.ask);
-            bidOkcoinTable.loadData(orderBookO.bid);
+            let orderBookO = parseOrderBook(jsonData)
+            askOkcoinTable.loadData(orderBookO.ask)
+            bidOkcoinTable.loadData(orderBookO.bid)
 
-            okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl);
+            okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
 
-            $('#okcoin-last-price').html(jsonData.lastPrice);
-            $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal);
+            $('#okcoin-last-price').html(jsonData.lastPrice)
+            $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal)
 
-            mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal);
-            mobxStore.o_bid_1 = Number(jsonData.bid[0].price);
-            mobxStore.o_ask_1 = Number(jsonData.ask[0].price);
-            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2);
-        });
+            mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal)
+            mobxStore.o_bid_1 = Number(jsonData.bid[0].price)
+            mobxStore.o_ask_1 = Number(jsonData.ask[0].price)
+            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2)
+        })
 
         fetch('/mon/all', function (resultJson) {
-            let pTicker = document.getElementById('deadlock-checker');
-            pTicker.innerHTML = resultJson.allHtml;
-            mobxStore.allMon.xrateLimitBtm = resultJson.xrateLimitBtm;
-            mobxStore.allMon.xrateLimitBtmUpdated = resultJson.xrateLimitBtmUpdated;
-            let bitmexReconnectCount = document.getElementById('bitmex-reconnect-count');
-            bitmexReconnectCount.innerHTML = resultJson.bitmexReconnectCount;
-            monVar.showMonMoving(baseUrl, resultJson);
-        });
+            let pTicker = document.getElementById('deadlock-checker')
+            pTicker.innerHTML = resultJson.allHtml
+            mobxStore.allMon.xrateLimitBtm = resultJson.xrateLimitBtm
+            mobxStore.allMon.xrateLimitBtmUpdated = resultJson.xrateLimitBtmUpdated
+            let bitmexReconnectCount = document.getElementById('bitmex-reconnect-count')
+            bitmexReconnectCount.innerHTML = resultJson.bitmexReconnectCount
+            monVar.showMonMoving(baseUrl, resultJson)
+        })
         fetch('/mon/calc-delta', function (resultJson) {
-            monCalcDelta.updateMonCalcDelta(baseUrl, resultJson);
-        });
+            monCalcDelta.updateMonCalcDelta(baseUrl, resultJson)
+        })
 
         fetch('/market/sum-bal', function (resultJson) {
-            $("#sum-bal").html(resultJson.result);
+            $('#sum-bal').html(resultJson.result)
 
-            eBestMin.fillComponents(resultJson);
-        });
+            eBestMin.fillComponents(resultJson)
+        })
 
         fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
-            let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName));
+            let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName))
             if (poloniexAccount.btc === null) {
-                let quAvg = poloniexAccount.quAvg;
-                pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet, quAvg)
-                        + ', p' + poloniexAccount.positionStr
-                        + ', lv' + poloniexAccount.leverage
-                        + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
-                        + ', st' + Utils.withSign(poloniexAccount.availableForShort)
-                        + ', liq' + Utils.withSign(poloniexAccount.liqPrice)
-                        + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
-                        + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
-                        + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
-                        + ',<br> entry_price ' + poloniexAccount.entryPrice
-                        // + '<br>'
-                        + ',<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
-                        + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
-                        + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg);
+                let quAvg = poloniexAccount.quAvg
+                pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet,
+                  quAvg)
+                  + ', p' + poloniexAccount.positionStr
+                  + ', lv' + poloniexAccount.leverage
+                  + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
+                  + ', st' + Utils.withSign(poloniexAccount.availableForShort)
+                  + ', liq' + Utils.withSign(poloniexAccount.liqPrice)
+                  + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
+                  + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
+                  + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
+                  + ',<br> entry_price ' + poloniexAccount.entryPrice
+                  // + '<br>'
+                  + ',<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
+                  + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
+                  + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg)
             } else {
                 pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
-                        + ', usd=' + poloniexAccount.usd;
+                  + ', usd=' + poloniexAccount.usd
             }
-        });
+        })
 
         fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
-            let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName));
+            let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName))
             if (marketAccount.btc === null) {
-                const quAvg = marketAccount.quAvg;
-                const ethBtcBid1 = marketAccount.ethBtcBid1;
-                mobxStore.secondMarketAccount = marketAccount;
+                const quAvg = marketAccount.quAvg
+                const ethBtcBid1 = marketAccount.ethBtcBid1
+                mobxStore.secondMarketAccount = marketAccount
                 if (ethBtcBid1 === null) {
-                    oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet, quAvg)
-                            + ', p' + marketAccount.positionStr
-                            + ', lv' + marketAccount.leverage
-                            + ', lg' + Utils.withSign(marketAccount.availableForLong)
-                            + ', st' + Utils.withSign(marketAccount.availableForShort)
-                            + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
-                            + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
-                            + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                            + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
-                            + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
-                            + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
-                            + ',<br> entry_price ' + marketAccount.entryPrice
-                            + ',<br> pl_pos_' + marketAccount.plPos
-                            + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
-                            + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
-                            + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg);
+                    oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet,
+                      quAvg)
+                      + ', p' + marketAccount.positionStr
+                      + ', lv' + marketAccount.leverage
+                      + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
+                      + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                      + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
+                      + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                      + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                      + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
+                      + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
+                      + ',<br> entry_price ' + marketAccount.entryPrice
+                      + ',<br> pl_pos_' + marketAccount.plPos
+                      + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
+                      + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
+                      + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
                 } else {
-                    const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1);
-                    const wUsd = Utils.toUsd(wBtc, quAvg);
-                    const eMarkBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1);
-                    const eMarkUsd = Utils.toUsd(eMarkBtc, quAvg);
-                    const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1);
-                    const eBestUsd = Utils.toUsd(eBestBtc, quAvg);
-                    const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1);
-                    const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg);
-                    const uBtc = Utils.ethToBtc(marketAccount.upl, ethBtcBid1);
-                    const uUsd = Utils.toUsd(uBtc, quAvg);
-                    const mBtc = Utils.ethToBtc(marketAccount.margin, ethBtcBid1);
-                    const mUsd = Utils.toUsd(mBtc, quAvg);
-                    const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1);
-                    const aUsd = Utils.toUsd(aBtc, quAvg);
+                    const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1)
+                    const wUsd = Utils.toUsd(wBtc, quAvg)
+                    const eMarkBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1)
+                    const eMarkUsd = Utils.toUsd(eMarkBtc, quAvg)
+                    const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1)
+                    const eBestUsd = Utils.toUsd(eBestBtc, quAvg)
+                    const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1)
+                    const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg)
+                    const uBtc = Utils.ethToBtc(marketAccount.upl, ethBtcBid1)
+                    const uUsd = Utils.toUsd(uBtc, quAvg)
+                    const mBtc = Utils.ethToBtc(marketAccount.margin, ethBtcBid1)
+                    const mUsd = Utils.toUsd(mBtc, quAvg)
+                    const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1)
+                    const aUsd = Utils.toUsd(aBtc, quAvg)
                     oBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
-                            + ', p' + marketAccount.positionStr
-                            + ', lv' + marketAccount.leverage
-                            + ', lg' + Utils.withSign(marketAccount.availableForLong)
-                            + ', st' + Utils.withSign(marketAccount.availableForShort)
-                            + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
-                            + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
-                            + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                            + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
-                            + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
-                            + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
-                            + ',<br> entry_price ' + marketAccount.entryPrice
-                            + ',<br> pl_pos_' + marketAccount.plPos
-                            + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
-                            + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
-                            + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd;
+                      + ', p' + marketAccount.positionStr
+                      + ', lv' + marketAccount.leverage
+                      + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
+                      + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                      + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
+                      + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                      + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
+                      + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
+                      + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
+                      + ',<br> entry_price ' + marketAccount.entryPrice
+                      + ',<br> pl_pos_' + marketAccount.plPos
+                      + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
+                      + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
+                      + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
 
                 }
 
             } else {
                 oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
-                        + ', usd=' + marketAccount.usd;
+                  + ', usd=' + marketAccount.usd
             }
-        });
+        })
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
-            let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName));
+            let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName))
             liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-                    + '<br>b_' + marketAccount.mmDql
-                    + '<br>b_' + marketAccount.mmDmrl;
-        });
+              + '<br>b_' + marketAccount.mmDql
+              + '<br>b_' + marketAccount.mmDmrl
+        })
         fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
-            let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName));
+            let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName))
             liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
-                    + '<br>o_' + marketAccount.mmDql
-                    + '<br>o_' + marketAccount.mmDmrl;
-        });
+              + '<br>o_' + marketAccount.mmDql
+              + '<br>o_' + marketAccount.mmDmrl
+        })
         fetch('/delta-params', function (result) {
-            let b = document.getElementById('b_delta_minmax');
-            let o = document.getElementById('o_delta_minmax');
-            b.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMin) + '...';
-            o.innerHTML = Utils.withSign(result.instantDelta.okDeltaMin) + '...';
-            let btmMax = document.createElement('span');
-            btmMax.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMax);
-            btmMax.style.color = result.instantDelta.btmMaxColor;
-            b.appendChild(btmMax);
-            let okMax = document.createElement('span');
-            okMax.innerHTML = Utils.withSign(result.instantDelta.okDeltaMax);
-            okMax.style.color = result.instantDelta.okMaxColor;
-            o.appendChild(okMax);
+            let b = document.getElementById('b_delta_minmax')
+            let o = document.getElementById('o_delta_minmax')
+            b.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMin) + '...'
+            o.innerHTML = Utils.withSign(result.instantDelta.okDeltaMin) + '...'
+            let btmMax = document.createElement('span')
+            btmMax.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMax)
+            btmMax.style.color = result.instantDelta.btmMaxColor
+            b.appendChild(btmMax)
+            let okMax = document.createElement('span')
+            okMax.innerHTML = Utils.withSign(result.instantDelta.okDeltaMax)
+            okMax.style.color = result.instantDelta.okMaxColor
+            o.appendChild(okMax)
 
-            let b_min = document.getElementById('b_delta_min_minmax');
-            let o_min = document.getElementById('o_delta_min_minmax');
-            b_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMin) + '...';
-            o_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMin) + '...';
-            let btmMax_min = document.createElement('span');
-            btmMax_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMax);
-            btmMax_min.style.color = result.deltaMin.btmMaxColor;
-            b_min.appendChild(btmMax_min);
-            let okMax_min = document.createElement('span');
-            okMax_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMax);
-            okMax_min.style.color = result.deltaMin.okMaxColor;
-            o_min.appendChild(okMax_min);
+            let b_min = document.getElementById('b_delta_min_minmax')
+            let o_min = document.getElementById('o_delta_min_minmax')
+            b_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMin) + '...'
+            o_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMin) + '...'
+            let btmMax_min = document.createElement('span')
+            btmMax_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMax)
+            btmMax_min.style.color = result.deltaMin.btmMaxColor
+            b_min.appendChild(btmMax_min)
+            let okMax_min = document.createElement('span')
+            okMax_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMax)
+            okMax_min.style.color = result.deltaMin.okMaxColor
+            o_min.appendChild(okMax_min)
 
-            let sRange = document.getElementById('signal-time-range');
-            sRange.innerHTML = Utils.withSign(result.signalData.signalTimeMin) + '...';
-            let sRangeMax = document.createElement('span');
-            sRangeMax.innerHTML = Utils.withSign(result.signalData.signalTimeMax);
+            let sRange = document.getElementById('signal-time-range')
+            sRange.innerHTML = Utils.withSign(result.signalData.signalTimeMin) + '...'
+            let sRangeMax = document.createElement('span')
+            sRangeMax.innerHTML = Utils.withSign(result.signalData.signalTimeMax)
             // sRangeMax.style.color = result.signalData.maxColor;
-            sRange.appendChild(sRangeMax);
+            sRange.appendChild(sRangeMax)
 
-            let sAvg = document.getElementById('signal-time-avg');
-            sAvg.innerHTML = Utils.withSign(result.signalData.signalTimeAvg);
-        });
+            let sAvg = document.getElementById('signal-time-avg')
+            sAvg.innerHTML = Utils.withSign(result.signalData.signalTimeAvg)
+        })
         fetch('/market/timers', function (result) {
-            let startSignalTimer = document.getElementById('start-signal-timer');
-            startSignalTimer.innerHTML = result.startSignalTimerStr;
+            let startSignalTimer = document.getElementById('start-signal-timer')
+            startSignalTimer.innerHTML = result.startSignalTimerStr
 
-            let deltaMinTimer = document.getElementById('delta-min-timer');
-            deltaMinTimer.innerHTML = result.deltaMinTimerStr;
+            let deltaMinTimer = document.getElementById('delta-min-timer')
+            deltaMinTimer.innerHTML = result.deltaMinTimerStr
 
-            let bordersTimer = document.getElementById('borders-timer');
-            bordersTimer.innerHTML = result.bordersTimerStr;
-            bordersVar.updateTableHash(result.bordersV2TableHashCode);
-        });
+            let bordersTimer = document.getElementById('borders-timer')
+            bordersTimer.innerHTML = result.bordersTimerStr
+            bordersVar.updateTableHash(result.bordersV2TableHashCode)
+        })
         // markets order is opposite for deltas
         fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
-                function (returnData) {
-                    repaintDeltasAndBorders(returnData);
-                });
+          function (returnData) {
+              repaintDeltasAndBorders(returnData)
+          })
 
         fetch('/market/states', function (returnData) {
-            repaintStates(returnData);
-            showPosDiff(returnData.posDiffJson);
-        });
+            repaintStates(returnData)
+            showPosDiff(returnData.posDiffJson)
+        })
         fetch('/market/pos-corr', function (returnData) {
-            repaintPosCorr(returnData);
-        });
+            repaintPosCorr(returnData)
+        })
         fetch('/market/liq-params', function (returnData) {
-            repaintLiqParams(returnData);
-        });
+            repaintLiqParams(returnData)
+        })
 
-        var logsFetching = document.getElementById('logs-fetching');
+        var logsFetching = document.getElementById('logs-fetching')
 
         if (logsFetching.checked) {
             fetch(sprintf('/market/trade-log/%s', firstMarketName), function (returnData) {
-                let area1 = document.getElementById(firstMarketName + '-trade-log');
-                area1.scrollTop = area1.scrollHeight;
+                let area1 = document.getElementById(firstMarketName + '-trade-log')
+                area1.scrollTop = area1.scrollHeight
                 area1.innerHTML = returnData.trades.length > 0
-                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                        : "";
-            });
+                  ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                  : ''
+            })
             fetch('/market/trade-log/okcoin', function (returnData) {
-                let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName));
-                area1.scrollTop = area1.scrollHeight;
+                let area1 = document.getElementById(sprintf('%s-trade-log', secondMarketName))
+                area1.scrollTop = area1.scrollHeight
                 area1.innerHTML = returnData.trades.length > 0
-                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                        : "";
-            });
+                  ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                  : ''
+            })
             fetch('/market/deltas-log', function (returnData) {
-                let area1 = document.getElementById('deltas-log');
-                area1.scrollTop = area1.scrollHeight;
+                let area1 = document.getElementById('deltas-log')
+                area1.scrollTop = area1.scrollHeight
                 area1.innerHTML = returnData.trades.length > 0
-                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                        : "";
-            });
+                  ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                  : ''
+            })
             fetch('/market/warning-log', function (returnData) {
-                let area1 = document.getElementById('warning-log');
-                area1.scrollTop = area1.scrollHeight;
+                let area1 = document.getElementById('warning-log')
+                area1.scrollTop = area1.scrollHeight
                 area1.innerHTML = returnData.trades.length > 0
-                        ? returnData.trades.reduce((a, b) => a + '\n' + b)
-                        : "";
-            });
+                  ? returnData.trades.reduce((a, b) => a + '\n' + b)
+                  : ''
+            })
         }
 
-        function setOpenOrdersHeight(ordersContainer) {
+        function setOpenOrdersHeight (ordersContainer) {
             // if (ordersContainer.childNodes.length > 4) {
             //     ordersContainer.style.height = 'auto';
             // } else {
-                ordersContainer.style.height = '80px';
+            ordersContainer.style.height = '80px'
             // }
         }
 
-        function timestampSorter() {
+        function timestampSorter () {
             return function (a, b) {
-                return ('' + b.timestamp).localeCompare(a.timestamp);
-            };
+                return ('' + b.timestamp).localeCompare(a.timestamp)
+            }
         }
 
         fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
-            var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName));
+            var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName))
             while (myNode.firstChild) {
-                myNode.removeChild(myNode.firstChild);
+                myNode.removeChild(myNode.firstChild)
             }
-            setOpenOrdersHeight(myNode);
-            returnData
-            .sort((a, b) => ('' + b.timestamp).localeCompare(a.timestamp))
-            .forEach(function (oo) {
+            setOpenOrdersHeight(myNode)
+            returnData.sort((a, b) => ('' + b.timestamp).localeCompare(a.timestamp)).forEach(function (oo) {
                 // console.log(oo.timestamp);
-                let existedOrder = document.getElementById("p-span-" + oo.id);
+                let existedOrder = document.getElementById('p-span-' + oo.id)
                 if (existedOrder === null) {
-                    let labelOrder = createElement("span", {"id": "p-span-" + oo.id, "style": "font-size:small"},
-                            "#" + oo.arbId
-                            + ": id='" + oo.id.substring(0, 9) + "...'"
-                            + ",c=" + oo.currency
-                            + ",t=" + oo.orderType
-                            + ",s=" + oo.status
-                            + ",q=" + oo.price
-                            + ",a=" + oo.amount
-                            + "(f=" + oo.filledAmount + ")"
-                            + ",time=" + oo.timestamp
-                    );
-                    let move = createElement("button", {"id": "p-move-" + oo.id, "title": "Try move"}, "mv");
-                    move.addEventListener("click", function () {
-                        moveOrderP(oo.id, oo.orderType);
-                    }, false);
-                    let cancel = createElement("button", {"id": "p-cancel-" + oo.id}, "cnl");
-                    cancel.addEventListener("click", function () {
-                        cancelOrder(oo.id, firstMarketName);
-                    }, oo.id);
+                    let labelOrder = createElement('span', { 'id': 'p-span-' + oo.id, 'style': 'font-size:small' },
+                      '#' + oo.arbId
+                      + ': id=\'' + oo.id.substring(0, 9) + '...\''
+                      + ',c=' + oo.currency
+                      + ',t=' + oo.orderType
+                      + ',s=' + oo.status
+                      + ',q=' + oo.price
+                      + ',a=' + oo.amount
+                      + '(f=' + oo.filledAmount + ')'
+                      + ',time=' + oo.timestamp
+                    )
+                    let move = createElement('button', { 'id': 'p-move-' + oo.id, 'title': 'Try move' }, 'mv')
+                    move.addEventListener('click', function () {
+                        moveOrderP(oo.id, oo.orderType)
+                    }, false)
+                    let cancel = createElement('button', { 'id': 'p-cancel-' + oo.id }, 'cnl')
+                    cancel.addEventListener('click', function () {
+                        cancelOrder(oo.id, firstMarketName)
+                    }, oo.id)
 
-                    let openOrderDiv = createElement("div", {"id": "p-links"}, [labelOrder, move, cancel]);
-                    const ordersContainer = document.getElementById(sprintf('%s-open-orders', firstMarketName));
-                    ordersContainer.appendChild(openOrderDiv);
-                    setOpenOrdersHeight(ordersContainer);
+                    let openOrderDiv = createElement('div', { 'id': 'p-links' }, [labelOrder, move, cancel])
+                    const ordersContainer = document.getElementById(sprintf('%s-open-orders', firstMarketName))
+                    ordersContainer.appendChild(openOrderDiv)
+                    setOpenOrdersHeight(ordersContainer)
                 }
 
-            });
-        });
-        fetch('/market/okcoin/open-orders', function (returnData) {
-            var myNode = document.getElementById("okcoin-open-orders");
-            while (myNode.firstChild) {
-                myNode.removeChild(myNode.firstChild);
-            }
-            setOpenOrdersHeight(myNode);
-            returnData
-            .sort((a, b) => {
-                if (a.status === 'WAITING') return -1
-                return ('' + b.timestamp).localeCompare(a.timestamp)
             })
-            .forEach(function (oo) {
-                let existedOrder = document.getElementById("o-span-" + oo.id);
+        })
+        fetch('/market/okcoin/open-orders', function (returnData) {
+            var myNode = document.getElementById('okcoin-open-orders')
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild)
+            }
+            setOpenOrdersHeight(myNode)
+            returnData.sort((a, b) => {
+                if (a.status === 'WAITING') {
+                    return -1
+                }
+                return ('' + b.timestamp).localeCompare(a.timestamp)
+            }).forEach(function (oo) {
+                let existedOrder = document.getElementById('o-span-' + oo.id)
                 if (existedOrder === null) {
-                    let labelOrder = createElement("span", {"id": "o-span-" + oo.id, "style": "font-size:small"},
-                            "#" + oo.arbId
-                            + ": id='" + oo.id + "'"
-                            + ",t=" + oo.orderType
-                            + ",s=" + oo.status
-                            + ",q=" + oo.price
-                            + ",a=" + oo.amount
-                            + "(f=" + oo.filledAmount + ")"
-                            + ",time=" + oo.timestamp
-                    );
-                    let openOrderDiv;
+                    let labelOrder = createElement('span', { 'id': 'o-span-' + oo.id, 'style': 'font-size:small' },
+                      '#' + oo.arbId
+                      + ': id=\'' + oo.id + '\''
+                      + ',t=' + oo.orderType
+                      + ',s=' + oo.status
+                      + ',q=' + oo.price
+                      + ',a=' + oo.amount
+                      + '(f=' + oo.filledAmount + ')'
+                      + ',time=' + oo.timestamp
+                    )
+                    let openOrderDiv
                     if (oo.status !== 'WAITING') {
-                        let move = createElement("button", { "id": "o-move-" + oo.id, "title": "Try move" }, "mv");
-                        move.addEventListener("click", function () {
-                            moveOrderO(oo.id, oo.orderType);
-                        }, false);
+                        let move = createElement('button', { 'id': 'o-move-' + oo.id, 'title': 'Try move' }, 'mv')
+                        move.addEventListener('click', function () {
+                            moveOrderO(oo.id, oo.orderType)
+                        }, false)
 
-                        let cancel = createElement("button", { "id": "o-cancel-" + oo.id }, "cnl");
-                        cancel.addEventListener("click", function () {
-                            cancelOrder(oo.id, secondMarketName);
-                        }, oo.id);
+                        let cancel = createElement('button', { 'id': 'o-cancel-' + oo.id }, 'cnl')
+                        cancel.addEventListener('click', function () {
+                            cancelOrder(oo.id, secondMarketName)
+                        }, oo.id)
 
-                        openOrderDiv = createElement("div", { "id": "o-links" }, [labelOrder, move, cancel]);
+                        openOrderDiv = createElement('div', { 'id': 'o-links' }, [labelOrder, move, cancel])
                     } else {
                         labelOrder.style = 'font-size:small; background-color:lightgrey'
-                        openOrderDiv = createElement("div", { "id": "o-links", "background-color": "lightgrey" }, labelOrder);
+                        openOrderDiv = createElement('div', { 'id': 'o-links', 'background-color': 'lightgrey' },
+                          labelOrder)
                     }
-                    const ordersContainer = document.getElementById("okcoin-open-orders");
-                    ordersContainer.appendChild(openOrderDiv);
-                    setOpenOrdersHeight(ordersContainer);
+                    const ordersContainer = document.getElementById('okcoin-open-orders')
+                    ordersContainer.appendChild(openOrderDiv)
+                    setOpenOrdersHeight(ordersContainer)
                 }
-            });
-        });
+            })
+        })
 
-        updateCumParams();
+        updateCumParams()
 
-    };
-    var updateData = setInterval(updateFunction, 1000);
+    }
+    var updateData = setInterval(updateFunction, 1000)
 
-    function bindDumpButton() {
-        if (typeof Handsontable === "undefined") {
-            return;
+    function bindDumpButton () {
+        if (typeof Handsontable === 'undefined') {
+            return
         }
 
         Handsontable.Dom.addEvent(document.body, 'click', function (e) {
 
-            var element = e.target || e.srcElement;
+            var element = e.target || e.srcElement
 
-            if (element.nodeName == "BUTTON" && element.name == 'dump') {
-                var name = element.getAttribute('data-dump');
-                var instance = element.getAttribute('data-instance');
-                var hot = window[instance];
-                console.log('data of ' + name, hot.getData());
+            if (element.nodeName == 'BUTTON' && element.name == 'dump') {
+                var name = element.getAttribute('data-dump')
+                var instance = element.getAttribute('data-instance')
+                var hot = window[instance]
+                console.log('data of ' + name, hot.getData())
             }
 
-            if (element.nodeName == "BUTTON" && element.name == 'update') {
+            if (element.nodeName == 'BUTTON' && element.name == 'update') {
                 // var name = element.getAttribute('example1');
                 // var instance = element.getAttribute('data-instance');
                 // var hot = window[name];
                 // console.log('data of ' + name, hot);
 
-                clearInterval(updateData); // stop the setInterval()
-                const interval = parseInt(document.getElementById('update_interval').value);
-                console.log('new interval ' + interval);
-                updateData = setInterval(updateFunction, interval);
+                clearInterval(updateData) // stop the setInterval()
+                const interval = parseInt(document.getElementById('update_interval').value)
+                console.log('new interval ' + interval)
+                updateData = setInterval(updateFunction, interval)
             }
 
             if (element.name == 'sendToSocket') {
-                socket.send("test message");
+                socket.send('test message')
             }
 
             if (element.id == 'update-border1') {
-                let newBorderValue = document.getElementById('border1-edit').value;
-                let request = {border1: newBorderValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newBorderValue = document.getElementById('border1-edit').value
+                let request = { border1: newBorderValue }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
-                        requestData,
-                        function (responseData, resultElement) {
-                            allSettings.currentPreset = "";
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      allSettings.currentPreset = ''
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-border2') {
-                let newBorderValue = document.getElementById('border2-edit').value;
-                let request = {border2: newBorderValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newBorderValue = document.getElementById('border2-edit').value
+                let request = { border2: newBorderValue }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-borders',
-                        requestData,
-                        function (responseData, resultElement) {
-                            allSettings.currentPreset = "";
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      allSettings.currentPreset = ''
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-delta') {
-                let newCumDeltaValue = document.getElementById('cum-delta-edit').value;
-                let request = {cumDelta: newCumDeltaValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newCumDeltaValue = document.getElementById('cum-delta-edit').value
+                let request = { cumDelta: newCumDeltaValue }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-delta-fact') {
-                let newCumDeltaFactValue = document.getElementById('cum-delta-fact-edit').value;
-                let request = {cumDeltaFact: newCumDeltaFactValue};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newCumDeltaFactValue = document.getElementById('cum-delta-fact-edit').value
+                let request = { cumDeltaFact: newCumDeltaFactValue }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-diff-fact-br') {
-                let newVal = document.getElementById('cum-diff-fact-br-edit').value;
-                let request = {cumDiffFactBr: newVal};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newVal = document.getElementById('cum-diff-fact-br-edit').value
+                let request = { cumDiffFactBr: newVal }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-diff2-pre') {
-                let newVal = document.getElementById('cum-diff2-pre-edit').value;
-                let request = {cumDiff2Pre: newVal};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newVal = document.getElementById('cum-diff2-pre-edit').value
+                let request = { cumDiff2Pre: newVal }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData, function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData, function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-cum-diff2-post') {
-                let newVal = document.getElementById('cum-diff2-post-edit').value;
-                let request = {cumDiff2Post: newVal};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let newVal = document.getElementById('cum-diff2-post-edit').value
+                let request = { cumDiff2Post: newVal }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData, function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData, function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-diff1') {
-                let element = document.getElementById('cum-diff1-edit').value;
-                let request = {cumDiffFact1: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cum-diff1-edit').value
+                let request = { cumDiffFact1: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-diff2') {
-                let element = document.getElementById('cum-diff2-edit').value;
-                let request = {cumDiffFact2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cum-diff2-edit').value
+                let request = { cumDiffFact2: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-diff') {
-                let element = document.getElementById('cum-diff-edit').value;
-                let request = {cumDiffFact: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cum-diff-edit').value
+                let request = { cumDiffFact: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-com1') {
-                let element = document.getElementById('cum-com1-edit').value;
-                let request = {cumCom1: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cum-com1-edit').value
+                let request = { cumCom1: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cum-com2') {
-                let element = document.getElementById('cum-com2-edit').value;
-                let request = {cumCom2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cum-com2-edit').value
+                let request = { cumCom2: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-cumBitmexMCom') {
-                let element = document.getElementById('cumBitmexMCom-edit').value;
-                let request = {cumBitmexMCom: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('cumBitmexMCom-edit').value
+                let request = { cumBitmexMCom: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-slip') {
-                let element = document.getElementById('slip-edit').value;
-                let request = {slip: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('slip-edit').value
+                let request = { slip: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'reset-all-cum') {
-                let confirmation = window.confirm("Reset all cum values!\n\nAre you sure?");
+                let confirmation = window.confirm('Reset all cum values!\n\nAre you sure?')
                 if (confirmation) {
-                    let request = {resetAllCumValues: true};
-                    let requestData = JSON.stringify(request);
-                    console.log(requestData);
+                    let request = { resetAllCumValues: true }
+                    let requestData = JSON.stringify(request)
+                    console.log(requestData)
 
                     Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                            requestData,
-                            function (responseData, resultElement) {
-                                repaintDeltasAndBorders(responseData);
-                            },
-                            null
-                    );
+                      requestData,
+                      function (responseData, resultElement) {
+                          repaintDeltasAndBorders(responseData)
+                      },
+                      null
+                    )
                 }
             }
 
             if (element.id == 'free-markets-states') {
-                let request = {firstMarket: true, secondMarket: true};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let request = { firstMarket: true, secondMarket: true }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/free-states',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintStates(JSON.parse(responseData));
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintStates(JSON.parse(responseData))
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-count1') {
-                let element = document.getElementById('count1-edit').value;
-                let request = {count1: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('count1-edit').value
+                let request = { count1: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-count2') {
-                let element = document.getElementById('count2-edit').value;
-                let request = {count2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('count2-edit').value
+                let request = { count2: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-reserveBtc1') {
-                let element = document.getElementById('reserveBtc1-edit').value;
-                let request = {reserveBtc1: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('reserveBtc1-edit').value
+                let request = { reserveBtc1: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-reserveBtc2') {
-                let element = document.getElementById('reserveBtc2-edit').value;
-                let request = {reserveBtc2: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('reserveBtc2-edit').value
+                let request = { reserveBtc2: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'print-sum-bal') {
-                let request = {};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let request = {}
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/print-sum-bal',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintStates(JSON.parse(responseData));
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintStates(JSON.parse(responseData))
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-fundingRateFee') {
-                let element = document.getElementById('fundingRateFee-edit').value;
-                let request = {fundingRateFee: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('fundingRateFee-edit').value
+                let request = { fundingRateFee: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/update-maker-delta',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintDeltasAndBorders(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintDeltasAndBorders(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-customSwapTime') {
-                let element = document.getElementById('customSwapTime-edit').value;
-                let request = {command: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('customSwapTime-edit').value
+                let request = { command: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
-                        requestData,
-                        function (responseData, resultElement) {
-                            let cst = document.getElementById("customSwapTime");
-                            cst.innerHTML = responseData.result;
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      let cst = document.getElementById('customSwapTime')
+                      cst.innerHTML = responseData.result
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-timeCompareUpdating') {
-                let element = document.getElementById('timeCompareUpdating-edit').value;
-                let request = {command: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('timeCompareUpdating-edit').value
+                let request = { command: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
-                        requestData,
-                        function (responseData, resultElement) {
-                            let timeCompareUpdating = document.getElementById('timeCompareUpdating');
-                            timeCompareUpdating.innerHTML = responseData.result;
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      let timeCompareUpdating = document.getElementById('timeCompareUpdating')
+                      timeCompareUpdating.innerHTML = responseData.result
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-pos-corr') {
-                let posCorr = document.getElementById("pos-corr").innerHTML;
+                let posCorr = document.getElementById('pos-corr').innerHTML
                 if (posCorr == 'stopped') {
-                    posCorr = 'enabled';
+                    posCorr = 'enabled'
                 } else {
-                    posCorr = 'stopped';
+                    posCorr = 'stopped'
                 }
-                let request = {status: posCorr};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let request = { status: posCorr }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
 
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintPosCorr(JSON.parse(responseData));
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintPosCorr(JSON.parse(responseData))
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-periodToCorrection') {
-                let element = document.getElementById('periodToCorrection-edit').value;
-                let request = {periodToCorrection: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('periodToCorrection-edit').value
+                let request = { periodToCorrection: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintPosCorr(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintPosCorr(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-maxDiffCorr') {
-                let element = document.getElementById('maxDiffCorr-edit').value;
-                let request = {maxDiffCorr: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('maxDiffCorr-edit').value
+                let request = { maxDiffCorr: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/pos-corr',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintPosCorr(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintPosCorr(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'update-b_mr_liq') {
-                let element = document.getElementById('b_mr_liq-edit').value;
-                let request = {bMrLiq: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('b_mr_liq-edit').value
+                let request = { bMrLiq: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-o_mr_liq') {
-                let element = document.getElementById('o_mr_liq-edit').value;
-                let request = {oMrLiq: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('o_mr_liq-edit').value
+                let request = { oMrLiq: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-b_DQL_open_min') {
-                let element = document.getElementById('b_DQL_open_min-edit').value;
-                let request = {bDQLOpenMin: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('b_DQL_open_min-edit').value
+                let request = { bDQLOpenMin: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-o_DQL_open_min') {
-                let element = document.getElementById('o_DQL_open_min-edit').value;
-                let request = {oDQLOpenMin: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('o_DQL_open_min-edit').value
+                let request = { oDQLOpenMin: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-b_DQL_close_min') {
-                let element = document.getElementById('b_DQL_close_min-edit').value;
-                let request = {bDQLCloseMin: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('b_DQL_close_min-edit').value
+                let request = { bDQLCloseMin: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
             if (element.id == 'update-o_DQL_close_min') {
-                let element = document.getElementById('o_DQL_close_min-edit').value;
-                let request = {oDQLCloseMin: element};
-                let requestData = JSON.stringify(request);
-                console.log(requestData);
+                let element = document.getElementById('o_DQL_close_min-edit').value
+                let request = { oDQLCloseMin: element }
+                let requestData = JSON.stringify(request)
+                console.log(requestData)
                 Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                        requestData,
-                        function (responseData, resultElement) {
-                            repaintLiqParams(responseData);
-                        },
-                        null
-                );
+                  requestData,
+                  function (responseData, resultElement) {
+                      repaintLiqParams(responseData)
+                  },
+                  null
+                )
             }
 
             if (element.id == 'okcoin-reset-liq-info') {
-                Http.httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {},
+                  null)
             }
             if (element.id == 'bitmex-reset-liq-info') {
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {},
+                  null)
             }
             if (element.id == 'reset-delta-minmax') {
-                Http.httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {},
+                  null)
             }
             if (element.id == 'reset-signal-time-params') {
-                Http.httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {},
+                  null)
             }
             if (element.id == 'reset-delta_min-minmax') {
-                Http.httpAsyncPost(baseUrl + '/reset-delta-params-min', '', function (responseData, resultElement) {}, null);
+                Http.httpAsyncPost(baseUrl + '/reset-delta-params-min', '', function (responseData, resultElement) {},
+                  null)
             }
             if (element.id == 'reset-time-compare') {
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '', function (responseData, resultElement) {
-                    let timeCompare = document.getElementById('timeCompare');
-                    timeCompare.innerHTML = responseData.result;
-                }, null);
+                Http.httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '',
+                  function (responseData, resultElement) {
+                      let timeCompare = document.getElementById('timeCompare')
+                      timeCompare.innerHTML = responseData.result
+                  }, null)
             }
 
         });
