@@ -19,6 +19,7 @@ let settingsStore = require('./store/settings-store');
 let settingsPreset = require('./components/settings-preset');
 let cumParams = require('./components/cum-params');
 let closeAllPos = require('./components/close-all-pos');
+let createRecoveryNtUsd = require('./components/recovery-nt-usd');
 
 // let portNumber = "4031";
 
@@ -137,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     posAdjustmentVar.show(baseUrlWithPort);
     cumParams.showCumParams(baseUrlWithPort);
     closeAllPos.createCloseAllPos(baseUrlWithPort);
+    createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
 
     registerRoutes(e);
 
