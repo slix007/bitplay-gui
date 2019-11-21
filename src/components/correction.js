@@ -37,7 +37,7 @@ let showCorr = function (baseUrl) {
                 x => x.corr.maxTotalCount, true
         );
         createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd')
-        createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock_usd', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
+        createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
 
         var mainPreliq = document.getElementById("preliq");
         createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
