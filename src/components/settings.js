@@ -1008,6 +1008,8 @@ const set_bu12 = $('<span/>', {title: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), he
 const set_bu23 = $('<span/>', {title: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'}).html('set_bu23');
 const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hedge_eth'}).addClass('templ').html('set_eu11');
 const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
+const set_btc_swap = $('<span/>', {title: 'set_btc_swap: b = XBTUSD, o = BTC_SWAP (%s), hedge_btc'}).html('set_eth_swap');
+const set_eth_swap = $('<span/>', {title: 'set_eth_swap: b = ETHUSD, o = ETH_SWAP (%s), hedge_eth'}).html('set_eth_swap');
 const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
 const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
 
@@ -1020,6 +1022,8 @@ var arbModArr = [
     {val: 'MODE_TMP', txt: 'set_tmp', info: set_tmp, mod: "TMP", mainSet: "set_tmp"},
     {val: 'MODE4_SET_BU10_SET_EU11', txt: 'M21: set_bu10 + set_eu11', info: set_bu10_set_eu11, mod: "M21", mainSet: "set_eu11"},
     {val: 'MODE5_SET_BU10_SET_EU12', txt: 'M22: set_bu10 + set_eu12', info: set_bu10_set_eu12, mod: "M22", mainSet: "set_eu12"},
+    {val: 'BTC_SWAP_SET', txt: 'BTC_SWAP_SET', info: set_btc_swap, mod: "BTC_SWAP_SET", mainSet: "set_btc_swap"},
+    {val: 'ETH_SWAP_SET', txt: 'ETH_SWAP_SET', info: set_eth_swap, mod: "ETH_SWAP_SET", mainSet: "set_eth_swap"},
 ];
 
 function createContractModes(settingsData, SETTINGS_URL) {
