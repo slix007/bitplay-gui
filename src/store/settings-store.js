@@ -184,7 +184,9 @@ export const mobxStore = observable({
         return toJS(this.secondMarketAccount);
     },
 
-    allMon: {}
+    allMon: {},
+
+    okexSwapSettlement: '',
 
 });
 

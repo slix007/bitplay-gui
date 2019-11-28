@@ -20,6 +20,7 @@ let settingsPreset = require('./components/settings-preset');
 let cumParams = require('./components/cum-params');
 let closeAllPos = require('./components/close-all-pos');
 let createRecoveryNtUsd = require('./components/recovery-nt-usd');
+let okexFundingRate = require('./components/okex/funding');
 
 // let portNumber = "4031";
 
@@ -139,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     cumParams.showCumParams(baseUrlWithPort);
     closeAllPos.createCloseAllPos(baseUrlWithPort);
     createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
+    okexFundingRate.createSwapFunding()
 
     registerRoutes(e);
 

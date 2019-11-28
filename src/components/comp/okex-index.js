@@ -1,7 +1,8 @@
 'use strict';
 const $ = require('jquery');
 const Http = require('../../http');
-const Utils = require('../../utils');
+const Utils = require('../../utils')
+const { mobxStore } = require('../../store/settings-store')
 
 var exports = module.exports = {};
 
@@ -27,15 +28,17 @@ exports.fillComponents = function (futureIndex, baseUrl) {
         const line2 = $('<div>').appendTo(indexCont3);
         line1.append(label);
         if (Utils.isNonProdHost()) {
-            createPriceForTest(line1, x => ({limits: {okexMaxPriceForTest: x}}));
+            createPriceForTest(line1, x => ({ limits: { okexMaxPriceForTest: x } }))
         }
-        line2.append(label2);
+        line2.append(label2)
         if (Utils.isNonProdHost()) {
-            createPriceForTest(line2, x => ({limits: {okexMinPriceForTest: x}}));
+            createPriceForTest(line2, x => ({ limits: { okexMinPriceForTest: x } }))
         }
     }
 
-    updateLimits(futureIndex.limits);
+    updateLimits(futureIndex.limits)
+
+    mobxStore.okexSwapSettlement = futureIndex.okexSwapSettlement
 
 };
 
