@@ -10,6 +10,18 @@ const ind = document.createElement('span');
 const label = document.createElement('span');
 const label2 = document.createElement('span');
 
+// min max price
+const limitAskLb = $('<span>').text('Limit ask /');
+const limitAskVal = $('<span>');
+const limitBidLb = $('<span>').text('Limit bid /');
+const limitBidVal = $('<span>');
+const limitMaxPriceLb = $('<span>').text('Max price = ');
+const limitMaxPriceVal = $('<span>');
+const limitMinPriceLb = $('<span>').text('Min price = ');
+const limitMinPriceVal = $('<span>');
+const limitTimestampVal = $('<span>');
+
+
 exports.fillComponents = function (futureIndex, baseUrl) {
     URL = baseUrl + '/settings/all';
 
@@ -34,6 +46,19 @@ exports.fillComponents = function (futureIndex, baseUrl) {
         if (Utils.isNonProdHost()) {
             createPriceForTest(line2, x => ({ limits: { okexMinPriceForTest: x } }))
         }
+
+        label.appendChild(limitAskLb.get(0));
+        label.appendChild(limitMaxPriceLb.get(0));
+        label.appendChild(limitAskVal.get(0));
+        label.appendChild($('<span>').text(' / ').get(0));
+        label.appendChild(limitMaxPriceVal.get(0));
+
+        label2.appendChild(limitBidLb.get(0));
+        label2.appendChild(limitMinPriceLb.get(0));
+        label2.appendChild(limitBidVal.get(0));
+        label2.appendChild($('<span>').text(' / ').get(0));
+        label2.appendChild(limitMinPriceVal.get(0));
+        line2.append(limitTimestampVal);
     }
 
     updateLimits(futureIndex.limits)
@@ -95,8 +120,13 @@ function createLimitPrice(container, value, URL) {
 }
 
 function updateLimits(limits) {
-    label.innerHTML = 'Limit ask / Max price = ' + limits.limitAsk + ' / ' + limits.maxPrice;
-    label2.innerHTML = 'Limit bid / Min price = ' + limits.limitBid + ' / ' + limits.minPrice;
+
+    limitAskVal.text(limits.limitAsk);
+    limitBidVal.text(limits.limitBid);
+    limitMaxPriceVal.text(limits.maxPrice).prop('title', limits.priceRangeTimestamp)
+    limitMinPriceVal.text(limits.minPrice).prop('title', limits.priceRangeTimestamp)
+    limitTimestampVal.text(` min/max timestamp: ${limits.priceRangeTimestamp}`)
+
     if (limits.maxPriceForTest) {
         label.setAttribute('style', 'background-color:tomato');
     } else {
