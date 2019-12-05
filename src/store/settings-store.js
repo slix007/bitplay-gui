@@ -51,6 +51,7 @@ export const allSettings = observable({
         posAdjustment: {},
         baddBorder: 0,
         oaddBorder: 0,
+        conBoPortions: {}
     },
 
     bitmexChangeOnSo: {

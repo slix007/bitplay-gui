@@ -31,7 +31,6 @@ let showCorr = function (baseUrl) {
         var main = document.getElementById("correction");
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
-        // createSetParam(main, URL, 'corr max total', corrParams, 'corr', 'maxTotalCount');
         createSetParamVolatile(main, URL, 'corr max total: ',
                 x => ({corr: {maxTotalCount: x}}),
                 x => x.corr.maxTotalCount, true

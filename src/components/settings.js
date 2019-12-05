@@ -20,7 +20,7 @@ const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isAc
 
 const enableRestart = require('../components/enable-restart');
 
-export {showArbVersion, updateAllSettings, createSettingsInput};
+export {showArbVersion, updateAllSettings, createSettingsInput, createCheckboxV, createSettingsV};
 
 let updateAllSettings = function () {
     Http.httpAsyncGet(allSettings.SETTINGS_URL, function (rawData) {
@@ -240,7 +240,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     fillBitmexChangeOnSo();
 };
 
-function createSettingsV(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isActiveFunc) {
+let createSettingsV = function(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isActiveFunc) {
     const lb = $('<span>').text(labelName).appendTo(container);
     const edit = $('<input>').width('40px').appendTo(container);
     const updateBtn = $('<button>').text('set').appendTo(container);
@@ -266,7 +266,7 @@ function createSettingsV(container, SETTINGS_URL, labelName, requestCreator, val
     });
 }
 
-function createCheckboxV(cont, SETTINGS_URL, fieldName) {
+let createCheckboxV = function(cont, SETTINGS_URL, fieldName) {
     const checkbox = $('<input>').attr('type', 'checkbox').appendTo(cont);
     mobx.autorun(function () {
         checkbox.prop('checked', isActive(fieldName));
