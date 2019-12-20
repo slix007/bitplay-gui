@@ -5,7 +5,7 @@ import Http from '../../http'
 import * as mobx from 'mobx'
 import { fillOkexSettlementEnding } from '../settings-okexSettlement'
 
-export {repaintStates};
+export { repaintStates, createDqlState }
 
 const btmReconId = 'btm-reconnect-state';
 const arbId = 'arb-state';
@@ -184,10 +184,10 @@ function createSignalStatusBar() {
         switch (status) {
             case 'OK':
                 el.css('color', 'green');
-                break;
+                break
             case 'WRONG':
-                el.css('color', 'red');
-                break;
+                el.css('color', 'red')
+                break
             case 'STARTED':
                 el.css('color', 'orange');
                 break;
@@ -209,14 +209,29 @@ function createSignalStatusBar() {
         showPart(o_order_book, sp.okOrderBook);
         showPart(btmMaxDelta, sp.btmMaxDelta);
         showPart(okMaxDelta, sp.okMaxDelta);
-        showPart(ntUsd, sp.ntUsd);
-        showPart(states, sp.states);
-        showPart(btmDqlOpen, sp.btmDqlOpen);
-        showPart(okDqlOpen, sp.okDqlOpen);
-        showPart(btmAffordable, sp.btmAffordable);
-        showPart(okAffordable, sp.okAffordable);
-        showPart(priceLimits, sp.priceLimits);
+        showPart(ntUsd, sp.ntUsd)
+        showPart(states, sp.states)
+        showPart(btmDqlOpen, sp.btmDqlOpen)
+        showPart(okDqlOpen, sp.okDqlOpen)
+        showPart(btmAffordable, sp.btmAffordable)
+        showPart(okAffordable, sp.okAffordable)
+        showPart(priceLimits, sp.priceLimits)
     });
+}
+
+let createDqlState = function () {
+    let markets = $('#dql-state')
+    $('<span>').text('Dql state: ').appendTo(markets)
+    const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(markets)
+
+    mobx.autorun(r => {
+        const stateValue = allSettings.marketStates.dqlState
+        stateVar.text(stateValue);
+        if (stateValue === 'PRELIQ') stateVar.css('color', 'red')
+        if (stateValue === 'CLOSE_ONLY') stateVar.css('color', 'orange')
+        if (stateValue === 'ANY_ORDERS') stateVar.css('color', 'green')
+    });
+
 }
 
 
