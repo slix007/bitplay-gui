@@ -176,16 +176,26 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     let repaintLiqParams = function (returnData) {
         let bMrLiq = document.getElementById('b_mr_liq')
         let oMrLiq = document.getElementById('o_mr_liq')
-        let bDQLOpenMin = document.getElementById('b_DQL_open_min')
-        let oDQLOpenMin = document.getElementById('o_DQL_open_min')
-        let bDQLCloseMin = document.getElementById('b_DQL_close_min')
-        let oDQLCloseMin = document.getElementById('o_DQL_close_min')
+        let bDQLOpenMin = $('#b_DQL_open_min')
+        let oDQLOpenMin = $('#o_DQL_open_min')
+        let bDQLCloseMin = $('#b_DQL_close_min')
+        let oDQLCloseMin = $('#o_DQL_close_min')
         bMrLiq.innerHTML = returnData.bMrLiq
         oMrLiq.innerHTML = returnData.oMrLiq
-        bDQLOpenMin.innerHTML = returnData.bDQLOpenMin
-        oDQLOpenMin.innerHTML = returnData.oDQLOpenMin
-        bDQLCloseMin.innerHTML = returnData.bDQLCloseMin
-        oDQLCloseMin.innerHTML = returnData.oDQLCloseMin
+        bDQLOpenMin.text(returnData.bDQLOpenMin)
+        oDQLOpenMin.text(returnData.oDQLOpenMin)
+        bDQLCloseMin.text(returnData.bDQLCloseMin)
+        oDQLCloseMin.text(returnData.oDQLCloseMin)
+        let decorateDql = (el, open, close) => {
+            if (Number(open) < Number(close))
+                el.css('font-weight', 'bold').css('color', 'red').prop('title', 'OpenMin should be more than CloseMin')
+            else
+                el.css('font-weight', 'normal').css('color', 'black').prop('title', '')
+        }
+        decorateDql(bDQLOpenMin, returnData.bDQLOpenMin, returnData.bDQLCloseMin)
+        decorateDql(bDQLCloseMin, returnData.bDQLOpenMin, returnData.bDQLCloseMin)
+        decorateDql(oDQLOpenMin, returnData.oDQLOpenMin, returnData.oDQLCloseMin)
+        decorateDql(oDQLCloseMin, returnData.oDQLOpenMin, returnData.oDQLCloseMin)
     }
     let repaintStates = function (returnData) {
         marketState.repaintStates(returnData)
