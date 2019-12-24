@@ -5,7 +5,7 @@ import Http from '../../http'
 import * as mobx from 'mobx'
 import { fillOkexSettlementEnding } from '../settings-okexSettlement'
 
-export { repaintStates, createDqlState }
+export { repaintStates, createDqlState, createSeBestState }
 
 const btmReconId = 'btm-reconnect-state';
 const arbId = 'arb-state';
@@ -230,6 +230,20 @@ let createDqlState = function () {
         if (stateValue === 'PRELIQ') stateVar.css('color', 'red')
         if (stateValue === 'CLOSE_ONLY') stateVar.css('color', 'orange')
         if (stateValue === 'ANY_ORDERS') stateVar.css('color', 'green')
+    });
+
+}
+
+let createSeBestState = function () {
+    let cont = $('#sebest-state')
+    $('<span>').text('S_e_best: ').css('margin-left', '30px').appendTo(cont)
+    const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(cont)
+
+    mobx.autorun(r => {
+        const stateValue = allSettings.marketStates.sebestStatus
+        stateVar.text(stateValue);
+        if (stateValue === 'NORMAL') stateVar.css('color', 'green')
+        if (stateValue === 'LOWER') stateVar.css('color', 'red')
     });
 
 }

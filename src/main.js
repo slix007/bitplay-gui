@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
     okexFundingRate.createSwapFunding()
     marketStates.createDqlState()
+    marketStates.createSeBestState()
 
     registerRoutes(e);
 
