@@ -239,11 +239,30 @@ let createSeBestState = function () {
     $('<span>').text('S_e_best: ').css('margin-left', '30px').appendTo(cont)
     const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(cont)
 
+    const resetBtn = $('<button>').text('reset').appendTo(cont)
+    const resetRes = $('<span>').appendTo(cont)
+    resetBtn.click(() => {
+        resetBtn.prop('disabled', true)
+        Http.httpAsyncPost(allSettings.BASE_URL + '/market/reset-ebestmin', '',
+          json => {
+              resetBtn.prop('disabled', false)
+              console.log(json)
+              const res = JSON.parse(json)
+              resetRes.text(res.result)
+          })
+    })
+
     mobx.autorun(r => {
         const stateValue = allSettings.marketStates.sebestStatus
-        stateVar.text(stateValue);
-        if (stateValue === 'NORMAL') stateVar.css('color', 'green')
-        if (stateValue === 'LOWER') stateVar.css('color', 'red')
+        stateVar.text(stateValue)
+        if (stateValue === 'NORMAL') {
+            stateVar.css('color', 'green')
+            resetBtn.prop('disabled', true)
+        }
+        if (stateValue === 'LOWER') {
+            stateVar.css('color', 'red')
+            resetBtn.prop('disabled', false)
+        }
     });
 
 }
