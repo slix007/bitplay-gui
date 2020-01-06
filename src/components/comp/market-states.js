@@ -227,6 +227,7 @@ let createDqlState = function () {
     mobx.autorun(r => {
         const stateValue = allSettings.marketStates.dqlState
         stateVar.text(stateValue);
+        if (stateValue === 'KILLPOS') stateVar.css('color', 'red')
         if (stateValue === 'PRELIQ') stateVar.css('color', 'red')
         if (stateValue === 'CLOSE_ONLY') stateVar.css('color', 'orange')
         if (stateValue === 'ANY_ORDERS') stateVar.css('color', 'green')

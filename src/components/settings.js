@@ -135,6 +135,8 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createOkexEbestElast(settingsData, SETTINGS_URL);
 
+        createDqlKillPos(SETTINGS_URL);
+
         createDqlLevel(SETTINGS_URL);
 
         showBitmexOrderBookType();
@@ -1307,6 +1309,19 @@ function createOkexEbestElast() {
         );
     });
 }
+
+function createDqlKillPos(SETTINGS_URL) {
+    const $cont = $('#dql-killpos');
+
+    createSettingsInput($cont, SETTINGS_URL, 'b_DQL_killpos',
+      x => ({ dql: { btmDqlKillPos: x } }),
+      x => (x.dql.btmDqlKillPos))
+
+    createSettingsInput($cont, SETTINGS_URL, 'o_DQL_killpos',
+      x => ({ dql: { okexDqlKillPos: x } }),
+      x => (x.dql.okexDqlKillPos))
+}
+
 
 function createDqlLevel(SETTINGS_URL) {
     const $cont = $('#dql-level');
