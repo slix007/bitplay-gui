@@ -173,30 +173,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         let maxDiffCorr = document.getElementById('maxDiffCorr')
         maxDiffCorr.innerHTML = returnData.maxDiffCorr
     }
-    let repaintLiqParams = function (returnData) {
-        let bMrLiq = document.getElementById('b_mr_liq')
-        let oMrLiq = document.getElementById('o_mr_liq')
-        let bDQLOpenMin = $('#b_DQL_open_min')
-        let oDQLOpenMin = $('#o_DQL_open_min')
-        let bDQLCloseMin = $('#b_DQL_close_min')
-        let oDQLCloseMin = $('#o_DQL_close_min')
-        bMrLiq.innerHTML = returnData.bMrLiq
-        oMrLiq.innerHTML = returnData.oMrLiq
-        bDQLOpenMin.text(returnData.bDQLOpenMin)
-        oDQLOpenMin.text(returnData.oDQLOpenMin)
-        bDQLCloseMin.text(returnData.bDQLCloseMin)
-        oDQLCloseMin.text(returnData.oDQLCloseMin)
-        let decorateDql = (el, open, close) => {
-            if (Number(open) < Number(close))
-                el.css('font-weight', 'bold').css('color', 'red').prop('title', 'OpenMin should be more than CloseMin')
-            else
-                el.css('font-weight', 'normal').css('color', 'black').prop('title', '')
-        }
-        decorateDql(bDQLOpenMin, returnData.bDQLOpenMin, returnData.bDQLCloseMin)
-        decorateDql(bDQLCloseMin, returnData.bDQLOpenMin, returnData.bDQLCloseMin)
-        decorateDql(oDQLOpenMin, returnData.oDQLOpenMin, returnData.oDQLCloseMin)
-        decorateDql(oDQLCloseMin, returnData.oDQLOpenMin, returnData.oDQLCloseMin)
-    }
     let repaintStates = function (returnData) {
         marketState.repaintStates(returnData)
     }
@@ -549,9 +525,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         })
         fetch('/market/pos-corr', function (returnData) {
             repaintPosCorr(returnData)
-        })
-        fetch('/market/liq-params', function (returnData) {
-            repaintLiqParams(returnData)
         })
 
         var logsFetching = document.getElementById('logs-fetching')
@@ -1116,85 +1089,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                   requestData,
                   function (responseData, resultElement) {
                       repaintPosCorr(responseData)
-                  },
-                  null
-                )
-            }
-
-            if (element.id == 'update-b_mr_liq') {
-                let element = document.getElementById('b_mr_liq-edit').value
-                let request = { bMrLiq: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
-                  },
-                  null
-                )
-            }
-            if (element.id == 'update-o_mr_liq') {
-                let element = document.getElementById('o_mr_liq-edit').value
-                let request = { oMrLiq: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
-                  },
-                  null
-                )
-            }
-            if (element.id == 'update-b_DQL_open_min') {
-                let element = document.getElementById('b_DQL_open_min-edit').value
-                let request = { bDQLOpenMin: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
-                  },
-                  null
-                )
-            }
-            if (element.id == 'update-o_DQL_open_min') {
-                let element = document.getElementById('o_DQL_open_min-edit').value
-                let request = { oDQLOpenMin: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
-                  },
-                  null
-                )
-            }
-            if (element.id == 'update-b_DQL_close_min') {
-                let element = document.getElementById('b_DQL_close_min-edit').value
-                let request = { bDQLCloseMin: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
-                  },
-                  null
-                )
-            }
-            if (element.id == 'update-o_DQL_close_min') {
-                let element = document.getElementById('o_DQL_close_min-edit').value
-                let request = { oDQLCloseMin: element }
-                let requestData = JSON.stringify(request)
-                console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/liq-params',
-                  requestData,
-                  function (responseData, resultElement) {
-                      repaintLiqParams(responseData)
                   },
                   null
                 )

@@ -223,8 +223,8 @@
                         <div>o_delta: <span id="okex-limits-status-o-delta"></span></div>
                         <div>adj_buy: <span id="okex-limits-status-adj-buy"></span></div>
                         <div>adj_sell: <span id="okex-limits-status-adj-sell"></span></div>
-                        <div>corr/preliq_buy: <span id="okex-limits-status-corr-buy"></span></div>
-                        <div>corr/preliq_sell: <span id="okex-limits-status-corr-sell"></span></div>
+                        <div>corr/preliq/killpos_buy: <span id="okex-limits-status-corr-buy"></span></div>
+                        <div>corr/preliq/killpos_sell: <span id="okex-limits-status-corr-sell"></span></div>
                     </div>
 
                     <div style="background-color: azure; border: solid">Post only settings
@@ -489,47 +489,9 @@
             <span id="reserveBtc2"></span>
         </div>
         <div id="hedge-settings"></div>
-        <div>
-            b_mr_liq:
-            <input type="text" id="b_mr_liq-edit">
-            <button id="update-b_mr_liq">update b_mr_liq</button>
-            <span id="b_mr_liq"></span>
-        </div>
-        <div>
-            o_mr_liq:
-            <input type="text" id="o_mr_liq-edit">
-            <button id="update-o_mr_liq">update o_mr_liq</button>
-            <span id="o_mr_liq"></span>
-        </div>
+        <div id="dql-mr-liq"></div>
         <div id="fee-settings"></div>
-        <div>
-            b_DQL_open_min:
-            <input type="text" id="b_DQL_open_min-edit">
-            <button id="update-b_DQL_open_min">update b_DQL_open_min</button>
-            <span id="b_DQL_open_min"></span>
-            <span style="font-style: italic; font-size: small">(new signals only if b_DQL >= b_DQL_open_min)</span>
-        </div>
-        <div>
-            o_DQL_open_min:
-            <input type="text" id="o_DQL_open_min-edit">
-            <button id="update-o_DQL_open_min">update o_DQL_open_min</button>
-            <span id="o_DQL_open_min"></span>
-            <span style="font-style: italic; font-size: small">(new signals only if o_DQL >= o_DQL_open_min)</span>
-        </div>
-        <div>
-            b_DQL_close_min:
-            <input type="text" id="b_DQL_close_min-edit">
-            <button id="update-b_DQL_close_min">update b_DQL_close_min</button>
-            <span id="b_DQL_close_min"></span>
-            <span style="font-style: italic; font-size: small">(#b_preliq correction when b_DQL <= b_DQL_close_min)</span>
-        </div>
-        <div>
-            o_DQL_close_min:
-            <input type="text" id="o_DQL_close_min-edit">
-            <button id="update-o_DQL_close_min">update o_DQL_close_min</button>
-            <span id="o_DQL_close_min"></span>
-            <span style="font-style: italic; font-size: small">(#o_preliq correction when o_DQL <= o_DQL_close_min)</span>
-        </div>
+        <div id="dql-params"></div>
         <div id="dql-killpos"></div>
         <div id="dql-level"></div>
         <div id="links-to-logs">

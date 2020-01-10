@@ -1,4 +1,4 @@
-/*handsontable*/
+ /*handsontable*/
 .fixed-container {
     width: 584px;
     height: 320px;
@@ -14,3 +14,7 @@
     color:blue;
 }
 
+.spanAsHint {
+    font-style: italic;
+    font-size: small;
+}

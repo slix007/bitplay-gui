@@ -126,22 +126,25 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createContractModes(settingsData, SETTINGS_URL);
         createHedgeSettings(settingsData, SETTINGS_URL);
 
-        maxBitmexReconnects(settingsData, SETTINGS_URL);
+        maxBitmexReconnects(settingsData, SETTINGS_URL)
 
-        createOkexFakePriceDev(settingsData, SETTINGS_URL);
+        createOkexFakePriceDev(settingsData, SETTINGS_URL)
 
-        createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({adjustByNtUsd: x}), x => x.adjustByNtUsd, true);
-        createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL);
+        createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({ adjustByNtUsd: x }), x => x.adjustByNtUsd,
+          true)
+        createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL)
 
-        createOkexEbestElast(settingsData, SETTINGS_URL);
+        createOkexEbestElast(settingsData, SETTINGS_URL)
 
-        createDqlKillPos(SETTINGS_URL);
+        createDqlParams(SETTINGS_URL)
 
-        createDqlLevel(SETTINGS_URL);
+        createDqlKillPos(SETTINGS_URL)
 
-        showBitmexOrderBookType();
+        createDqlLevel(SETTINGS_URL)
 
-        showPreSignalObReFetch();
+        showBitmexOrderBookType()
+
+        showPreSignalObReFetch()
     });
 
     // Volatile mode
@@ -520,6 +523,7 @@ function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, 
         const value = valExtractor(allSettings);
         realValue.text(value);
     });
+    return realValue
 }
 
 function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain, withTakerFok) {
@@ -1299,29 +1303,95 @@ function createOkexEbestElast() {
 
     checkbox.click(function () {
         checkbox.attr('disabled', true);
-        let requestData = JSON.stringify({okexEbestElast: checkbox.prop('checked')});
-        console.log(requestData);
+        let requestData = JSON.stringify({ okexEbestElast: checkbox.prop('checked') })
+        console.log(requestData)
         Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
-                function (result) {
-                    setAllSettingsRaw(result);
-                    checkbox.attr('disabled', false);
-                }
-        );
+          function (result) {
+              setAllSettingsRaw(result)
+              checkbox.attr('disabled', false)
+          }
+        )
     });
 }
 
-function createDqlKillPos(SETTINGS_URL) {
-    const $cont = $('#dql-killpos');
+function createDqlParams (SETTINGS_URL) {
+    const dqlMrLiqCont = $('#dql-mr-liq')
 
-    createSettingsInput($cont, SETTINGS_URL, 'b_DQL_killpos',
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'b_mr_liq',
+      x => ({ dql: { bmrLiq: x } }), x => (x.dql.bmrLiq))
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'o_mr_liq',
+      x => ({ dql: { omrLiq: x } }), x => (x.dql.omrLiq))
+
+    const dqlParamsCont = $('#dql-params')
+    const bDQLOpenMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(bDQLOpenMinCont, SETTINGS_URL, 'b_DQL_open_min',
+      x => ({ dql: { bdqlopenMin: x } }),
+      x => (x.dql.bdqlopenMin), true)
+    $('<span>').text('(new signals only if b_DQL >= b_DQL_open_min)').addClass('spanAsHint').appendTo(bDQLOpenMinCont)
+
+    const oDQLOpenMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(oDQLOpenMinCont, SETTINGS_URL, 'o_DQL_open_min',
+      x => ({ dql: { odqlopenMin: x } }),
+      x => (x.dql.odqlopenMin), true)
+    $('<span>').text('(new signals only if o_DQL >= o_DQL_open_min)').addClass('spanAsHint').appendTo(oDQLOpenMinCont)
+
+    const bDQLCloseMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(bDQLCloseMinCont, SETTINGS_URL, 'b_DQL_close_min',
+      x => ({ dql: { bdqlcloseMin: x } }),
+      x => (x.dql.bdqlcloseMin), true)
+    $('<span>').
+    text('(#b_preliq correction when b_DQL <= b_DQL_close_min)').
+    addClass('spanAsHint').
+    appendTo(bDQLCloseMinCont)
+
+    const oDQLCloseMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(oDQLCloseMinCont, SETTINGS_URL, 'o_DQL_close_min',
+      x => ({ dql: { odqlcloseMin: x } }),
+      x => (x.dql.odqlcloseMin), true)
+    $('<span>').
+    text('(#o_preliq correction when o_DQL <= o_DQL_close_min)').
+    addClass('spanAsHint').
+    appendTo(oDQLCloseMinCont)
+
+    const decorateDql = (el, open, close) => {
+        if (Number(open) < Number(close)) {
+            el.css('font-weight', 'bold').css('color', 'red').prop('title', 'OpenMin should be more than CloseMin')
+        } else {
+            el.css('font-weight', 'normal').css('color', 'black').prop('title', '')
+        }
+    }
+    mobx.autorun(r => {
+        decorateDql(bDQLOpenMinCont, allSettings.dql.bdqlopenMin, allSettings.dql.bdqlcloseMin)
+        decorateDql(bDQLCloseMinCont, allSettings.dql.bdqlopenMin, allSettings.dql.bdqlcloseMin)
+        decorateDql(oDQLOpenMinCont, allSettings.dql.odqlopenMin, allSettings.dql.odqlcloseMin)
+        decorateDql(oDQLCloseMinCont, allSettings.dql.odqlopenMin, allSettings.dql.odqlcloseMin)
+    })
+}
+
+function createDqlKillPos (SETTINGS_URL) {
+    const $cont = $('#dql-killpos')
+
+    const btmKillpos = $('<div>').appendTo($cont)
+    createSettingsInput(btmKillpos, SETTINGS_URL, 'b_DQL_killpos',
       x => ({ dql: { btmDqlKillPos: x } }),
       x => (x.dql.btmDqlKillPos))
 
-    createSettingsInput($cont, SETTINGS_URL, 'o_DQL_killpos',
+    const okKillpos = $('<div>').appendTo($cont)
+    createSettingsInput(okKillpos, SETTINGS_URL, 'o_DQL_killpos',
       x => ({ dql: { okexDqlKillPos: x } }),
       x => (x.dql.okexDqlKillPos))
-}
 
+    const decorateDql = (el, close, kill) => {
+        if (Number(close) < Number(kill))
+            el.css('font-weight', 'bold').css('color', 'red').prop('title', 'Killpos should be less than CloseMin')
+        else
+            el.css('font-weight', 'normal').css('color', 'black').prop('title', '')
+    }
+    mobx.autorun(r => {
+        decorateDql(btmKillpos, allSettings.dql.bdqlcloseMin, allSettings.dql.btmDqlKillPos)
+        decorateDql(okKillpos, allSettings.dql.odqlcloseMin, allSettings.dql.okexDqlKillPos)
+    })
+}
 
 function createDqlLevel(SETTINGS_URL) {
     const $cont = $('#dql-level');

@@ -39,8 +39,8 @@ let showCorr = function (baseUrl) {
         createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
 
         var mainPreliq = document.getElementById("preliq");
-        createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
-        createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
+        createSetParam(mainPreliq, URL, 'preliq/killpos max attempts', corrParams, 'preliq', 'maxErrorCount');
+        createSetParam(mainPreliq, URL, 'preliq/killpos max total', corrParams, 'preliq', 'maxTotalCount');
         createSetParamBlockUsdPreliq(mainPreliq, URL, corrParams);
 
         var mainAdj = document.getElementById("pos-adj-params");
@@ -59,7 +59,7 @@ function createResetBtn(mainContainer, RESET_URL) {
     $(mainContainer).append(container);
 
     var setBtn = document.createElement('button');
-    setBtn.innerHTML = 'Reset corr/preliq';
+    setBtn.innerHTML = 'Reset corr/preliq/killpos';
     $(setBtn).click(function () {
         setBtn.disabled = true;
         const requestData = JSON.stringify({command: 'reset corr/preliq'});
@@ -70,7 +70,7 @@ function createResetBtn(mainContainer, RESET_URL) {
             console.log(res);
             setMonitoringCount(corrCountLabel, res, 'corr');
             setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq');
+            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
             setBtn.disabled = false;
         });
 
@@ -147,7 +147,7 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
             currValLabel.innerHTML = res[paramName1][paramName2];
             setMonitoringCount(corrCountLabel, res, 'corr');
             setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq');
+            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
 
             setBtn.disabled = false;
             // alert(rawRes);
@@ -184,7 +184,7 @@ function createSetParamBlockUsdPreliq(mainContainer, SET_URL, paramsObj) {
             mobxStore.corrParams = res;
             setMonitoringCount(corrCountLabel, res, 'corr');
             setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq');
+            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
 
             setBtn.disabled = false;
         });
@@ -219,7 +219,7 @@ function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, par
             mobxStore.corrParams = res;
             setMonitoringCount(corrCountLabel, res, 'corr');
             setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq');
+            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
 
             setBtn.disabled = false;
         });
@@ -239,7 +239,7 @@ function createMonitorCounter(corrMon, corrParams, subParamName) {
     return label;
 }
 
-function setMonitoringCount(label, corrParams, subParam) {
+function setMonitoringCount(label, corrParams, subParam, subParamPostfix) {
     const currErrorCount = corrParams[subParam].currErrorCount;
     const maxErrorCount = corrParams[subParam].maxErrorCount;
     const succeedCount = corrParams[subParam].succeedCount;
@@ -253,7 +253,7 @@ function setMonitoringCount(label, corrParams, subParam) {
     }
 
     label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
-            subParam,
+            subParamPostfix ? subParam + subParamPostfix : subParam,
             currErrorCount, maxErrorCount,
             succeedCount, failedCount, currTotalCount, maxTotalCount);
 
@@ -267,7 +267,7 @@ var updateMonitorFunction = function () {
         let res = JSON.parse(rawData);
         setMonitoringCount(corrCountLabel, res, 'corr');
         setMonitoringCount(adjCountLabel, res, 'adj');
-        setMonitoringCount(preliqCountLabel, res, 'preliq');
+        setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
     });
 };
 
