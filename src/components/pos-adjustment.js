@@ -38,7 +38,7 @@ let show = function (baseUrl) {
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentDelaySec');
 
         createNumberValue(container, settingsData, SETTINGS_URL, 'corrDelaySec');
-        createNumberValue(container, settingsData, SETTINGS_URL, 'preliq(killpos)DelaySec');
+        createNumberValue(container, settingsData, SETTINGS_URL, 'preliqDelaySec', 'preliq(killpos)DelaySec');
 
     });
 };
@@ -143,12 +143,12 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
     });
 }
 
-function createNumberValue(parentCont, settingsData, SETTINGS_URL, name) {
+function createNumberValue(parentCont, settingsData, SETTINGS_URL, name, nameLabel) {
     let container = document.createElement('div');
     parentCont.appendChild(container);
 
     let label = document.createElement('span');
-    label.innerHTML = name + ': ';
+    label.innerHTML = (nameLabel ? nameLabel : name) + ': ';
     let edit = document.createElement('input');
     edit.innerHTML = '';
     let updateBtn = document.createElement('button');
