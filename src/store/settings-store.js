@@ -68,6 +68,7 @@ export const allSettings = observable({
         startAtTimeStr: '',
         period: -1
     },
+    okexFtpd: {},
 
     okexEbestElast: false,
 

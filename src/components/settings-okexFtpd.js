@@ -5,64 +5,107 @@ import $ from 'jquery'
 import Http from '../http'
 import * as mobx from 'mobx'
 
-export { createAbortSignal }
+export { createOkexFtpd }
 
-const createAbortSignal = function () {
-  const $cont = $('#abort-signal')
+const createOkexFtpd = function () {
+  const cont = $('#okex-fake-taker-price-deviation')
 
-  const ch = $('<input>').attr('type', 'checkbox').attr('title', 'only CON_B_O_PORTIONS').appendTo($cont)
-  ch.click(() => {
-    ch.attr('disabled', true)
-    const requestData = JSON.stringify({ abortSignal: { abortSignalPtsEnabled: ch.prop('checked') } })
-    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
-      function (result) {
-        setAllSettingsRaw(result)
-        ch.attr('disabled', false)
-      })
+  createFtpdTypeDropdown(cont)
 
-  })
-  mobx.autorun(function () {
-    ch.prop('checked', allSettings.abortSignal.abortSignalPtsEnabled)
-  })
+  createOkexFtpdValue(cont)
 
-  _createSettingsParam($cont, 'abort_signal_pts: ',
-    x => ({ abortSignal: { abortSignalPts: x } }),
-    x => x.abortSignal.abortSignalPts,
-    x => x.arbScheme === 'CON_B_O_PORTIONS' && ch.prop('checked'))
+  createOkexFtpdBod(cont)
+
+
+
 }
 
-function _createSettingsParam (
-  container, labelName, requestCreator, valExtractor, isActiveFunc) {
-  const lb = $('<span>').text(labelName).appendTo(container)
-  const edit = $('<input>').width('60px').appendTo(container)
-  const updateBtn = $('<button>').text('set').appendTo(container)
-  const realValue = $('<span>').appendTo(container)
-  updateBtn.click(() => {
-    const requestData = JSON.stringify(requestCreator(edit.val()))
-    updateBtn.prop('disabled', true)
-    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
-      function (result) {
-        setAllSettingsRaw(result)
-        updateBtn.prop('disabled', false)
-      })
+function createFtpdTypeDropdown (container) {
+  $('<span>').text('FTPD type: ').appendTo(container)
+  let select = $('<select>')
+  select.append($('<option>').val('PTS').text('PTS'))
+  select.append($('<option>').val('PERCENT').text('PERCENT'))
+  select.change(function () {
+    const requestData = JSON.stringify({ okexFtpd: { okexFtpdType: this.value } })
+    select.prop('disabled', true)
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData, (result) => {
+      setAllSettingsRaw(result)
+      select.prop('disabled', false)
+    })
   })
-  mobx.autorun(function () {
-    const value = valExtractor(allSettings)
-    realValue.text(value)
-    const isActive = isActiveFunc ? isActiveFunc(allSettings) : true
-    // : allSettings.tradingModeState.tradingMode === 'VOLATILE';
-    if (isActive) {
-      lb.css('color', 'black').prop('title', '')
-      realValue.css('color', 'black').prop('title', '')
-      updateBtn.prop('disabled', false)
-      edit.prop('disabled', false)
-      lb.prop('disabled', false)
+
+  mobx.autorun(r => {
+    select.val(allSettings.okexFtpd.okexFtpdType)
+  })
+
+  container.append(select)
+}
+
+function createOkexFtpdValue (cont) {
+
+  const label = $('<span/>', { title: 'Fake taker price deviation' }).text('FTPD ')
+  const edit = $('<input>').width('80px')
+  const resLabel = $('<span/>').html(allSettings.okexFtpd)
+  let updateBtn = $('<button>').text('set').css('margin-right', '5px')
+
+  cont.append(label).append(edit).append(updateBtn).append(resLabel)
+
+  updateBtn.click(function () {
+    updateBtn.attr('disabled', true)
+    let requestData = JSON.stringify({ okexFtpd: {okexFtpd: edit.val()}  })
+    console.log(requestData)
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData, (result) => {
+      setAllSettingsRaw(result)
+      updateBtn.attr('disabled', false)
+    })
+  })
+
+  mobx.autorun(r => {
+    if (allSettings.okexFtpd.okexFtpdType === 'PTS') {
+      label.text(' FTPD(usd) ')
+    } else if (allSettings.okexFtpd.okexFtpdType === 'PERCENT') {
+      label.text(' FTPD(percent) ')
+    }
+    resLabel.text(allSettings.okexFtpd.okexFtpd)
+  })
+}
+
+function createOkexFtpdBod (cont) {
+
+  const label = $('<span/>', { title: 'best offer distance' }).css('margin-left', '15px').text('bod ').appendTo(cont)
+  const edit = $('<input>').width('80px').appendTo(cont)
+  const updateBtn = $('<button>').text('set').css('margin-right', '5px').appendTo(cont)
+  const resLabel = $('<span/>').html(allSettings.okexFtpd.okexFtpdBod).appendTo(cont)
+
+  const bodDetailsLabel =$('<span>').appendTo(cont)
+
+
+  updateBtn.click(function () {
+    updateBtn.attr('disabled', true)
+    let requestData = JSON.stringify({ okexFtpd: {okexFtpdBod: edit.val()}  })
+    console.log(requestData)
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData, (result) => {
+      setAllSettingsRaw(result)
+      updateBtn.attr('disabled', false)
+    })
+  })
+
+  mobx.autorun(r => {
+    if (allSettings.okexFtpd.okexFtpdType === 'PTS') {
+      label.css('color', 'grey')
+      resLabel.css('color', 'grey')
+    } else if (allSettings.okexFtpd.okexFtpdType === 'PERCENT') {
+      label.css('color', 'black')
+      resLabel.css('color', 'black')
+    }
+    resLabel.text(allSettings.okexFtpd.okexFtpdBod)
+    if (allSettings.marketStates.ftpdDetails && allSettings.marketStates.ftpdDetails.length > 0) {
+      bodDetailsLabel.text(', ' + allSettings.marketStates.ftpdDetails)
     } else {
-      lb.css('color', 'grey').prop('title', '')
-      realValue.css('color', 'grey').prop('title', '')
-      updateBtn.prop('disabled', true)
-      edit.prop('disabled', true)
-      lb.prop('disabled', true)
+      bodDetailsLabel.text('')
     }
   })
 }
+
+
+
