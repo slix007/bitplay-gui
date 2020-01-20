@@ -91,18 +91,23 @@ function createOkexFtpdBod (cont) {
   })
 
   mobx.autorun(r => {
-    if (allSettings.okexFtpd.okexFtpdType === 'PTS') {
-      label.css('color', 'grey')
-      resLabel.css('color', 'grey')
-    } else if (allSettings.okexFtpd.okexFtpdType === 'PERCENT') {
-      label.css('color', 'black')
-      resLabel.css('color', 'black')
-    }
     resLabel.text(allSettings.okexFtpd.okexFtpdBod)
-    if (allSettings.marketStates.ftpdDetails && allSettings.marketStates.ftpdDetails.length > 0) {
-      bodDetailsLabel.text(', ' + allSettings.marketStates.ftpdDetails)
+    const bod = allSettings.marketStates.okexFtpdJson.bod
+    const bodMax = allSettings.marketStates.okexFtpdJson.bod_max
+    const bodMin = allSettings.marketStates.okexFtpdJson.bod_min
+    bodDetailsLabel.text(
+      ', bod_max=' + bodMax + ', bod_min=' + bodMin
+    )
+    if (bodMax < bod  || bodMin < bod) {
+      resLabel.css('color', 'darkgoldenrod')
+      resLabel.prop('title', 'FTPD is 0 because (bod_max < bod || bod_min < bod)')
+      bodDetailsLabel.css('color', 'darkgoldenrod')
+      bodDetailsLabel.prop('title', 'FTPD is 0 because (bod_max < bod || bod_min < bod)')
     } else {
-      bodDetailsLabel.text('')
+      resLabel.css('color', 'black')
+      resLabel.prop('title', '')
+      bodDetailsLabel.css('color', 'black')
+      bodDetailsLabel.prop('title', '')
     }
   })
 }
