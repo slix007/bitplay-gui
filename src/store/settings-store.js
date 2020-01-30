@@ -90,6 +90,7 @@ export const allSettings = observable({
     marketStates: {
         signalParts: {},
         orderPortionsJson: {},
+        okexFtpdJson: {},
     },
 
     ///settings/preset-all

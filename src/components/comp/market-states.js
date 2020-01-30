@@ -57,6 +57,7 @@ let repaintStates = function (returnData) {
     updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
     updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
+    updateDelayTimer($('#killposDelaySec-id'), returnData.preliqDelay);
 
     allSettings.marketStates = returnData;
     allSettings.okexSettlementMode = returnData.okexSettlementMode;

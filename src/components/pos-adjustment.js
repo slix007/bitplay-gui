@@ -38,7 +38,8 @@ let show = function (baseUrl) {
         createNumberValue(container, settingsData, SETTINGS_URL, 'posAdjustmentDelaySec');
 
         createNumberValue(container, settingsData, SETTINGS_URL, 'corrDelaySec');
-        createNumberValue(container, settingsData, SETTINGS_URL, 'preliqDelaySec', 'preliq(killpos)DelaySec');
+        createNumberValue(container, settingsData, SETTINGS_URL, 'preliqDelaySec');
+        createNumberValue(container, settingsData, SETTINGS_URL, 'killposDelaySec');
 
     });
 };
