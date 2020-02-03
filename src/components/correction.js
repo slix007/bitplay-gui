@@ -19,16 +19,16 @@ let showCorr = function (baseUrl) {
 
 
     Http.httpAsyncGet(URL, function (rawData) {
-        let corrParams = JSON.parse(rawData);
+        const corrParams = JSON.parse(rawData);
         setCorrParams(corrParams);
 
-        var corrMon = document.getElementById("corr-monitoring");
+        const corrMon = document.getElementById("corr-monitoring");
         corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
         adjCountLabel = createMonitorCounter(corrMon, corrParams, 'adj');
         preliqCountLabel = createMonitorCounter(corrMon, corrParams, 'preliq');
         createResetBtn(corrMon, RESET_CORR_URL);
 
-        var main = document.getElementById("correction");
+        const main = document.getElementById("correction");
 
         createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
         createSetParamVolatile(main, URL, 'corr max total: ',
@@ -38,12 +38,18 @@ let showCorr = function (baseUrl) {
         createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd')
         createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
 
-        var mainPreliq = document.getElementById("preliq");
-        createSetParam(mainPreliq, URL, 'preliq/killpos max attempts', corrParams, 'preliq', 'maxErrorCount');
-        createSetParam(mainPreliq, URL, 'preliq/killpos max total', corrParams, 'preliq', 'maxTotalCount');
+        const mainPreliq = document.getElementById("preliq");
+        createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
+        createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
         createSetParamBlockUsdPreliq(mainPreliq, URL, corrParams);
 
-        var mainAdj = document.getElementById("pos-adj-params");
+        const mainKillpos = document.getElementById("killpos");
+        createSetParam(mainKillpos, URL, 'preliq max attempts', corrParams, 'killpos', 'maxErrorCount');
+        createSetParam(mainKillpos, URL, 'preliq max total', corrParams, 'killpos', 'maxTotalCount');
+        createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams);
+
+
+        const mainAdj = document.getElementById("pos-adj-params");
 
         createSetParam(mainAdj, URL, 'adj max attempts', corrParams, 'adj', 'maxErrorCount');
         // createSetParam(mainAdj, URL, 'adj max total', corrParams, 'adj', 'maxTotalCount');
