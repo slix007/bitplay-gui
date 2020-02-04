@@ -57,7 +57,7 @@ let repaintStates = function (returnData) {
     updateDelayTimer($('#corrDelaySec-id'), returnData.corrDelay);
     updateDelayTimer($('#posAdjustmentDelaySec-id'), returnData.posAdjustmentDelay);
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
-    updateDelayTimer($('#killposDelaySec-id'), returnData.preliqDelay);
+    updateDelayTimer($('#killposDelaySec-id'), returnData.killposDelay);
 
     allSettings.marketStates = returnData;
     allSettings.okexSettlementMode = returnData.okexSettlementMode;
@@ -143,6 +143,7 @@ function updateState(id, text) {
         case 'FORBIDDEN':
         case 'SYSTEM_OVERLOADED':
         case 'PRELIQ':
+        case 'KILLPOS':
             el.style.color = 'red';
             break;
         default:

@@ -11,7 +11,7 @@ let mobx = require('mobx');
 // var exports = module.exports = {};
 export {showCorr};
 
-var URL, corrCountLabel, adjCountLabel, preliqCountLabel;
+let URL, corrCountLabel, adjCountLabel, preliqCountLabel, killposCountLabel
 
 let showCorr = function (baseUrl) {
     URL = baseUrl + '/settings/corr';
@@ -19,44 +19,44 @@ let showCorr = function (baseUrl) {
 
 
     Http.httpAsyncGet(URL, function (rawData) {
-        const corrParams = JSON.parse(rawData);
-        setCorrParams(corrParams);
+        const corrParams = JSON.parse(rawData)
+        setCorrParams(corrParams)
 
-        const corrMon = document.getElementById("corr-monitoring");
-        corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr');
-        adjCountLabel = createMonitorCounter(corrMon, corrParams, 'adj');
-        preliqCountLabel = createMonitorCounter(corrMon, corrParams, 'preliq');
-        createResetBtn(corrMon, RESET_CORR_URL);
+        const corrMon = document.getElementById('corr-monitoring')
+        corrCountLabel = createMonitorCounter(corrMon, corrParams, 'corr')
+        adjCountLabel = createMonitorCounter(corrMon, corrParams, 'adj')
+        preliqCountLabel = createMonitorCounter(corrMon, corrParams, 'preliq')
+        killposCountLabel = createMonitorCounter(corrMon, corrParams, 'killpos')
+        createResetBtn(corrMon, RESET_CORR_URL)
 
-        const main = document.getElementById("correction");
+        const main = document.getElementById('correction')
 
-        createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount');
+        createSetParam(main, URL, 'corr max attempts', corrParams, 'corr', 'maxErrorCount')
         createSetParamVolatile(main, URL, 'corr max total: ',
-                x => ({corr: {maxTotalCount: x}}),
-                x => x.corr.maxTotalCount, true
-        );
+          x => ({ corr: { maxTotalCount: x } }),
+          x => x.corr.maxTotalCount, true
+        )
         createSetParamBlockUsd(main, URL, 'corr/adj maxBlock_usd', corrParams, 'corr', 'maxVolCorrUsd')
         createSetParamBlockUsd(main, URL, 'recovery_nt_usd maxBlock', corrParams, 'recoveryNtUsd', 'maxBlockUsd')
 
-        const mainPreliq = document.getElementById("preliq");
-        createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount');
-        createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount');
-        createSetParamBlockUsdPreliq(mainPreliq, URL, corrParams);
+        const mainPreliq = document.getElementById('preliq')
+        createSetParam(mainPreliq, URL, 'preliq max attempts', corrParams, 'preliq', 'maxErrorCount')
+        createSetParam(mainPreliq, URL, 'preliq max total', corrParams, 'preliq', 'maxTotalCount')
+        createSetParamBlockUsdPreliq(mainPreliq, URL, corrParams, 'preliq', 'preliqBlockUsd')
 
-        const mainKillpos = document.getElementById("killpos");
-        createSetParam(mainKillpos, URL, 'preliq max attempts', corrParams, 'killpos', 'maxErrorCount');
-        createSetParam(mainKillpos, URL, 'preliq max total', corrParams, 'killpos', 'maxTotalCount');
-        createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams);
+        const mainKillpos = document.getElementById('killpos')
+        // createSetParam(mainKillpos, URL, 'killpos max attempts', corrParams, 'killpos', 'maxErrorCount')
+        createSetParam(mainKillpos, URL, 'killpos max total', corrParams, 'killpos', 'maxTotalCount')
+        createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams, 'killpos', 'preliqBlockUsd')
 
+        const mainAdj = document.getElementById('pos-adj-params')
 
-        const mainAdj = document.getElementById("pos-adj-params");
-
-        createSetParam(mainAdj, URL, 'adj max attempts', corrParams, 'adj', 'maxErrorCount');
+        createSetParam(mainAdj, URL, 'adj max attempts', corrParams, 'adj', 'maxErrorCount')
         // createSetParam(mainAdj, URL, 'adj max total', corrParams, 'adj', 'maxTotalCount');
         createSetParamVolatile(mainAdj, URL, 'adj max total: ',
-                x => ({adj: {maxTotalCount: x}}),
-                x => x.adj.maxTotalCount, true
-        );
+          x => ({ adj: { maxTotalCount: x } }),
+          x => x.adj.maxTotalCount, true
+        )
     });
 };
 
@@ -72,12 +72,13 @@ function createResetBtn(mainContainer, RESET_URL) {
         console.log(requestData);
 
         Http.httpAsyncPost(RESET_URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            console.log(res);
-            setMonitoringCount(corrCountLabel, res, 'corr');
-            setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
-            setBtn.disabled = false;
+            const res = JSON.parse(rawRes)
+            console.log(res)
+            setMonitoringCount(corrCountLabel, res, 'corr')
+            setMonitoringCount(adjCountLabel, res, 'adj')
+            setMonitoringCount(preliqCountLabel, res, 'preliq')
+            setMonitoringCount(killposCountLabel, res, 'killpos')
+            setBtn.disabled = false
         });
 
     });
@@ -148,14 +149,15 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
         console.log(requestData);
 
         Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            console.log(res);
-            currValLabel.innerHTML = res[paramName1][paramName2];
-            setMonitoringCount(corrCountLabel, res, 'corr');
-            setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
+            const res = JSON.parse(rawRes)
+            console.log(res)
+            currValLabel.innerHTML = res[paramName1][paramName2]
+            setMonitoringCount(corrCountLabel, res, 'corr')
+            setMonitoringCount(adjCountLabel, res, 'adj')
+            setMonitoringCount(preliqCountLabel, res, 'preliq')
+            setMonitoringCount(killposCountLabel, res, 'killpos')
 
-            setBtn.disabled = false;
+            setBtn.disabled = false
             // alert(rawRes);
         });
 
@@ -163,36 +165,36 @@ function createSetParam(mainContainer, SET_URL, labelVal, paramsObj, paramName1,
     $(container).append(label, edit, setBtn, currValLabel);
 }
 
-function createSetParamBlockUsdPreliq(mainContainer, SET_URL, paramsObj) {
-    let paramName1 = 'preliq', paramName2 = 'preliqBlockUsd';
-    let labelVal = 'preliq block_usd';
-    let resLabel1 = $('<span>');
+function createSetParamBlockUsdPreliq (mainContainer, SET_URL, paramsObj, paramName1, paramName2) {
+    let labelVal = paramName1 + ' block_usd'
+    let resLabel1 = $('<span>')
     mobx.autorun(function () {
-        const usd = mobxStore.corrParams[paramName1][paramName2];
+        const usd = mobxStore.corrParams[paramName1][paramName2]
         resLabel1.text(sprintf('%susd (b=%scont, o=%scont)',
-                usd,
-                utils.btmUsdToCont(usd, mobxStore.isEth, mobxStore.cm),
-                utils.okUsdToCont(usd, mobxStore.isEth)));
-    });
+          usd,
+          utils.btmUsdToCont(usd, mobxStore.isEth, mobxStore.cm),
+          utils.okUsdToCont(usd, mobxStore.isEth)))
+    })
 
-    let cont = $('<div>').appendTo(mainContainer);
-    $('<span>').html(labelVal).appendTo(cont);
-    const edit = $('<input>').width('80px').appendTo(cont);
-    let setBtn = $('<button>').text('set').appendTo(cont);
+    let cont = $('<div>').appendTo(mainContainer)
+    $('<span>').html(labelVal).appendTo(cont)
+    const edit = $('<input>').width('80px').appendTo(cont)
+    let setBtn = $('<button>').text('set').appendTo(cont)
     setBtn.click(function () {
-        setBtn.disabled = true;
-        let requestObj = {[paramName1]: {[paramName2]: edit.val()}};
-        const requestData = JSON.stringify(requestObj);
-        console.log(requestData);
+        setBtn.disabled = true
+        let requestObj = { [paramName1]: { [paramName2]: edit.val() } }
+        const requestData = JSON.stringify(requestObj)
+        console.log(requestData)
 
         Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            mobxStore.corrParams = res;
-            setMonitoringCount(corrCountLabel, res, 'corr');
-            setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
+            const res = JSON.parse(rawRes)
+            mobxStore.corrParams = res
+            setMonitoringCount(corrCountLabel, res, 'corr')
+            setMonitoringCount(adjCountLabel, res, 'adj')
+            setMonitoringCount(preliqCountLabel, res, 'preliq')
+            setMonitoringCount(killposCountLabel, res, 'killpos')
 
-            setBtn.disabled = false;
+            setBtn.disabled = false
         });
     });
     resLabel1.appendTo(cont);
@@ -221,13 +223,14 @@ function createSetParamBlockUsd(mainContainer, SET_URL, labelVal, paramsObj, par
         console.log(requestData);
 
         Http.httpAsyncPost(SET_URL, requestData, function (rawRes) {
-            const res = JSON.parse(rawRes);
-            mobxStore.corrParams = res;
-            setMonitoringCount(corrCountLabel, res, 'corr');
-            setMonitoringCount(adjCountLabel, res, 'adj');
-            setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
+            const res = JSON.parse(rawRes)
+            mobxStore.corrParams = res
+            setMonitoringCount(corrCountLabel, res, 'corr')
+            setMonitoringCount(adjCountLabel, res, 'adj')
+            setMonitoringCount(preliqCountLabel, res, 'preliq')
+            setMonitoringCount(killposCountLabel, res, 'killpos')
 
-            setBtn.disabled = false;
+            setBtn.disabled = false
         });
     });
     resLabel1.appendTo(cont);
@@ -258,10 +261,16 @@ function setMonitoringCount(label, corrParams, subParam, subParamPostfix) {
         label.style.color = 'black';
     }
 
-    label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
-            subParamPostfix ? subParam + subParamPostfix : subParam,
-            currErrorCount, maxErrorCount,
-            succeedCount, failedCount, currTotalCount, maxTotalCount);
+    if (subParam === 'killpos') {
+        label.innerHTML = sprintf('%s: Total(success+fail / totalStarted / max): %s+%s / %s / %s',
+          subParamPostfix ? subParam + subParamPostfix : subParam,
+          succeedCount, failedCount, currTotalCount, maxTotalCount);
+    } else {
+        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
+          subParamPostfix ? subParam + subParamPostfix : subParam,
+          currErrorCount, maxErrorCount,
+          succeedCount, failedCount, currTotalCount, maxTotalCount);
+    }
 
 }
 
@@ -270,10 +279,11 @@ var updateMonitorFunction = function () {
         return;
     }
     Http.httpAsyncGet(URL, function (rawData) {
-        let res = JSON.parse(rawData);
-        setMonitoringCount(corrCountLabel, res, 'corr');
-        setMonitoringCount(adjCountLabel, res, 'adj');
-        setMonitoringCount(preliqCountLabel, res, 'preliq', '/killpos');
+        let res = JSON.parse(rawData)
+        setMonitoringCount(corrCountLabel, res, 'corr')
+        setMonitoringCount(adjCountLabel, res, 'adj')
+        setMonitoringCount(preliqCountLabel, res, 'preliq')
+        setMonitoringCount(killposCountLabel, res, 'killpos')
     });
 };
 
