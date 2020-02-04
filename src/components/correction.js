@@ -47,7 +47,7 @@ let showCorr = function (baseUrl) {
         const mainKillpos = document.getElementById('killpos')
         // createSetParam(mainKillpos, URL, 'killpos max attempts', corrParams, 'killpos', 'maxErrorCount')
         createSetParam(mainKillpos, URL, 'killpos max total', corrParams, 'killpos', 'maxTotalCount')
-        createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams, 'killpos', 'preliqBlockUsd')
+        // createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams, 'killpos', 'preliqBlockUsd')
 
         const mainAdj = document.getElementById('pos-adj-params')
 
