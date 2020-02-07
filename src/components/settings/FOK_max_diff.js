@@ -12,14 +12,14 @@ export {showBitmexFokMaxDiff};
 // bitmex fill or kill max diff
 const showBitmexFokMaxDiff = () => {
     const $FOK_cont = $('#FOK_max_diff');
-    createSettingsInput($FOK_cont, allSettings.SETTINGS_URL,'FOK_max_diff',
+    createSettingsInput($FOK_cont, allSettings.SETTINGS_URL,'FOK/IOC_max_diff',
             x => ({bitmexFokMaxDiff: x}),
             x => (x.bitmexFokMaxDiff), true);
     createSettingsCheckbox($FOK_cont,'Auto',
             x => ({bitmexFokMaxDiffAuto: x}),
             x => (x.bitmexFokMaxDiffAuto));
 
-    createSettingsInput($FOK_cont, allSettings.SETTINGS_URL, 'FOK_total_diff',
+    createSettingsInput($FOK_cont, allSettings.SETTINGS_URL, 'FOK/IOC_total_diff',
             x => ({bitmexFokTotalDiff: x}),
             x => (x.bitmexFokTotalDiff));
 

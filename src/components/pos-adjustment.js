@@ -105,6 +105,7 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
     const select = $('<select>');
     select.append($('<option>').val('TAKER').text('TAKER'));
     select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
+    select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'));
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
     select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));

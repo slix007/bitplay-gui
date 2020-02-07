@@ -97,6 +97,7 @@ function _createSignalTo_ ($cont) {
     let select = $('<select>', { id: 'btmChangeOnSoPlacingType' })
     select.append($('<option>').val('TAKER').text('TAKER'))
     select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'))
+    select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'))
     select.change(function () {
         select.prop('disabled', true)
         const requestData = JSON.stringify({ bitmexChangeOnSo: { signalPlacingType: this.value } })

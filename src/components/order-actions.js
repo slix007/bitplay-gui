@@ -106,6 +106,7 @@ function createOrderActions(container, labelName, idName, ORDER_URL, toolName, C
     select.append($('<option>').val('TAKER').text('TAKER'));
     if (idName.startsWith('btm')) {
         select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
+        select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'));
     }
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
