@@ -36,31 +36,33 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';
 
     Http.httpAsyncGet(SETTINGS_URL, function (rawData) {
-        let settingsData = JSON.parse(rawData);
-        setAllSettings(settingsData, SETTINGS_URL);
-        enableRestart.showRestartEnable(baseUrl);
+        let settingsData = JSON.parse(rawData)
+        setAllSettings(settingsData, SETTINGS_URL)
+        enableRestart.showRestartEnable(baseUrl)
 
         // Arb version
-        let container = document.getElementById("select-arb-version");
+        let container = document.getElementById('select-arb-version')
         createArbScheme(container, SETTINGS_URL,
-                x => ({arbScheme: x}),
-                x => x.arbScheme,
-                true);
-        createPortions(container);
-        createAbortSignal(container);
+          x => ({ arbScheme: x }),
+          x => x.arbScheme,
+          true,
+          x => x
+        )
+        createPortions(container)
+        createAbortSignal(container)
 
         // Bitmex place orders type:
-        let $bitmexPlacingCont = $('#bitmex-placing-type');
-        const btmPlacingLb = $('<span>').text('Bitmex place orders type:');
-        btmPlacingLb.appendTo($bitmexPlacingCont);
+        let $bitmexPlacingCont = $('#bitmex-placing-type')
+        const btmPlacingLb = $('<span>').text('Bitmex place orders type:')
+        btmPlacingLb.appendTo($bitmexPlacingCont)
         createPlacingTypeWithBtmChangeOnSo($bitmexPlacingCont.get(0), SETTINGS_URL,
-                x => ({bitmexPlacingType: x}),
-                x => x.bitmexPlacingType,
-                btmPlacingLb, 'bitmexPlacingType', true);
+          x => ({ bitmexPlacingType: x }),
+          x => x.bitmexPlacingType,
+          btmPlacingLb, 'bitmexPlacingType', true)
 
-        let okexPlacingCont = $('#okex-placing-type');
-        const okPlacingLb = $('<span>').text('Okex place orders type:');
-        okPlacingLb.appendTo(okexPlacingCont);
+        let okexPlacingCont = $('#okex-placing-type')
+        const okPlacingLb = $('<span>').text('Okex place orders type:')
+        okPlacingLb.appendTo(okexPlacingCont)
         createPlacingType(okexPlacingCont.get(0), SETTINGS_URL,
           x => ({ okexPlacingType: x }),
           x => x.okexPlacingType,
@@ -178,9 +180,10 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const btmPlacingLbV = $('<span>').text('Bitmex place orders type:');
     btmPlacingLbV.appendTo($btmPlacingContV);
     createPlacingType($btmPlacingContV.get(0), SETTINGS_URL,
-            x => ({settingsVolatileMode: {bitmexPlacingType: x}}),
-            x => x.settingsVolatileMode.bitmexPlacingType,
-            btmPlacingLbV, 'bitmexPlacingType', false, true
+      x => ({ settingsVolatileMode: { bitmexPlacingType: x } }),
+      x => x.settingsVolatileMode.bitmexPlacingType,
+      btmPlacingLbV, 'bitmexPlacingType', false, true,
+      x => x.settingsVolatileMode
     );
 
     const $okPlacingContV = $('<div>').appendTo($column2Cont);
@@ -237,11 +240,13 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
             x => x.settingsVolatileMode.adjMaxTotalCount);
 
     const $arbSchemeV = $('<div>').appendTo($column3Cont);
-    createCheckboxV($arbSchemeV, SETTINGS_URL, 'arb_scheme');
+    createCheckboxV($arbSchemeV, SETTINGS_URL, 'arb_scheme')
     createArbScheme($arbSchemeV, SETTINGS_URL,
-            x => ({settingsVolatileMode: {arbScheme: x}}),
-            x => x.settingsVolatileMode.arbScheme,
-            false);
+      x => ({ settingsVolatileMode: { arbScheme: x } }),
+      x => x.settingsVolatileMode.arbScheme,
+      false,
+      x => x.settingsVolatileMode
+    )
 
 
     fillBitmexChangeOnSo();
@@ -528,31 +533,39 @@ function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, 
     return realValue
 }
 
-function createPlacingType(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain, withTakerFok) {
-    const select = $('<select>');
-    select.append($('<option>').val('TAKER').text('TAKER'));
-    if (withTakerFok) {
-        select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
-        select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'));
-    }
-    select.append($('<option>').val('MAKER').text('MAKER'));
-    select.append($('<option>').val('HYBRID').text('HYBRID'));
-    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
-    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
-    select.change(onVerPick);
+function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain,
+  withTakerFok, settingsObj) {
+    const select = $('<select>')
+    const optionIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+    const optionFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
 
-    mainContainer.appendChild(select.get(0));
+    select.append($('<option>').val('TAKER').text('TAKER'))
+    if (withTakerFok) {
+        select.append(optionFok)
+        select.append(optionIoc)
+    }
+    select.append($('<option>').val('MAKER').text('MAKER'))
+    select.append($('<option>').val('HYBRID').text('HYBRID'))
+    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'))
+    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'))
+    select.change(onVerPick)
+
+    mainContainer.appendChild(select.get(0))
 
     mobx.autorun(function () {
-        select.val(valExtractor(allSettings));
+        if (settingsObj) {
+            optionIoc.attr('disabled', settingsObj(allSettings).arbScheme !== 'CON_B_O_PORTIONS')
+        }
+
+        select.val(valExtractor(allSettings))
         if (isActiveV(fieldName)) {
-            lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode');
+            lb.css('font-weight', 'bold').prop('title', 'Activated VOLATILE mode')
         } else {
-            lb.css('font-weight', 'normal').prop('title', '');
+            lb.css('font-weight', 'normal').prop('title', '')
         }
         if (isMain) {
             if (isActiveV(fieldName)) {
-                select.get(0).disabled = true;
+                select.get(0).disabled = true
             } else {
                 select.get(0).disabled = false;
             }
@@ -574,7 +587,8 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
     const select = $('<select>');
     select.append($('<option>').val('TAKER').text('TAKER'));
     select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
-    select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'));
+    const optionIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+    select.append(optionIoc);
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
     select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
@@ -583,6 +597,7 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
     mainContainer.appendChild(select.get(0));
 
     mobx.autorun(function () {
+        optionIoc.attr('disabled', allSettings.arbScheme !== 'CON_B_O_PORTIONS')
         select.val(valExtractor(allSettings));
         if (isMain) {
             let extraTitle = '';
@@ -615,30 +630,39 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
     }
 }
 
-function createArbScheme(container, SETTINGS_URL, requestCreator, valExtractor, isMain) {
-    const lb = $('<span>').text('Arbitrage version:').appendTo(container);
-    let select = $('<select>').appendTo(container);
-    select.append($('<option>').val('SIM').text('SIM'));
-    select.append($('<option>').val('CON_B_O').text('CON_B_O'));
-    select.append($('<option>').val('CON_B_O_PORTIONS').text('CON_B_O_PORTIONS'));
+function createArbScheme (container, SETTINGS_URL, requestCreator, valExtractor, isMain, settingsObj) {
+    const lb = $('<span>').text('Arbitrage version:').appendTo(container)
+    let select = $('<select>').appendTo(container)
+    const optionSim = $('<option>').val('SIM').text('SIM')
+    const optionConBo = $('<option>').val('CON_B_O').text('CON_B_O')
+    select.append(optionSim)
+    select.append(optionConBo)
+    select.append($('<option>').val('CON_B_O_PORTIONS').text('CON_B_O_PORTIONS'))
     select.change(function () {
-        const requestData = JSON.stringify(requestCreator(this.value));
-        select.disabled = true;
+        const requestData = JSON.stringify(requestCreator(this.value))
+        select.disabled = true
         Http.httpAsyncPost(SETTINGS_URL, requestData, result => {
-            setAllSettingsRaw(result);
-            select.attr('disabled', false);
-        });
-    });
+            setAllSettingsRaw(result)
+            select.attr('disabled', false)
+        })
+    })
     mobx.autorun(function () {
-        select.val(valExtractor(allSettings));
+        if (settingsObj(allSettings).bitmexPlacingType === 'TAKER_IOC') {
+            optionSim.attr('disabled', true)
+            optionConBo.attr('disabled', true)
+        } else {
+            optionSim.attr('disabled', false)
+            optionConBo.attr('disabled', false)
+        }
+        select.val(valExtractor(allSettings))
         if (isMain) {
-            let extraTitle = '';
+            let extraTitle = ''
             if (bitmexChangeOnSoToConBo()) {
-                extraTitle += 'BitmexChangeOnSo:CON_B_O';
-                select.val('CON_B_O');
+                extraTitle += 'BitmexChangeOnSo:CON_B_O'
+                select.val('CON_B_O')
             }
             if (isActiveV('arb_scheme')) {
-                extraTitle += '\nActivated VOLATILE mode';
+                extraTitle += '\nActivated VOLATILE mode'
             }
             if (extraTitle.length > 0) {
                 lb.css('font-weight', 'bold').prop('title', extraTitle);
