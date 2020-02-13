@@ -1154,7 +1154,7 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     /// BTC
     function addBtcHedge() {
-        let btcHedgeName = settingsData.eth ? settingsData.extraSetNameCurrent : settingsData.mainSetNameCurrent;
+        let btcHedgeName = settingsData.eth ? settingsData.contractModeCurrent.extraSetNameCurrent : settingsData.contractModeCurrent.mainSetNameCurrent;
         let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
         const labelName = sprintf('%s, %s, hedge', arbMod.mod, btcHedgeName);
         const cont = $('<div/>').appendTo(mainCont);
@@ -1181,7 +1181,7 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     /// ETH
     function addEthHedge() {
-        let ethHedgeName = settingsData.mainSetNameCurrent;
+        let ethHedgeName = settingsData.contractModeCurrent.mainSetNameCurrent;
         let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
         const labelName = sprintf('%s, %s, hedge', arbMod.mod, ethHedgeName);
 
