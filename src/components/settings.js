@@ -116,23 +116,25 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createManageType(settingsData, SETTINGS_URL);
         createStopMoving(settingsData, TOGGLE_STOP_MOVING_URL);
 
-        createSignalDelay($('#signal-delay'), SETTINGS_URL, x => ({signalDelayMs: x}), null, true);
+        createSignalDelay($('#signal-delay'), SETTINGS_URL, x => ({ signalDelayMs: x }), null, true)
 
-        createColdStorage('btc', settingsData, SETTINGS_ADMIN_URL, x => ({coldStorageBtc: x}), x => x.coldStorageBtc);
+        createColdStorage('btc', settingsData, SETTINGS_ADMIN_URL, x => ({ coldStorageBtc: x }), x => x.coldStorageBtc)
         if (settingsData.eth) {
-            createColdStorage('eth', settingsData, SETTINGS_ADMIN_URL, x => ({coldStorageEth: x}), x => x.coldStorageEth);
+            createColdStorage('eth', settingsData, SETTINGS_ADMIN_URL, x => ({ coldStorageEth: x }),
+              x => x.coldStorageEth)
         }
-        createEBestMin(settingsData, SETTINGS_ADMIN_URL);
+        createEBestMin(settingsData, SETTINGS_ADMIN_URL)
 
-        createUsdQuoteType(settingsData, SETTINGS_URL);
+        createUsdQuoteType(settingsData, SETTINGS_URL)
 
-        createContractModes(settingsData, SETTINGS_URL);
-        createHedgeSettings(settingsData, SETTINGS_URL);
+        createContractMode(settingsData, SETTINGS_URL, "left")
+        createContractMode(settingsData, SETTINGS_URL, "right")
+        createHedgeSettings(settingsData, SETTINGS_URL)
 
         maxBitmexReconnects(settingsData, SETTINGS_URL)
 
         // createOkexFakePriceDev(settingsData, SETTINGS_URL)
-        createOkexFtpd();
+        createOkexFtpd()
 
         createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({ adjustByNtUsd: x }), x => x.adjustByNtUsd,
           true)
@@ -999,107 +1001,147 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 
     function onVerPick() {
         console.log(this.value);
-        const requestData = JSON.stringify({usdQuoteType: this.value});
+        const requestData = JSON.stringify({ usdQuoteType: this.value })
 
         Http.httpAsyncPost(SETTINGS_URL,
-                requestData, function (result) {
-                    let data = JSON.parse(result);
-                    alert('New value: ' + data.usdQuoteType);
-                });
+          requestData, function (result) {
+              let data = JSON.parse(result)
+              alert('New value: ' + data.usdQuoteType)
+          })
     }
 
 }
 
+const leftContractTypes = [
+    {txt: 'Bitmex [ETHUSD]', val: 'ETHUSD'},
+    {txt:'Bitmex [XBTUSD]', val: 'XBTUSD'},
+    {txt:'Bitmex [XBTH20]', val: 'XBTH20'},
+    {txt:'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek'},
+    {txt:'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek'},
+    {txt:'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek'},
+    {txt:'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek'},
+]
+//Okex [ETHUSD_ThisWeek]
+// Okex [ETHUSD_NextWeek]
+// Okex [ETHUSD_Swap]
+// Okex [BTCUSD_ThisWeek]
+// Okex [BTCUSD_NextWeek]
+// Okex [BTCUSD_Quarter]
+// Okex [BTC_Swap]
+const rightContractTypes = [
+    {txt:'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek'},
+    {txt:'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek'},
+    {txt:'Okex [ETHUSD_Swap]', val: 'ETH_Swap'},
+    {txt:'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek'},
+    {txt:'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek'},
+    {txt:'Okex [BTCUSD_Quarter]', val: 'BTC_Quarter'},
+    {txt:'Okex [BTC_Swap]', val: 'BTC_Swap'},
+]
 
-const set_bu11 = $('<span/>', {title: 'set_bu11: b = XBTUSD, o = BTC_W (%s), hedge_btc'}).html('set_bu11');
-const set_bu10_1 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
-const set_bu10_2 = $('<span/>', {title: 'set_bu10: b = XBTUSD, o = null, hedge_btc'}).html('set_bu10 + ');
-const set_bu12 = $('<span/>', {title: 'set_bu12: b = XBTUSD, o = BTC_BW (%s), hedge_btc'}).html('set_bu12');
-const set_bu23 = $('<span/>', {title: 'set_bu23: b = XBT_Q, o = BTC_Q (%s), hedge_btc'}).html('set_bu23');
-const set_eu11 = $('<span/>', {title: 'set_eu11: b = ETHUSD, o = ETH_W (%s), hedge_eth'}).addClass('templ').html('set_eu11');
-const set_eu12 = $('<span/>', {title: 'set_eu12: b = ETHUSD, o = ETH_BW (%s), hedge_eth'}).addClass('templ').html('set_eu12');
-const set_btc_swap = $('<span/>', {title: 'set_btc_swap: b = XBTUSD, o = BTC_SWAP (%s), hedge_btc'}).html('set_eth_swap');
-const set_eth_swap = $('<span/>', {title: 'set_eth_swap: b = ETHUSD, o = ETH_SWAP (%s), hedge_eth'}).html('set_eth_swap');
-const set_bu10_set_eu11 = $('<span/>').append(set_bu10_1).append(set_eu11);
-const set_bu10_set_eu12 = $('<span/>').append(set_bu10_2).append(set_eu12);
 
-const set_tmp = $('<span/>').html('set_tmp (BitmexContractType.XBTH19, OkexContractType.BTC_Quarter)');
+function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
+    // left-contract-type-select
+    const cont = $(`#${leftRightMarket}-contract-type-select`)
 
-var arbModArr = [
-    {val: 'MODE1_SET_BU11', txt: 'M10: set_bu11', info: set_bu11, mod: "M10", mainSet: "set_bu11"},
-    {val: 'MODE2_SET_BU12', txt: 'M11: set_bu12', info: set_bu12, mod: "M11", mainSet: "set_bu12"},
-    {val: 'MODE3_SET_BU23', txt: 'M20: set_bu23', info: set_bu23, mod: "M20", mainSet: "set_bu23"},
-    {val: 'MODE_TMP', txt: 'set_tmp', info: set_tmp, mod: "TMP", mainSet: "set_tmp"},
-    {val: 'MODE4_SET_BU10_SET_EU11', txt: 'M21: set_bu10 + set_eu11', info: set_bu10_set_eu11, mod: "M21", mainSet: "set_eu11"},
-    {val: 'MODE5_SET_BU10_SET_EU12', txt: 'M22: set_bu10 + set_eu12', info: set_bu10_set_eu12, mod: "M22", mainSet: "set_eu12"},
-    {val: 'BTC_SWAP_SET', txt: 'BTC_SWAP_SET', info: set_btc_swap, mod: "BTC_SWAP_SET", mainSet: "set_btc_swap"},
-    {val: 'ETH_SWAP_SET', txt: 'ETH_SWAP_SET', info: set_eth_swap, mod: "ETH_SWAP_SET", mainSet: "set_eth_swap"},
-];
+    const select = $('<select>').appendTo(cont)
+    const cntTypes = leftRightMarket === 'left' ? leftContractTypes : rightContractTypes
+    select.html($.map(cntTypes, function (item) {
+        return $('<option/>', { value: item.val, text: item.txt })
+    }))
+    select.change(function () {
+        const requestData = `{ "contractMode": { "${leftRightMarket}" : "${this.value}" }}`
+        console.log(requestData)
+        select.disabled = true
+        Http.httpAsyncPost(SETTINGS_URL, requestData, result => {
+            setAllSettingsRaw(result)
+            select.attr('disabled', false)
+        })
+    })
 
-function createContractModes(settingsData, SETTINGS_URL) {
+    const lb = $('<span>').css('color', 'red').appendTo(cont)
+    mobx.autorun(r => {
+        const fromDb = allSettings.contractMode[leftRightMarket]
+        const current = allSettings.contractModeCurrent[leftRightMarket]
+        console.log(fromDb)
+        console.log(current)
 
-    const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Arbitrage mod: ');
-    let detailsLabel = $('<span/>');
-    const select = $('<select/>').html($.map(arbModArr, function (item) {
-        return $('<option/>', {value: item.val, text: item.txt});
-    })).val(settingsData.contractMode);
-    select.on('change', onVerPick);
 
-    const warnLabel = $('<span/>').css('color', 'red');
-
-    function updateLabels(data) {
-        warnLabel.html(data.contractMode === data.contractModeCurrent ? ''
-                : ' warning: to apply the changes restart is needed');
-        let item = arbModArr.find(item => item.val === data.contractMode);
-
-        detailsLabel.replaceWith(item.info);
-        detailsLabel = item.info;
-        if (detailsLabel.children().length === 0) {
-            detailsLabel.attr('title', sprintf(detailsLabel.attr('title'), data.okexContractName));
+        select.val(fromDb);
+        if (fromDb !== current) {
+            lb.text('RESTART NEEDED')
         } else {
-            detailsLabel.find('span.templ').each(function (idx, item) {
-                item.title = sprintf(item.title, data.okexContractName);
-            });
+            lb.text('')
         }
+    })
 
-    }
-
-    updateLabels(settingsData);
-
-    $("#contract-mode").append(label).append(select).append(detailsLabel).append(warnLabel);
-
-    function onVerPick() {
-        console.log(this.value);
-        const requestData = JSON.stringify({contractMode: this.value});
-
-        Http.httpAsyncPost(SETTINGS_URL,
-                requestData, function (result) {
-                    let data = JSON.parse(result);
-                    updateLabels(data);
-                    alert('New value: ' + data.contractMode);
-                });
-    }
 }
 
-function maxBitmexReconnects(settingsData, SETTINGS_URL) {
-    var container = document.getElementById("max-bitmex-reconnects");
 
-    var label = document.createElement('span');
-    label.innerHTML = 'Max bitmex reconnects:';
-    var edit = document.createElement('input');
-    edit.style.width = '80px';
-    edit.innerHTML = '';
-    var resultLabel = document.createElement('span');
+//
+// function createContractModes(settingsData, SETTINGS_URL) {
+//
+//     const label = $('<span/>', {title: 'Type by contract delivery time'}).html('Arbitrage mod: ');
+//     let detailsLabel = $('<span/>');
+//     const select = $('<select/>').html($.map(arbModArr, function (item) {
+//         return $('<option/>', {value: item.val, text: item.txt});
+//     })).val(settingsData.contractMode);
+//     select.on('change', onVerPick);
+//
+//     const warnLabel = $('<span/>').css('color', 'red');
+//
+//     function updateLabels(data) {
+//         warnLabel.html(data.contractMode === data.contractModeCurrent ? ''
+//                 : ' warning: to apply the changes restart is needed');
+//         let item = arbModArr.find(item => item.val === data.contractMode);
+//
+//         detailsLabel.replaceWith(item.info);
+//         detailsLabel = item.info;
+//         if (detailsLabel.children().length === 0) {
+//             detailsLabel.attr('title', sprintf(detailsLabel.attr('title'), data.okexContractName));
+//         } else {
+//             detailsLabel.find('span.templ').each(function (idx, item) {
+//                 item.title = sprintf(item.title, data.okexContractName);
+//             });
+//         }
+//
+//     }
+//
+//     updateLabels(settingsData);
+//
+//     $("#contract-mode").append(label).append(select).append(detailsLabel).append(warnLabel);
+//
+//     function onVerPick() {
+//         console.log(this.value);
+//         const requestData = JSON.stringify({contractMode: this.value});
+//
+//         Http.httpAsyncPost(SETTINGS_URL,
+//                 requestData, function (result) {
+//                     let data = JSON.parse(result);
+//                     updateLabels(data);
+//                     alert('New value: ' + data.contractMode);
+//                 });
+//     }
+// }
 
-    resultLabel.innerHTML = settingsData.restartSettings.maxBitmexReconnects;
-    var setBtn = document.createElement('button');
+function maxBitmexReconnects (settingsData, SETTINGS_URL) {
+    const container = document.getElementById('max-bitmex-reconnects')
+
+    const label = document.createElement('span')
+    label.innerHTML = 'Max bitmex reconnects:'
+    const edit = document.createElement('input')
+    edit.style.width = '80px'
+    edit.innerHTML = ''
+    const resultLabel = document.createElement('span')
+
+    resultLabel.innerHTML = settingsData.restartSettings.maxBitmexReconnects
+    const setBtn = document.createElement('button')
     setBtn.onclick = function () {
-        setBtn.disabled = true;
-        const requestData = JSON.stringify({restartSettings: {maxBitmexReconnects: edit.value}});
-        console.log(requestData);
-        console.log(SETTINGS_URL);
+        setBtn.disabled = true
+        const requestData = JSON.stringify({ restartSettings: { maxBitmexReconnects: edit.value } })
+        console.log(requestData)
+        console.log(SETTINGS_URL)
         Http.httpAsyncPost(SETTINGS_URL,
-                requestData, function (rawRes) {
+          requestData, function (rawRes) {
                     const res = JSON.parse(rawRes);
                     resultLabel.innerHTML = res.restartSettings.maxBitmexReconnects;
                     setBtn.disabled = false;
@@ -1154,68 +1196,73 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     /// BTC
     function addBtcHedge() {
-        let btcHedgeName = settingsData.eth ? settingsData.contractModeCurrent.extraSetNameCurrent : settingsData.contractModeCurrent.mainSetNameCurrent;
-        let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
-        const labelName = sprintf('%s, %s, hedge', arbMod.mod, btcHedgeName);
-        const cont = $('<div/>').appendTo(mainCont);
-        $('<span/>').html(labelName).appendTo(cont); // 'Hedge BTC: '
-        const editHedgeBtc = $('<input>').width('80px').appendTo(cont);
-        const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc);
-        let updateBtn = $('<button>').text('Update')
-        .css('margin-left', '5px').css('margin-right', '5px')
-        .click(function () {
-            updateBtn.attr('disabled', true);
+        let btcHedgeName = settingsData.eth ? settingsData.extraSetNameCurrent : settingsData.mainSetNameCurrent
+        const modeName = settingsData.contractModeCurrent.modeName
+        const labelName = sprintf('%s, %s, hedge', modeName, btcHedgeName)
+        const cont = $('<div/>').appendTo(mainCont)
+        $('<span/>').html(labelName).appendTo(cont) // 'Hedge BTC: '
+        const editHedgeBtc = $('<input>').width('80px').appendTo(cont)
+        const resLabelHedgeBtc = $('<span/>').html(settingsData.hedgeBtc)
+        let updateBtn = $('<button>').
+        text('Update').
+        css('margin-left', '5px').
+        css('margin-right', '5px').
+        click(function () {
+            updateBtn.attr('disabled', true)
 
-            let requestData = JSON.stringify({hedgeBtc: editHedgeBtc.val()});
-            console.log(requestData);
+            let requestData = JSON.stringify({ hedgeBtc: editHedgeBtc.val() })
+            console.log(requestData)
             Http.httpAsyncPost(SETTINGS_URL, requestData,
-                    function (rawResp) {
-                        const res = JSON.parse(rawResp);
-                        resLabelHedgeBtc.html(res.hedgeBtc);
-                        updateBtn.attr('disabled', false);
-                    }
-            );
+              function (rawResp) {
+                  const res = JSON.parse(rawResp)
+                  resLabelHedgeBtc.html(res.hedgeBtc)
+                  updateBtn.attr('disabled', false)
+              }
+            )
         }).appendTo(cont);
         resLabelHedgeBtc.appendTo(cont);
     }
 
     /// ETH
     function addEthHedge() {
-        let ethHedgeName = settingsData.contractModeCurrent.mainSetNameCurrent;
-        let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
-        const labelName = sprintf('%s, %s, hedge', arbMod.mod, ethHedgeName);
+        let ethHedgeName = settingsData.mainSetNameCurrent
+        const modeName = settingsData.contractModeCurrent.modeName
+        const labelName = sprintf('%s, %s, hedge', modeName, ethHedgeName)
 
-        const contEth = $('<div/>').appendTo(mainCont);
-        $('<span/>').html(labelName).appendTo(contEth);
-        const editHedgeEth = $('<input>').width('80px').appendTo(contEth);
-        const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth);
-        let updateBtnEth = $('<button>').text('Update')
-        .css('margin-left', '5px').css('margin-right', '5px')
-        .click(function () {
-            updateBtnEth.attr('disabled', true);
-            let requestData = JSON.stringify({hedgeEth: editHedgeEth.val()});
-            console.log(requestData);
+        const contEth = $('<div/>').appendTo(mainCont)
+        $('<span/>').html(labelName).appendTo(contEth)
+        const editHedgeEth = $('<input>').width('80px').appendTo(contEth)
+        const resLabelHedgeEth = $('<span/>').html(settingsData.hedgeEth)
+        let updateBtnEth = $('<button>').
+        text('Update').
+        css('margin-left', '5px').
+        css('margin-right', '5px').
+        click(function () {
+            updateBtnEth.attr('disabled', true)
+            let requestData = JSON.stringify({ hedgeEth: editHedgeEth.val() })
+            console.log(requestData)
             Http.httpAsyncPost(SETTINGS_URL, requestData,
-                    function (rawResp) {
-                        const res = JSON.parse(rawResp);
-                        resLabelHedgeEth.html(res.hedgeEth);
-                        updateBtnEth.attr('disabled', false);
-                    }
-            );
-        }).appendTo(contEth);
-        resLabelHedgeEth.appendTo(contEth);
+              function (rawResp) {
+                  const res = JSON.parse(rawResp)
+                  resLabelHedgeEth.html(res.hedgeEth)
+                  updateBtnEth.attr('disabled', false)
+              }
+            )
+        }).
+        appendTo(contEth)
+        resLabelHedgeEth.appendTo(contEth)
     }
 
-    if (settingsData.eth) {
-        addEthHedge();
-    }
-    addBtcHedge();
+    // if (settingsData.eth) {
+    //     addEthHedge();
+    // }
+    addBtcHedge()
 
-    setCheckBoxState(settingsData);
+    setCheckBoxState(settingsData)
 
-    let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
-    Utils.setDocumentTitle(arbMod.mod.toLowerCase());
-    mobxStore.arbMod = arbMod;
+    // let arbMod = arbModArr.find(o => o.val === settingsData.contractModeCurrent);
+    // Utils.setDocumentTitle(arbMod.mod.toLowerCase());
+    // mobxStore.arbMod = arbMod;
 }
 
 function createAdjustByNtUsd(cont, SETTINGS_URL, requestCreator, valExtractor, isMain) {
