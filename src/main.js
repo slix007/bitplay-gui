@@ -52,6 +52,8 @@ const afterLoginFunc = function (isAuthorized) {
         httpVar.httpAsyncGet(marketsUrl, function (response) {
             console.log(response);
             let parsedResp = JSON.parse(response);
+            parsedResp.first = 'bitmex'// redefine
+            console.log(response);
 
             // console.log('first market=' + parsedResp.first);
 

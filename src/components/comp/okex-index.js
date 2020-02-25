@@ -138,12 +138,14 @@ function updateLimits(limits) {
         label2.setAttribute('style', 'background-color:white');
     }
 
-    decorateLimits($('#okex-limits-status-b-delta'), limits.insideLimitsEx.btmDelta);
-    decorateLimits($('#okex-limits-status-o-delta'), limits.insideLimitsEx.okDelta);
-    decorateLimits($('#okex-limits-status-adj-buy'), limits.insideLimitsEx.adjBuy);
-    decorateLimits($('#okex-limits-status-adj-sell'), limits.insideLimitsEx.adjSell);
-    decorateLimits($('#okex-limits-status-corr-buy'), limits.insideLimitsEx.corrBuy);
-    decorateLimits($('#okex-limits-status-corr-sell'), limits.insideLimitsEx.corrSell);
+    if (limits && limits.insideLimitsEx) {
+        decorateLimits($('#okex-limits-status-b-delta'), limits.insideLimitsEx.btmDelta);
+        decorateLimits($('#okex-limits-status-o-delta'), limits.insideLimitsEx.okDelta);
+        decorateLimits($('#okex-limits-status-adj-buy'), limits.insideLimitsEx.adjBuy);
+        decorateLimits($('#okex-limits-status-adj-sell'), limits.insideLimitsEx.adjSell);
+        decorateLimits($('#okex-limits-status-corr-buy'), limits.insideLimitsEx.corrBuy);
+        decorateLimits($('#okex-limits-status-corr-sell'), limits.insideLimitsEx.corrSell);
+    }
 
 }
 
