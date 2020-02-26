@@ -68,14 +68,6 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
           x => x.okexPlacingType,
           okPlacingLb, 'okexPlacingType', true)
 
-        // System overload settings
-        var overloadContainer = document.getElementById('sys-overload-settings')
-        createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
-        createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
-        createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
-        createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
-        createXRateLimitBtm(overloadContainer)
-
         // okex postOnly settings
         let postOnlyContainer = $('#post-only-settings')
         createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
@@ -89,10 +81,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         // okex leverage
         createSetttingsOkexLeverage();
 
-        showBitmexFokMaxDiff();
 
-        // Bitmex price workaround (for testing)
-        createBitmexSpecialPrice(settingsData.bitmexPrice, SETTINGS_URL);
 
         // Fee settings
         // const $feeCont = $('#fee-settings');
@@ -131,7 +120,6 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         createContractMode(settingsData, SETTINGS_URL, "right")
         createHedgeSettings(settingsData, SETTINGS_URL)
 
-        maxBitmexReconnects(settingsData, SETTINGS_URL)
 
         // createOkexFakePriceDev(settingsData, SETTINGS_URL)
         createOkexFtpd()
@@ -148,7 +136,27 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createDqlLevel(SETTINGS_URL)
 
-        showBitmexOrderBookType()
+        if (allSettings.marketList.left === 'bitmex') {
+            showBitmexOrderBookType()
+            maxBitmexReconnects(settingsData, SETTINGS_URL)
+            showBitmexFokMaxDiff();
+
+            // System overload settings
+            const overloadCnt = document.getElementById('sys-overload-settings')
+            $('<span>').text('System overload and Post only settings').appendTo(overloadCnt)
+            const overloadContainer = $('<span>').appendTo(overloadCnt)
+            createPlaceAttempts(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+            createSysOverloadErrors(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+            createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+            createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
+            createXRateLimitBtm(overloadContainer)
+
+            // Bitmex price workaround (for testing)
+            createBitmexSpecialPrice(settingsData.bitmexPrice, SETTINGS_URL);
+
+        } else {
+            $('#bitmex-funding-rate-block').hide()
+        }
 
         showPreSignalObReFetch()
     });
@@ -250,8 +258,9 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
       x => x.settingsVolatileMode
     )
 
-
-    fillBitmexChangeOnSo();
+    if (allSettings.marketList.left === 'bitmex') {
+        fillBitmexChangeOnSo();
+    }
 };
 
 let createSettingsV = function(container, SETTINGS_URL, labelName, requestCreator, valExtractor, isActiveFunc) {

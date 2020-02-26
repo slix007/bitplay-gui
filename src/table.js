@@ -25,8 +25,10 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
     Utils.fillLinksToLogs()
     restartVar.addRestartButton()
-    restartVar.addReconnectButton()
-    restartVar.addResubscribeButton()
+    if (allSettings.marketList.left === 'bitmex') {
+        restartVar.addReconnectButton()
+        restartVar.addResubscribeButton()
+    }
 
     let container = document.getElementById('example1')
     let positions = document.getElementById('positions')
