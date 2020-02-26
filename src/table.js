@@ -270,6 +270,91 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         return `<span style="${styleStr}" title="${titleStr}">${rawDataStr}</span>`
     }
 
+    function showBalanceOkex (marketAccount, elBalance) {
+        if (marketAccount.btc === null) {
+            const quAvg = marketAccount.quAvg
+            const ethBtcBid1 = marketAccount.ethBtcBid1
+            mobxStore.secondMarketAccount = marketAccount
+            if (ethBtcBid1 === null) {
+                elBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet,
+                  quAvg)
+                  + ', p' + marketAccount.positionStr
+                  + ', lv' + marketAccount.leverage
+                  + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
+                  + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                  + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
+                  + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                  + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                  + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
+                  + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
+                  + ',<br> entry_price ' + marketAccount.entryPrice
+                  + ',<br> pl_pos_' + marketAccount.plPos
+                  + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
+                  + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
+                  + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
+            } else {
+                const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1)
+                const wUsd = Utils.toUsd(wBtc, quAvg)
+                const eMarkBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1)
+                const eMarkUsd = Utils.toUsd(eMarkBtc, quAvg)
+                const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1)
+                const eBestUsd = Utils.toUsd(eBestBtc, quAvg)
+                const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1)
+                const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg)
+                const uBtc = Utils.ethToBtc(marketAccount.upl, ethBtcBid1)
+                const uUsd = Utils.toUsd(uBtc, quAvg)
+                const mBtc = Utils.ethToBtc(marketAccount.margin, ethBtcBid1)
+                const mUsd = Utils.toUsd(mBtc, quAvg)
+                const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1)
+                const aUsd = Utils.toUsd(aBtc, quAvg)
+                elBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
+                  + ', p' + marketAccount.positionStr
+                  + ', lv' + marketAccount.leverage
+                  + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
+                  + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
+                  + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
+                  + ', liq' + Utils.withSign(marketAccount.liqPrice)
+                  + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
+                  + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
+                  + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
+                  + ',<br> entry_price ' + marketAccount.entryPrice
+                  + ',<br> pl_pos_' + marketAccount.plPos
+                  + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
+                  + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
+                  + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
+
+            }
+
+        } else {
+            elBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
+              + ', usd=' + marketAccount.usd
+        }
+    }
+
+    function showBalanceBitmex (btmAccount, elBalance) {
+        if (btmAccount.btc === null) {
+            let quAvg = btmAccount.quAvg
+            elBalance.innerHTML = 'Balance: w' + btmAccount.wallet + '_' + Utils.toUsd(btmAccount.wallet,
+              quAvg)
+              + ', p' + btmAccount.positionStr
+              + ', lv' + btmAccount.leverage
+              + ', lg' + Utils.withSign(btmAccount.availableForLong)
+              + ', st' + Utils.withSign(btmAccount.availableForShort)
+              + ', liq' + Utils.withSign(btmAccount.liqPrice)
+              + ',<br> e_mark_' + btmAccount.eMark + '_' + Utils.toUsd(btmAccount.eMark, quAvg)
+              + ',<br> e_best__' + btmAccount.eBest + '_' + Utils.toUsd(btmAccount.eBest, quAvg)
+              + ',<br> e_avg__' + btmAccount.eAvg + '_' + Utils.toUsd(btmAccount.eAvg, quAvg)
+              + ',<br> entry_price ' + btmAccount.entryPrice
+              // + '<br>'
+              + ',<br> u' + btmAccount.upl + '_' + Utils.toUsd(btmAccount.upl, quAvg)
+              + ',<br> m' + btmAccount.margin + '_' + Utils.toUsd(btmAccount.margin, quAvg)
+              + ',<br> a' + btmAccount.available + '_' + Utils.toUsd(btmAccount.available, quAvg)
+        } else {
+            elBalance.innerHTML = 'Balance: btc=' + btmAccount.btc
+              + ', usd=' + btmAccount.usd
+        }
+    }
+
     var updateFunction = function () {
 
         function showPosDiff (posDiffJson) {
@@ -296,8 +381,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             if (posDiffJson.placingBlocks != null) {
                 placingBlocksVar.updateBlocks(posDiffJson.placingBlocks)
             }
-            if (posDiffJson.btmUsdInContract != null) {
-                $('#bitmex-contract-usd').text(posDiffJson.btmUsdInContract)
+            if (posDiffJson.btmUsdInContract != null && allSettings.marketList.left === 'bitmex') {
+                $('#left-contract-usd').text(`(1 contract = $${posDiffJson.btmUsdInContract})`)
             }
             if (posDiffJson.isEth != null) {
                 placingOrderObj.isEth = posDiffJson.isEth
@@ -367,91 +452,18 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             eBestMin.fillComponents(resultJson)
         })
 
-        fetch(sprintf('/market/%s/account', firstMarketName), function (poloniexAccount) {
-            let pBalance = document.getElementById(sprintf('%s-balance', firstMarketName))
-            if (poloniexAccount.btc === null) {
-                let quAvg = poloniexAccount.quAvg
-                pBalance.innerHTML = 'Balance: w' + poloniexAccount.wallet + '_' + Utils.toUsd(poloniexAccount.wallet,
-                  quAvg)
-                  + ', p' + poloniexAccount.positionStr
-                  + ', lv' + poloniexAccount.leverage
-                  + ', lg' + Utils.withSign(poloniexAccount.availableForLong)
-                  + ', st' + Utils.withSign(poloniexAccount.availableForShort)
-                  + ', liq' + Utils.withSign(poloniexAccount.liqPrice)
-                  + ',<br> e_mark_' + poloniexAccount.eMark + '_' + Utils.toUsd(poloniexAccount.eMark, quAvg)
-                  + ',<br> e_best__' + poloniexAccount.eBest + '_' + Utils.toUsd(poloniexAccount.eBest, quAvg)
-                  + ',<br> e_avg__' + poloniexAccount.eAvg + '_' + Utils.toUsd(poloniexAccount.eAvg, quAvg)
-                  + ',<br> entry_price ' + poloniexAccount.entryPrice
-                  // + '<br>'
-                  + ',<br> u' + poloniexAccount.upl + '_' + Utils.toUsd(poloniexAccount.upl, quAvg)
-                  + ',<br> m' + poloniexAccount.margin + '_' + Utils.toUsd(poloniexAccount.margin, quAvg)
-                  + ',<br> a' + poloniexAccount.available + '_' + Utils.toUsd(poloniexAccount.available, quAvg)
+        fetch(sprintf('/market/%s/account', firstMarketName), function (leftAccount) {
+            let elBalance = document.getElementById(sprintf('%s-balance', firstMarketName))
+            if (allSettings.marketList.left === 'bitmex') {
+                showBalanceBitmex(leftAccount, elBalance)
             } else {
-                pBalance.innerHTML = 'Balance: btc=' + poloniexAccount.btc
-                  + ', usd=' + poloniexAccount.usd
+                showBalanceOkex(leftAccount, elBalance)
             }
         })
 
         fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
             let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName))
-            if (marketAccount.btc === null) {
-                const quAvg = marketAccount.quAvg
-                const ethBtcBid1 = marketAccount.ethBtcBid1
-                mobxStore.secondMarketAccount = marketAccount
-                if (ethBtcBid1 === null) {
-                    oBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet,
-                      quAvg)
-                      + ', p' + marketAccount.positionStr
-                      + ', lv' + marketAccount.leverage
-                      + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
-                      + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
-                      + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
-                      + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                      + ',<br> e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
-                      + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
-                      + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
-                      + ',<br> entry_price ' + marketAccount.entryPrice
-                      + ',<br> pl_pos_' + marketAccount.plPos
-                      + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
-                      + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
-                      + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
-                } else {
-                    const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1)
-                    const wUsd = Utils.toUsd(wBtc, quAvg)
-                    const eMarkBtc = Utils.ethToBtc(marketAccount.eLast, ethBtcBid1)
-                    const eMarkUsd = Utils.toUsd(eMarkBtc, quAvg)
-                    const eBestBtc = Utils.ethToBtc(marketAccount.eBest, ethBtcBid1)
-                    const eBestUsd = Utils.toUsd(eBestBtc, quAvg)
-                    const eAvgBtc = Utils.ethToBtc(marketAccount.eAvg, ethBtcBid1)
-                    const eAvgUsd = Utils.toUsd(eAvgBtc, quAvg)
-                    const uBtc = Utils.ethToBtc(marketAccount.upl, ethBtcBid1)
-                    const uUsd = Utils.toUsd(uBtc, quAvg)
-                    const mBtc = Utils.ethToBtc(marketAccount.margin, ethBtcBid1)
-                    const mUsd = Utils.toUsd(mBtc, quAvg)
-                    const aBtc = Utils.ethToBtc(marketAccount.available, ethBtcBid1)
-                    const aUsd = Utils.toUsd(aBtc, quAvg)
-                    oBalance.innerHTML = sprintf('Balance: w%s_%s_%s', marketAccount.wallet, wBtc, wUsd)
-                      + ', p' + marketAccount.positionStr
-                      + ', lv' + marketAccount.leverage
-                      + lgst(marketAccount.availableForLong, marketAccount.availableForShort)
-                      + ', lgMkt' + Utils.withSign(marketAccount.longAvailToClose)
-                      + ', stMkt' + Utils.withSign(marketAccount.shortAvailToClose)
-                      + ', liq' + Utils.withSign(marketAccount.liqPrice)
-                      + ',<br> e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
-                      + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
-                      + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
-                      + ',<br> entry_price ' + marketAccount.entryPrice
-                      + ',<br> pl_pos_' + marketAccount.plPos
-                      + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
-                      + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
-                      + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
-
-                }
-
-            } else {
-                oBalance.innerHTML = 'Balance: btc=' + marketAccount.btc
-                  + ', usd=' + marketAccount.usd
-            }
+            showBalanceOkex(marketAccount, oBalance)
         })
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName))

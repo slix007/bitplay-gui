@@ -1068,7 +1068,7 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
 
         select.val(fromDb);
         if (fromDb !== current) {
-            lb.text('RESTART NEEDED')
+            lb.text('RESTART IS NEEDED')
         } else {
             lb.text('')
         }

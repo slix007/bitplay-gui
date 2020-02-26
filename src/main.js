@@ -52,18 +52,23 @@ const afterLoginFunc = function (isAuthorized) {
         httpVar.httpAsyncGet(marketsUrl, function (response) {
             console.log(response);
             let parsedResp = JSON.parse(response);
-            parsedResp.first = 'bitmex'// redefine
+            $('#left-market-name').text(parsedResp.left);
+            settingsStore.allSettings.marketList = parsedResp
+            //workaround for REST mapping
+            parsedResp.first = 'bitmex'
+            parsedResp.second = 'okcoin'
             console.log(response);
 
             // console.log('first market=' + parsedResp.first);
 
             function fillMainPage(parsedResp) {
-                $('#bitmex-contract-type-label').text(parsedResp.firstFutureContractName);
-                const okCt = parsedResp.secondFutureContractName;
-
+                const leftCt = parsedResp.leftFutureContractName
+                $('#left-contract-type-label').text(leftCt);
+                $('#left-contract-usd').text(sprintf('(1 contract = $%s)', leftCt.startsWith('BTC') ? '100' : '10'))
+                const rightCt = parsedResp.rightFutureContractName;
                 $('#okex-contract-type-label').text(sprintf('(1 contract = $%s)[%s]',
-                        okCt.startsWith('BTC') ? '100' : '10',
-                        okCt));
+                        rightCt.startsWith('BTC') ? '100' : '10',
+                        rightCt));
 
                 tableVar.showMainInfo(parsedResp.first, parsedResp.second, baseUrlWithPort);
                 settingsVar.showArbVersion(parsedResp.first, parsedResp.second, baseUrlWithPort);

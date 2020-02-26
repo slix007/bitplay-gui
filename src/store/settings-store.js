@@ -33,13 +33,22 @@ export const allSettings = observable({
     SETTINGS_URL: '',
     BASE_URL: '',
 
+    // GET /market/list
+    marketList: {
+        left: 'bitmex',
+        right: 'okex',
+        leftFutureContractName: 'x',
+        rightFutureContractName: 'x',
+        eth: false
+    },
+
     extraFlags: [],
     movingStopped: false,
     // restartEnabled: false,
     eth: false,
     tradingModeAuto: false,
     restartSettings: {},
-    tradingModeState: {tradingMode: ''},
+    tradingModeState: { tradingMode: '' },
     placingBlocks: {},
     posAdjustment: {},
     bitmexPlacingType: '',
