@@ -17,11 +17,11 @@ let repaintStates = function (returnData) {
 
     if ($(container).children().length === 0) {
         let markets = $('#markets-states');
-        $('<span>').text('Bitmex state: ').appendTo(markets);
+        $('<span>').text('Left state: ').appendTo(markets);
         $('<span>',{id:firstId}).text(returnData.firstMarket).appendTo(markets);
         $('<span>').text((returnData && returnData.firstTimeToReset && returnData.firstTimeToReset.length === 0
                 ? '' : ('(' + returnData.firstTimeToReset + 'sec)'))).appendTo(markets);
-        $('<span>').text(', Okex state: ').appendTo(markets);
+        $('<span>').text(', Right state: ').appendTo(markets);
         $('<span>',{id:secondId}).text(returnData.secondMarket).appendTo(markets);
         $('<span>').text((returnData && returnData.secondTimeToReset && returnData.secondTimeToReset.length === 0
                 ? '' : ('(' + returnData.secondTimeToReset + 'sec)'))).appendTo(markets);
@@ -31,7 +31,6 @@ let repaintStates = function (returnData) {
 
         $('<span>').text('; Bitmex reconnect state: ').appendTo(markets);
         $('<span>', {id: btmReconId}).text(returnData.bitmexReconnectState).appendTo(markets);
-
         const bitmexSoState = $('<span>').appendTo(markets);
         mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
 
@@ -165,20 +164,20 @@ function createSignalStatusBar() {
 
     const deltaName = $('<span>').text('_').css(my_css_class).appendTo(cont);
     const signalDelay = $('<span>').text('signal_delay').css(my_css_class).appendTo(cont);
-    const b_order_book = $('<span>').text('b_order_book').css(my_css_class).appendTo(cont);
-    const b_order_book_XBTUSD = $('<span>').text('b_order_book_xbtusd').css(my_css_class);
+    const b_order_book = $('<span>').text('L_order_book').css(my_css_class).appendTo(cont);
+    const b_order_book_XBTUSD = $('<span>').text('L_order_book_xbtusd').css(my_css_class);
     if (allSettings.eth) {
         b_order_book_XBTUSD.appendTo(cont);
     }
-    const o_order_book = $('<span>').text('o_order_book').css(my_css_class).appendTo(cont);
-    const btmMaxDelta = $('<span>').text('b_max_delta').css(my_css_class).appendTo(cont);
-    const okMaxDelta = $('<span>').text('o_max_delta').css(my_css_class).appendTo(cont);
+    const o_order_book = $('<span>').text('R_order_book').css(my_css_class).appendTo(cont);
+    const btmMaxDelta = $('<span>').text('L_max_delta').css(my_css_class).appendTo(cont);
+    const okMaxDelta = $('<span>').text('R_max_delta').css(my_css_class).appendTo(cont);
     const ntUsd = $('<span>').text('nt_usd').css(my_css_class).appendTo(cont);
     const states = $('<span>').text('states').css(my_css_class).appendTo(cont);
-    const btmDqlOpen = $('<span>').text('bitmex_dql_open').css(my_css_class).appendTo(cont);
-    const okDqlOpen = $('<span>').text('okex_dql_open').css(my_css_class).appendTo(cont);
-    const btmAffordable = $('<span>').text('bitmex_affordable').css(my_css_class).appendTo(cont);
-    const okAffordable = $('<span>').text('okex_affordable').css(my_css_class).appendTo(cont);
+    const leftDqlOpen = $('<span>').text('L_dql_open').css(my_css_class).appendTo(cont);
+    const rightDqlOpen = $('<span>').text('R_dql_open').css(my_css_class).appendTo(cont);
+    const leftAffordable = $('<span>').text('L_affordable').css(my_css_class).appendTo(cont);
+    const rightAffordable = $('<span>').text('R_affordable').css(my_css_class).appendTo(cont);
     const priceLimits = $('<span>').text('price_limits').css(my_css_class).appendTo(cont);
 
     function showPart(el, status) {
@@ -213,10 +212,10 @@ function createSignalStatusBar() {
         showPart(okMaxDelta, sp.okMaxDelta);
         showPart(ntUsd, sp.ntUsd)
         showPart(states, sp.states)
-        showPart(btmDqlOpen, sp.btmDqlOpen)
-        showPart(okDqlOpen, sp.okDqlOpen)
-        showPart(btmAffordable, sp.btmAffordable)
-        showPart(okAffordable, sp.okAffordable)
+        showPart(leftDqlOpen, sp.btmDqlOpen)
+        showPart(rightDqlOpen, sp.okDqlOpen)
+        showPart(leftAffordable, sp.btmAffordable)
+        showPart(rightAffordable, sp.okAffordable)
         showPart(priceLimits, sp.priceLimits)
     });
 }

@@ -470,14 +470,14 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName))
             liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-              + '<br>b_' + marketAccount.mmDql
-              + '<br>b_' + marketAccount.mmDmrl
+              + '<br>L_' + marketAccount.mmDql
+              + '<br>L_' + marketAccount.mmDmrl
         })
         fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName))
             liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
-              + '<br>o_' + marketAccount.mmDql
-              + '<br>o_' + marketAccount.mmDmrl
+              + '<br>R_' + marketAccount.mmDql
+              + '<br>R_' + marketAccount.mmDmrl
         })
         fetch('/delta-params', function (result) {
             let b = document.getElementById('b_delta_minmax')
