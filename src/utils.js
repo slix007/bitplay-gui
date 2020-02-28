@@ -43,11 +43,11 @@ exports.fillLinksToLogs = function () {
     // console.log(window.location.host);
     // console.log(window.location.hostname);
 
-    addLink('/market/trade-log/bitmex');
-    addLink('/market/trade-log/okcoin');
+    addLink('/market/trade-log/left');
+    addLink('/market/trade-log/right');
     addLink('/market/deltas-log');
     addLink('/market/warning-log');
-    addLink('/market/trade-log/bitmex?date=2017-08-29');
+    addLink('/market/trade-log/left?date=2017-08-29');
     addLink('/chart.html');
     addLink('/deltas?lastCount=10');
     addLink('/deltas/B_DELTA?lastCount=10');

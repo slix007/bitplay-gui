@@ -9,12 +9,18 @@ const mobx = require('mobx');
 var exports = module.exports = {};
 
 var updateBlocks = function (bl) {
-    $('#fixedBlocks')
-    .prop('title', sprintf('cm=%s, isEth=%s', bl.cm, bl.eth))
-    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.fixedBlockUsd, bl.fixedBlockBitmex, bl.fixedBlockOkex));
-    $('#dynBlocks')
-    .prop('title', sprintf('cm=%s, isEth=%s', bl.cm, bl.eth))
-    .text(sprintf('%susd (bitmex=%scont, okex=%scont)', bl.dynMaxBlockUsd, bl.dynMaxBlockBitmex, bl.dynMaxBlockOkex));
+    const title = allSettings.leftIsBtm
+      ? sprintf('cm=%s, isEth=%s', bl.cm, bl.eth)
+      : sprintf('isEth=%s', bl.eth)
+    const leftLabel = allSettings.leftIsBtm ? 'L_bitmex' : 'L_okex'
+    const fixedBlocks = $('#fixedBlocks')
+    const dynBlocks = $('#dynBlocks')
+    fixedBlocks.text(sprintf('%susd (%s=%scont, R_okex=%scont)',
+      bl.fixedBlockUsd, leftLabel, bl.fixedBlockBitmex, bl.fixedBlockOkex))
+    dynBlocks.text(sprintf('%susd (%s=%scont, R_okex=%scont)',
+      bl.dynMaxBlockUsd, leftLabel, bl.dynMaxBlockBitmex, bl.dynMaxBlockOkex))
+    fixedBlocks.prop('title', title)
+    dynBlocks.prop('title', title)
 };
 
 exports.updateBlocks = updateBlocks;

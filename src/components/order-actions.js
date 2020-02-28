@@ -47,10 +47,13 @@ let showOrderActions = function (firstMarketName, secondMarketName, baseUrl, isE
     // createOrderActions(btmCont, btmLabelCont.get()[0], 'bitmex', BITMEX_ORDER_URL);
     createOrderActions(btmCont, 'Order ', 'btm', BITMEX_ORDER_URL, null, BITMEX_CNL_ALL);
 
-    if (isEth) {
+    if (isEth && allSettings.marketList.left == 'bitmex') {
         let btmCont_ETH_XBTUSD = document.getElementById("bitmex-order-actions-ETH-XBTUSD");
         // createOrderActions(btmCont_ETH_XBTUSD, btmXBTUSDLabelCont.get()[0], 'bitmex_ETH_XBTUSD', BITMEX_ORDER_URL, "XBTUSD");
         createOrderActions(btmCont_ETH_XBTUSD, 'XBTUSD Order ', 'btmXBTUSD', BITMEX_ORDER_URL, "XBTUSD");
+    } else {
+        $('#bitmex-order-actions-ETH-XBTUSD').hide()
+        $('#okcoin-order-actions-ETH-XBTUSD').hide()
     }
 
     let okCont = document.getElementById("okcoin-order-actions");

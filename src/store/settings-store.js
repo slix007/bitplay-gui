@@ -39,7 +39,12 @@ export const allSettings = observable({
         right: 'okex',
         leftFutureContractName: 'x',
         rightFutureContractName: 'x',
-        eth: false
+        eth: false,
+        first: 'bitmex', // for endpoints
+        second: 'okcoin', // for endpoints
+    },
+    get leftIsBtm() {
+        return this.marketList.left === 'bitmex'
     },
 
     extraFlags: [],
