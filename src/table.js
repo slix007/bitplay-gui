@@ -369,7 +369,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             mainSet.innerHTML = posDiffJson.mainSetStr//Notional
             let mainSetSource = document.getElementById('main-set-source')
             mainSetSource.innerHTML = posDiffJson.mainSetSource
-            if (posDiffJson.extraSetStr != null) {
+            if (posDiffJson.extraSetStr != null && allSettings.leftIsBtm) {
                 let extraSetStr = document.getElementById('extra-set-string')
                 if (posDiffJson.extraSetEqual) {
                     extraSetStr.style.color = '#008f00'
