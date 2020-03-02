@@ -1205,9 +1205,8 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
 
     /// BTC
     function addBtcHedge() {
-        let btcHedgeName = settingsData.eth ? settingsData.extraSetNameCurrent : settingsData.mainSetNameCurrent
         const modeName = settingsData.contractModeCurrent.modeName
-        const labelName = sprintf('%s, %s, hedge', modeName, btcHedgeName)
+        const labelName = sprintf('%s, btc, hedge', modeName)
         const cont = $('<div/>').appendTo(mainCont)
         $('<span/>').html(labelName).appendTo(cont) // 'Hedge BTC: '
         const editHedgeBtc = $('<input>').width('80px').appendTo(cont)
@@ -1230,13 +1229,15 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
             )
         }).appendTo(cont);
         resLabelHedgeBtc.appendTo(cont);
+        mobx.autorun(r => {
+            resLabelHedgeBtc.html(allSettings.hedgeBtc)
+        })
     }
 
     /// ETH
     function addEthHedge() {
-        let ethHedgeName = settingsData.mainSetNameCurrent
         const modeName = settingsData.contractModeCurrent.modeName
-        const labelName = sprintf('%s, %s, hedge', modeName, ethHedgeName)
+        const labelName = sprintf('%s, eth, hedge', modeName)
 
         const contEth = $('<div/>').appendTo(mainCont)
         $('<span/>').html(labelName).appendTo(contEth)
@@ -1260,12 +1261,17 @@ function createHedgeSettings(settingsData, SETTINGS_URL) {
         }).
         appendTo(contEth)
         resLabelHedgeEth.appendTo(contEth)
+        mobx.autorun(r => {
+            resLabelHedgeEth.html(allSettings.hedgeEth)
+        })
     }
 
-    // if (settingsData.eth) {
-    //     addEthHedge();
-    // }
-    addBtcHedge()
+    if (settingsData.eth) {
+        addEthHedge();
+    }
+    if (!settingsData.eth || allSettings.leftIsBtm) {
+        addBtcHedge()
+    }
 
     setCheckBoxState(settingsData)
 
