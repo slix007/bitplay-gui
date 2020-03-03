@@ -110,8 +110,8 @@
                     <div id="bitmex-future-index3"></div>
 
 
-                    <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
-                    <!--<button name="cleanbitmexOrderBook">clean bitmex order book(1 min old)</button>-->
+<!--                 left okex   -->
+                    <div id="left-before-orderbook"></div>
 
 
                     <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
@@ -124,12 +124,12 @@
                     </div>
 
                     <div id="bitmex-orderbook-type"></div>
-                    <div>
-                        <span id="limits-status-btm">
-                            Bitmex: <span id="bitmex-limits-status"></span>
-                        </span>
-                    </div>
 
+                    <div id="left-limits-status"></div>
+                    <!-- left okex  -->
+                    <div id="left-after-limits"></div>
+
+                    <!-- left bitmex  -->
                     <div style="background-color: azure; border: solid; display: flex;">
                         <div style="float: left;">
                             <div id="bitmex-reconnect-count"></div>
@@ -206,13 +206,7 @@
                     <div style="border: solid; height: 40px;" id="okcoin-order-actions"></div>
                     <div style="border: solid; height: 40px;" id="okcoin-order-actions-ETH-XBTUSD"></div>
 
-                    <div>
-                        <span id="okcoin-future-index"></span>
-                        <span id="okex-eth-bal"></span>
-                        <span id="okcoin-future-index2"></span>
-                    </div>
-                    <div id="okex-fake-taker-price-deviation" style="height: 20px;"></div>
-                    <div id="okcoin-future-index3"></div>
+                    <div id="right-before-orderbook"></div>
 
                     <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
                         <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
@@ -223,24 +217,19 @@
                         <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
-                    <div id="limits-status-ok">
-                        <div>Okex price limits:</div>
-                        <div>b_delta: <span id="okex-limits-status-b-delta"></span></div>
-                        <div>o_delta: <span id="okex-limits-status-o-delta"></span></div>
-                        <div>adj_buy: <span id="okex-limits-status-adj-buy"></span></div>
-                        <div>adj_sell: <span id="okex-limits-status-adj-sell"></span></div>
-                        <div>corr/preliq/killpos_buy: <span id="okex-limits-status-corr-buy"></span></div>
-                        <div>corr/preliq/killpos_sell: <span id="okex-limits-status-corr-sell"></span></div>
-                    </div>
+                    <div id="right-limits-status"></div>
 
-                    <div style="background-color: azure; border: solid">Post only settings
-                        <div id="post-only-settings"></div>
-                    </div>
-                    <div style="background-color: azure; border: solid">
-                        <div id="o-lvg"></div>
-                    </div>
+                    <div id="right-after-limits"></div>
 
-                    <div id="okex-swap-funding"></div>
+
+                    <!--                    <div style="background-color: azure; border: solid">Post only settings-->
+                    <!--                        <div id="post-only-settings"></div>-->
+                    <!--                    </div>-->
+                    <!--                    <div style="background-color: azure; border: solid">-->
+                    <!--                        <div id="o-lvg"></div>-->
+                    <!--                    </div>-->
+
+                    <!--                    <div id="okex-swap-funding"></div>-->
 
 
                 </div>

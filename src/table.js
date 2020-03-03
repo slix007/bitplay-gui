@@ -22,6 +22,10 @@ export { showMainInfo }
 
 let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
     // console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
+    if (!allSettings.leftIsBtm) {
+        okexIndexVar.createBeforeAndAfterOrderBook('left')
+    }
+    okexIndexVar.createBeforeAndAfterOrderBook('right')
 
     Utils.fillLinksToLogs()
     restartVar.addRestartButton()
@@ -407,16 +411,20 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askBitmexTable.loadData(orderBookP.ask)
             bidBitmexTable.loadData(orderBookP.bid)
 
-            bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
+            if (allSettings.leftIsBtm) {
+                bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
+                $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal)
+            }else {
+                okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'left')
+
+                mobxStore.b_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2)
+            }
 
             $('#bitmex-last-price').html(jsonData.lastPrice)
-            $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal)
 
-            mobxStore.futureIndex.twoMarketsIndexDiff = jsonData.futureIndex.twoMarketsIndexDiff
             mobxStore.futureIndex.b_index = Number(jsonData.futureIndex.indexVal)
             mobxStore.b_bid_1 = Number(jsonData.bid[0].price)
             mobxStore.b_ask_1 = Number(jsonData.ask[0].price)
-            // mobxStore.bxbtBal = jsonData.futureIndex.contractExtraJson.bxbtBal;
         })
 
         fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
@@ -424,10 +432,9 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             askOkcoinTable.loadData(orderBookO.ask)
             bidOkcoinTable.loadData(orderBookO.bid)
 
-            okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
+            okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'right')
 
             $('#okcoin-last-price').html(jsonData.lastPrice)
-            $('#okex-eth-bal').html(jsonData.futureIndex.contractExtraJson.ethBtcBal)
 
             mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal)
             mobxStore.o_bid_1 = Number(jsonData.bid[0].price)

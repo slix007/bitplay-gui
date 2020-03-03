@@ -1,5 +1,7 @@
 'use strict';
 
+import { allSettings } from './store/settings-store'
+
 let $ = require('jquery');
 let sprintf = require('sprintf-js').sprintf;
 var Utils = require('./utils');
@@ -20,7 +22,6 @@ let settingsPreset = require('./components/settings-preset');
 let cumParams = require('./components/cum-params');
 let closeAllPos = require('./components/close-all-pos');
 let createRecoveryNtUsd = require('./components/recovery-nt-usd');
-let okexFundingRate = require('./components/okex/funding');
 let marketStates = require('./components/comp/market-states');
 
 // let portNumber = "4031";
@@ -34,7 +35,7 @@ let baseUrlWithPort = process.env.backendUrl === 'use-window.location.hostname'
         : process.env.backendUrl;
 let marketsUrl = sprintf('%s/market/list', baseUrlWithPort);
 console.log('baseUrlWithPort:' + baseUrlWithPort);
-
+allSettings.SETTINGS_URL = baseUrlWithPort + '/settings/all';
 
 
 function getCurrentTabName() {
@@ -148,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
     cumParams.showCumParams(baseUrlWithPort);
     closeAllPos.createCloseAllPos(baseUrlWithPort);
     createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
-    okexFundingRate.createSwapFunding()
     marketStates.createDqlState()
     marketStates.createSeBestState()
 

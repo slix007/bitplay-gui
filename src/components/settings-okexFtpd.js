@@ -1,14 +1,13 @@
 'use strict'
 
-import { allSettings, setAllSettingsRaw } from '../store/settings-store'
+import { allSettings, mobxStore, setAllSettingsRaw } from '../store/settings-store'
 import $ from 'jquery'
 import Http from '../http'
 import * as mobx from 'mobx'
 
 export { createOkexFtpd }
 
-const createOkexFtpd = function () {
-  const cont = $('#okex-fake-taker-price-deviation')
+const createOkexFtpd = function (cont) {
 
   createFtpdTypeDropdown(cont)
 
@@ -92,9 +91,9 @@ function createOkexFtpdBod (cont) {
 
   mobx.autorun(r => {
     resLabel.text(allSettings.okexFtpd.okexFtpdBod)
-    const bod = allSettings.marketStates.okexFtpdJson.bod
-    const bodMax = allSettings.marketStates.okexFtpdJson.bod_max
-    const bodMin = allSettings.marketStates.okexFtpdJson.bod_min
+    const bod = mobxStore.marketStates.okexFtpdJson.bod
+    const bodMax = mobxStore.marketStates.okexFtpdJson.bod_max
+    const bodMin = mobxStore.marketStates.okexFtpdJson.bod_min
     bodDetailsLabel.text(
       ', bod_max=' + bodMax + ', bod_min=' + bodMin
     )

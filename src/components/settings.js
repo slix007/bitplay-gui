@@ -7,10 +7,8 @@ import { bitmexChangeOnSoToConBo, bitmexSignalChangeOnSo } from '../store/settin
 import { showBitmexOrderBookType } from './settings/bitmex-custom'
 import { showPreSignalObReFetch } from './settings/pre-signal'
 import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
-import { createSetttingsOkexLeverage } from './okex/leverage'
 import { createPortions } from './settings-conBoPortions'
 import { createAbortSignal } from './settings-abortSignal'
-import { createOkexFtpd } from './settings-okexFtpd'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -69,17 +67,17 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
           okPlacingLb, 'okexPlacingType', true)
 
         // okex postOnly settings
-        let postOnlyContainer = $('#post-only-settings')
-        createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
-        createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
-        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'placeTry',
-          x => ({ okexPostOnlyArgs: { postOnlyAttempts: x } }),
-          x => (x.okexPostOnlyArgs.postOnlyAttempts))
-        createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenTryMs',
-          x => ({ okexPostOnlyArgs: { postOnlyBetweenAttemptsMs: x } }),
-                x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
-        // okex leverage
-        createSetttingsOkexLeverage();
+        // // let postOnlyContainer = $('#post-only-settings')
+        // // createPostOnlyCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
+        // // createPostOnlyWithoutLastCheckbox(postOnlyContainer, settingsData.okexPostOnlyArgs, SETTINGS_URL)
+        // createSettingsInput(postOnlyContainer, SETTINGS_URL, 'placeTry',
+        //   x => ({ okexPostOnlyArgs: { postOnlyAttempts: x } }),
+        //   x => (x.okexPostOnlyArgs.postOnlyAttempts))
+        // createSettingsInput(postOnlyContainer, SETTINGS_URL, 'betweenTryMs',
+        //   x => ({ okexPostOnlyArgs: { postOnlyBetweenAttemptsMs: x } }),
+        //         x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs));
+        // // okex leverage
+        // createSetttingsOkexLeverage();
 
 
 
@@ -122,7 +120,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
 
         // createOkexFakePriceDev(settingsData, SETTINGS_URL)
-        createOkexFtpd()
+        // createOkexFtpd()
 
         createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({ adjustByNtUsd: x }), x => x.adjustByNtUsd,
           true)
@@ -350,7 +348,7 @@ function createTradingModeDropdown(SETTINGS_URL) {
 
 function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
     let container = document.createElement('div');
-    mainContainer.appendChild(container);
+    mainContainer.append(container);
 
     let label = document.createElement('span');
     label.innerHTML = 'placeTry';
@@ -380,7 +378,7 @@ function createPlaceAttempts(mainContainer, obj, SETTINGS_URL) {
 
 function createSysOverloadErrors(mainContainer, obj, SETTINGS_URL) {
     var container = document.createElement('div');
-    mainContainer.appendChild(container);
+    mainContainer.append(container);
 
     var label = document.createElement('span');
     label.innerHTML = 'movingErrorsForOverload';
@@ -410,7 +408,7 @@ function createSysOverloadErrors(mainContainer, obj, SETTINGS_URL) {
 
 function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
     let container = document.createElement('div');
-    mainContainer.appendChild(container);
+    mainContainer.append(container);
 
     let label = document.createElement('span');
     label.innerHTML = 'overloadTimeMs';
@@ -440,7 +438,7 @@ function createSysOverloadTime(mainContainer, obj, SETTINGS_URL) {
 
 function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
     let container = document.createElement('div');
-    mainContainer.appendChild(container);
+    mainContainer.append(container);
 
     let label = document.createElement('span');
     label.innerHTML = 'betweenTryMs';
@@ -483,46 +481,6 @@ function createXRateLimitBtm (mainCont) {
     })
 }
 
-function createPostOnlyCheckbox (mainCont, obj, SETTINGS_URL) {
-    const $cont = $('<div>').appendTo(mainCont)
-    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont)
-    const label = $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont)
-    checkbox.click(function () {
-        checkbox.prop('disabled', true)
-        const requestData = JSON.stringify({ okexPostOnlyArgs: { postOnlyEnabled: checkbox.prop('checked') } })
-        Http.httpAsyncPost(SETTINGS_URL, requestData,
-          json => {
-              checkbox.prop('disabled', false)
-              const res = setAllSettingsRaw(json)
-              // alert('New value: ' + res.manageType);
-          })
-
-    });
-    mobx.autorun(r => {
-        checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyEnabled);
-    })
-}
-
-function createPostOnlyWithoutLastCheckbox(mainCont, obj, SETTINGS_URL) {
-    const $cont = $('<div>').appendTo(mainCont);
-    const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont);
-    const label = $('<span>').text('the last is NORMAL').prop('title', 'the last attempt is always NORMAL').appendTo($cont);
-    checkbox.click(function () {
-        checkbox.prop('disabled', true);
-        const requestData = JSON.stringify({okexPostOnlyArgs: {postOnlyWithoutLast: checkbox.prop('checked')}});
-        Http.httpAsyncPost(SETTINGS_URL, requestData,
-                json => {
-                    checkbox.prop('disabled', false);
-                    const res = setAllSettingsRaw(json);
-                    // alert('New value: ' + res.manageType);
-                });
-
-    });
-    mobx.autorun(r => {
-        checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyWithoutLast);
-    })
-}
-
 function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor, sameCont) {
     const container = sameCont ? mainCont : $('<div>').appendTo(mainCont);
     const lb = $('<span>').text(labelName).appendTo(container);
@@ -532,6 +490,7 @@ function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, 
     updateBtn.click(() => {
         const requestData = JSON.stringify(requestCreator(edit.val()));
         updateBtn.prop('disabled', true);
+        console.log('SettingsInput request:' + requestData + ' to ' + SETTINGS_URL)
         Http.httpAsyncPost(SETTINGS_URL, requestData, function (result) {
             setAllSettingsRaw(result);
             updateBtn.prop('disabled', false);
@@ -797,11 +756,11 @@ function createIgnoreLimitPrice(settingsData, SETTINGS_URL) {
     checkbox.checked = settingsData.limits.ignoreLimits;
     let decorateLimitsStatus = function () {
         if (checkbox.checked) {
-            $('#limits-status-btm').css("text-decoration", "line-through");
-            $('#limits-status-ok').css("text-decoration", "line-through");
+            $('#left-limits-status').css("text-decoration", "line-through");
+            $('#right-limits-status').css("text-decoration", "line-through");
         } else {
-            $('#limits-status-btm').css("text-decoration", "initial");
-            $('#limits-status-ok').css("text-decoration", "initial");
+            $('#left-limits-status').css("text-decoration", "initial");
+            $('#right-limits-status').css("text-decoration", "initial");
         }
     };
     decorateLimitsStatus();

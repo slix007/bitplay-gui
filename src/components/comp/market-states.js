@@ -1,5 +1,5 @@
 'use strict';
-import { allSettings, setAllSettingsRaw } from '../../store/settings-store'
+import { allSettings, mobxStore, setAllSettingsRaw } from '../../store/settings-store'
 import $ from 'jquery'
 import Http from '../../http'
 import * as mobx from 'mobx'
@@ -58,7 +58,7 @@ let repaintStates = function (returnData) {
     updateDelayTimer($('#preliqDelaySec-id'), returnData.preliqDelay);
     updateDelayTimer($('#killposDelaySec-id'), returnData.killposDelay);
 
-    allSettings.marketStates = returnData;
+    mobxStore.marketStates = returnData;
     allSettings.okexSettlementMode = returnData.okexSettlementMode;
     allSettings.nowMomentStr = returnData.nowMomentStr
     fillOkexSettlementEnding(allSettings)
@@ -198,7 +198,7 @@ function createSignalStatusBar() {
     }
 
     mobx.autorun(r => {
-        const sp = allSettings.marketStates.signalParts;
+        const sp = mobxStore.marketStates.signalParts;
         deltaName.text(sp.deltaName);
         showPart(signalDelay, sp.signalDelay);
         showPart(b_order_book, sp.btmOrderBook);
@@ -226,7 +226,7 @@ let createDqlState = function () {
     const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(markets)
 
     mobx.autorun(r => {
-        const stateValue = allSettings.marketStates.dqlState
+        const stateValue = mobxStore.marketStates.dqlState
         stateVar.text(stateValue);
         if (stateValue === 'KILLPOS') stateVar.css('color', 'red')
         if (stateValue === 'PRELIQ') stateVar.css('color', 'red')
@@ -255,7 +255,7 @@ let createSeBestState = function () {
     })
 
     mobx.autorun(r => {
-        const stateValue = allSettings.marketStates.sebestStatus
+        const stateValue = mobxStore.marketStates.sebestStatus
         stateVar.text(stateValue)
         if (stateValue === 'NORMAL') {
             stateVar.css('color', 'green')

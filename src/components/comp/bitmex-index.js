@@ -1,19 +1,19 @@
-'use strict';
-import * as mobx from "mobx";
-import $ from "jquery";
-import Http from "../../http";
-import Utils from "../../utils";
-import {mobxStore} from "../../store/settings-store";
-import moment from "moment";
+'use strict'
+import * as mobx from 'mobx'
+import $ from 'jquery'
+import Http from '../../http'
+import Utils from '../../utils'
+import { mobxStore } from '../../store/settings-store'
+import moment from 'moment'
 
-export {fillComponents};
+export { fillComponents }
 
-const ind = document.createElement('span');
-const label = document.createElement('div');
-const label2 = document.createElement('div');
+const ind = document.createElement('span')
+const label = document.createElement('div')
+const label2 = document.createElement('div')
 
 let fillComponents = function (futureIndex, baseUrl) {
-    URL = baseUrl + '/settings/all';
+    URL = baseUrl + '/settings/all'
 
     ind.innerHTML = 'Index/Mark: ' + futureIndex.index + ', timestamp=' + futureIndex.timestamp + ', ';
 
@@ -30,6 +30,10 @@ let fillComponents = function (futureIndex, baseUrl) {
 
         createIndexDiff();
         createDelivery();
+
+        const $limitsLeft = $('#left-limits-status')
+        $limitsLeft.append($('<span>').text('Bitmex:'))
+        $limitsLeft.append($('<span>', { 'id': 'bitmex-limits-status' }).text('...'))
     }
 
     if (futureIndex.limits != null) {
@@ -48,7 +52,7 @@ function createIndexDiff() {
     const o_sam = $('<span>').prop('title', 'o_best_sam - o_index').appendTo($cont);
 
     mobx.autorun(r => {
-        $('#index-diff').text(mobxStore.futureIndex.twoMarketsIndexDiff);
+        $('#index-diff').text(mobxStore.marketStates.twoMarketsIndexDiff)
         // b_best_sam = (b_ask[1] + b_bid[1]) / 2;
         // o_best_sam = (o_ask[1] + o_bid[1]) / 2;
         const b_best_sam = mobxStore.b_best_sam;

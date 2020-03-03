@@ -100,13 +100,6 @@ export const allSettings = observable({
         onlyOpen: false
     },
 
-    // MarketStatesJson, /market/states
-    marketStates: {
-        signalParts: {},
-        orderPortionsJson: {},
-        okexFtpdJson: {},
-    },
-
     ///settings/preset-all
     settingsPresets: [],
 
@@ -159,7 +152,6 @@ export const mobxStore = observable({
     futureIndex: {
         b_index: 0,
         o_index: 0,
-        twoMarketsIndexDiff: '',
     },
     b_bid_1: 0,
     b_ask_1: 0,
@@ -204,6 +196,14 @@ export const mobxStore = observable({
     allMon: {},
 
     okexSwapSettlement: '',
+
+    // MarketStatesJson, /market/states
+    marketStates: {
+        signalParts: {},
+        orderPortionsJson: {},
+        okexFtpdJson: {},
+        twoMarketsIndexDiff: '',
+    },
 
 });
 

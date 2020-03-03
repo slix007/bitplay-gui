@@ -10,14 +10,14 @@ const mobx = require('mobx')
 
 export { createSetttingsOkexLeverage }
 
-const createSetttingsOkexLeverage = function () {
+const createSetttingsOkexLeverage = function (prevCont, arbType) {
 
-  const container = $('#o-lvg')
+  const container = $('<div>').css({ 'background-color': 'azure', 'border': 'solid' }).appendTo(prevCont)
   const URL = allSettings.BASE_URL + '/market/okcoin/change-leverage'
 
   createTransientParamChange(container, URL, 'O_Lvg',
     x => ({ leverage: x }),
-    x => (x.settingsTransient.okexLeverage))
+    x => (x.settingsTransient ? x.settingsTransient.okexLeverage : ''))
 
 }
 

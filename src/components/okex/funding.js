@@ -9,9 +9,10 @@ const mobx = require('mobx')
 
 export { createSwapFunding }
 
-const createSwapFunding = function () {
+const createSwapFunding = function (prevCont, arbType) {
 
-  const container = $('#okex-swap-funding')
+  // const container = $('#okex-swap-funding')
+  const container = $('<div>').appendTo(prevCont)
   // const URL = allSettings.BASE_URL + '/market/okcoin/swap-funding'
 
   const lb = $('<span>').appendTo(container)

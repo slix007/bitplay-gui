@@ -1,6 +1,6 @@
 'use strict';
 
-import {allSettings} from "../store/settings-store";
+import { allSettings, mobxStore } from '../store/settings-store'
 
 let $ = require('jquery');
 let _ = require('lodash');
@@ -160,7 +160,7 @@ function createOrderActions(container, labelName, idName, ORDER_URL, toolName, C
         });
         let pt_lb = $('<span>').text('0').appendTo(container);
         mobx.autorun(r => {
-            pt_lb.text(allSettings.marketStates.orderPortionsJson[idName]);
+            pt_lb.text(mobxStore.marketStates.orderPortionsJson[idName]);
         });
 
         let cnlAllBtn = $('<button>').text('cnlAll').appendTo(container)
