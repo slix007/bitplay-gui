@@ -994,11 +994,11 @@ function createEBestMin(settingsData, SETTINGS_ADMIN_URL) {
 
 function createUsdQuoteType(settingsData, SETTINGS_URL) {
     var arr = [
-        'BITMEX',
-        'OKEX',
+        'LEFT',
+        'RIGHT',
         'AVG',
-        'INDEX_BITMEX',
-        'INDEX_OKEX'
+        'INDEX_LEFT',
+        'INDEX_RIGHT'
     ];
     const label = $('<span/>', {title: 'How to convert BTC to USD'}).html('Usd quote type: ');
     const select = $('<select/>').html($.map(arr, function (item) {
