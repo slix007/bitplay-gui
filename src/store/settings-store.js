@@ -103,7 +103,7 @@ export const allSettings = observable({
     ///settings/preset-all
     settingsPresets: [],
 
-    okexPostOnlyArgs: {},
+    allPostOnlyArgs: { left: {}, right: {} }
 
 });
 

@@ -1,7 +1,7 @@
 import { createSetttingsOkexLeverage } from '../okex/leverage'
 import { createSettingsInput } from '../settings'
 import * as mobx from 'mobx'
-import { allSettings } from '../../store/settings-store'
+import { allSettings, setAllSettingsRaw } from '../../store/settings-store'
 import { createSwapFunding } from '../okex/funding'
 
 export { okexAfterLimitsSettings }
@@ -17,14 +17,14 @@ const okexAfterLimitsSettings = function (arbType) {
   cont.append($('<span>').text('Post only settings'))
 
   let postOnlyContainer = $('<div>').appendTo(cont)
-  createPostOnlyCheckbox(postOnlyContainer, allSettings.okexPostOnlyArgs, allSettings.SETTINGS_URL)
-  createPostOnlyWithoutLastCheckbox(postOnlyContainer, allSettings.okexPostOnlyArgs, allSettings.SETTINGS_URL)
+  createPostOnlyCheckbox(postOnlyContainer, arbType)
+  createPostOnlyWithoutLastCheckbox(postOnlyContainer, arbType)
   createSettingsInput(postOnlyContainer, allSettings.SETTINGS_URL, 'placeTry',
-    x => ({ okexPostOnlyArgs: { postOnlyAttempts: x } }),
-    x => (x.okexPostOnlyArgs.postOnlyAttempts))
+    x => ({ allPostOnlyArgs: { [arbType]: { postOnlyAttempts: x } } }),
+    x => (x.allPostOnlyArgs[arbType].postOnlyAttempts))
   createSettingsInput(postOnlyContainer, allSettings.SETTINGS_URL, 'betweenTryMs',
-    x => ({ okexPostOnlyArgs: { postOnlyBetweenAttemptsMs: x } }),
-    x => (x.okexPostOnlyArgs.postOnlyBetweenAttemptsMs))
+    x => ({ allPostOnlyArgs: { [arbType]: { postOnlyBetweenAttemptsMs: x } } }),
+    x => (x.allPostOnlyArgs[arbType].postOnlyBetweenAttemptsMs))
   // okex leverage
   createSetttingsOkexLeverage(cont, arbType)
 
@@ -32,14 +32,15 @@ const okexAfterLimitsSettings = function (arbType) {
 
 }
 
-function createPostOnlyCheckbox (mainCont, obj, SETTINGS_URL) {
+function createPostOnlyCheckbox (mainCont, arbType) {
   const $cont = $('<div>').appendTo(mainCont)
   const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont)
-  const label = $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont)
+  $('<span>').text('postOnly').prop('title', 'the placingTypes are MAKER/MAKER_TICK').appendTo($cont)
   checkbox.click(function () {
     checkbox.prop('disabled', true)
-    const requestData = JSON.stringify({ okexPostOnlyArgs: { postOnlyEnabled: checkbox.prop('checked') } })
-    Http.httpAsyncPost(SETTINGS_URL, requestData,
+    const requestData = JSON.stringify(
+      { allPostOnlyArgs: { [arbType]: { postOnlyEnabled: checkbox.prop('checked') } } })
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
       json => {
         checkbox.prop('disabled', false)
         const res = setAllSettingsRaw(json)
@@ -48,11 +49,11 @@ function createPostOnlyCheckbox (mainCont, obj, SETTINGS_URL) {
 
   })
   mobx.autorun(r => {
-    checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyEnabled)
+    checkbox.prop('checked', allSettings.allPostOnlyArgs[arbType].postOnlyEnabled)
   })
 }
 
-function createPostOnlyWithoutLastCheckbox (mainCont, obj, SETTINGS_URL) {
+function createPostOnlyWithoutLastCheckbox (mainCont, arbType) {
   const $cont = $('<div>').appendTo(mainCont)
   const checkbox = $('<input>').attr('type', 'checkbox').appendTo($cont)
   const label = $('<span>').
@@ -61,8 +62,9 @@ function createPostOnlyWithoutLastCheckbox (mainCont, obj, SETTINGS_URL) {
   appendTo($cont)
   checkbox.click(function () {
     checkbox.prop('disabled', true)
-    const requestData = JSON.stringify({ okexPostOnlyArgs: { postOnlyWithoutLast: checkbox.prop('checked') } })
-    Http.httpAsyncPost(SETTINGS_URL, requestData,
+    const requestData = JSON.stringify(
+      { allPostOnlyArgs: { [arbType]: { postOnlyWithoutLast: checkbox.prop('checked') } } })
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
       json => {
         checkbox.prop('disabled', false)
         const res = setAllSettingsRaw(json)
@@ -71,7 +73,7 @@ function createPostOnlyWithoutLastCheckbox (mainCont, obj, SETTINGS_URL) {
 
   })
   mobx.autorun(r => {
-    checkbox.prop('checked', allSettings.okexPostOnlyArgs.postOnlyWithoutLast)
+    checkbox.prop('checked', allSettings.allPostOnlyArgs[arbType].postOnlyWithoutLast)
   })
 }
 
