@@ -82,7 +82,7 @@ export const allSettings = observable({
         startAtTimeStr: '',
         period: -1
     },
-    okexFtpd: {},
+    allFtpd: { left: {}, right: {} },
 
     okexEbestElast: false,
 
@@ -201,8 +201,9 @@ export const mobxStore = observable({
     marketStates: {
         signalParts: {},
         orderPortionsJson: {},
-        okexFtpdJson: {},
-        twoMarketsIndexDiff: '',
+        leftFtpdJson: {},
+        rightFtpdJson: {},
+        twoMarketsIndexDiff: ''
     },
 
 });

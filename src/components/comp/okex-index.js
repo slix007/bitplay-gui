@@ -32,7 +32,7 @@ function createBeforeAndAfterOrderBook (arbType) {
     indexCont.appendTo(contBeforeOrderBook)
     ftpdDiv.appendTo(contBeforeOrderBook)
     indexCont3.appendTo(contBeforeOrderBook)
-    createOkexFtpd(ftpdDiv)
+    createOkexFtpd(ftpdDiv, arbType)
 
     const line1 = $('<div>').appendTo(indexCont3)
     const line2 = $('<div>').appendTo(indexCont3)
