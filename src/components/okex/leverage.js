@@ -13,11 +13,12 @@ export { createSetttingsOkexLeverage }
 const createSetttingsOkexLeverage = function (prevCont, arbType) {
 
   const container = $('<div>').css({ 'background-color': 'azure', 'border': 'solid' }).appendTo(prevCont)
-  const URL = allSettings.BASE_URL + '/market/okcoin/change-leverage'
+  const URL =  `${allSettings.BASE_URL}/market/${arbType}/change-leverage`
 
+  const fieldName = `${arbType}OkexLeverage`
   createTransientParamChange(container, URL, 'O_Lvg',
     x => ({ leverage: x }),
-    x => (x.settingsTransient ? x.settingsTransient.okexLeverage : ''))
+    x => (x.settingsTransient ? x.settingsTransient[fieldName] : ''))
 
 }
 
