@@ -30,10 +30,10 @@ export function repaint(borderData, BORDERS_SETTINGS_URL) {
         createVerDropdown(firstPart, borderData.activeVersion, BORDERS_SETTINGS_URL);
         createPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
         createDeltaMinPeriodSec(firstPart, borderData, BORDERS_SETTINGS_URL);
-        createMaxDelta('b_max_delta', firstPart, borderData, BORDERS_SETTINGS_URL, x => ({btmMaxDelta: x}), x => x.borderParams.btmMaxDelta);
+        createMaxDelta('L_max_delta', firstPart, borderData, BORDERS_SETTINGS_URL, x => ({btmMaxDelta: x}), x => x.borderParams.btmMaxDelta);
         createOnlyOpen(firstPart, borderData, BORDERS_SETTINGS_URL);
         let firstPart1 = $('<div>').appendTo(firstPart);
-        createMaxDelta('o_max_delta', firstPart1, borderData, BORDERS_SETTINGS_URL, x => ({okMaxDelta: x}), x => x.borderParams.okMaxDelta);
+        createMaxDelta('R_max_delta', firstPart1, borderData, BORDERS_SETTINGS_URL, x => ({okMaxDelta: x}), x => x.borderParams.okMaxDelta);
         createOnlyOpen(firstPart1, borderData, BORDERS_SETTINGS_URL, true);
 
         const secondPart = $('<div>').

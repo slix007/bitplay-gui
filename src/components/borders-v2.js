@@ -192,7 +192,7 @@ let showBordersV2 = function (baseUrl) {
         });
     }
 
-    function createBorderTable(elementId) {
+    function createBorderTable(elementId, labelName) {
         var table = document.createElement('div');
         const dataUrl = baseUrl + '/borders/list';
         var theTableRef = createTable(table, dataUrl, elementId);
@@ -200,17 +200,17 @@ let showBordersV2 = function (baseUrl) {
         var container = document.getElementById(elementId);
 
         var label = document.createElement('div');
-        label.innerHTML = elementId;
+        label.innerHTML = labelName;
         container.appendChild(label);
         container.appendChild(table);
 
         return theTableRef;
     }
 
-    b_br_close = createBorderTable('b_br_close');
-    b_br_open = createBorderTable('b_br_open');
-    o_br_close = createBorderTable('o_br_close');
-    o_br_open = createBorderTable('o_br_open');
+    b_br_close = createBorderTable('b_br_close', 'L_br_close');
+    b_br_open = createBorderTable('b_br_open', 'L_br_open');
+    o_br_close = createBorderTable('o_br_close', 'R_br_close');
+    o_br_open = createBorderTable('o_br_open', 'R_br_open');
 
     Http.httpAsyncGet(MAIN_BORDERS_URL, function(rawData) {
         let borderData = JSON.parse(rawData);
@@ -244,8 +244,8 @@ let showBordersV2 = function (baseUrl) {
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'step');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'gapStep');
         createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'maxLvl');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'bAddDelta');
-        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'okAddDelta');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'bAddDelta', 'L_add_delta');
+        createNumberParam(container, borderData.bordersV2, BORDERS_SETTINGS_V2_URL, 'okAddDelta', 'R_add_delta');
 
         // --- autoBaseLvl
         const autoContainer = document.createElement('div');
@@ -352,29 +352,29 @@ function createPosModeDropdown(container, posMode, BORDERS_SETTINGS_URL) {
     var select = document.createElement('select');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
-    option1.setAttribute("value", "OK_MODE");
-    option2.setAttribute("value", "BTM_MODE");
-    option1.innerHTML = 'OK_MODE';
-    option2.innerHTML = 'BTM_MODE';
+    option1.setAttribute("value", "RIGHT_MODE");
+    option2.setAttribute("value", "LEFT_MODE");
+    option1.innerHTML = 'RIGHT_MODE';
+    option2.innerHTML = 'LEFT_MODE';
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", function () {
         select.disabled = true;
         bordersUtils.saveBordersSettings(BORDERS_SETTINGS_URL, 'posMode', this.value, select);
     });
-    select.value = posMode !== 'undefined' ? posMode : 'OK_MODE';
+    select.value = posMode !== 'undefined' ? posMode : 'RIGHT_MODE';
 
     container.appendChild(label);
     container.appendChild(select);
 }
 
-function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName) {
+function createNumberParam(mainContainer, bordersV2, BORDERS_SETTINGS_V2_URL, elName, labelName) {
     var container = document.createElement('div');
     container.setAttribute("id", elName);
     mainContainer.appendChild(container);
 
     var label = document.createElement('span');
-    label.innerHTML = Utils.camelToUnderscore(elName);
+    label.innerHTML = labelName ? labelName : Utils.camelToUnderscore(elName);
     var edit = document.createElement('input');
     edit.style.width = '80px';
     edit.innerHTML = '';
@@ -406,17 +406,17 @@ function createBaseLvlTypeDropdown(mainContainer, bordersV2, BORDERS_SETTINGS_V2
     select.id = 'baseLvlType-select';
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
-    option1.setAttribute("value", "B_OPEN");
-    option2.setAttribute("value", "OK_OPEN");
-    option1.innerHTML = 'B_OPEN';
-    option2.innerHTML = 'OK_OPEN';
+    option1.setAttribute("value", "LEFT_OPEN");
+    option2.setAttribute("value", "RIGHT_OPEN");
+    option1.innerHTML = 'LEFT_OPEN';
+    option2.innerHTML = 'RIGHT_OPEN';
     select.appendChild(option1);
     select.appendChild(option2);
     select.addEventListener("change", function () {
         select.disabled = true;
         saveParam(BORDERS_SETTINGS_V2_URL, 'baseLvlType', this.value, select);
     });
-    select.value = bordersV2.baseLvlType; // bordersV2.baseLvlType !== 'undefined' ? bordersV2.baseLvlType : 'B_OPEN';
+    select.value = bordersV2.baseLvlType; // bordersV2.baseLvlType !== 'undefined' ? bordersV2.baseLvlType : 'LEFT_OPEN';
 
     container.appendChild(label);
     container.appendChild(select);

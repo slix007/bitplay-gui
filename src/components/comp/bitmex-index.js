@@ -47,23 +47,23 @@ function createIndexDiff() {
     // indexDiff
     const $cont = $('#index-best-sam');
     $('<span>').text('; ').appendTo($cont);
-    const b_sam = $('<span>').prop('title', 'b_best_sam - b_index').appendTo($cont);
+    const b_sam = $('<span>').prop('title', 'left_best_sam - left_index').appendTo($cont);
     $('<span>').text('; ').appendTo($cont);
-    const o_sam = $('<span>').prop('title', 'o_best_sam - o_index').appendTo($cont);
+    const o_sam = $('<span>').prop('title', 'right_best_sam - right_index').appendTo($cont);
 
     mobx.autorun(r => {
         $('#index-diff').text(mobxStore.marketStates.twoMarketsIndexDiff)
-        // b_best_sam = (b_ask[1] + b_bid[1]) / 2;
-        // o_best_sam = (o_ask[1] + o_bid[1]) / 2;
-        const b_best_sam = mobxStore.b_best_sam;
-        const o_best_sam = mobxStore.o_best_sam;
+        // left_best_sam = (b_ask[1] + b_bid[1]) / 2;
+        // right_best_sam = (o_ask[1] + o_bid[1]) / 2;
+        const left_best_sam = mobxStore.left_best_sam;
+        const right_best_sam = mobxStore.right_best_sam;
 
-        const ind_b = (b_best_sam - mobxStore.futureIndex.b_index);
-        const ind_o = o_best_sam - mobxStore.futureIndex.o_index;
+        const ind_b = (left_best_sam - mobxStore.futureIndex.b_index);
+        const ind_o = right_best_sam - mobxStore.futureIndex.o_index;
         b_sam.text(ind_b.toFixed(2))
-        .prop('title', 'b_best_sam - b_index\n' + sprintf('%s - %s', b_best_sam, mobxStore.futureIndex.b_index));
+        .prop('title', 'left_best_sam - left_index\n' + sprintf('%s - %s', left_best_sam, mobxStore.futureIndex.b_index));
         o_sam.text(ind_o.toFixed(2))
-        .prop('title', 'o_best_sam - o_index\n' + sprintf('%s - %s', o_best_sam, mobxStore.futureIndex.o_index));
+        .prop('title', 'right_best_sam - right_index\n' + sprintf('%s - %s', right_best_sam, mobxStore.futureIndex.o_index));
     });
 }
 

@@ -161,10 +161,10 @@ export const mobxStore = observable({
     get o_delivery_round() {
         return this.isEth ? 3 : 2;
     },
-    get b_best_sam() {
+    get left_best_sam() {
         return ((this.b_ask_1 + this.b_bid_1) / 2).toFixed(3);
     },
-    get o_best_sam() {
+    get right_best_sam() {
         return ((this.o_ask_1 + this.o_bid_1) / 2).toFixed(3);
     },
 

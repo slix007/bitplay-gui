@@ -40,7 +40,7 @@ function createPresetList(baseUrl, cont) {
     const btnSet = $('<button>').text('load').appendTo(cont);
     const btnDel = $('<button>').text('remove').appendTo(cont);
     const checkBoxNoExeptions = $('<input>').attr('type', 'checkbox').appendTo(cont);
-    $('<span>').text('load with No exceptions').attr('title', 'borders V1, sum_delta V1, borders V2, b_add_delta, ok_add_delta.').appendTo(cont);
+    $('<span>').text('load with No exceptions').attr('title', 'borders V1, sum_delta V1, borders V2, L_add_delta, R_add_delta.').appendTo(cont);
 
     updateCurrentList();
 

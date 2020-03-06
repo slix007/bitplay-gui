@@ -60,9 +60,9 @@ function createBeforeAndAfterOrderBook (arbType) {
 
     const limitsDiv = $(`#${arbType}-limits-status`)
     $('<div>').text('Okex price limits:').appendTo(limitsDiv)
-    const bDeltaDiv = $('<div>').text('b_delta:').appendTo(limitsDiv)
+    const bDeltaDiv = $('<div>').text('L_delta:').appendTo(limitsDiv)
     $('<span>', { 'id': `${arbType}-limits-status-b-delta` }).appendTo(bDeltaDiv)
-    const oDeltaDiv = $('<div>').text('o_delta:').appendTo(limitsDiv)
+    const oDeltaDiv = $('<div>').text('R_delta:').appendTo(limitsDiv)
     $('<span>', { 'id': `${arbType}-limits-status-o-delta` }).appendTo(oDeltaDiv)
     const adjBuyDiv = $('<div>').text('adj_buy:').appendTo(limitsDiv)
     $('<span>', { 'id': `${arbType}-limits-status-adj-buy` }).appendTo(adjBuyDiv)

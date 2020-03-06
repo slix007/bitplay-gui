@@ -87,14 +87,14 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         const comParamsCont = $('<div>').css('float', 'left').appendTo($feeCont);
         const table = $('<table>').css('border-spacing', 'unset').appendTo(comParamsCont);
         const tbody = $('<tbody>').appendTo(table);
-        createComParam(tbody, x => ({feeSettings: {bTakerComRate: x}}), x => x.feeSettings.bTakerComRate,
-                'b_taker_com_rate', 'b_best_sam', 'b_taker_com_');
-        createComParam(tbody, x => ({feeSettings: {bMakerComRate: x}}), x => x.feeSettings.bMakerComRate,
-                'b_maker_com_rate', 'b_best_sam', 'b_maker_com_');
-        createComParam(tbody, x => ({feeSettings: {oTakerComRate: x}}), x => x.feeSettings.oTakerComRate,
-                'o_taker_com_rate', 'o_best_sam', 'o_taker_com_');
-        createComParam(tbody, x => ({feeSettings: {oMakerComRate: x}}), x => x.feeSettings.oMakerComRate,
-                'o_maker_com_rate', 'o_best_sam', 'o_maker_com_');
+        createComParam(tbody, x => ({feeSettings: {leftTakerComRate: x}}), x => x.feeSettings.leftTakerComRate,
+                'L_taker_com_rate', 'left_best_sam', 'L_taker_com_');
+        createComParam(tbody, x => ({feeSettings: {leftMakerComRate: x}}), x => x.feeSettings.leftMakerComRate,
+                'L_maker_com_rate', 'left_best_sam', 'L_maker_com_');
+        createComParam(tbody, x => ({feeSettings: {rightTakerComRate: x}}), x => x.feeSettings.rightTakerComRate,
+                'R_taker_com_rate', 'right_best_sam', 'R_taker_com_');
+        createComParam(tbody, x => ({feeSettings: {rightMakerComRate: x}}), x => x.feeSettings.rightMakerComRate,
+                'R_maker_com_rate', 'right_best_sam', 'R_maker_com_');
         createComPtsSum($feeCont);
 
         // Ignore limits
@@ -209,10 +209,10 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({settingsVolatileMode: {signalDelayMs: x}}),
             x => x.settingsVolatileMode.signalDelayMs);
 
-    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'b_add_border',
+    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'L_add_border',
             x => ({settingsVolatileMode: {baddBorder: x}}),
             x => x.settingsVolatileMode.baddBorder);
-    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'o_add_border',
+    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'R_add_border',
             x => ({settingsVolatileMode: {oaddBorder: x}}),
             x => x.settingsVolatileMode.oaddBorder);
 
@@ -725,24 +725,24 @@ function createComPtsSum($feeCont) {
     const comParamsCont2 = $('<div>').css('float', 'left').css('margin-left', '20px').appendTo($feeCont);
     const table2 = $('<table>').appendTo(comParamsCont2);
     const tbody2 = $('<tbody>').appendTo(table2);
-    const sumMaker = $('<span>').text('b_maker + o_maker = ');
+    const sumMaker = $('<span>').text('L_maker + R_maker = ');
     sumMaker.appendTo($('<td>').appendTo($('<tr>').appendTo(tbody2)));
-    const sumTaker = $('<span>').text('b_taker + o_taker = ');
+    const sumTaker = $('<span>').text('L_taker + R_taker = ');
     sumTaker.appendTo($('<td>').appendTo($('<tr>').appendTo(tbody2)));
     mobx.autorun(r => {
         // b_maker + o_maker;
         // b_taker + o_taker.
-        const b_taker_com_pts = Number((allSettings.feeSettings.bTakerComRate / 100 * mobxStore.b_best_sam).toFixed(3));
-        const b_maker_com_pts = Number((allSettings.feeSettings.bMakerComRate / 100 * mobxStore.b_best_sam).toFixed(3));
-        const o_taker_com_pts = Number((allSettings.feeSettings.oTakerComRate / 100 * mobxStore.o_best_sam).toFixed(3));
-        const o_maker_com_pts = Number((allSettings.feeSettings.oMakerComRate / 100 * mobxStore.o_best_sam).toFixed(3));
-        // const sumM = (Number(b_maker_com_pts) + Number(o_maker_com_pts));
-        const sumM = Number((b_maker_com_pts + o_maker_com_pts).toFixed(3));
+        const left_taker_com_pts = Number((allSettings.feeSettings.leftTakerComRate / 100 * mobxStore.left_best_sam).toFixed(3));
+        const left_maker_com_pts = Number((allSettings.feeSettings.leftMakerComRate / 100 * mobxStore.left_best_sam).toFixed(3));
+        const right_taker_com_pts = Number((allSettings.feeSettings.rightTakerComRate / 100 * mobxStore.right_best_sam).toFixed(3));
+        const right_maker_com_pts = Number((allSettings.feeSettings.rightMakerComRate / 100 * mobxStore.right_best_sam).toFixed(3));
+        // const sumM = (Number(left_maker_com_pts) + Number(right_maker_com_pts));
+        const sumM = Number((left_maker_com_pts + right_maker_com_pts).toFixed(3));
         const sumM2 = (sumM * 2).toFixed(3);
-        sumMaker.text('b_maker + o_maker = ' + sumM + ' / ' + sumM2);
-        const sumT = Number((b_taker_com_pts + o_taker_com_pts).toFixed(3));
+        sumMaker.text('L_maker + R_maker = ' + sumM + ' / ' + sumM2);
+        const sumT = Number((left_taker_com_pts + right_taker_com_pts).toFixed(3));
         const sumT2 = (sumT * 2).toFixed(3);
-        sumTaker.text('b_taker + o_taker = ' + sumT + ' / ' + sumT2);
+        sumTaker.text('L_taker + R_taker = ' + sumT + ' / ' + sumT2);
     });
 
 }
@@ -1348,35 +1348,35 @@ function createDqlParams (SETTINGS_URL) {
       x => ({ dql: { omrLiq: x } }), x => (x.dql.omrLiq))
 
     const dqlParamsCont = $('#dql-params')
-    const bDQLOpenMinCont = $('<div>').appendTo(dqlParamsCont)
-    createSettingsInput(bDQLOpenMinCont, SETTINGS_URL, 'b_DQL_open_min',
-      x => ({ dql: { bdqlopenMin: x } }),
-      x => (x.dql.bdqlopenMin), true)
-    $('<span>').text('(new signals only if b_DQL >= b_DQL_open_min)').addClass('spanAsHint').appendTo(bDQLOpenMinCont)
+    const leftDqlOpenMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(leftDqlOpenMinCont, SETTINGS_URL, 'L_DQL_open_min',
+      x => ({ dql: { leftDqlOpenMin: x } }),
+      x => (x.dql.leftDqlOpenMin), true)
+    $('<span>').text('(new signals only if L_DQL >= L_DQL_open_min)').addClass('spanAsHint').appendTo(leftDqlOpenMinCont)
 
-    const oDQLOpenMinCont = $('<div>').appendTo(dqlParamsCont)
-    createSettingsInput(oDQLOpenMinCont, SETTINGS_URL, 'o_DQL_open_min',
-      x => ({ dql: { odqlopenMin: x } }),
-      x => (x.dql.odqlopenMin), true)
-    $('<span>').text('(new signals only if o_DQL >= o_DQL_open_min)').addClass('spanAsHint').appendTo(oDQLOpenMinCont)
+    const rightDqlOpenMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(rightDqlOpenMinCont, SETTINGS_URL, 'R_DQL_open_min',
+      x => ({ dql: { rightDqlOpenMin: x } }),
+      x => (x.dql.rightDqlOpenMin), true)
+    $('<span>').text('(new signals only if R_DQL >= R_DQL_open_min)').addClass('spanAsHint').appendTo(rightDqlOpenMinCont)
 
-    const bDQLCloseMinCont = $('<div>').appendTo(dqlParamsCont)
-    createSettingsInput(bDQLCloseMinCont, SETTINGS_URL, 'b_DQL_close_min',
-      x => ({ dql: { bdqlcloseMin: x } }),
-      x => (x.dql.bdqlcloseMin), true)
+    const leftDqlCloseMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(leftDqlCloseMinCont, SETTINGS_URL, 'L_DQL_close_min',
+      x => ({ dql: { leftDqlCloseMin: x } }),
+      x => (x.dql.leftDqlCloseMin), true)
     $('<span>').
-    text('(#b_preliq correction when b_DQL <= b_DQL_close_min)').
+    text('(#L_preliq correction when L_DQL <= L_DQL_close_min)').
     addClass('spanAsHint').
-    appendTo(bDQLCloseMinCont)
+    appendTo(leftDqlCloseMinCont)
 
-    const oDQLCloseMinCont = $('<div>').appendTo(dqlParamsCont)
-    createSettingsInput(oDQLCloseMinCont, SETTINGS_URL, 'o_DQL_close_min',
-      x => ({ dql: { odqlcloseMin: x } }),
-      x => (x.dql.odqlcloseMin), true)
+    const rightDqlCloseMinCont = $('<div>').appendTo(dqlParamsCont)
+    createSettingsInput(rightDqlCloseMinCont, SETTINGS_URL, 'R_DQL_close_min',
+      x => ({ dql: { rightDqlCloseMin: x } }),
+      x => (x.dql.rightDqlCloseMin), true)
     $('<span>').
-    text('(#o_preliq correction when o_DQL <= o_DQL_close_min)').
+    text('(#R_preliq correction when R_DQL <= R_DQL_close_min)').
     addClass('spanAsHint').
-    appendTo(oDQLCloseMinCont)
+    appendTo(rightDqlCloseMinCont)
 
     const decorateDql = (el, open, close) => {
         if (Number(open) < Number(close)) {
@@ -1386,10 +1386,10 @@ function createDqlParams (SETTINGS_URL) {
         }
     }
     mobx.autorun(r => {
-        decorateDql(bDQLOpenMinCont, allSettings.dql.bdqlopenMin, allSettings.dql.bdqlcloseMin)
-        decorateDql(bDQLCloseMinCont, allSettings.dql.bdqlopenMin, allSettings.dql.bdqlcloseMin)
-        decorateDql(oDQLOpenMinCont, allSettings.dql.odqlopenMin, allSettings.dql.odqlcloseMin)
-        decorateDql(oDQLCloseMinCont, allSettings.dql.odqlopenMin, allSettings.dql.odqlcloseMin)
+        decorateDql(leftDqlOpenMinCont, allSettings.dql.leftDqlOpenMin, allSettings.dql.leftDqlCloseMin)
+        decorateDql(leftDqlCloseMinCont, allSettings.dql.leftDqlOpenMin, allSettings.dql.leftDqlCloseMin)
+        decorateDql(rightDqlOpenMinCont, allSettings.dql.rightDqlOpenMin, allSettings.dql.rightDqlCloseMin)
+        decorateDql(rightDqlCloseMinCont, allSettings.dql.rightDqlOpenMin, allSettings.dql.rightDqlCloseMin)
     })
 }
 
@@ -1397,14 +1397,14 @@ function createDqlKillPos (SETTINGS_URL) {
     const $cont = $('#dql-killpos')
 
     const btmKillpos = $('<div>').appendTo($cont)
-    createSettingsInput(btmKillpos, SETTINGS_URL, 'b_DQL_killpos',
-      x => ({ dql: { btmDqlKillPos: x } }),
-      x => (x.dql.btmDqlKillPos))
+    createSettingsInput(btmKillpos, SETTINGS_URL, 'L_DQL_killpos',
+      x => ({ dql: { leftDqlKillPos: x } }),
+      x => (x.dql.leftDqlKillPos))
 
     const okKillpos = $('<div>').appendTo($cont)
-    createSettingsInput(okKillpos, SETTINGS_URL, 'o_DQL_killpos',
-      x => ({ dql: { okexDqlKillPos: x } }),
-      x => (x.dql.okexDqlKillPos))
+    createSettingsInput(okKillpos, SETTINGS_URL, 'R_DQL_killpos',
+      x => ({ dql: { rightDqlKillPos: x } }),
+      x => (x.dql.rightDqlKillPos))
 
     const decorateDql = (el, close, kill) => {
         if (Number(close) < Number(kill))
@@ -1413,8 +1413,8 @@ function createDqlKillPos (SETTINGS_URL) {
             el.css('font-weight', 'normal').css('color', 'black').prop('title', '')
     }
     mobx.autorun(r => {
-        decorateDql(btmKillpos, allSettings.dql.bdqlcloseMin, allSettings.dql.btmDqlKillPos)
-        decorateDql(okKillpos, allSettings.dql.odqlcloseMin, allSettings.dql.okexDqlKillPos)
+        decorateDql(btmKillpos, allSettings.dql.leftDqlCloseMin, allSettings.dql.leftDqlKillPos)
+        decorateDql(okKillpos, allSettings.dql.rightDqlCloseMin, allSettings.dql.rightDqlKillPos)
     })
 }
 
@@ -1423,8 +1423,8 @@ function createDqlLevel(SETTINGS_URL) {
 
     let label = $('<span>').html('DQL_level: ').appendTo($cont);
     label.prop('title', 'Preliq выполняется при уловиях:\n'
-            + 'b_DQL <= b_DQL_close_min && b_DQL >= DQL_level, или\n'
-            + 'o_DQL <= o_DQL_close_min && o_DQL >= DQL_level.');
+            + 'L_DQL <= L_DQL_close_min && L_DQL >= DQL_level, или\n'
+            + 'R_DQL <= R_DQL_close_min && R_DQL >= DQL_level.');
 
     let edit = $('<input>').width('60px').appendTo($cont);
     let updateBtn = $('<button>').text('set')

@@ -8,8 +8,8 @@ var exports = module.exports = {};
 // const resLabel = $('<span>');
 const resLabel = $('<span>');
 const lbDelaySec = $('<span>');
-const lbBitmex = $('<span>');
-const lbOkex = $('<span>');
+const lbLeft = $('<span>');
+const lbRight = $('<span>');
 
 exports.fillComponents = function (jsonData, baseUrl) {
     let SET_URL = baseUrl + '/market/last-price-deviation';
@@ -59,8 +59,8 @@ function addLPD(SET_URL, baseUrl, indexCont) {
     indexCont.append(setBtn);
     indexCont.append(resLabel);
     indexCont.append(fixCurrBtn);
-    indexCont.append(lbBitmex);
-    indexCont.append(lbOkex);
+    indexCont.append(lbLeft);
+    indexCont.append(lbRight);
 }
 
 function addLPDDelay(SET_URL, baseUrl, indexCont) {
@@ -108,8 +108,8 @@ function showDev(label, isExceed, text, baseVal, currVal, maxDevUsd) {
 
 function updateInfo(jsonData) {
     resLabel.html(sprintf('%s usd  ', jsonData.maxDevUsd));
-    showDev(lbBitmex, jsonData.bitmexMainExceed, 'bitmex=', jsonData.bitmexMain, jsonData.bitmexMainCurr, jsonData.maxDevUsd);
-    showDev(lbOkex, jsonData.okexMainExceed, ', okex=', jsonData.okexMain, jsonData.okexMainCurr, jsonData.maxDevUsd);
+    showDev(lbLeft, jsonData.leftMainExceed, 'left=', jsonData.leftMain, jsonData.leftMainCurr, jsonData.maxDevUsd);
+    showDev(lbRight, jsonData.rightMainExceed, ', right=', jsonData.rightMain, jsonData.rightMainCurr, jsonData.maxDevUsd);
 
     lbDelaySec.html(sprintf('%s sec. To fixCurrent(sec): %s', jsonData.delaySec, jsonData.toNextFix));
 }
