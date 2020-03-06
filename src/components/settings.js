@@ -510,7 +510,7 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
     const optionFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
 
     select.append($('<option>').val('TAKER').text('TAKER'))
-    if (withTakerFok) {
+    if (withTakerFok && allSettings.leftIsBtm) {
         select.append(optionFok)
         select.append(optionIoc)
     }

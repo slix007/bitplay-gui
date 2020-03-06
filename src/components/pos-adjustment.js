@@ -104,8 +104,14 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
 
     const select = $('<select>');
     select.append($('<option>').val('TAKER').text('TAKER'));
-    select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
-    select.append($('<option>').val('TAKER_IOC').text('TAKER_IOC'));
+    if (allSettings.leftIsBtm) {
+        const optionTakerFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
+        const optionTakerIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+        select.append(optionTakerFok);
+        select.append(optionTakerIoc);
+        // optionTakerFok.attr('disabled', true);
+        // optionTakerIoc.attr('disabled', true);
+    }
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
     select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
