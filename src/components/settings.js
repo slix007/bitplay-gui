@@ -1345,10 +1345,10 @@ function createOkexEbestElast() {
 function createDqlParams (SETTINGS_URL) {
     const dqlMrLiqCont = $('#dql-mr-liq')
 
-    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'b_mr_liq',
-      x => ({ dql: { bmrLiq: x } }), x => (x.dql.bmrLiq))
-    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'o_mr_liq',
-      x => ({ dql: { omrLiq: x } }), x => (x.dql.omrLiq))
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'L_mr_liq',
+      x => ({ dql: { leftMrLiq: x } }), x => (x.dql.leftMrLiq))
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'R_mr_liq',
+      x => ({ dql: { rightMrLiq: x } }), x => (x.dql.rightMrLiq))
 
     const dqlParamsCont = $('#dql-params')
     const leftDqlOpenMinCont = $('<div>').appendTo(dqlParamsCont)

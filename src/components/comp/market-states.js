@@ -29,10 +29,12 @@ let repaintStates = function (returnData) {
         $('<span>').text('; Arbitrage state: ').appendTo(markets);
         $('<span>', {id: arbId}).text(returnData.arbState).appendTo(markets);
 
-        $('<span>').text('; Bitmex reconnect state: ').appendTo(markets);
-        $('<span>', {id: btmReconId}).text(returnData.bitmexReconnectState).appendTo(markets);
-        const bitmexSoState = $('<span>').appendTo(markets);
-        mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
+        if (allSettings.leftIsBtm) {
+            $('<span>').text('; Bitmex reconnect state: ').appendTo(markets);
+            $('<span>', {id: btmReconId}).text(returnData.bitmexReconnectState).appendTo(markets);
+            const bitmexSoState = $('<span>').appendTo(markets);
+            mobx.autorun(r => showBitmexSoState(bitmexSoState, allSettings));
+        }
 
         const okexSettlement = $('<span>').appendTo(markets)
         mobx.autorun(r => showOkexSettlement(okexSettlement, allSettings))
@@ -43,7 +45,9 @@ let repaintStates = function (returnData) {
     updateState(firstId, returnData.firstMarket);
     updateState(secondId, returnData.secondMarket);
     updateState(arbId, returnData.arbState);
-    updateState(btmReconId, returnData.bitmexReconnectState);
+    if (allSettings.leftIsBtm) {
+        updateState(btmReconId, returnData.bitmexReconnectState);
+    }
 
     const sigDeltay = returnData.signalDelay;
     const timeToSig = '. Time to signal (ms): ' + showTimeToSignal(returnData.timeToSignal);

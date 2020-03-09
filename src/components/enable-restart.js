@@ -88,9 +88,9 @@ function createMaxTimestampDelay(container, allSettings, SETTINGS_URL) {
 
 function createRestartMonitoringLabels(container) {
     bTimestampDelayMax = document.createElement('div');
-    bTimestampDelayMax.innerHTML = 'bTimestampDelayMax: ';
+    bTimestampDelayMax.innerHTML = 'L_TimestampDelayMax: ';
     oTimestampDelayMax = document.createElement('div');
-    oTimestampDelayMax.innerHTML = 'oTimestampDelayMax: ';
+    oTimestampDelayMax.innerHTML = 'R_TimestampDelayMax: ';
 
     let resetBtn = document.createElement('button');
     resetBtn.onclick = onBtnClick;
