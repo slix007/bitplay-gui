@@ -8,6 +8,7 @@ import {
 } from '../store/cum-params-store'
 import Http from '../http'
 import $ from 'jquery'
+import { allSettings } from '../store/settings-store'
 
 let URL;
 let URL_RESET;
@@ -81,7 +82,10 @@ function createCumParams(cont, cumType) {
     const cum_diff_ast = createParam('cum_diff_ast:');
     const cum_com1_ast = createParam('cum_com1/ast:');
     const cum_com2_ast = createParam('cum_com2/ast:');
-    const cum_bitmex_m_com_ast = createParam('cum_bitmex_M_com/ast:');
+    let cum_bitmex_m_com_ast;
+    if (allSettings.leftIsBtm) {
+        cum_bitmex_m_com_ast = createParam('cum_bitmex_M_com/ast:');
+    }
     const slip = createParam('slip_br/slip:');
     const vert1 = createParam('CompletedVert1/Vert1:')
     const vert2 = createParam('CompletedVert2/Vert2:')
@@ -123,8 +127,10 @@ function createCumParams(cont, cumType) {
         cum_com1_ast.text(sprintf('%s/%s', p.cumCom1, cumAstCom1));
         const cumAstCom2 = p.cumAstCom2 && p.cumAstCom2 !== 0 ? p.cumAstCom2.toFixed(4) : 0;
         cum_com2_ast.text(sprintf('%s/%s', p.cumCom2, cumAstCom2));
-        const cumAstBitmexMCom = p.cumAstBitmexMCom && p.cumAstBitmexMCom !== 0 ? p.cumAstBitmexMCom.toFixed(4) : 0;
-        cum_bitmex_m_com_ast.text(sprintf('%s/%s', p.cumBitmexMCom, cumAstBitmexMCom));
+        if (allSettings.leftIsBtm) {
+            const cumAstBitmexMCom = p.cumAstBitmexMCom && p.cumAstBitmexMCom !== 0 ? p.cumAstBitmexMCom.toFixed(4) : 0;
+            cum_bitmex_m_com_ast.text(sprintf('%s/%s', p.cumBitmexMCom, cumAstBitmexMCom));
+        }
         const slipBr = p.slipBr && p.slipBr !== 0 ? p.slipBr.toFixed(2) : 0;
         const slip1 = p.slip && p.slip !== 0 ? p.slip.toFixed(2) : 0;
         slip.text(sprintf('%s/%s', slipBr, slip1));
