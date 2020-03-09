@@ -506,13 +506,16 @@ function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, 
 function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain,
   withTakerFok, settingsObj) {
     const select = $('<select>')
-    const optionIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
-    const optionFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
-
     select.append($('<option>').val('TAKER').text('TAKER'))
-    if (withTakerFok && allSettings.leftIsBtm) {
-        select.append(optionFok)
-        select.append(optionIoc)
+    const optionTakerFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
+    const optionTakerIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+    if (withTakerFok) {
+        select.append(optionTakerFok)
+        select.append(optionTakerIoc)
+        if (!allSettings.leftIsBtm) {
+            optionTakerFok.attr('disabled', true)
+            optionTakerIoc.attr('disabled', true)
+        }
     }
     select.append($('<option>').val('MAKER').text('MAKER'))
     select.append($('<option>').val('HYBRID').text('HYBRID'))
@@ -524,7 +527,7 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
 
     mobx.autorun(function () {
         if (settingsObj) {
-            optionIoc.attr('disabled', settingsObj(allSettings).arbScheme !== 'CON_B_O_PORTIONS')
+            optionIoc.attr('disabled', settingsObj(allSettings).arbScheme !== 'R_wait_L_portions')
         }
 
         select.val(valExtractor(allSettings))
@@ -567,7 +570,7 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
     mainContainer.appendChild(select.get(0));
 
     mobx.autorun(function () {
-        optionIoc.attr('disabled', allSettings.arbScheme !== 'CON_B_O_PORTIONS')
+        optionIoc.attr('disabled', allSettings.arbScheme !== 'R_wait_L_portions')
         select.val(valExtractor(allSettings));
         if (isMain) {
             let extraTitle = '';
@@ -603,11 +606,11 @@ function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, request
 function createArbScheme (container, SETTINGS_URL, requestCreator, valExtractor, isMain, settingsObj) {
     const lb = $('<span>').text('Arbitrage version:').appendTo(container)
     let select = $('<select>').appendTo(container)
-    const optionSim = $('<option>').val('SIM').text('SIM')
-    const optionConBo = $('<option>').val('CON_B_O').text('CON_B_O')
+    const optionSim = $('<option>').val('L_with_R').text('L_with_R')
+    const optionConBo = $('<option>').val('R_wait_L').text('R_wait_L')
     select.append(optionSim)
     select.append(optionConBo)
-    select.append($('<option>').val('CON_B_O_PORTIONS').text('CON_B_O_PORTIONS'))
+    select.append($('<option>').val('R_wait_L_portions').text('R_wait_L_portions'))
     select.change(function () {
         const requestData = JSON.stringify(requestCreator(this.value))
         select.disabled = true
@@ -628,8 +631,8 @@ function createArbScheme (container, SETTINGS_URL, requestCreator, valExtractor,
         if (isMain) {
             let extraTitle = ''
             if (bitmexChangeOnSoToConBo()) {
-                extraTitle += 'BitmexChangeOnSo:CON_B_O'
-                select.val('CON_B_O')
+                extraTitle += 'BitmexChangeOnSo:R_wait_L'
+                select.val('R_wait_L_portions')
             }
             if (isActiveV('arb_scheme')) {
                 extraTitle += '\nActivated VOLATILE mode'

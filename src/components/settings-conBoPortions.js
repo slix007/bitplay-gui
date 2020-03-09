@@ -11,41 +11,41 @@ export { createPortions }
 
 const createPortions = function () {
   const $cont = $('#con-b-o-portions')
-  $('<div>').text('CON_B_O_PORTIONS params:').appendTo($cont)
+  $('<div>').text('R_wait_L_portions params:').appendTo($cont)
 
   _createSettingsParam($('<div>').appendTo($cont), 'Min nt_usd to start Okex: ',
     x => ({ conBoPortions: { minNtUsdToStartOkex: x } }),
     x => x.conBoPortions.minNtUsdToStartOkex + 'usd=' + okUsdToCont(x.conBoPortions.minNtUsdToStartOkex,
       mobxStore.isEth) + 'cont',
-    x => x.arbScheme === 'CON_B_O_PORTIONS',
-    true, 'conBoPortions_minNtUsdToStartOkex')
+    x => x.arbScheme === 'R_wait_L_portions',
+    true, 'R_wait_L_portions_minNtUsdToStartOkex')
   _createSettingsParam($('<div>').appendTo($cont), 'Okex Max portion_usd: ',
     x => ({ conBoPortions: { maxPortionUsdOkex: x } }),
     x => x.conBoPortions.maxPortionUsdOkex + 'usd=' + okUsdToCont(x.conBoPortions.maxPortionUsdOkex, mobxStore.isEth)
       + 'cont',
-    x => x.arbScheme === 'CON_B_O_PORTIONS',
-    true, 'conBoPortions_maxPortionUsdOkex')
+    x => x.arbScheme === 'R_wait_L_portions',
+    true, 'R_wait_L_portions_maxPortionUsdOkex')
 
   const $column4Cont = $('#volatile-mode-params-4')
   const $conBoPortionsContV = $('<div>').appendTo($column4Cont)
-  const btmPlacingLbV = $('<div>').text('CON_B_O_PORTIONS params:')
+  const btmPlacingLbV = $('<div>').text('R_wait_L_portions params:')
   btmPlacingLbV.appendTo($conBoPortionsContV)
-  createCheckboxV($conBoPortionsContV, allSettings.SETTINGS_URL, 'conBoPortions_minNtUsdToStartOkex')
+  createCheckboxV($conBoPortionsContV, allSettings.SETTINGS_URL, 'R_wait_L_portions_minNtUsdToStartOkex')
   _createSettingsParam($conBoPortionsContV, 'Min nt_usd to start Okex: ',
     x => ({ settingsVolatileMode: { conBoPortions: { minNtUsdToStartOkex: x } } }),
     x => x.settingsVolatileMode.conBoPortions.minNtUsdToStartOkex + 'usd='
       + okUsdToCont(x.settingsVolatileMode.conBoPortions.minNtUsdToStartOkex, mobxStore.isEth) + 'cont',
-    x => x.arbScheme === 'CON_B_O_PORTIONS',
-    false, 'conBoPortions_minNtUsdToStartOkex')
+    x => x.arbScheme === 'R_wait_L_portions',
+    false, 'R_wait_L_portions_minNtUsdToStartOkex')
 
   const secondParam = $('<div>').appendTo($column4Cont)
-  createCheckboxV(secondParam, allSettings.SETTINGS_URL, 'conBoPortions_maxPortionUsdOkex')
+  createCheckboxV(secondParam, allSettings.SETTINGS_URL, 'R_wait_L_portions_maxPortionUsdOkex')
   _createSettingsParam(secondParam, 'Okex Max portion_usd: ',
     x => ({ settingsVolatileMode: { conBoPortions: { maxPortionUsdOkex: x } } }),
     x => x.settingsVolatileMode.conBoPortions.maxPortionUsdOkex + 'usd='
       + okUsdToCont(x.settingsVolatileMode.conBoPortions.maxPortionUsdOkex, mobxStore.isEth) + 'cont',
-    x => x.arbScheme === 'CON_B_O_PORTIONS',
-    false, 'conBoPortions_maxPortionUsdOkex')
+    x => x.arbScheme === 'R_wait_L_portions',
+    false, 'R_wait_L_portions_maxPortionUsdOkex')
 }
 
 function _createSettingsParam (

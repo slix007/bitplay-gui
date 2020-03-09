@@ -10,7 +10,7 @@ export { createAbortSignal }
 const createAbortSignal = function () {
   const $cont = $('#abort-signal')
 
-  const ch = $('<input>').attr('type', 'checkbox').attr('title', 'only CON_B_O_PORTIONS').appendTo($cont)
+  const ch = $('<input>').attr('type', 'checkbox').attr('title', 'only R_wait_L_portions').appendTo($cont)
   ch.click(() => {
     ch.attr('disabled', true)
     const requestData = JSON.stringify({ abortSignal: { abortSignalPtsEnabled: ch.prop('checked') } })
@@ -28,7 +28,7 @@ const createAbortSignal = function () {
   _createSettingsParam($cont, 'abort_signal_pts: ',
     x => ({ abortSignal: { abortSignalPts: x } }),
     x => x.abortSignal.abortSignalPts,
-    x => x.arbScheme === 'CON_B_O_PORTIONS' && ch.prop('checked'))
+    x => x.arbScheme === 'R_wait_L_portions' && ch.prop('checked'))
 }
 
 function _createSettingsParam (
