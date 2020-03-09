@@ -155,8 +155,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         delta2Sma.innerHTML = Utils.withSign(returnData.delta2Sma)
         delta1MinFixed.innerHTML = Utils.withSign(returnData.delta1MinFixed)
         delta2MinFixed.innerHTML = Utils.withSign(returnData.delta2MinFixed)
-        delta1MinInstant.innerHTML = 'b_delta_min_current=' + Utils.withSign(returnData.delta1MinInstant)
-        delta2MinInstant.innerHTML = 'o_delta_min_current=' + Utils.withSign(returnData.delta2MinInstant)
+        delta1MinInstant.innerHTML = 'L_delta_min_current=' + Utils.withSign(returnData.delta1MinInstant)
+        delta2MinInstant.innerHTML = 'R_delta_min_current=' + Utils.withSign(returnData.delta2MinInstant)
         delta1EveryCalc.innerHTML = returnData.delta1EveryCalc
         delta2EveryCalc.innerHTML = returnData.delta2EveryCalc
         deltaHistPerStarted.innerHTML = returnData.deltaHistPerStarted
@@ -487,8 +487,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
               + '<br>R_' + marketAccount.mmDmrl
         })
         fetch('/delta-params', function (result) {
-            let b = document.getElementById('b_delta_minmax')
-            let o = document.getElementById('o_delta_minmax')
+            let b = document.getElementById('L_delta_minmax')
+            let o = document.getElementById('R_delta_minmax')
             b.innerHTML = Utils.withSign(result.instantDelta.btmDeltaMin) + '...'
             o.innerHTML = Utils.withSign(result.instantDelta.okDeltaMin) + '...'
             let btmMax = document.createElement('span')
@@ -500,8 +500,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             okMax.style.color = result.instantDelta.okMaxColor
             o.appendChild(okMax)
 
-            let b_min = document.getElementById('b_delta_min_minmax')
-            let o_min = document.getElementById('o_delta_min_minmax')
+            let b_min = document.getElementById('L_delta_min_minmax')
+            let o_min = document.getElementById('R_delta_min_minmax')
             b_min.innerHTML = Utils.withSign(result.deltaMin.btmDeltaMin) + '...'
             o_min.innerHTML = Utils.withSign(result.deltaMin.okDeltaMin) + '...'
             let btmMax_min = document.createElement('span')

@@ -116,12 +116,12 @@ function createDelivery() {
             o_delivery_lb.text(mobxStore.o_delivery);
 
             delivery_diff_lb.text(delivery_diff)
-            .prop('title', 'b_index - o_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
+            .prop('title', 'L_index - R_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
 
             etm_b_delta_lb.text(etm_b_delta)
-            .prop('title', 'etm_b_delta = b_bid[1] - o_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
+            .prop('title', 'etm_L_delta = L_bid[1] - R_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
             etm_o_delta_lb.text(etm_o_delta)
-            .prop('title', 'etm_o_delta = o_delivery - b_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
+            .prop('title', 'etm_R_delta = R_delivery - L_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
         } else {
             $cont.hide();
         }

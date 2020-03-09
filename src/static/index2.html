@@ -275,26 +275,26 @@
         <div id="DELTA_BLOCK" style="display: flex;">
             <div id="DELTA_DATA_BLOCKS" style="float: top;">
                 <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                    <div>b_delta = b_bid[1] - o_ask[1] = <span id="delta1"></span></div>
-                    <div>o_delta = o_bid[1] - b_ask[1] = <span id="delta2"></span></div>
+                    <div>L_delta = L_bid[1] - R_ask[1] = <span id="delta1"></span></div>
+                    <div>R_delta = R_bid[1] - L_ask[1] = <span id="delta2"></span></div>
                 </div>
                 <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                    <div>b_delta_sma:<span id="delta1Sma"></span></div>
-                    <div>o_delta_sma:<span id="delta2Sma"></span></div>
+                    <div>L_delta_sma:<span id="delta1Sma"></span></div>
+                    <div>R_delta_sma:<span id="delta2Sma"></span></div>
                 </div>
                 <div style="float: left; padding-right: 10px; padding-left: 10px; ">
-                    <div>b_delta_min:<span id="delta1MinFixed"></span></div>
-                    <div>o_delta_min:<span id="delta2MinFixed"></span></div>
+                    <div>L_delta_min:<span id="delta1MinFixed"></span></div>
+                    <div>R_delta_min:<span id="delta2MinFixed"></span></div>
                 </div>
                 <div style="float: left; padding-right: 10px; padding-left: 10px; ">
                     <div>
-                        <span id="border1-lb">b_border:</span>
+                        <span id="border1-lb">L_border:</span>
                         <input type="text" id="border1-edit">
                         <button id="update-border1">Update border1</button>
                         <span id="border1"></span>
                     </div>
                     <div>
-                        <span id="border2-lb">o_border:</span>
+                        <span id="border2-lb">R_border:</span>
                         <input type="text" id="border2-edit">
                         <button id="update-border2">Update border2</button>
                         <span id="border2"></span>
@@ -310,16 +310,16 @@
                 <div style="float: left; padding-right: 10px; padding-left: 10px;">
                     <div>
                         <span id="borders-timer"></span><br>
-                        range b_delta: <span id="b_delta_minmax"></span><br>
-                        range o_delta: <span id="o_delta_minmax"></span>
+                        range L_delta: <span id="b_delta_minmax"></span><br>
+                        range R_delta: <span id="o_delta_minmax"></span>
                         <button id="reset-delta-minmax">reset</button>
                     </div>
                 </div>
                 <div style="float: left; padding-right: 10px; padding-left: 10px; ">
                     <div>
                         <span id="delta-min-timer"></span><br>
-                        range b_delta_min: <span id="b_delta_min_minmax"></span>;<br>
-                        range o_delta_min: <span id="o_delta_min_minmax"></span>;
+                        range L_delta_min: <span id="b_delta_min_minmax"></span>;<br>
+                        range R_delta_min: <span id="o_delta_min_minmax"></span>;
                         <button id="reset-delta_min-minmax">reset</button>
                     </div>
                 </div>
