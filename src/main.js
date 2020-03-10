@@ -51,16 +51,12 @@ const afterLoginFunc = function (isAuthorized) {
     // baseUrl = baseUrlWithPort;
     if (isAuthorized) {
         httpVar.httpAsyncGet(marketsUrl, function (response) {
-            console.log(response);
             let parsedResp = JSON.parse(response);
             $('#left-market-name').text(parsedResp.left);
             settingsStore.allSettings.marketList = parsedResp
             //workaround for REST mapping
             parsedResp.first = 'bitmex'
             parsedResp.second = 'okcoin'
-            console.log(response);
-
-            // console.log('first market=' + parsedResp.first);
 
             function fillMainPage(parsedResp) {
                 const leftCt = parsedResp.leftFutureContractName

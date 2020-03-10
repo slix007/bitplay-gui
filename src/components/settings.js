@@ -54,17 +54,17 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
         const btmPlacingLb = $('<span>').text('Bitmex place orders type:')
         btmPlacingLb.appendTo($bitmexPlacingCont)
         createPlacingTypeWithBtmChangeOnSo($bitmexPlacingCont.get(0), SETTINGS_URL,
-          x => ({ bitmexPlacingType: x }),
-          x => x.bitmexPlacingType,
-          btmPlacingLb, 'bitmexPlacingType', true)
+          x => ({ leftPlacingType: x }),
+          x => x.leftPlacingType,
+          btmPlacingLb, 'leftPlacingType', true)
 
         let okexPlacingCont = $('#okex-placing-type')
         const okPlacingLb = $('<span>').text('Okex place orders type:')
         okPlacingLb.appendTo(okexPlacingCont)
         createPlacingType(okexPlacingCont.get(0), SETTINGS_URL,
-          x => ({ okexPlacingType: x }),
-          x => x.okexPlacingType,
-          okPlacingLb, 'okexPlacingType', true)
+          x => ({ rightPlacingType: x }),
+          x => x.rightPlacingType,
+          okPlacingLb, 'rightPlacingType', true)
 
         // okex postOnly settings
         // // let postOnlyContainer = $('#post-only-settings')
@@ -174,39 +174,39 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
     const contTimer = $('<div>').appendTo($column1Cont);
     createSettingsV(contTimer, SETTINGS_URL, 'Volatile duration(sec)',
             x => ({settingsVolatileMode: {volatileDurationSec: x}}),
-            x => x.settingsVolatileMode.volatileDurationSec,
-            x => false);
-    $('<span>').attr('id', 'timeToResetTradingMode-label').appendTo(contTimer);
+      x => x.settingsVolatileMode.volatileDurationSec,
+      x => false);
+    $('<span>').attr('id', 'timeToResetTradingMode-label').appendTo(contTimer)
     createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'Border cross depth',
-            x => ({settingsVolatileMode: {borderCrossDepth: x}}),
-            x => x.settingsVolatileMode.borderCrossDepth,
-            x => x.tradingModeAuto);
+      x => ({ settingsVolatileMode: { borderCrossDepth: x } }),
+      x => x.settingsVolatileMode.borderCrossDepth,
+      x => x.tradingModeAuto)
 
-    const $column2Cont = $('#volatile-mode-params-2');
-    const $btmPlacingContV = $('<div>').appendTo($column2Cont);
-    createCheckboxV($btmPlacingContV, SETTINGS_URL, 'bitmexPlacingType');
-    const btmPlacingLbV = $('<span>').text('Bitmex place orders type:');
-    btmPlacingLbV.appendTo($btmPlacingContV);
+    const $column2Cont = $('#volatile-mode-params-2')
+    const $btmPlacingContV = $('<div>').appendTo($column2Cont)
+    createCheckboxV($btmPlacingContV, SETTINGS_URL, 'leftPlacingType')
+    const btmPlacingLbV = $('<span>').text('Left place orders type:')
+    btmPlacingLbV.appendTo($btmPlacingContV)
     createPlacingType($btmPlacingContV.get(0), SETTINGS_URL,
-      x => ({ settingsVolatileMode: { bitmexPlacingType: x } }),
-      x => x.settingsVolatileMode.bitmexPlacingType,
-      btmPlacingLbV, 'bitmexPlacingType', false, true,
+      x => ({ settingsVolatileMode: { leftPlacingType: x } }),
+      x => x.settingsVolatileMode.leftPlacingType,
+      btmPlacingLbV, 'leftPlacingType', false, true,
       x => x.settingsVolatileMode
-    );
+    )
 
-    const $okPlacingContV = $('<div>').appendTo($column2Cont);
-    createCheckboxV($okPlacingContV, SETTINGS_URL, 'okexPlacingType');
-    const okPlacingLbV = $('<span>').text('Okex place orders type:');
-    okPlacingLbV.appendTo($okPlacingContV);
+    const $okPlacingContV = $('<div>').appendTo($column2Cont)
+    createCheckboxV($okPlacingContV, SETTINGS_URL, 'rightPlacingType')
+    const okPlacingLbV = $('<span>').text('Right place orders type:')
+    okPlacingLbV.appendTo($okPlacingContV)
     createPlacingType($okPlacingContV.get(0), SETTINGS_URL,
-            x => ({settingsVolatileMode: {okexPlacingType: x}}),
-            x => x.settingsVolatileMode.okexPlacingType,
-            okPlacingLbV, 'okexPlacingType'
-    );
+      x => ({ settingsVolatileMode: { rightPlacingType: x } }),
+      x => x.settingsVolatileMode.rightPlacingType,
+      okPlacingLbV, 'rightPlacingType'
+    )
 
-    const $signalDelayContV = $('<div>').appendTo($column2Cont);
-    createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs');
-    createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({settingsVolatileMode: {signalDelayMs: x}}),
+    const $signalDelayContV = $('<div>').appendTo($column2Cont)
+    createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs')
+    createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({ settingsVolatileMode: { signalDelayMs: x } }),
             x => x.settingsVolatileMode.signalDelayMs);
 
     createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'L_add_border',
@@ -527,7 +527,7 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
 
     mobx.autorun(function () {
         if (settingsObj) {
-            optionIoc.attr('disabled', settingsObj(allSettings).arbScheme !== 'R_wait_L_portions')
+            optionTakerFok.attr('disabled', settingsObj(allSettings).arbScheme !== 'R_wait_L_portions')
         }
 
         select.val(valExtractor(allSettings))
@@ -620,7 +620,7 @@ function createArbScheme (container, SETTINGS_URL, requestCreator, valExtractor,
         })
     })
     mobx.autorun(function () {
-        if (settingsObj(allSettings).bitmexPlacingType === 'TAKER_IOC') {
+        if (settingsObj(allSettings).leftPlacingType === 'TAKER_IOC') {
             optionSim.attr('disabled', true)
             optionConBo.attr('disabled', true)
         } else {
@@ -1033,9 +1033,6 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
     mobx.autorun(r => {
         const fromDb = allSettings.contractMode[leftRightMarket]
         const current = allSettings.contractModeCurrent[leftRightMarket]
-        console.log(fromDb)
-        console.log(current)
-
 
         select.val(fromDb);
         if (fromDb !== current) {
