@@ -197,7 +197,8 @@ export const mobxStore = observable({
 
     allMon: {},
 
-    okexSwapSettlement: '',
+    leftSwapSettlement: '',
+    rightSwapSettlement: '',
 
     // MarketStatesJson, /market/states
     marketStates: {

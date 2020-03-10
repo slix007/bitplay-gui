@@ -85,7 +85,9 @@ const fillComponents = function (futureIndex, baseUrl, arbType) {
       + futureIndex.contractExtraJson.ethBtcBal
     $(`#${arbType}-indexCont`).html(indexString)
 
-    mobxStore.okexSwapSettlement = futureIndex.okexSwapSettlement
+    if (futureIndex.leftSwapSettlement) { mobxStore.leftSwapSettlement = futureIndex.leftSwapSettlement }
+
+    if (futureIndex.rightSwapSettlement) { mobxStore.rightSwapSettlement = futureIndex.rightSwapSettlement }
 
 }
 

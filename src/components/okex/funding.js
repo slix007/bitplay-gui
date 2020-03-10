@@ -22,7 +22,7 @@ const createSwapFunding = function (prevCont, arbType) {
     // console.log(mobxStore.okexSwapSettlement.fundingRate)
     // console.log(mobxStore.okexSwapSettlement.fundingTime)
 
-    const val = mobxStore.okexSwapSettlement
+    const val = arbType === 'left' ? mobxStore.leftSwapSettlement : mobxStore.rightSwapSettlement
     // lb.html(mobxStore.okexSwapSettlement.fundingRate)
 
     if (val) {
