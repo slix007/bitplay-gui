@@ -108,10 +108,6 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
     const optionTakerIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
     select.append(optionTakerFok);
     select.append(optionTakerIoc);
-    if (!allSettings.leftIsBtm) {
-        optionTakerFok.attr('disabled', true);
-        optionTakerIoc.attr('disabled', true);
-    }
     select.append($('<option>').val('MAKER').text('MAKER'));
     select.append($('<option>').val('HYBRID').text('HYBRID'));
     select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
@@ -133,6 +129,11 @@ function createPosAdjustmentPlacingType(parentCont, SETTINGS_URL) {
 
     mobx.autorun(r => {
         select.val(allSettings.posAdjustment.posAdjustmentPlacingType);
+        if (!allSettings.leftIsBtm) {
+            optionTakerFok.attr('disabled', true);
+            optionTakerIoc.attr('disabled', true);
+        }
+
         let extraTitle = '';
         if (bitmexChangeOnSoToTaker()) {
             extraTitle += 'BitmexChangeOnSo: Adj_to_TAKER';
