@@ -51,7 +51,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type')
-        const btmPlacingLb = $('<span>').text('Bitmex place orders type:')
+        const btmPlacingLb = $('<span>').text('Left place orders type:')
         btmPlacingLb.appendTo($bitmexPlacingCont)
         createPlacingTypeWithBtmChangeOnSo($bitmexPlacingCont.get(0), SETTINGS_URL,
           x => ({ leftPlacingType: x }),
@@ -59,7 +59,7 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
           btmPlacingLb, 'leftPlacingType', true)
 
         let okexPlacingCont = $('#okex-placing-type')
-        const okPlacingLb = $('<span>').text('Okex place orders type:')
+        const okPlacingLb = $('<span>').text('Right place orders type:')
         okPlacingLb.appendTo(okexPlacingCont)
         createPlacingType(okexPlacingCont.get(0), SETTINGS_URL,
           x => ({ rightPlacingType: x }),
