@@ -512,10 +512,6 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
     if (withTakerFok) {
         select.append(optionTakerFok)
         select.append(optionTakerIoc)
-        if (!allSettings.leftIsBtm) {
-            optionTakerFok.attr('disabled', true)
-            optionTakerIoc.attr('disabled', true)
-        }
     }
     select.append($('<option>').val('MAKER').text('MAKER'))
     select.append($('<option>').val('HYBRID').text('HYBRID'))
@@ -528,6 +524,10 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
     mobx.autorun(function () {
         if (settingsObj) {
             optionTakerFok.attr('disabled', settingsObj(allSettings).arbScheme !== 'R_wait_L_portions')
+        }
+        if (!allSettings.leftIsBtm) {
+            optionTakerFok.attr('disabled', true)
+            optionTakerIoc.attr('disabled', true)
         }
 
         select.val(valExtractor(allSettings))
@@ -557,30 +557,38 @@ function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtr
 }
 
 function createPlacingTypeWithBtmChangeOnSo(mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain) {
-    const select = $('<select>');
-    select.append($('<option>').val('TAKER').text('TAKER'));
-    select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'));
-    const optionIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
-    select.append(optionIoc);
-    select.append($('<option>').val('MAKER').text('MAKER'));
-    select.append($('<option>').val('HYBRID').text('HYBRID'));
-    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'));
-    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'));
-    select.change(onVerPick);
-    mainContainer.appendChild(select.get(0));
+    const select = $('<select>')
+    select.append($('<option>').val('TAKER').text('TAKER'))
+    // select.append($('<option>').val('TAKER_FOK').text('TAKER_FOK'))
+    // const optionIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+    // select.append(optionIoc);
+    const optionTakerFok = $('<option>').val('TAKER_FOK').text('TAKER_FOK')
+    const optionTakerIoc = $('<option>').val('TAKER_IOC').text('TAKER_IOC')
+    select.append(optionTakerFok)
+    select.append(optionTakerIoc)
+    select.append($('<option>').val('MAKER').text('MAKER'))
+    select.append($('<option>').val('HYBRID').text('HYBRID'))
+    select.append($('<option>').val('MAKER_TICK').text('MAKER_TICK'))
+    select.append($('<option>').val('HYBRID_TICK').text('HYBRID_TICK'))
+    select.change(onVerPick)
+    mainContainer.appendChild(select.get(0))
 
     mobx.autorun(function () {
-        optionIoc.attr('disabled', allSettings.arbScheme !== 'R_wait_L_portions')
-        select.val(valExtractor(allSettings));
+        optionTakerIoc.attr('disabled', allSettings.arbScheme !== 'R_wait_L_portions')
+        if (!allSettings.leftIsBtm) {
+            optionTakerFok.attr('disabled', true)
+            optionTakerIoc.attr('disabled', true)
+        }
+        select.val(valExtractor(allSettings))
         if (isMain) {
-            let extraTitle = '';
+            let extraTitle = ''
             const bitmexChangeOnSoSignalType = bitmexSignalChangeOnSo()
             if (bitmexChangeOnSoSignalType) {
-                extraTitle += 'BitmexChangeOnSo: Signal_to_' + bitmexChangeOnSoSignalType;
-                select.val(bitmexChangeOnSoSignalType);
+                extraTitle += 'BitmexChangeOnSo: Signal_to_' + bitmexChangeOnSoSignalType
+                select.val(bitmexChangeOnSoSignalType)
             }
             if (isActiveV(fieldName)) {
-                extraTitle += '\nActivated VOLATILE mode';
+                extraTitle += '\nActivated VOLATILE mode'
             }
             if (extraTitle.length > 0) {
                 lb.css('font-weight', 'bold').prop('title', extraTitle);
