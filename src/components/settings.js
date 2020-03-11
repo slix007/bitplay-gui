@@ -124,6 +124,9 @@ let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
 
         createAdjustByNtUsd($('#adjust-by-nt-usd'), SETTINGS_URL, x => ({ adjustByNtUsd: x }), x => x.adjustByNtUsd,
           true)
+        if (!allSettings.leftIsBtm) {
+            createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL, 'left')
+        }
         createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL)
 
         createOkexEbestElast(settingsData, SETTINGS_URL)
@@ -1288,24 +1291,26 @@ function createAdjustByNtUsd(cont, SETTINGS_URL, requestCreator, valExtractor, i
     container.appendChild(label.get(0));
 }
 
-function createNtUsdMultiplicityOkex(settingsData, SETTINGS_URL) {
-    const $cont = $('#nt-usd-multiplicity-okex');
+function createNtUsdMultiplicityOkex (settingsData, SETTINGS_URL, arbType) {
+    const mainCont = $('#nt-usd-multiplicity-okex')
+    const $cont = $('<div>').appendTo(mainCont)
 
-    let label = $('<span>').html('nt_usd_multiplicity_okex').appendTo($cont);
-    let edit = $('<input>').width('60px').appendTo($cont);
-    let updateBtn = $('<button>').text('set')
-    .css('margin-right', '5px').appendTo($cont);
-    let resLabel = $('<span>').html(settingsData.ntUsdMultiplicityOkex).appendTo($cont);
+    const labelVal = arbType && arbType == 'left' ? 'nt_usd_multiplicity_L_okex' : 'nt_usd_multiplicity_R_okex'
+    let label = $('<span>').html(labelVal).appendTo($cont)
+    let edit = $('<input>').width('60px').appendTo($cont)
+    let updateBtn = $('<button>').text('set').css('margin-right', '5px').appendTo($cont)
+    const paramName = arbType && arbType === 'left' ? 'ntUsdMultiplicityOkexLeft' : 'ntUsdMultiplicityOkex'
+    let resLabel = $('<span>').html(settingsData[paramName]).appendTo($cont)
 
     updateBtn.click(function () {
-        updateBtn.attr('disabled', true);
-        let requestData = JSON.stringify({ntUsdMultiplicityOkex: edit.val()});
-        console.log(requestData);
+        updateBtn.attr('disabled', true)
+        let requestData = JSON.stringify({ [paramName]: edit.val() })
+        console.log(requestData)
         Http.httpAsyncPost(SETTINGS_URL, requestData,
-                function (rawResp) {
-                    const res = JSON.parse(rawResp);
-                    resLabel.html(res.ntUsdMultiplicityOkex);
-                    updateBtn.attr('disabled', false);
+          function (rawResp) {
+              const res = JSON.parse(rawResp)
+              resLabel.html(res[paramName])
+              updateBtn.attr('disabled', false)
                 }
         );
     });
