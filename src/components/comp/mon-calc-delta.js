@@ -39,13 +39,13 @@ exports.updateMonCalcDelta = function (baseUrl, resultJson) {
 
         $('<a>').attr('href', baseUrl + '/mon/calc-delta/list').text('/mon/calc-delta/list')
         .appendTo($('<div>').appendTo(main));
-        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/bitmex').text('/mon/calc-delta/list/bitmex')
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/left').text('/mon/calc-delta/list/left')
         .appendTo($('<div>').appendTo(main));
-        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/okex').text('/mon/calc-delta/list/okex')
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/right').text('/mon/calc-delta/list/right')
         .appendTo($('<div>').appendTo(main));
-        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/bitmex-all').text('/mon/calc-delta/list/bitmex-all')
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/left-all').text('/mon/calc-delta/list/left-all')
         .appendTo($('<div>').appendTo(main));
-        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/okex-all').text('/mon/calc-delta/list/okex-all')
+        $('<a>').attr('href', baseUrl + '/mon/calc-delta/list/right-all').text('/mon/calc-delta/list/right-all')
         .appendTo($('<div>').appendTo(main));
         $('<a>').attr('href', baseUrl + '/market/debug-log').text('/market/debug-log')
         .appendTo($('<div>').appendTo(main));
@@ -63,17 +63,17 @@ exports.updateMonCalcDelta = function (baseUrl, resultJson) {
         }).appendTo(main);
 
         var row = $('<tr>').appendTo(deltaMsTable);
-        $('<td></td>').text("btmDeltaMs/max/timestamp=").appendTo(row);
-        $('<td></td>').attr('id', 'btmDeltaMs').text(sprintf('%s/%s/%s', resultJson.btmDeltaMs, resultJson.maxBtmDeltaMs, resultJson.lastBtmDeltaTime)).appendTo(row);
+        $('<td></td>').text("leftDeltaMs/max/timestamp=").appendTo(row);
+        $('<td></td>').attr('id', 'leftDeltaMs').text(sprintf('%s/%s/%s', resultJson.btmDeltaMs, resultJson.maxBtmDeltaMs, resultJson.lastBtmDeltaTime)).appendTo(row);
         var row = $('<tr>').appendTo(deltaMsTable);
-        $('<td></td>').text("btmValidateDeltaMs/max/timestamp=").appendTo(row);
-        $('<td></td>').attr('id', 'btmValidateDeltaMs').text(sprintf('%s/%s/%s', resultJson.btmValidateDeltaMs, resultJson.maxBtmValidateDeltaMs, resultJson.lastBtmValidateDeltaTime)).appendTo(row);
+        $('<td></td>').text("leftValidateDeltaMs/max/timestamp=").appendTo(row);
+        $('<td></td>').attr('id', 'leftValidateDeltaMs').text(sprintf('%s/%s/%s', resultJson.btmValidateDeltaMs, resultJson.maxBtmValidateDeltaMs, resultJson.lastBtmValidateDeltaTime)).appendTo(row);
         var row = $('<tr>').appendTo(deltaMsTable);
-        $('<td></td>').text("okDeltaMs/max/timestamp=").appendTo(row);
-        $('<td></td>').attr('id', 'okDeltaMs').text(sprintf('%s/%s/%s', resultJson.okDeltaMs, resultJson.maxOkDeltaMs, resultJson.lastOkDeltaTime)).appendTo(row);
+        $('<td></td>').text("rightDeltaMs/max/timestamp=").appendTo(row);
+        $('<td></td>').attr('id', 'rightDeltaMs').text(sprintf('%s/%s/%s', resultJson.okDeltaMs, resultJson.maxOkDeltaMs, resultJson.lastOkDeltaTime)).appendTo(row);
         var row = $('<tr>').appendTo(deltaMsTable);
-        $('<td></td>').text("okValidateDeltaMs/max/timestamp=").appendTo(row);
-        $('<td></td>').attr('id', 'okValidateDeltaMs').text(sprintf('%s/%s/%s', resultJson.okValidateDeltaMs, resultJson.maxOkValidateDeltaMs, resultJson.lastOkValidateDeltaTime)).appendTo(row);
+        $('<td></td>').text("rightValidateDeltaMs/max/timestamp=").appendTo(row);
+        $('<td></td>').attr('id', 'rightValidateDeltaMs').text(sprintf('%s/%s/%s', resultJson.okValidateDeltaMs, resultJson.maxOkValidateDeltaMs, resultJson.lastOkValidateDeltaTime)).appendTo(row);
 
         var row = $('<tr>').appendTo(deltaMsTable);
         $('<td></td>').text("").appendTo(row);

@@ -115,10 +115,10 @@ function createRestartMonitoringLabels(container) {
 
 function fillRestartMonitoringLabels(data) {
     if (bTimestampDelayMax) {
-        bTimestampDelayMax.innerHTML = 'bTimestampDelayMax: ' + data.instantDelta.btmDeltaMax;
+        bTimestampDelayMax.innerHTML = 'L_TimestampDelayMax: ' + data.instantDelta.btmDeltaMax;
     }
     if (oTimestampDelayMax) {
-        oTimestampDelayMax.innerHTML = 'oTimestampDelayMax: ' + data.instantDelta.okDeltaMax;
+        oTimestampDelayMax.innerHTML = 'R_TimestampDelayMax: ' + data.instantDelta.okDeltaMax;
     }
 }
 

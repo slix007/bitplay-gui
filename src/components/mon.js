@@ -59,25 +59,25 @@ function createMonMoving(container) {
     let btmCont = $('<div>').css('float', 'left').appendTo(mainCont);
     let okexCont = $('<div>').css('float', 'left').css('margin-left', '10px').appendTo(mainCont);
 
-    bitmexPlacingBefore = $('<div>').html('bitmexPlacingBefore: ').appendTo(btmCont);
-    bitmexPlacingWholePlacing = $('<div>').html('bitmexPlacingWholePlacing: ').appendTo(btmCont);
-    bitmexPlacingWaitingMarket = $('<div>').html('bitmexPlacingWaitingMarket: ').appendTo(btmCont);
-    bitmexPlacingCount = $('<div>').css('margin-bottom', '5px').html('bitmexPlacingCount: ').appendTo(btmCont);
+    bitmexPlacingBefore = $('<div>').html('leftPlacingBefore: ').appendTo(btmCont);
+    bitmexPlacingWholePlacing = $('<div>').html('leftPlacingWholePlacing: ').appendTo(btmCont);
+    bitmexPlacingWaitingMarket = $('<div>').html('leftPlacingWaitingMarket: ').appendTo(btmCont);
+    bitmexPlacingCount = $('<div>').css('margin-bottom', '5px').html('leftPlacingCount: ').appendTo(btmCont);
 
-    bitmexMovingBefore = $('<div>').html('bitmexMovingBefore: ').appendTo(btmCont);
-    bitmexMovingWaitingPrev = $('<div>').html('bitmexMovingWaitingPrev: ').appendTo(btmCont);
-    bitmexMovingWaitingMarket = $('<div>').html('bitmexMovingWaitingMarket: ').appendTo(btmCont);
-    bitmexMovingAfter = $('<div>').html('bitmexMovingAfter: ').appendTo(btmCont);
-    bitmexMovingCount = $('<div>').html('bitmexMovingCount: ').appendTo(btmCont);
+    bitmexMovingBefore = $('<div>').html('leftMovingBefore: ').appendTo(btmCont);
+    bitmexMovingWaitingPrev = $('<div>').html('leftMovingWaitingPrev: ').appendTo(btmCont);
+    bitmexMovingWaitingMarket = $('<div>').html('leftMovingWaitingMarket: ').appendTo(btmCont);
+    bitmexMovingAfter = $('<div>').html('leftMovingAfter: ').appendTo(btmCont);
+    bitmexMovingCount = $('<div>').html('leftMovingCount: ').appendTo(btmCont);
 
-    okexPlacingBefore = $('<div>').html('okexPlacingBefore: ').appendTo(okexCont);
-    okexPlacingWaitingMarket = $('<div>').html('okexPlacingWaitingMarket: ').appendTo(okexCont);
-    okexPlacingWholePlacing = $('<div>').html('okexPlacingWholePlacing: ').appendTo(okexCont);
-    okexPlacingCount = $('<div>').css('margin-bottom', '5px').html('okexPlacingCount: ').appendTo(okexCont);
+    okexPlacingBefore = $('<div>').html('rightPlacingBefore: ').appendTo(okexCont);
+    okexPlacingWaitingMarket = $('<div>').html('rightPlacingWaitingMarket: ').appendTo(okexCont);
+    okexPlacingWholePlacing = $('<div>').html('rightPlacingWholePlacing: ').appendTo(okexCont);
+    okexPlacingCount = $('<div>').css('margin-bottom', '5px').html('rightPlacingCount: ').appendTo(okexCont);
 
-    okexMovingBefore = $('<div>').html('okexMovingBefore: ').appendTo(okexCont);
-    okexMovingWholeMoving = $('<div>').html('okexMovingWholeMoving: ').appendTo(okexCont);
-    okexMovingCount = $('<div>').html('okexMovingCount: ').appendTo(okexCont);
+    okexMovingBefore = $('<div>').html('rightMovingBefore: ').appendTo(okexCont);
+    okexMovingWholeMoving = $('<div>').html('rightMovingWholeMoving: ').appendTo(okexCont);
+    okexMovingCount = $('<div>').html('rightMovingCount: ').appendTo(okexCont);
 
     let resetBtn = $('<button>').text('Reset').click(function () {
         console.log('reset MonMoving');
