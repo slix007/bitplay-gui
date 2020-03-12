@@ -26,25 +26,25 @@ function showRange(data) {
 }
 
 function fillLabels(data) {
-    bitmexPlacingBefore.html('bitmexPlacingBefore: ' + showRange(data.monBitmexPlacing.before));
-    bitmexPlacingWaitingMarket.html('bitmexPlacingWaitingMarket: ' + showRange(data.monBitmexPlacing.waitingMarket));
-    bitmexPlacingWholePlacing.html('bitmexPlacingWholePlacing: ' + showRange(data.monBitmexPlacing.wholePlacing));
-    bitmexPlacingCount.html('bitmexPlacingCount: ' + data.monBitmexPlacing.count);
+    bitmexPlacingBefore.html('leftPlacingBefore: ' + showRange(data.monBitmexPlacing.before));
+    bitmexPlacingWaitingMarket.html('leftPlacingWaitingMarket: ' + showRange(data.monBitmexPlacing.waitingMarket));
+    bitmexPlacingWholePlacing.html('leftPlacingWholePlacing: ' + showRange(data.monBitmexPlacing.wholePlacing));
+    bitmexPlacingCount.html('leftPlacingCount: ' + data.monBitmexPlacing.count);
 
-    bitmexMovingBefore.html('bitmexMovingBefore: ' + showRange(data.monBitmexMoving.before));
-    bitmexMovingWaitingPrev.html('bitmexMovingWaitingPrev: ' + showRange(data.monBitmexMoving.waitingPrev));
-    bitmexMovingWaitingMarket.html('bitmexMovingWaitingMarket: ' + showRange(data.monBitmexMoving.waitingMarket));
-    bitmexMovingAfter.html('bitmexMovingAfter: ' + showRange(data.monBitmexMoving.after));
-    bitmexMovingCount.html('bitmexMovingCount: ' + data.monBitmexMoving.count);
+    bitmexMovingBefore.html('leftMovingBefore: ' + showRange(data.monBitmexMoving.before));
+    bitmexMovingWaitingPrev.html('leftMovingWaitingPrev: ' + showRange(data.monBitmexMoving.waitingPrev));
+    bitmexMovingWaitingMarket.html('leftMovingWaitingMarket: ' + showRange(data.monBitmexMoving.waitingMarket));
+    bitmexMovingAfter.html('leftMovingAfter: ' + showRange(data.monBitmexMoving.after));
+    bitmexMovingCount.html('leftMovingCount: ' + data.monBitmexMoving.count);
 
-    okexPlacingBefore.html('okexPlacingBefore: ' + showRange(data.monOkexPlacing.before));
-    okexPlacingWaitingMarket.html('okexPlacingWaitingMarket: ' + showRange(data.monOkexPlacing.waitingMarket));
-    okexPlacingWholePlacing.html('okexPlacingWholePlacing: ' + showRange(data.monOkexPlacing.wholePlacing));
-    okexPlacingCount.html('okexPlacingWaitingCount: ' + data.monOkexPlacing.count);
+    okexPlacingBefore.html('rightPlacingBefore: ' + showRange(data.monOkexPlacing.before));
+    okexPlacingWaitingMarket.html('rightPlacingWaitingMarket: ' + showRange(data.monOkexPlacing.waitingMarket));
+    okexPlacingWholePlacing.html('rightPlacingWholePlacing: ' + showRange(data.monOkexPlacing.wholePlacing));
+    okexPlacingCount.html('rightPlacingWaitingCount: ' + data.monOkexPlacing.count);
 
-    okexMovingBefore.html('okexMovingBefore: ' + showRange(data.monOkexMoving.before));
-    okexMovingWholeMoving.html('okexMovingWholeMoving: ' + showRange(data.monOkexMoving.wholePlacing));
-    okexMovingCount.html('okexMovingCount: ' + data.monOkexMoving.count);
+    okexMovingBefore.html('rightMovingBefore: ' + showRange(data.monOkexMoving.before));
+    okexMovingWholeMoving.html('rightMovingWholeMoving: ' + showRange(data.monOkexMoving.wholePlacing));
+    okexMovingCount.html('rightMovingCount: ' + data.monOkexMoving.count);
 
 }
 
