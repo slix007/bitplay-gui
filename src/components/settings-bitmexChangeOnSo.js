@@ -14,7 +14,7 @@ let fillBitmexChangeOnSo = function () {
 
     // checkbox toConBo
     const toConBoCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
-    $('<label>').text('to_R_wait_L').appendTo($cont);
+    $('<label>').text('to_R_wait_L_portions').appendTo($cont);
     mobx.autorun(() => toConBoCheckbox.prop('checked', allSettings.bitmexChangeOnSo.toConBo));
     toConBoCheckbox.click(() => {
         toConBoCheckbox.prop('disabled', true);

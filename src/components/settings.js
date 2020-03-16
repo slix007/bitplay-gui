@@ -642,7 +642,7 @@ function createArbScheme (container, SETTINGS_URL, requestCreator, valExtractor,
         if (isMain) {
             let extraTitle = ''
             if (bitmexChangeOnSoToConBo()) {
-                extraTitle += 'BitmexChangeOnSo:R_wait_L'
+                extraTitle += 'BitmexChangeOnSo:R_wait_L_portions'
                 select.val('R_wait_L_portions')
             }
             if (isActiveV('arb_scheme')) {

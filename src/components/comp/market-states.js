@@ -75,7 +75,7 @@ function convertTimeToReset(timeToResetTradingMode) {
 function showBitmexSoState(lb, allSettings) {
   if (allSettings.bitmexChangeOnSo.secToReset > 0) {
     let flags = []
-    flags.push(allSettings.bitmexChangeOnSo.toConBo ? 'R_wait_L' : '')
+    flags.push(allSettings.bitmexChangeOnSo.toConBo ? 'R_wait_L_portions' : '')
     flags.push(allSettings.bitmexChangeOnSo.adjToTaker ? 'Adj_to_TAKER' : '')
     flags.push(allSettings.bitmexChangeOnSo.signalTo ? 'Signal_to_' + allSettings.bitmexChangeOnSo.signalPlacingType : '')
     const flag = flags.filter(value => value !== '').join(', ')
