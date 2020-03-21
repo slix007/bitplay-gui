@@ -998,6 +998,7 @@ const leftContractTypes = [
     {txt: 'Bitmex [ETHUSD]', val: 'ETHUSD'},
     {txt:'Bitmex [XBTUSD]', val: 'XBTUSD'},
     {txt:'Bitmex [XBTH20]', val: 'XBTH20'},
+    {txt:'Bitmex [XBTM20]', val: 'XBTM20'},
     {txt:'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek'},
     {txt:'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek'},
     {txt:'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek'},
