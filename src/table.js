@@ -476,15 +476,30 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         })
         fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName))
-            liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-              + '<br>L_' + marketAccount.mmDql
-              + '<br>L_' + marketAccount.mmDmrl
+            if (allSettings.leftIsBtm && allSettings.eth) {
+                liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
+                  + '<br>L_' + marketAccount.mmDql
+                  + '<br>L_' + marketAccount.mmDmrl
+                  + '<br>' + sprintf('%s %s', marketAccount.dqlExtra, marketAccount.dmrlExtra)
+                  + '<br>L_' + marketAccount.mmDqlExtra
+                  + '<br>L_' + marketAccount.mmDmrlExtra
+            } else {
+                liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
+                  + '<br>L_' + marketAccount.mmDql
+                  + '<br>L_' + marketAccount.mmDmrl
+            }
         })
         fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
             let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName))
-            liqInfo.innerHTML = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
+            let labelHtml = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
               + '<br>R_' + marketAccount.mmDql
               + '<br>R_' + marketAccount.mmDmrl
+            if (allSettings.leftIsBtm && allSettings.eth) {
+                labelHtml += '<br>'
+                labelHtml += '<br>'
+                labelHtml += '<br>'
+            }
+            liqInfo.innerHTML = labelHtml
         })
         fetch('/delta-params', function (result) {
             let b = document.getElementById('L_delta_minmax')
