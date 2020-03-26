@@ -480,9 +480,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
                   + '<br>L_' + marketAccount.mmDql
                   + '<br>L_' + marketAccount.mmDmrl
-                  + '<br>' + sprintf('%s %s', marketAccount.dqlExtra, marketAccount.dmrlExtra)
+                  + '<br>' + marketAccount.dqlExtra
                   + '<br>L_' + marketAccount.mmDqlExtra
-                  + '<br>L_' + marketAccount.mmDmrlExtra
             } else {
                 liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
                   + '<br>L_' + marketAccount.mmDql
@@ -495,7 +494,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
               + '<br>R_' + marketAccount.mmDql
               + '<br>R_' + marketAccount.mmDmrl
             if (allSettings.leftIsBtm && allSettings.eth) {
-                labelHtml += '<br>'
                 labelHtml += '<br>'
                 labelHtml += '<br>'
             }
