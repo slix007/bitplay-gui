@@ -20,8 +20,7 @@ const lastPriceDevVar = require('./components/comp/last-price-deviation')
 
 export { showMainInfo }
 
-let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
-    // console.log(sprintf('first:%s, second:%s', firstMarketName, secondMarketName));
+let showMainInfo = function (baseUrl) {
     if (!allSettings.leftIsBtm) {
         okexIndexVar.createBeforeAndAfterOrderBook('left')
     }
@@ -34,13 +33,10 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         restartVar.addResubscribeButton()
     }
 
-    let container = document.getElementById('example1')
-    let positions = document.getElementById('positions')
-    let hot
-    var elementBitmexBid = document.getElementById(sprintf('%s-bid', firstMarketName))
-    var elementBitmexAsk = document.getElementById(sprintf('%s-ask', firstMarketName))
-    var elementOkcoinBid = document.getElementById(sprintf('%s-bid', secondMarketName))
-    var elementOkcoinAsk = document.getElementById(sprintf('%s-ask', secondMarketName))
+    const elementLeftBid = document.getElementById('left-bid')
+    const elementLeftAsk = document.getElementById('left-ask')
+    const elementRightBid = document.getElementById('right-bid')
+    const elementRightAsk = document.getElementById('right-ask')
 
     //var socket = new WebSocket("ws://localhost:4030/market/socket");
     // alert("Socket created");
@@ -86,9 +82,9 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         let inputData = JSON.parse(Http.httpGet(dataUrl))
 
         if (dataUrl.includes('bitmex')) {
-            $('#bitmex-last-price').html(inputData.lastPrice)
+            $('#left-last-price').html(inputData.lastPrice)
         } else {
-            $('#okcoin-last-price').html(inputData.lastPrice)
+            $('#right-last-price').html(inputData.lastPrice)
         }
 
         return parseOrderBook(inputData)
@@ -112,17 +108,10 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         })
     }
 
-    var askBitmexTable = createTable(elementBitmexAsk,
-      sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'ask')
-    var bidBitmexTable = createTable(elementBitmexBid,
-      sprintf('%s/market/%s/order-book', baseUrl, firstMarketName), 'bid')
-    var askOkcoinTable = createTable(elementOkcoinAsk,
-      sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'ask')
-    var bidOkcoinTable = createTable(elementOkcoinBid,
-      sprintf('%s/market/%s/order-book', baseUrl, secondMarketName), 'bid')
-
-    this.b = 1
-    var that = this
+    const askLeftTable = createTable(elementLeftAsk, `${baseUrl}/market/left/order-book`, 'ask')
+    const bidLeftTable = createTable(elementLeftBid, `${baseUrl}/market/left/order-book`, 'bid')
+    const askRightTable = createTable(elementRightAsk, `${baseUrl}/market/right/order-book`, 'ask')
+    const bidRightTable = createTable(elementRightBid, `${baseUrl}/market/right/order-book`, 'bid')
 
     let fetch = function (url, callback) {
         Http.httpAsyncGet(baseUrl + url, function (rawData) {
@@ -222,11 +211,11 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 // </div>
 
     function moveOrderP (orderId, orderType) {
-        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', firstMarketName))
+        moveOrder(orderId, orderType, '/market/left/open-orders/move')
     }
 
     function moveOrderO (orderId, orderType) {
-        moveOrder(orderId, orderType, sprintf('/market/%s/open-orders/move', secondMarketName))
+        moveOrder(orderId, orderType, '/market/right/open-orders/move')
     }
 
     function moveOrder (orderId, orderType, moveUrl) {
@@ -400,41 +389,41 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
         }
 
-        fetch(sprintf('/market/last-price-deviation', firstMarketName), function (jsonData) {
+        fetch('/market/last-price-deviation', function (jsonData) {
             lastPriceDevVar.fillComponents(jsonData, baseUrl)
         })
 
-        fetch(sprintf('/market/%s/order-book', firstMarketName), function (jsonData) {
+        fetch('/market/left/order-book', function (jsonData) {
             let orderBookP = parseOrderBook(jsonData)
             // console.log('orderBookP.ask');
             // console.log(orderBookP.ask);
-            askBitmexTable.loadData(orderBookP.ask)
-            bidBitmexTable.loadData(orderBookP.bid)
+            askLeftTable.loadData(orderBookP.ask)
+            bidLeftTable.loadData(orderBookP.bid)
 
             if (allSettings.leftIsBtm) {
                 bitmexIndexVar.fillComponents(jsonData.futureIndex, baseUrl)
                 $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal)
-            }else {
+            } else {
                 okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'left')
 
                 mobxStore.b_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2)
             }
 
-            $('#bitmex-last-price').html(jsonData.lastPrice)
+            $('#left-last-price').html(jsonData.lastPrice)
 
             mobxStore.futureIndex.b_index = Number(jsonData.futureIndex.indexVal)
             mobxStore.b_bid_1 = Number(jsonData.bid[0].price)
             mobxStore.b_ask_1 = Number(jsonData.ask[0].price)
         })
 
-        fetch(sprintf('/market/%s/order-book', secondMarketName), function (jsonData) {
+        fetch('/market/right/order-book', function (jsonData) {
             let orderBookO = parseOrderBook(jsonData)
-            askOkcoinTable.loadData(orderBookO.ask)
-            bidOkcoinTable.loadData(orderBookO.bid)
+            askRightTable.loadData(orderBookO.ask)
+            bidRightTable.loadData(orderBookO.bid)
 
             okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'right')
 
-            $('#okcoin-last-price').html(jsonData.lastPrice)
+            $('#right-last-price').html(jsonData.lastPrice)
 
             mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal)
             mobxStore.o_bid_1 = Number(jsonData.bid[0].price)
@@ -461,8 +450,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             eBestMin.fillComponents(resultJson)
         })
 
-        fetch(sprintf('/market/%s/account', firstMarketName), function (leftAccount) {
-            let elBalance = document.getElementById(sprintf('%s-balance', firstMarketName))
+        fetch('/market/left/account', function (leftAccount) {
+            let elBalance = document.getElementById('left-balance')
             if (allSettings.marketList.left === 'bitmex') {
                 showBalanceBitmex(leftAccount, elBalance)
             } else {
@@ -470,12 +459,12 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
         })
 
-        fetch(sprintf('/market/%s/account', secondMarketName), function (marketAccount) {
-            let oBalance = document.getElementById(sprintf('%s-balance', secondMarketName))
+        fetch('/market/right/account', function (marketAccount) {
+            let oBalance = document.getElementById('right-balance')
             showBalanceOkex(marketAccount, oBalance)
         })
-        fetch(sprintf('/market/%s/liq-info', firstMarketName), function (marketAccount) {
-            let liqInfo = document.getElementById(sprintf('%s-liq-info', firstMarketName))
+        fetch('/market/left/liq-info', function (marketAccount) {
+            let liqInfo = document.getElementById('left-liq-info')
             if (allSettings.leftIsBtm && allSettings.eth) {
                 liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
                   + '<br>L_' + marketAccount.mmDql
@@ -488,8 +477,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                   + '<br>L_' + marketAccount.mmDmrl
             }
         })
-        fetch(sprintf('/market/%s/liq-info', secondMarketName), function (marketAccount) {
-            let liqInfo = document.getElementById(sprintf('%s-liq-info', secondMarketName))
+        fetch('/market/right/liq-info', function (marketAccount) {
+            let liqInfo = document.getElementById('right-liq-info')
             let labelHtml = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
               + '<br>R_' + marketAccount.mmDql
               + '<br>R_' + marketAccount.mmDmrl
@@ -548,10 +537,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             bordersVar.updateTableHash(result.bordersV2TableHashCode)
         })
         // markets order is opposite for deltas
-        fetch(sprintf('/market/deltas?market1=%s&market2=%s', secondMarketName, firstMarketName),
-          function (returnData) {
-              repaintDeltasAndBorders(returnData)
-          })
+        fetch('/market/deltas', returnData => {repaintDeltasAndBorders(returnData)})
 
         fetch('/market/states', function (returnData) {
             repaintStates(returnData)
@@ -575,8 +561,8 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
             }
         }
 
-        fetch(sprintf('/market/%s/open-orders', firstMarketName), function (returnData) {
-            var myNode = document.getElementById(sprintf('%s-open-orders', firstMarketName))
+        fetch('/market/left/open-orders', function (returnData) {
+            const myNode = document.getElementById('left-open-orders')
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild)
             }
@@ -602,19 +588,19 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                     }, false)
                     let cancel = createElement('button', { 'id': 'p-cancel-' + oo.id }, 'cnl')
                     cancel.addEventListener('click', function () {
-                        cancelOrder(oo.id, firstMarketName)
+                        cancelOrder(oo.id, 'left')
                     }, oo.id)
 
                     let openOrderDiv = createElement('div', { 'id': 'p-links' }, [labelOrder, move, cancel])
-                    const ordersContainer = document.getElementById(sprintf('%s-open-orders', firstMarketName))
+                    const ordersContainer = document.getElementById('left-open-orders')
                     ordersContainer.appendChild(openOrderDiv)
                     setOpenOrdersHeight(ordersContainer)
                 }
 
             })
         })
-        fetch('/market/okcoin/open-orders', function (returnData) {
-            var myNode = document.getElementById('okcoin-open-orders')
+        fetch('/market/right/open-orders', function (returnData) {
+            const myNode = document.getElementById('right-open-orders')
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild)
             }
@@ -646,7 +632,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
 
                         let cancel = createElement('button', { 'id': 'o-cancel-' + oo.id }, 'cnl')
                         cancel.addEventListener('click', function () {
-                            cancelOrder(oo.id, secondMarketName)
+                            cancelOrder(oo.id, 'right')
                         }, oo.id)
 
                         openOrderDiv = createElement('div', { 'id': 'o-links' }, [labelOrder, move, cancel])
@@ -655,7 +641,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                         openOrderDiv = createElement('div', { 'id': 'o-links', 'background-color': 'lightgrey' },
                           labelOrder)
                     }
-                    const ordersContainer = document.getElementById('okcoin-open-orders')
+                    const ordersContainer = document.getElementById('right-open-orders')
                     ordersContainer.appendChild(openOrderDiv)
                     setOpenOrdersHeight(ordersContainer)
                 }
@@ -665,7 +651,7 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         updateCumParams()
 
     }
-    var updateData = setInterval(updateFunction, 1000)
+    let updateData = setInterval(updateFunction, 1000)
 
     function bindDumpButton () {
         if (typeof Handsontable === 'undefined') {
@@ -1095,12 +1081,12 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
                 )
             }
 
-            if (element.id == 'okcoin-reset-liq-info') {
-                Http.httpAsyncPost(baseUrl + '/market/okcoin/liq-info', '', function (responseData, resultElement) {},
+            if (element.id == 'right-reset-liq-info') {
+                Http.httpAsyncPost(baseUrl + '/market/right/liq-info', '', function (responseData, resultElement) {},
                   null)
             }
-            if (element.id == 'bitmex-reset-liq-info') {
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/liq-info', '', function (responseData, resultElement) {},
+            if (element.id == 'left-reset-liq-info') {
+                Http.httpAsyncPost(baseUrl + '/market/left/liq-info', '', function (responseData, resultElement) {},
                   null)
             }
             if (element.id == 'reset-delta-minmax') {
@@ -1126,6 +1112,6 @@ let showMainInfo = function (firstMarketName, secondMarketName, baseUrl) {
         });
     }
 
-    bindDumpButton(hot);
+    bindDumpButton();
 
 };

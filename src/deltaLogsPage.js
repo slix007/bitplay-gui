@@ -36,50 +36,24 @@ function convertDate(today) {
     return today;
 }
 
-exports.showDeltaLogs = function (firstMarketName, secondMarketName, baseUrl) {
+exports.showDeltaLogs = function (baseUrl) {
 
-    const URL = sprintf('%s/trade/list', baseUrl);
+    const URL = sprintf('%s/trade/list', baseUrl)
 
-    const mainContainer = $('div[data-name="deltalogs-page"]');
-    // const mainCont = mainContainer.get()[0];
-    // let fetchTradeLogs = function (dataUrl) {
-    //     let inputData = JSON.parse(Http.httpGet(dataUrl));
-    //     return inputData.map(item => item.deltaLog)[0];
-    // };
-    //
-    // function createTable(container, dataUrl) {
-    //     return new Handsontable(container, {
-    //         data: fetchTradeLogs(dataUrl),
-    //         colWidths: [100, 140, 300],
-    //         rowHeaders: true,
-    //         colHeaders: ['level', 'time', 'details'],
-    //         fixedRowsTop: 1,
-    //         fixedColumnsLeft: 1,
-    //         fixedRowsBottom: 1,
-    //         manualColumnResize: true,
-    //         columnSorting: true,
-    //         sortIndicator: true,
-    //         stretchH: 'last',
-    //         autoColumnSize: {
-    //             samplingRatio: 23
-    //         }
-    //     });
-    // }
-    // let tradeTable = createTable(mainCont, URL);
-    // tradeTable.loadData(logs);
+    const mainContainer = $('div[data-name="deltalogs-page"]')
 
     // jquery-treetable experiment
-    function reCreateTable(trades) {
+    function reCreateTable (trades) {
 
-        $("#logs-table").remove();
+        $('#logs-table').remove()
 
         // let $table = $('#logs-table');
-        let $table = $('<table/>');
-        $table.prop('id', 'logs-table');
-        $table.addClass('treetable');
+        let $table = $('<table/>')
+        $table.prop('id', 'logs-table')
+        $table.addClass('treetable')
 
-        const $caption = $('<caption/>');
-        $table.append($caption);
+        const $caption = $('<caption/>')
+        $table.append($caption)
         $caption.append($('<a/>').text('Expand all').attr('href', window.location.hash).click(function () {
             this.href = window.location.hash;
             $table.treetable('expandAll');

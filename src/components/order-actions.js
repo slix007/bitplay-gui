@@ -36,44 +36,26 @@ let mobx = require('mobx');
 
 export {showOrderActions};
 
-let showOrderActions = function (firstMarketName, secondMarketName, baseUrl, isEth) {
-    const BITMEX_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, firstMarketName);
-    const OKCOIN_ORDER_URL = sprintf('%s/market/%s/place-market-order', baseUrl, secondMarketName);
-    const BITMEX_CNL_ALL = sprintf('%s/market/%s/open-orders/cancel-all', baseUrl, firstMarketName);
-    const OKCOIN_CNL_ALL = sprintf('%s/market/%s/open-orders/cancel-all', baseUrl, secondMarketName);
+let showOrderActions = function (baseUrl, isEth) {
+    const LEFT_ORDER_URL = `${baseUrl}/market/left/place-market-order`
+    const RIGHT_ORDER_URL = `${baseUrl}/market/right/place-market-order`
+    const LEFT_CNL_ALL = `${baseUrl}/market/left/open-orders/cancel-all`
+    const RIGHT_CNL_ALL = `${baseUrl}/market/right/open-orders/cancel-all`
 
-    let btmCont = document.getElementById("bitmex-order-actions");
-    // createAmountType(btmCont, btmLabelCont);
-    // createOrderActions(btmCont, btmLabelCont.get()[0], 'bitmex', BITMEX_ORDER_URL);
-    createOrderActions(btmCont, 'Order ', 'btm', BITMEX_ORDER_URL, null, BITMEX_CNL_ALL);
+    let btmCont = document.getElementById("left-order-actions");
+    createOrderActions(btmCont, 'Order ', 'btm', LEFT_ORDER_URL, null, LEFT_CNL_ALL);
 
     if (isEth && allSettings.leftIsBtm) {
-        let btmCont_ETH_XBTUSD = document.getElementById("bitmex-order-actions-ETH-XBTUSD");
-        // createOrderActions(btmCont_ETH_XBTUSD, btmXBTUSDLabelCont.get()[0], 'bitmex_ETH_XBTUSD', BITMEX_ORDER_URL, "XBTUSD");
-        createOrderActions(btmCont_ETH_XBTUSD, 'XBTUSD Order ', 'btmXBTUSD', BITMEX_ORDER_URL, "XBTUSD");
+        let btmCont_ETH_XBTUSD = document.getElementById("left-order-actions-ETH-XBTUSD");
+        createOrderActions(btmCont_ETH_XBTUSD, 'XBTUSD Order ', 'btmXBTUSD', LEFT_ORDER_URL, "XBTUSD");
     } else {
-        $('#bitmex-order-actions-ETH-XBTUSD').hide()
-        $('#okcoin-order-actions-ETH-XBTUSD').hide()
+        $('#left-order-actions-ETH-XBTUSD').hide()
+        $('#right-order-actions-ETH-XBTUSD').hide()
     }
 
-    let okCont = document.getElementById("okcoin-order-actions");
-    // createOrderActions(okCont, okLabelCont.get()[0], 'okex', OKCOIN_ORDER_URL);
-    createOrderActions(okCont, 'Order ', 'ok', OKCOIN_ORDER_URL, null, OKCOIN_CNL_ALL);
+    let okCont = document.getElementById("right-order-actions");
+    createOrderActions(okCont, 'Order ', 'ok', RIGHT_ORDER_URL, null, RIGHT_CNL_ALL);
 };
-
-// function createAmountType(mainCont, label) {
-//     const checkbox = $('<input>').prop('title', 'Use USD').prop('type', 'checkbox').appendTo(mainCont);
-//     // const label = $('<label>')
-//     label.text(mobxStore.placingOrderObj.amountTypeBitmex)
-//     .appendTo(mainCont);
-//     checkbox.click(function () {
-//         mobxStore.placingOrderObj.isBitmexUsd = checkbox.prop('checked');
-//     });
-//
-//     mobx.autorun(function () {
-//         label.text(mobxStore.placingOrderObj.amountTypeBitmex);
-//     });
-// }
 
 function createOrderActions(container, labelName, idName, ORDER_URL, toolName, CNL_ALL_URL) {
     const checkboxLabel = $('<span>').appendTo(container);

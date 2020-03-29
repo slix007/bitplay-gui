@@ -15,7 +15,7 @@ let createCloseAllPos = function (baseUrl) {
 };
 
 function bitmexCloseAllPos(baseUrl) {
-    const URL_CLOSE_ALL_POS = baseUrl + '/market/bitmex/close-all-pos';
+    const URL_CLOSE_ALL_POS = baseUrl + '/market/left/close-all-pos';
 
     const cont = $('#bitmex-close-all-pos');
     const checkbox = $('<input>').css('margin-left', '10px').attr('type', 'checkbox').appendTo(cont);
@@ -27,7 +27,7 @@ function bitmexCloseAllPos(baseUrl) {
     btn.prop('disabled', true);
 
     btn.click(() => {
-        let confirmation = window.confirm("Bitmex: close all positions\n\nAre you sure?");
+        let confirmation = window.confirm("Left: close all positions\n\nAre you sure?");
         if (confirmation) {
             // console.log('request to ' + URL_CLOSE_ALL_POS);
             btn.prop('disabled', true);
@@ -60,7 +60,7 @@ function bitmexCloseAllPos(baseUrl) {
 }
 
 function okexCloseAllPos(baseUrl) {
-    const URL_CLOSE_ALL_POS = baseUrl + '/market/okcoin/close-all-pos';
+    const URL_CLOSE_ALL_POS = baseUrl + '/market/right/close-all-pos';
 
     const cont = $('#okex-close-all-pos');
     const checkbox = $('<input>').css('margin-left', '10px').attr('type', 'checkbox').appendTo(cont);

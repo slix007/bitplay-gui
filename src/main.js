@@ -54,9 +54,6 @@ const afterLoginFunc = function (isAuthorized) {
             let parsedResp = JSON.parse(response);
             $('#left-market-name').text(parsedResp.left);
             settingsStore.allSettings.marketList = parsedResp
-            //workaround for REST mapping
-            parsedResp.first = 'bitmex'
-            parsedResp.second = 'okcoin'
 
             function fillMainPage(parsedResp) {
                 const leftCt = parsedResp.leftFutureContractName
@@ -67,25 +64,23 @@ const afterLoginFunc = function (isAuthorized) {
                         rightCt.startsWith('BTC') ? '100' : '10',
                         rightCt));
 
-                tableVar.showMainInfo(parsedResp.first, parsedResp.second, baseUrlWithPort);
-                settingsVar.showArbVersion(parsedResp.first, parsedResp.second, baseUrlWithPort);
+                tableVar.showMainInfo(baseUrlWithPort);
+                settingsVar.showArbVersion(baseUrlWithPort);
                 bordersVar.showBordersV2(baseUrlWithPort);
-                swapVar.showSwapV2(parsedResp.first, parsedResp.second, baseUrlWithPort);
-                orderActionVar.showOrderActions(parsedResp.first, parsedResp.second, baseUrlWithPort, parsedResp.eth);
+                swapVar.showSwapV2(baseUrlWithPort);
+                orderActionVar.showOrderActions(baseUrlWithPort, parsedResp.eth);
                 if (!parsedResp.eth) {
-                    document.getElementById('bitmex-order-actions-ETH-XBTUSD').style.display = 'none';
-                    document.getElementById('okcoin-order-actions-ETH-XBTUSD').style.display = 'none';
-                    // $("bitmex-order-actions-ETH-XBTUSD").hide();
-                    // $("okcoin-order-actions-ETH-XBTUSD").hide();
+                    document.getElementById('left-order-actions-ETH-XBTUSD').style.display = 'none';
+                    document.getElementById('right-order-actions-ETH-XBTUSD').style.display = 'none';
                 }
             }
 
-            function fillDeltaLogPage(parsedResp) {
-                deltaLogsPage.showDeltaLogs(parsedResp.first, parsedResp.second, baseUrlWithPort);
+            function fillDeltaLogPage () {
+                deltaLogsPage.showDeltaLogs(baseUrlWithPort);
             }
 
             fillMainPage(parsedResp);
-            fillDeltaLogPage(parsedResp);
+            fillDeltaLogPage();
         }, function (errorResp) {
             console.log(errorResp);
 

@@ -6,7 +6,7 @@ var Http = require('../http');
 
 var exports = module.exports = {};
 
-exports.showSwapV2 = function (firstMarketName, secondMarketName, baseUrl) {
+exports.showSwapV2 = function (baseUrl) {
     const MAIN_SWAP_PARAMS_URL = baseUrl + '/market/bitmex/swap';
 
     Http.httpAsyncGet(MAIN_SWAP_PARAMS_URL, function (rawData) {

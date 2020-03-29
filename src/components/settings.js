@@ -28,7 +28,7 @@ let updateAllSettings = function () {
     });
 };
 
-let showArbVersion = function (firstMarketName, secondMarketName, baseUrl) {
+let showArbVersion = function (baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
     const TOGGLE_STOP_MOVING_URL = baseUrl + '/settings/toggle-stop-moving';
     const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';

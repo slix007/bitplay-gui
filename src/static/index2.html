@@ -2,7 +2,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <!--<title id="main-title">bitmex-okcoin</title>-->
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.28.4/handsontable.full.min.js"></script>-->
     <!-- required modules for bare Handsontable -->
@@ -71,35 +70,23 @@
                         [<span id="left-contract-type-label"></span>]
                     </h3>
 
-                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                    <!--id="bitmex-trade-log">empty...</textarea>-->
-
-                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                    <!--id="okcoin-trade-log">empty...</textarea>-->
-
-                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                    <!--id="deltas-log">empty...</textarea>-->
-
-                    <!--<textarea style="float: right;width: 40%; height: 200px;border:1px solid black;"-->
-                    <!--id="warning-log">empty...</textarea>-->
-
-                    <div id="bitmex-balance">
+                    <div id="left-balance">
                         Balance ...
                     </div>
 
                     <div>
-                        <span id="bitmex-liq-info">
+                        <span id="left-liq-info">
                             liq info ...
                         </span>
-                        <button id="bitmex-reset-liq-info">reset</button>
+                        <button id="left-reset-liq-info">reset</button>
                         <span id="bitmex-close-all-pos"></span>
                     </div>
                     <!--<button name="sendToSocket">send to socket</button>-->
                     <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
 
-                    <div id="bitmex-open-orders" style="border:1px solid black; overflow-y: scroll;"></div>
-                    <div style="border: solid; height: 40px" id="bitmex-order-actions"></div>
-                    <div style="border: solid; height: 40px" id="bitmex-order-actions-ETH-XBTUSD"></div>
+                    <div id="left-open-orders" style="border:1px solid black; overflow-y: scroll;"></div>
+                    <div style="border: solid; height: 40px" id="left-order-actions"></div>
+                    <div style="border: solid; height: 40px" id="left-order-actions-ETH-XBTUSD"></div>
 
                     <!--<div id="bitmex-fake-taker-price-deviation" style="height: 20px;"></div>-->
                     <div>
@@ -115,12 +102,12 @@
 
 
                     <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
-                        <div id="bitmex-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                        <div id="left-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
-                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="bitmex-last-price"></span>
+                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="left-last-price"></span>
                     </div>
                     <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
-                        <div id="bitmex-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                        <div id="left-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
                     <div id="bitmex-orderbook-type"></div>
@@ -190,31 +177,31 @@
                         okex<span id="okex-contract-type-label"></span>
                     </h3>
 
-                    <div id="okcoin-balance">
+                    <div id="right-balance">
                         Balance ...
                     </div>
 
                     <div>
-                        <span id="okcoin-liq-info">liq info ...</span>
-                        <button id="okcoin-reset-liq-info">reset</button>
+                        <span id="right-liq-info">liq info ...</span>
+                        <button id="right-reset-liq-info">reset</button>
                         <span id="okex_e_best_e_last"></span>
                         <span id="okex-close-all-pos"></span>
                     </div>
 
-                    <div id="okcoin-open-orders" style="border:1px solid black; overflow-y: scroll;"></div>
+                    <div id="right-open-orders" style="border:1px solid black; overflow-y: scroll;"></div>
 
-                    <div style="border: solid; height: 40px;" id="okcoin-order-actions"></div>
-                    <div style="border: solid; height: 40px;" id="okcoin-order-actions-ETH-XBTUSD"></div>
+                    <div style="border: solid; height: 40px;" id="right-order-actions"></div>
+                    <div style="border: solid; height: 40px;" id="right-order-actions-ETH-XBTUSD"></div>
 
                     <div id="right-before-orderbook"></div>
 
                     <div style="width: 600px; height: 143px;" class="scroll-container fixed-container">
-                        <div id="okcoin-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                        <div id="right-ask" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
-                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="okcoin-last-price"></span>
+                    <div><span style="margin-left: 60px">LastPrice</span> <span style="margin-left: 30px; font-weight: bold" id="right-last-price"></span>
                     </div>
                     <div style="width: 600px; height: 150px;" class="scroll-container fixed-container">
-                        <div id="okcoin-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+                        <div id="right-bid" class="hot handsontable htRowHeaders htColumnHeaders"></div>
                     </div>
 
                     <div id="right-limits-status"></div>
