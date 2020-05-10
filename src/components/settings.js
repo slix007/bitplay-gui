@@ -995,14 +995,14 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 }
 
 const leftContractTypes = [
-    {txt: 'Bitmex [ETHUSD]', val: 'ETHUSD'},
-    {txt:'Bitmex [XBTUSD]', val: 'XBTUSD'},
-    {txt:'Bitmex [XBTH20]', val: 'XBTH20'},
-    {txt:'Bitmex [XBTM20]', val: 'XBTM20'},
-    {txt:'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek'},
-    {txt:'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek'},
-    {txt:'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek'},
-    {txt:'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek'},
+    { txt: 'Bitmex [ETHUSD]', val: 'ETHUSD' },
+    { txt: 'Bitmex [XBTUSD]', val: 'XBTUSD' },
+    { txt: 'Bitmex [XBTH20]', val: 'XBTH20' },
+    { txt: 'Bitmex [XBTM20]', val: 'XBTM20' },
+    { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
+    { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
+    { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
+    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' }
 ]
 //Okex [ETHUSD_ThisWeek]
 // Okex [ETHUSD_NextWeek]
@@ -1012,13 +1012,15 @@ const leftContractTypes = [
 // Okex [BTCUSD_Quarter]
 // Okex [BTC_Swap]
 const rightContractTypes = [
-    {txt:'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek'},
-    {txt:'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek'},
-    {txt:'Okex [ETHUSD_Swap]', val: 'ETH_Swap'},
-    {txt:'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek'},
-    {txt:'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek'},
-    {txt:'Okex [BTCUSD_Quarter]', val: 'BTC_Quarter'},
-    {txt:'Okex [BTC_Swap]', val: 'BTC_Swap'},
+    { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
+    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' },
+    { txt: 'Okex [ETHUSD_Quarter]', val: 'ETH_Quarter' },
+    { txt: 'Okex [ETHUSD_Perpetual]', val: 'ETH_Swap' },
+    { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
+    { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
+    { txt: 'Okex [BTCUSD_Quarter]', val: 'BTC_Quarter' },
+    { txt: 'Okex [BTCUSD_BiQuarter]', val: 'BTC_BiQuarter' },
+    { txt: 'Okex [BTCUSD_Perpetual]', val: 'BTC_Swap' }
 ]
 
 
@@ -1041,17 +1043,18 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
         })
     })
 
-    const lb = $('<span>').css('color', 'red').appendTo(cont)
+    const lbCont = $('<span>').appendTo(cont)
+    const lbWarn = $('<span>').css('color', 'red').appendTo(cont)
     mobx.autorun(r => {
         const fromDb = allSettings.contractMode[leftRightMarket]
         const current = allSettings.contractModeCurrent[leftRightMarket]
 
-        select.val(fromDb);
-        if (fromDb !== current) {
-            lb.text('RESTART IS NEEDED')
-        } else {
-            lb.text('')
-        }
+        select.val(fromDb)
+
+        const okexContractNameWithDate = allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
+        const needToShow = okexContractNameWithDate && okexContractNameWithDate !== 'SWAP'
+        lbCont.text(needToShow ? okexContractNameWithDate + ' ' : '')
+        lbWarn.text(fromDb !== current ? 'RESTART IS NEEDED' : '')
     })
 
 }
