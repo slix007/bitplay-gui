@@ -995,10 +995,11 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 }
 
 const leftContractTypes = [
-    { txt: 'Bitmex [ETHUSD]', val: 'ETHUSD' },
-    { txt: 'Bitmex [XBTUSD]', val: 'XBTUSD' },
-    { txt: 'Bitmex [XBTH20]', val: 'XBTH20' },
-    { txt: 'Bitmex [XBTM20]', val: 'XBTM20' },
+    { txt: 'Bitmex [ETHUSD_Perpetual]', val: 'ETHUSD_Perpetual' },
+    { txt: 'Bitmex [XBTUSD_Perpetual]', val: 'XBTUSD_Perpetual' },
+    { txt: 'Bitmex [XBTUSD_Quarter]', val: 'XBTUSD_Quarter' },
+    { txt: 'Bitmex [XBTUSD_BiQuarter]', val: 'XBTUSD_BiQuarter' },
+    { txt: 'Bitmex [ETHUSD_Quarter]', val: 'ETHUSD_Quarter' },
     { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
     { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
     { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
@@ -1051,10 +1052,25 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
 
         select.val(fromDb)
 
-        const okexContractNameWithDate = allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
-        const needToShow = okexContractNameWithDate && okexContractNameWithDate !== 'SWAP'
-        lbCont.text(needToShow ? okexContractNameWithDate + ' ' : '')
+        if (leftRightMarket === 'left') {
+            const contractType = leftContractTypes.filter(t => t.val === fromDb)[0]
+            console.log(contractType)
+            console.log(`fromDb=${fromDb}; current=${current}`)
+            console.log(allSettings.bitmexContractNames[fromDb])
+            const theName = contractType.txt.lastIndexOf('Bitmex', 0) === 0
+              ? allSettings.bitmexContractNames[fromDb]
+              : allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
+
+            $('#left-contract-type-label').text(theName);
+        } else {
+            const theName = allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
+            $('#right-contract-type-label').text(theName);
+        }
+        // const needToShow = okexContractNameWithDate && okexContractNameWithDate !== 'SWAP'
+        // lbCont.text(needToShow ? okexContractNameWithDate + ' ' : '')
         lbWarn.text(fromDb !== current ? 'RESTART IS NEEDED' : '')
+
+
     })
 
 }

@@ -53,16 +53,16 @@ const afterLoginFunc = function (isAuthorized) {
         httpVar.httpAsyncGet(marketsUrl, function (response) {
             let parsedResp = JSON.parse(response);
             $('#left-market-name').text(parsedResp.left);
+            $('#right-market-name').text(parsedResp.right);
             settingsStore.allSettings.marketList = parsedResp
 
             function fillMainPage(parsedResp) {
                 const leftCt = parsedResp.leftFutureContractName
-                $('#left-contract-type-label').text(leftCt);
+                const rightCt = parsedResp.rightFutureContractName
+                // $('#left-contract-type-label').text(leftCt);
+                // $('#right-contract-type-label').text(rightCt);
                 $('#left-contract-usd').text(sprintf('(1 contract = $%s)', leftCt.startsWith('BTC') ? '100' : '10'))
-                const rightCt = parsedResp.rightFutureContractName;
-                $('#okex-contract-type-label').text(sprintf('(1 contract = $%s)[%s]',
-                        rightCt.startsWith('BTC') ? '100' : '10',
-                        rightCt));
+                $('#right-contract-usd').text(sprintf('(1 contract = $%s)', rightCt.startsWith('BTC') ? '100' : '10'))
 
                 tableVar.showMainInfo(baseUrlWithPort);
                 settingsVar.showArbVersion(baseUrlWithPort);
