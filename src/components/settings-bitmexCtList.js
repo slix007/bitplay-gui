@@ -18,8 +18,9 @@ const createBitmexCtList = function () {
 
   const warnLb = $('<span>').css('font-weight', 'bold').css('color','red').appendTo(firstCont)
   mobx.autorun(r => {
-    const globalWarnLb = $('#warn-lb').css('color','red').css('font-weight', 'bold')
-    globalWarnLb.text(allSettings.restartWarn || allSettings.restartWarnBitmexCt ? 'RESTART IS NEEDED' : '')
+    const globalWarnLb = $('#warn-lb').css('color', 'red').css('font-weight', 'bold')
+    const global = allSettings.restartWarn.left || allSettings.restartWarn.right || allSettings.restartWarnBitmexCt
+    globalWarnLb.text(global ? 'RESTART IS NEEDED' : '')
     warnLb.text(allSettings.restartWarnBitmexCt ? 'RESTART IS NEEDED' : '')
   })
 

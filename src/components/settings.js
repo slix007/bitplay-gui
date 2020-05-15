@@ -1073,7 +1073,7 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
         // lbCont.text(needToShow ? okexContractNameWithDate + ' ' : '')
         const needRestart = fromDb !== current
         lbWarn.text(needRestart ? 'RESTART IS NEEDED' : '')
-        allSettings.restartWarn = needRestart
+        allSettings.restartWarn[leftRightMarket] = needRestart
 
     })
 
