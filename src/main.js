@@ -52,8 +52,8 @@ const afterLoginFunc = function (isAuthorized) {
     if (isAuthorized) {
         httpVar.httpAsyncGet(marketsUrl, function (response) {
             let parsedResp = JSON.parse(response);
-            $('#left-market-name').text(parsedResp.left);
-            $('#right-market-name').text(parsedResp.right);
+            // $('#left-market-name').text(parsedResp.left);
+            // $('#right-market-name').text(parsedResp.right);
             settingsStore.allSettings.marketList = parsedResp
 
             function fillMainPage(parsedResp) {

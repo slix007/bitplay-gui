@@ -1044,8 +1044,9 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
         })
     })
 
-    const lbCont = $('<span>').appendTo(cont)
-    const lbWarn = $('<span>').css('color', 'red').appendTo(cont)
+    // const lbCont = $('<span>').appendTo(cont)
+    const lbWarn = $(`#${leftRightMarket}-contract-type-warn`).css('color', 'red')
+
     mobx.autorun(r => {
         const fromDb = allSettings.contractMode[leftRightMarket]
         const current = allSettings.contractModeCurrent[leftRightMarket]
