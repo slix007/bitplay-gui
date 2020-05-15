@@ -9,6 +9,7 @@ import { showPreSignalObReFetch } from './settings/pre-signal'
 import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
 import { createPortions } from './settings-conBoPortions'
 import { createAbortSignal } from './settings-abortSignal'
+import { createBitmexCtList } from './settings-bitmexCtList'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -48,6 +49,7 @@ let showArbVersion = function (baseUrl) {
         )
         createPortions(container)
         createAbortSignal(container)
+        createBitmexCtList()
 
         // Bitmex place orders type:
         let $bitmexPlacingCont = $('#bitmex-placing-type')
@@ -1055,25 +1057,44 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
 
         if (leftRightMarket === 'left') {
             const contractType = leftContractTypes.filter(t => t.val === fromDb)[0]
-            console.log(contractType)
-            console.log(`fromDb=${fromDb}; current=${current}`)
+            // console.log(contractType)
+            // console.log(`fromDb=${fromDb}; current=${current}`)
             console.log(allSettings.bitmexContractNames[fromDb])
             const theName = contractType.txt.lastIndexOf('Bitmex', 0) === 0
               ? allSettings.bitmexContractNames[fromDb]
-              : allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
+              : getOkexName(allSettings, fromDb) // map contractNameEnum to contractNameWithDate
 
             $('#left-contract-type-label').text(theName);
         } else {
-            const theName = allSettings.okexContractNames[fromDb] // map contractNameEnum to contractNameWithDate
+            const theName = getOkexName(allSettings, fromDb) // map contractNameEnum to contractNameWithDate
             $('#right-contract-type-label').text(theName);
         }
         // const needToShow = okexContractNameWithDate && okexContractNameWithDate !== 'SWAP'
         // lbCont.text(needToShow ? okexContractNameWithDate + ' ' : '')
-        lbWarn.text(fromDb !== current ? 'RESTART IS NEEDED' : '')
-
+        const needRestart = fromDb !== current
+        lbWarn.text(needRestart ? 'RESTART IS NEEDED' : '')
+        allSettings.restartWarn = needRestart
 
     })
 
+}
+
+function getOkexName(allS, ct) {
+    // "BTC_NextWeek": "BTC0529",
+    // "ETH_Swap": "SWAP",
+    // "ETH_BiQuarter": "ETH0925",
+    // "ETH_ThisWeek": "ETH0522",
+    // "ETH_NextWeek": "ETH0529",
+    // "BTC_ThisWeek": "BTC0522",
+    // "BTC_Quarter": "BTC0626",
+    // "BTC_Swap": "SWAP",
+    // "BTC_BiQuarter": "BTC0925",
+    // "ETH_Quarter": "ETH0626"
+    const name = allS.okexContractNames[ct]
+    if (name !== 'SWAP') {
+        return name.slice(0, 3) + 'USD' + name.substring(3)
+    }
+    return name
 }
 
 

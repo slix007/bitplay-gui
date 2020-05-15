@@ -33,6 +33,9 @@ export const allSettings = observable({
     SETTINGS_URL: '',
     BASE_URL: '',
 
+    restartWarn: false,
+    restartWarnBitmexCt: false,
+
     // GET /market/list
     marketList: {
         left: 'bitmex',
