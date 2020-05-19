@@ -40,13 +40,7 @@ function _createSettingsParam (
   const realValue = $('<span>').appendTo(container)
   const warnLb = $('<span>').css('color', 'red').appendTo(container)
   updateBtn.click(() => {
-    if (!validate(edit.val())) {
-      warnLb.text('Rules: Starts with XBT or ETH and length should be 6.')
-      return
-    } else {
-      warnLb.text('')
-    }
-
+    warnLb.text('')
     const requestData = JSON.stringify(requestCreator(edit.val()))
     updateBtn.prop('disabled', true)
     Http.httpAsyncPost(allSettings.SETTINGS_URL, requestData,
@@ -65,10 +59,4 @@ function _createSettingsParam (
     edit.prop('disabled', false)
     lb.prop('disabled', false)
   })
-}
-
-function validate (ct) {
-  const starts = ct.startsWith('XBT') || ct.startsWith('ETH')
-  const length = ct.length === 6
-  return starts && length
 }
