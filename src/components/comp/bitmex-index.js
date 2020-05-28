@@ -3,7 +3,7 @@ import * as mobx from 'mobx'
 import $ from 'jquery'
 import Http from '../../http'
 import Utils from '../../utils'
-import { mobxStore } from '../../store/settings-store'
+import { allSettings, mobxStore } from '../../store/settings-store'
 import moment from 'moment'
 
 export { fillComponents }
@@ -85,8 +85,12 @@ function createDelivery() {
     const etm_o_delta_lb = $('<span>').text('l').appendTo($cont);
 
     mobx.autorun(r => {
-        // only m10, m21
-        const rightMod = mobxStore.arbMod.mod === 'M10' || mobxStore.arbMod.mod === 'M21';
+        // only Bitmex XBTUSD_Perpetual, ETHUSD_Perpetual
+        const leftCt = allSettings.contractModeCurrent.left
+        const rightCt = allSettings.contractModeCurrent.right
+        const validMode1 = leftCt === 'XBTUSD_Perpetual' && rightCt === 'BTC_ThisWeek'
+        const validMode2 = leftCt === 'ETHUSD_Perpetual' && rightCt === 'ETH_ThisWeek'
+        const validMode = validMode1 || validMode2
 
         let showDeliveryTime = moment().day("Friday")
         .utc(true)
@@ -104,7 +108,7 @@ function createDelivery() {
         const isAfterThreeHours = moment(currDate).isAfter(moment(showDeliveryTime));
         const isBeforeDelivery = moment(currDate).isBefore(moment(deliveryTime));
 
-        if (rightMod && isAfterThreeHours && isBeforeDelivery) { // it could be 0.000
+        if (validMode && isAfterThreeHours && isBeforeDelivery) { // it could be 0.000
         // if (true) { // it could be 0.000
             $cont.show();
             const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(2);
