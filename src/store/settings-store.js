@@ -163,6 +163,7 @@ export const mobxStore = observable({
     b_ask_1: 0,
     o_bid_1: 0,
     o_ask_1: 0,
+    b_delivery: 0,
     o_delivery: 0,
     get o_delivery_round() {
         return this.isEth ? 3 : 2;

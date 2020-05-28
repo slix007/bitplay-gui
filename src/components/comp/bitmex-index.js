@@ -88,9 +88,9 @@ function createDelivery() {
         // only Bitmex XBTUSD_Perpetual, ETHUSD_Perpetual
         const leftCt = allSettings.contractModeCurrent.left
         const rightCt = allSettings.contractModeCurrent.right
-        const validMode1 = leftCt === 'XBTUSD_Perpetual' && rightCt === 'BTC_ThisWeek'
-        const validMode2 = leftCt === 'ETHUSD_Perpetual' && rightCt === 'ETH_ThisWeek'
-        const validMode = validMode1 || validMode2
+        const validLeft = leftCt === 'BTC_ThisWeek' || leftCt === 'ETH_ThisWeek'
+        const validRight = rightCt === 'BTC_ThisWeek' || rightCt === 'ETH_ThisWeek'
+        const validMode = validLeft || validRight
 
         let showDeliveryTime = moment().day("Friday")
         .utc(true)
@@ -111,21 +111,39 @@ function createDelivery() {
         if (validMode && isAfterThreeHours && isBeforeDelivery) { // it could be 0.000
         // if (true) { // it could be 0.000
             $cont.show();
-            const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(2);
-            const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(2);
-            const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(2);
+            if (validRight) {
+                const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(2);
+                const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(2);
+                const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(2);
 
 
-            b_index_lb.text(mobxStore.futureIndex.b_index);
-            o_delivery_lb.text(mobxStore.o_delivery);
+                b_index_lb.text(mobxStore.futureIndex.b_index);
+                o_delivery_lb.text(mobxStore.o_delivery);
 
-            delivery_diff_lb.text(delivery_diff)
-            .prop('title', 'L_index - R_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
+                delivery_diff_lb.text(delivery_diff)
+                .prop('title', 'L_index - R_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.b_index, mobxStore.o_delivery));
 
-            etm_b_delta_lb.text(etm_b_delta)
-            .prop('title', 'etm_L_delta = L_bid[1] - R_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
-            etm_o_delta_lb.text(etm_o_delta)
-            .prop('title', 'etm_R_delta = R_delivery - L_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
+                etm_b_delta_lb.text(etm_b_delta)
+                .prop('title', 'etm_L_delta = L_bid[1] - R_delivery\n' + sprintf('%s - %s', mobxStore.b_bid_1, mobxStore.o_delivery));
+                etm_o_delta_lb.text(etm_o_delta)
+                .prop('title', 'etm_R_delta = R_delivery - L_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
+            } else { // validLeft
+                const delivery_diff = (mobxStore.futureIndex.o_index - mobxStore.b_delivery).toFixed(2);
+                const etm_b_delta = (mobxStore.o_bid_1 - mobxStore.b_delivery).toFixed(2);
+                const etm_o_delta = (mobxStore.b_delivery - mobxStore.o_ask_1).toFixed(2);
+
+
+                b_index_lb.text(mobxStore.futureIndex.o_index);
+                o_delivery_lb.text(mobxStore.b_delivery);
+
+                delivery_diff_lb.text(delivery_diff)
+                .prop('title', 'R_index - L_delivery\n' + sprintf('%s - %s', mobxStore.futureIndex.o_index, mobxStore.b_delivery));
+
+                etm_b_delta_lb.text(etm_b_delta)
+                .prop('title', 'etm_R_delta = R_bid[1] - L_delivery\n' + sprintf('%s - %s', mobxStore.o_bid_1, mobxStore.b_delivery));
+                etm_o_delta_lb.text(etm_o_delta)
+                .prop('title', 'etm_L_delta = L_delivery - R_ask[1]\n' + sprintf('%s - %s', mobxStore.b_delivery, mobxStore.o_ask_1));
+            }
         } else {
             $cont.hide();
         }
