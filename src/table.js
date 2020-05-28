@@ -406,7 +406,7 @@ let showMainInfo = function (baseUrl) {
             } else {
                 okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'left')
 
-                mobxStore.b_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2)
+                mobxStore.b_delivery = Number(jsonData.futureIndex.leftEstimatedDeliveryPrice).toFixed(2)
             }
 
             $('#left-last-price').html(jsonData.lastPrice)
@@ -428,7 +428,7 @@ let showMainInfo = function (baseUrl) {
             mobxStore.futureIndex.o_index = Number(jsonData.futureIndex.indexVal)
             mobxStore.o_bid_1 = Number(jsonData.bid[0].price)
             mobxStore.o_ask_1 = Number(jsonData.ask[0].price)
-            mobxStore.o_delivery = Number(jsonData.futureIndex.okexEstimatedDeliveryPrice).toFixed(2)
+            mobxStore.o_delivery = Number(jsonData.futureIndex.rightEstimatedDeliveryPrice).toFixed(2)
         })
 
         fetch('/mon/all', function (resultJson) {
