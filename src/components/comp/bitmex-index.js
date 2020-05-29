@@ -73,9 +73,11 @@ function createDelivery() {
     // // Delivery: etm_b_delta = n; etm_o_delta = k; delivery_diff = i;
     // Delivery: b_index (n) - o_delivery (k) = i; j; l
     // n = значение b_index, k = значение o_delivery, j = etm_b_delta, l = etm_o_delta.
-    $('<span>').text('Delivery: b_index (').appendTo($cont);
+    const lb1 = $('<span>').appendTo($cont)
     const b_index_lb = $('<span>').text('n').appendTo($cont);
-    $('<span>').text(') - o_delivery (').appendTo($cont);
+    const lb2 = $('<span>').appendTo($cont)
+    lb1.text('Delivery: L_index (')
+    lb2.text(') - R_delivery (')
     const o_delivery_lb = $('<span>').text('k').appendTo($cont);
     $('<span>').text(') = ').appendTo($cont);
     const delivery_diff_lb = $('<span>').text('i').appendTo($cont);
@@ -108,10 +110,15 @@ function createDelivery() {
         const isAfterThreeHours = moment(currDate).isAfter(moment(showDeliveryTime));
         const isBeforeDelivery = moment(currDate).isBefore(moment(deliveryTime));
 
+        // console.log(validLeft)
+        // console.log(validRight)
         if (validMode && isAfterThreeHours && isBeforeDelivery) { // it could be 0.000
         // if (true) { // it could be 0.000
             $cont.show();
             if (validRight) {
+                lb1.text('Delivery: L_index (')
+                lb2.text(') - R_delivery (')
+
                 const delivery_diff = (mobxStore.futureIndex.b_index - mobxStore.o_delivery).toFixed(2);
                 const etm_b_delta = (mobxStore.b_bid_1 - mobxStore.o_delivery).toFixed(2);
                 const etm_o_delta = (mobxStore.o_delivery - mobxStore.b_ask_1).toFixed(2);
@@ -128,6 +135,15 @@ function createDelivery() {
                 etm_o_delta_lb.text(etm_o_delta)
                 .prop('title', 'etm_R_delta = R_delivery - L_ask[1]\n' + sprintf('%s - %s', mobxStore.o_delivery, mobxStore.b_ask_1));
             } else { // validLeft
+                lb1.text('Delivery: R_index (')
+                lb2.text(') - L_delivery (')
+
+                // console.log(mobxStore.b_ask_1)
+                // console.log(mobxStore.b_bid_1)
+                // console.log(mobxStore.o_ask_1)
+                // console.log(mobxStore.o_bid_1)
+                // console.log(mobxStore.b_delivery)
+                // console.log(mobxStore.o_delivery)
                 const delivery_diff = (mobxStore.futureIndex.o_index - mobxStore.b_delivery).toFixed(2);
                 const etm_b_delta = (mobxStore.o_bid_1 - mobxStore.b_delivery).toFixed(2);
                 const etm_o_delta = (mobxStore.b_delivery - mobxStore.o_ask_1).toFixed(2);
