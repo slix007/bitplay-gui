@@ -405,7 +405,7 @@ let showMainInfo = function (baseUrl) {
                 $('#bitmex-bxbt-bal').html(jsonData.futureIndex.contractExtraJson.bxbtBal)
             } else {
                 okexIndexVar.fillComponents(jsonData.futureIndex, baseUrl, 'left')
-
+                bitmexIndexVar.createDelivery()
                 mobxStore.b_delivery = Number(jsonData.futureIndex.leftEstimatedDeliveryPrice).toFixed(2)
             }
 

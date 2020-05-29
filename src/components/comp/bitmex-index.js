@@ -6,7 +6,7 @@ import Utils from '../../utils'
 import { allSettings, mobxStore } from '../../store/settings-store'
 import moment from 'moment'
 
-export { fillComponents }
+export { fillComponents, createDelivery }
 
 const ind = document.createElement('span')
 const label = document.createElement('div')
@@ -69,6 +69,9 @@ function createIndexDiff() {
 
 function createDelivery() {
     const $cont = $('#delivery').addClass('blueText');
+    if ($($cont).children().length !== 0) {
+            return
+    }
 
     // // Delivery: etm_b_delta = n; etm_o_delta = k; delivery_diff = i;
     // Delivery: b_index (n) - o_delivery (k) = i; j; l

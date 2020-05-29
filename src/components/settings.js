@@ -1059,7 +1059,7 @@ function createContractMode (settingsData, SETTINGS_URL, leftRightMarket) {
             const contractType = leftContractTypes.filter(t => t.val === fromDb)[0]
             // console.log(contractType)
             // console.log(`fromDb=${fromDb}; current=${current}`)
-            console.log(allSettings.bitmexContractNames[fromDb])
+            console.log('bitmex contract=' + allSettings.bitmexContractNames[fromDb])
             const theName = contractType.txt.lastIndexOf('Bitmex', 0) === 0
               ? allSettings.bitmexContractNames[fromDb]
               : getOkexName(allSettings, fromDb) // map contractNameEnum to contractNameWithDate
