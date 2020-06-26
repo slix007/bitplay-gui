@@ -446,11 +446,15 @@ let showMainInfo = function (baseUrl) {
 
         fetch('/market/sum-bal', function (resultJson) {
             $('#sum-bal').html(resultJson.result)
+            if (!mobxStore.isEth) {
+                $('#sum-bal-implied').html(resultJson.sumBalImpliedString)
+            }
 
             eBestMin.fillComponents(resultJson)
         })
 
         fetch('/market/left/account', function (leftAccount) {
+            mobxStore.quAvg = leftAccount.quAvg
             let elBalance = document.getElementById('left-balance')
             if (allSettings.marketList.left === 'bitmex') {
                 showBalanceBitmex(leftAccount, elBalance)

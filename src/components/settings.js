@@ -10,6 +10,7 @@ import { showBitmexFokMaxDiff } from './settings/FOK_max_diff'
 import { createPortions } from './settings-conBoPortions'
 import { createAbortSignal } from './settings-abortSignal'
 import { createBitmexCtList } from './settings-bitmexCtList'
+import { showSumBalImpliedInput } from './settings/sum-bal-implied-input'
 
 let $ = require('jquery');
 let Http = require('../http');
@@ -138,6 +139,10 @@ let showArbVersion = function (baseUrl) {
         createDqlKillPos(SETTINGS_URL)
 
         createDqlLevel(SETTINGS_URL)
+
+        if (!mobxStore.isEth) {
+            showSumBalImpliedInput()
+        }
 
         if (allSettings.marketList.left === 'bitmex') {
             showBitmexOrderBookType()

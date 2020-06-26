@@ -188,6 +188,7 @@ export const mobxStore = observable({
         preliq: {}
     },
 
+    quAvg: 0,
     // okex: close-all-pos: button mkt
     secondMarketAccount: {
         positionStr : "+0-0",
