@@ -140,14 +140,23 @@ let showArbVersion = function (baseUrl) {
 
         createDqlLevel(SETTINGS_URL)
 
-        if (!mobxStore.isEth) {
-            showSumBalImpliedInput()
-        }
+        showSumBalImpliedInput()
+        mobx.autorun(function () {
+            if (allSettings.eth) {
+                console.log('hide sum-bal-implied')
+                $('#sum-bal-implied-input').hide()
+                $('#sum-bal-implied').hide()
+            } else {
+                console.log('show sum-bal-implied')
+                $('#sum-bal-implied-input').show()
+                $('#sum-bal-implied').show()
+            }
+        })
 
         if (allSettings.marketList.left === 'bitmex') {
             showBitmexOrderBookType()
             maxBitmexReconnects(settingsData, SETTINGS_URL)
-            showBitmexFokMaxDiff();
+            showBitmexFokMaxDiff()
 
             // System overload settings
             const overloadCnt = document.getElementById('sys-overload-settings')

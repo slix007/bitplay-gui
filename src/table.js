@@ -446,10 +446,7 @@ let showMainInfo = function (baseUrl) {
 
         fetch('/market/sum-bal', function (resultJson) {
             $('#sum-bal').html(resultJson.result)
-            if (!mobxStore.isEth) {
-                $('#sum-bal-implied').html(resultJson.sumBalImpliedString)
-            }
-
+            $('#sum-bal-implied').html(resultJson.sumBalImpliedString)
             eBestMin.fillComponents(resultJson)
         })
 
