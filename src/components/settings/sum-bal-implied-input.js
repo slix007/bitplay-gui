@@ -1,6 +1,6 @@
 'use strict'
 
-import { allSettings, mobxStore, setAllSettingsRaw } from '../../store/settings-store'
+import { allSettings, setAllSettingsRaw } from '../../store/settings-store'
 
 const $ = require('jquery')
 const Http = require('../../http')
@@ -59,10 +59,11 @@ function createInputUsdBtc (mainCont, SETTINGS_URL, labelName, requestCreator, v
   mobx.autorun(function () {
     const valueUsd = valExtractor(allSettings)
     // Значения в btc рассчитывается
-    // для vol_usd: vol_usd / usd_qu,
-    // для s_e_best_ini_usd: s_e_best_ini_usd / usd_qu.
-    if (mobxStore.quAvg !== 0) {
-      const valueBtc = (valueUsd / mobxStore.quAvg).toFixed(8)
+    // для vol_usd: vol_usd / usd_qu_ini,
+    // для s_e_best_ini_usd: s_e_best_ini_usd / usd_qu_ini.
+    const quAvg = allSettings.implied.usdQuIni
+    if (quAvg !== 0) {
+      const valueBtc = (valueUsd / quAvg).toFixed(8)
       if (usdOnly) {
         realValue.text(`[${valueUsd} usd]`)
       } else {
