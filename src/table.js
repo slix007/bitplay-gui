@@ -445,8 +445,17 @@ let showMainInfo = function (baseUrl) {
         })
 
         fetch('/market/sum-bal', function (resultJson) {
-            $('#sum-bal').html(resultJson.result)
-            $('#sum-bal-implied').html(resultJson.sumBalImpliedString)
+            function boldOneParam (res, paramToBold) {
+                const sInd = res.indexOf(paramToBold)
+                const eInd2 = res.substring(sInd).indexOf(', ')
+                const eInd = sInd + eInd2
+                return res.substring(0, sInd) + '<b>' + res.substring(sInd, eInd) + '</b>' + res.substring(eInd)
+            }
+
+            const sumBalString = boldOneParam(resultJson.result, 's_e_best')
+            $('#sum-bal').html(sumBalString)
+            const impliedString = boldOneParam(resultJson.sumBalImpliedString, 's_e_best_imp')
+            $('#sum-bal-implied').html(impliedString)
             eBestMin.fillComponents(resultJson)
         })
 
