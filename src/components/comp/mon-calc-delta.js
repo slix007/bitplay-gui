@@ -62,6 +62,9 @@ exports.updateMonCalcDelta = function (baseUrl, resultJson) {
             });
         }).appendTo(main);
 
+        $('<a>').attr('href', baseUrl + '/settings/slack').text('/settings/slack')
+        .appendTo($('<div>').appendTo(main));
+
         var row = $('<tr>').appendTo(deltaMsTable);
         $('<td></td>').text("leftDeltaMs/max/timestamp=").appendTo(row);
         $('<td></td>').attr('id', 'leftDeltaMs').text(sprintf('%s/%s/%s', resultJson.btmDeltaMs, resultJson.maxBtmDeltaMs, resultJson.lastBtmDeltaTime)).appendTo(row);
