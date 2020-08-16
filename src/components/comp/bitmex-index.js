@@ -219,6 +219,10 @@ function fillBitmexFunding(futureIndex) {
     fundTime.innerHTML = ', timeToSwap=' + futureIndex.timeToSwap
             + ', swapTime=' + futureIndex.swapTime
             + ', ';
+    let today = new Date();
+    let date = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+('0' + today.getDate()).slice(-2);
+    document.getElementById('customSwapTime').innerText = date + 'T' + futureIndex.swapTime
+
     let timeCompare = document.getElementById('timeCompare');
     timeCompare.innerHTML = futureIndex.timeCompareString;
     let timeCompareUpdating = document.getElementById('timeCompareUpdating');

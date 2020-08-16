@@ -1014,17 +1014,13 @@ let showMainInfo = function (baseUrl) {
             }
 
             if (element.id == 'update-customSwapTime') {
-                let element = document.getElementById('customSwapTime-edit').value
-                let request = { command: element }
+                let value = document.getElementById('customSwapTime-edit').value
+                let request = { command: value }
                 let requestData = JSON.stringify(request)
                 console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/custom-swap-time',
-                  requestData,
-                  function (responseData, resultElement) {
-                      let cst = document.getElementById('customSwapTime')
-                      cst.innerHTML = responseData.result
-                  },
-                  null
+                element.disabled = true
+                Http.httpAsyncPost(baseUrl + '/market/left/custom-swap-time',
+                  requestData, () => element.disabled = false
                 )
             }
 
@@ -1033,7 +1029,7 @@ let showMainInfo = function (baseUrl) {
                 let request = { command: element }
                 let requestData = JSON.stringify(request)
                 console.log(requestData)
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/update-time-compare-updating',
+                Http.httpAsyncPost(baseUrl + '/market/left/update-time-compare-updating',
                   requestData,
                   function (responseData, resultElement) {
                       let timeCompareUpdating = document.getElementById('timeCompareUpdating')
@@ -1112,7 +1108,7 @@ let showMainInfo = function (baseUrl) {
                   null)
             }
             if (element.id == 'reset-time-compare') {
-                Http.httpAsyncPost(baseUrl + '/market/bitmex/reset-time-compare', '',
+                Http.httpAsyncPost(baseUrl + '/market/left/reset-time-compare', '',
                   function (responseData, resultElement) {
                       let timeCompare = document.getElementById('timeCompare')
                       timeCompare.innerHTML = responseData.result
