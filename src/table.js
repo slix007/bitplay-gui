@@ -1099,6 +1099,10 @@ let showMainInfo = function (baseUrl) {
                 Http.httpAsyncPost(baseUrl + '/reset-delta-params', '', function (responseData, resultElement) {},
                   null)
             }
+            if (element.id == 'reset-ob-timestamps') {
+                Http.httpAsyncPost(baseUrl + '/reset-ob-timestamps', '', function (responseData, resultElement) {},
+                  null)
+            }
             if (element.id == 'reset-signal-time-params') {
                 Http.httpAsyncPost(baseUrl + '/reset-signal-time-params', '', function (responseData, resultElement) {},
                   null)

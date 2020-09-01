@@ -185,16 +185,17 @@ function createToSwapV2Open(swapV2, MAIN_SWAP_PARAMS_URL) {
     div.innerHTML = 'To open(swapV2): ' + swapV2.msToSwapString;
     container.appendChild(div);
 
-    setInterval(updateToSwapV2Open, 1000, MAIN_SWAP_PARAMS_URL);
+    setTimeout(updateToSwapV2Open, 1000, MAIN_SWAP_PARAMS_URL)
 }
 
 function updateToSwapV2Open(MAIN_SWAP_PARAMS_URL) {
 
     Http.httpAsyncGet(MAIN_SWAP_PARAMS_URL, function (rawData) {
-        let swapParams = JSON.parse(rawData);
-        const div = document.getElementById("div-swap-to-open");
-        const swapV2 = swapParams.swapV2;
-        div.innerHTML = 'To open(swapV2): ' + swapV2.msToSwapString;
+        let swapParams = JSON.parse(rawData)
+        const div = document.getElementById('div-swap-to-open')
+        const swapV2 = swapParams.swapV2
+        div.innerHTML = 'To open(swapV2): ' + swapV2.msToSwapString
 
-    });
+        setTimeout(updateToSwapV2Open, 1000, MAIN_SWAP_PARAMS_URL)
+    }, () => setTimeout(updateToSwapV2Open, 1000, MAIN_SWAP_PARAMS_URL))
 }

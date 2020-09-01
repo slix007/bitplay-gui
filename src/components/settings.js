@@ -20,6 +20,7 @@ let mobx = require('mobx');
 const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isActiveV} = require('../store/settings-store');
 
 const enableRestart = require('../components/enable-restart');
+const obTimestamps = require('../components/settings-ob-timestamps');
 
 export {showArbVersion, updateAllSettings, createSettingsInput, createCheckboxV, createSettingsV};
 
@@ -39,6 +40,7 @@ let showArbVersion = function (baseUrl) {
         let settingsData = JSON.parse(rawData)
         setAllSettings(settingsData, SETTINGS_URL)
         enableRestart.showRestartEnable(baseUrl)
+        obTimestamps.showSettingsObTimestamps(baseUrl)
 
         // Arb version
         let container = document.getElementById('select-arb-version')

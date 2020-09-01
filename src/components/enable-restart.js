@@ -14,16 +14,16 @@ exports.showRestartEnable = function (baseUrl) {
 
     const SETTINGS_URL = baseUrl + '/settings/all';
 
-    var container = document.getElementById("restart-div");
-    let btnC = document.createElement('div');
-    let maxDelayC = document.createElement('div');
+    const container = document.getElementById("restart-div");
+    const btnC = document.createElement('div');
     container.appendChild(btnC);
-    container.appendChild(maxDelayC);
 
     createRestartDiv(btnC, settingsStore.allSettings, SETTINGS_URL);
+
+    const maxDelayC = document.getElementById('max-timestamp-delay-div');
     createMaxTimestampDelay(maxDelayC, settingsStore.allSettings, SETTINGS_URL);
 
-    var restMonCont = document.getElementById("restart-monitoring");
+    const restMonCont = document.getElementById('restart-monitoring')
     createRestartMonitoringLabels(restMonCont);
 };
 
@@ -130,7 +130,8 @@ let updateMonitorFunction = function () {
     Http.httpAsyncGet(URL, function (rawData) {
         let data = JSON.parse(rawData);
         fillRestartMonitoringLabels(data);
-    });
+        setTimeout(updateMonitorFunction, 1000)
+    }, () => setTimeout(updateMonitorFunction, 1000))
 };
 
-setInterval(updateMonitorFunction, 1000);
+setTimeout(updateMonitorFunction, 1000);

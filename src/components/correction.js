@@ -284,9 +284,12 @@ var updateMonitorFunction = function () {
         setMonitoringCount(adjCountLabel, res, 'adj')
         setMonitoringCount(preliqCountLabel, res, 'preliq')
         setMonitoringCount(killposCountLabel, res, 'killpos')
-    });
+
+        setTimeout(updateMonitorFunction, 2000)
+    }, () => setTimeout(updateMonitorFunction, 2000))
+
 };
 
-setInterval(updateMonitorFunction, 2000);
+setTimeout(updateMonitorFunction, 2000);
 
 
