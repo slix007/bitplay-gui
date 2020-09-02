@@ -183,6 +183,7 @@ function createSignalStatusBar() {
     const leftAffordable = $('<span>').text('L_affordable').css(my_css_class).appendTo(cont);
     const rightAffordable = $('<span>').text('R_affordable').css(my_css_class).appendTo(cont);
     const priceLimits = $('<span>').text('price_limits').css(my_css_class).appendTo(cont);
+    const obTsDiffs = $('<span>').text('OB_Timestamps_diffs').css(my_css_class).appendTo(cont);
 
     function showPart(el, status) {
         el.prop('title', status);
@@ -221,6 +222,7 @@ function createSignalStatusBar() {
         showPart(leftAffordable, sp.btmAffordable)
         showPart(rightAffordable, sp.okAffordable)
         showPart(priceLimits, sp.priceLimits)
+        showPart(obTsDiffs, sp.obTsDiffs)
     });
 }
 
