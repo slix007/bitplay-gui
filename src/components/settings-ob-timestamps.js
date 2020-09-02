@@ -50,11 +50,15 @@ const showSettingsObTimestamps = function (baseUrl) {
     const rightObDiff = $('#r-ob-timestamps-range')
     const leftGet = $('#l-ob-timestamps-get-range')
     const rightGet = $('#r-ob-timestamps-get-range')
+    const leftExecDuration = $('#l-exec-duration-range')
+    const rightExecDuration = $('#r-exec-duration-range')
     mobx.autorun(r => {
         leftObDiff.text(mobxStore.marketStates.leftObTimestampDiff)
         rightObDiff.text(mobxStore.marketStates.rightObTimestampDiff)
         leftGet.text(mobxStore.marketStates.leftGetObDelay)
         rightGet.text(mobxStore.marketStates.rightGetObDelay)
+        leftExecDuration.text(mobxStore.marketStates.leftExecDuration)
+        rightExecDuration.text(mobxStore.marketStates.rightExecDuration)
     })
 
 }
