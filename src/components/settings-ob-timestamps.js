@@ -2,6 +2,7 @@
 
 import $ from 'jquery'
 import { allSettings, setAllSettingsRaw } from '../store/settings-store'
+import { withSign } from '../utils'
 
 let Http = require('../http')
 let sprintf = require('sprintf-js').sprintf
@@ -53,12 +54,12 @@ const showSettingsObTimestamps = function (baseUrl) {
     const leftExecDuration = $('#l-exec-duration-range')
     const rightExecDuration = $('#r-exec-duration-range')
     mobx.autorun(r => {
-        leftObDiff.text(mobxStore.marketStates.leftObTimestampDiff)
-        rightObDiff.text(mobxStore.marketStates.rightObTimestampDiff)
-        leftGet.text(mobxStore.marketStates.leftGetObDelay)
-        rightGet.text(mobxStore.marketStates.rightGetObDelay)
-        leftExecDuration.text(mobxStore.marketStates.leftExecDuration)
-        rightExecDuration.text(mobxStore.marketStates.rightExecDuration)
+        leftObDiff.text(withSign(mobxStore.marketStates.lt.minObDiff) + '...' + withSign(mobxStore.marketStates.lt.maxObDiff))
+        rightObDiff.text(withSign(mobxStore.marketStates.rt.minObDiff) + '...' + withSign(mobxStore.marketStates.rt.maxObDiff))
+        leftGet.text(withSign(mobxStore.marketStates.lt.minGetOb) + '...' + withSign(mobxStore.marketStates.lt.maxGetOb))
+        rightGet.text(withSign(mobxStore.marketStates.rt.minGetOb) + '...' + withSign(mobxStore.marketStates.rt.maxGetOb))
+        leftExecDuration.text(withSign(mobxStore.marketStates.lt.minExecDuration) + '...' + withSign(mobxStore.marketStates.lt.maxExecDuration))
+        rightExecDuration.text(withSign(mobxStore.marketStates.rt.minExecDuration) + '...' + withSign(mobxStore.marketStates.rt.maxExecDuration))
     })
 
 }

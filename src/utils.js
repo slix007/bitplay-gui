@@ -35,6 +35,7 @@ exports.ethToBtc = function(eth, qu) {
 };
 
 exports.withSign = function(value) {
+    if (value == null) {return 'null'}
     return (value < 0) ? (value) : ('+' + value);
 };
 
