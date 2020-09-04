@@ -71,7 +71,8 @@ export const allSettings = observable({
         posAdjustment: {},
         baddBorder: 0,
         oaddBorder: 0,
-        conBoPortions: {}
+        conBoPortions: {},
+        prem: {}
     },
 
     bitmexChangeOnSo: {
@@ -212,7 +213,9 @@ export const mobxStore = observable({
         orderPortionsJson: {},
         leftFtpdJson: {},
         rightFtpdJson: {},
-        twoMarketsIndexDiff: ''
+        twoMarketsIndexDiff: '',
+        lt: {}, rt: {},
+        autoAddBorderJson: {}
     },
 
 });

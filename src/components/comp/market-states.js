@@ -66,6 +66,9 @@ let repaintStates = function (returnData) {
     allSettings.okexSettlementMode = returnData.okexSettlementMode;
     allSettings.nowMomentStr = returnData.nowMomentStr
     fillOkexSettlementEnding(allSettings)
+    allSettings.settingsVolatileMode.borderCrossDepth = returnData.autoAddBorderJson.borderCrossDepth
+    allSettings.settingsVolatileMode.baddBorder = returnData.autoAddBorderJson.leftAddBorder
+    allSettings.settingsVolatileMode.oaddBorder = returnData.autoAddBorderJson.rightAddBorder
 };
 
 function convertTimeToReset(timeToResetTradingMode) {

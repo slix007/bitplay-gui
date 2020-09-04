@@ -198,10 +198,12 @@ let showArbVersion = function (baseUrl) {
       x => x.settingsVolatileMode.volatileDurationSec,
       x => false);
     $('<span>').attr('id', 'timeToResetTradingMode-label').appendTo(contTimer)
-    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'Border cross depth',
+    const $borderCrossDepth = $('<div>').appendTo($column1Cont)
+    createSettingsV($borderCrossDepth, SETTINGS_URL, 'Border cross depth',
       x => ({ settingsVolatileMode: { borderCrossDepth: x } }),
       x => x.settingsVolatileMode.borderCrossDepth,
       x => x.tradingModeAuto)
+    createCheckboxPrem($borderCrossDepth, SETTINGS_URL, 'BCD_prem')
 
     const $column2Cont = $('#volatile-mode-params-2')
     const $btmPlacingContV = $('<div>').appendTo($column2Cont)
@@ -228,17 +230,31 @@ let showArbVersion = function (baseUrl) {
     const $signalDelayContV = $('<div>').appendTo($column2Cont)
     createCheckboxV($signalDelayContV, SETTINGS_URL, 'signalDelayMs')
     createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({ settingsVolatileMode: { signalDelayMs: x } }),
-            x => x.settingsVolatileMode.signalDelayMs);
+      x => x.settingsVolatileMode.signalDelayMs)
 
-    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'L_add_border',
-            x => ({settingsVolatileMode: {baddBorder: x}}),
-            x => x.settingsVolatileMode.baddBorder);
-    createSettingsV($('<div>').appendTo($column1Cont), SETTINGS_URL, 'R_add_border',
-            x => ({settingsVolatileMode: {oaddBorder: x}}),
-            x => x.settingsVolatileMode.oaddBorder);
+    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'BCD_prem: ',
+      x => ({ settingsVolatileMode: { prem: { bcdPrem: Number(x).toFixed(3) } } }),
+      x => x.settingsVolatileMode.prem.bcdPrem)
+    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'L_add_border_prem: ',
+      x => ({ settingsVolatileMode: { prem: { leftAddBorderPrem: Number(x).toFixed(3) } } }),
+      x => x.settingsVolatileMode.prem.leftAddBorderPrem)
+    createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'R_add_border_prem: ',
+      x => ({ settingsVolatileMode: { prem: { rightAddBorderPrem: Number(x).toFixed(3) } } }),
+      x => x.settingsVolatileMode.prem.rightAddBorderPrem)
 
-    const $column3Cont = $('#volatile-mode-params-3');
-    const $placingBlocksContV = $('<div>').appendTo($column3Cont);
+    const $leftAddBorder = $('<div>').appendTo($column1Cont)
+    createSettingsV($leftAddBorder, SETTINGS_URL, 'L_add_border',
+      x => ({ settingsVolatileMode: { baddBorder: x } }),
+      x => x.settingsVolatileMode.baddBorder)
+    createCheckboxPrem($leftAddBorder, SETTINGS_URL, 'L_add_border_prem')
+    const $rightAddBorder = $('<div>').appendTo($column1Cont)
+    createSettingsV($rightAddBorder, SETTINGS_URL, 'R_add_border',
+      x => ({ settingsVolatileMode: { oaddBorder: x } }),
+      x => x.settingsVolatileMode.oaddBorder)
+    createCheckboxPrem($rightAddBorder, SETTINGS_URL, 'R_add_border_prem')
+
+    const $column3Cont = $('#volatile-mode-params-3')
+    const $placingBlocksContV = $('<div>').appendTo($column3Cont)
     createCheckboxV($placingBlocksContV, SETTINGS_URL, 'placingBlocks');
     createPlacingBlocksVolatile($placingBlocksContV, SETTINGS_URL);
 
@@ -326,6 +342,32 @@ let createCheckboxV = function(cont, SETTINGS_URL, fieldName) {
                     setAllSettingsRaw(result);
                     Utils.enableElements(cont);
                 });
+    });
+}
+
+let createCheckboxPrem = function(cont, SETTINGS_URL, fieldName) {
+    const checkbox = $('<input>').attr('type', 'checkbox').prop('title','auto').appendTo(cont);
+    mobx.autorun(function () {
+        if (isActive(fieldName)) {
+            checkbox.prop('checked', true);
+            Utils.disableElements(cont);
+            checkbox.prop('disabled', false)
+        } else {
+            checkbox.prop('checked', false);
+            Utils.enableElements(cont);
+        }
+    });
+    checkbox.click(function () {
+        checkbox.prop('disabled', true)
+        const req = checkbox.prop('checked')
+          ? {settingsVolatileMode: {fieldToAdd: fieldName}}
+          : {settingsVolatileMode: {fieldToRemove: fieldName}};
+        const requestData = JSON.stringify(req);
+        Http.httpAsyncPost(SETTINGS_URL,
+          requestData, function (result) {
+              setAllSettingsRaw(result);
+              checkbox.prop('disabled', false)
+          });
     });
 }
 
