@@ -347,13 +347,16 @@ let createCheckboxV = function(cont, SETTINGS_URL, fieldName) {
 
 let createCheckboxPrem = function(cont, SETTINGS_URL, fieldName) {
     const checkbox = $('<input>').attr('type', 'checkbox').prop('title','auto').appendTo(cont);
+    const lb = $('<spin>').text('auto').appendTo(cont)
     mobx.autorun(function () {
         if (isActive(fieldName)) {
             checkbox.prop('checked', true);
+            lb.css("font-weight","bold")
             Utils.disableElements(cont);
             checkbox.prop('disabled', false)
         } else {
             checkbox.prop('checked', false);
+            lb.css("font-weight","normal")
             Utils.enableElements(cont);
         }
     });
