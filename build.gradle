@@ -102,7 +102,7 @@ private void sshRun(hostName, remoteHomeDir, remoteInstallDir) {
         session(hostName) {
             println remoteInstallDir
             println remoteHomeDir
-            put from: "output", into: "${remoteHomeDir}/bitplay-gui"
+            put from: "$project.projectDir/output", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
             executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/output/** ${remoteInstallDir}", pty: true
         }
