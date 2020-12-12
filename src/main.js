@@ -61,8 +61,8 @@ const afterLoginFunc = function (isAuthorized) {
                 const rightCt = parsedResp.rightFutureContractName
                 // $('#left-contract-type-label').text(leftCt);
                 // $('#right-contract-type-label').text(rightCt);
-                $('#left-contract-usd').text(sprintf('(1 contract = $%s)', leftCt.startsWith('BTC') ? '100' : '10'))
-                $('#right-contract-usd').text(sprintf('(1 contract = $%s)', rightCt.startsWith('BTC') ? '100' : '10'))
+                // $('#left-contract-usd').text(sprintf('(1 contract = $%s)', leftCt.startsWith('BTC') ? '100' : '10'))
+                // $('#right-contract-usd').text(sprintf('(1 contract = $%s)', rightCt.startsWith('BTC') ? '100' : '10'))
 
                 tableVar.showMainInfo(baseUrlWithPort);
                 settingsVar.showArbVersion(baseUrlWithPort);

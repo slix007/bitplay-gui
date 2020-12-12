@@ -376,9 +376,8 @@ let showMainInfo = function (baseUrl) {
             if (posDiffJson.placingBlocks != null) {
                 placingBlocksVar.updateBlocks(posDiffJson.placingBlocks)
             }
-            if (posDiffJson.btmUsdInContract != null && allSettings.marketList.left === 'bitmex') {
-                $('#left-contract-usd').text(`(1 contract = $${posDiffJson.btmUsdInContract})`)
-            }
+            $('#left-contract-usd').text(`(1 contract = $${posDiffJson.leftSCV})`)
+            $('#right-contract-usd').text(`(1 contract = $${posDiffJson.rightSCV})`)
             if (posDiffJson.isEth != null) {
                 placingOrderObj.isEth = posDiffJson.isEth
                 mobxStore.isEth = posDiffJson.isEth

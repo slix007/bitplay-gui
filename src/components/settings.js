@@ -1058,15 +1058,19 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 }
 
 const leftContractTypes = [
-    { txt: 'Bitmex [ETHUSD_Perpetual]', val: 'ETHUSD_Perpetual' },
     { txt: 'Bitmex [XBTUSD_Perpetual]', val: 'XBTUSD_Perpetual' },
+    { txt: 'Bitmex [ETHUSD_Perpetual]', val: 'ETHUSD_Perpetual' },
+    { txt: 'Bitmex [LINKUSDT_Perpetual]', val: 'LINKUSDT_Perpetual' },
+    { txt: 'Bitmex [XRPUSD_Perpetual]', val: 'XRPUSD_Perpetual' },
+    { txt: 'Bitmex [LTCUSD_Perpetual]', val: 'LTCUSD_Perpetual' },
+    { txt: 'Bitmex [BCHUSD_Perpetual]', val: 'BCHUSD_Perpetual' },
     { txt: 'Bitmex [XBTUSD_Quarter]', val: 'XBTUSD_Quarter' },
-    { txt: 'Bitmex [XBTUSD_BiQuarter]', val: 'XBTUSD_BiQuarter' },
     { txt: 'Bitmex [ETHUSD_Quarter]', val: 'ETHUSD_Quarter' },
+    { txt: 'Bitmex [XBTUSD_BiQuarter]', val: 'XBTUSD_BiQuarter' },
     { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
     { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
     { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
-    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' }
+    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' },
 ]
 //Okex [ETHUSD_ThisWeek]
 // Okex [ETHUSD_NextWeek]
