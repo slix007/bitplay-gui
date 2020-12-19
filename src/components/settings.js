@@ -1058,37 +1058,41 @@ function createUsdQuoteType(settingsData, SETTINGS_URL) {
 }
 
 const leftContractTypes = [
-    { txt: 'Bitmex [XBTUSD_Perpetual]', val: 'XBTUSD_Perpetual' },
+    { txt: 'Bitmex [BTCUSD_Perpetual]', val: 'XBTUSD_Perpetual' },
     { txt: 'Bitmex [ETHUSD_Perpetual]', val: 'ETHUSD_Perpetual' },
     { txt: 'Bitmex [LINKUSDT_Perpetual]', val: 'LINKUSDT_Perpetual' },
     { txt: 'Bitmex [XRPUSD_Perpetual]', val: 'XRPUSD_Perpetual' },
     { txt: 'Bitmex [LTCUSD_Perpetual]', val: 'LTCUSD_Perpetual' },
     { txt: 'Bitmex [BCHUSD_Perpetual]', val: 'BCHUSD_Perpetual' },
-    { txt: 'Bitmex [XBTUSD_Quarter]', val: 'XBTUSD_Quarter' },
+    { txt: 'Bitmex [BTCUSD_Quarter]', val: 'XBTUSD_Quarter' },
     { txt: 'Bitmex [ETHUSD_Quarter]', val: 'ETHUSD_Quarter' },
-    { txt: 'Bitmex [XBTUSD_BiQuarter]', val: 'XBTUSD_BiQuarter' },
+    { txt: 'Bitmex [BTCUSD_BiQuarter]', val: 'XBTUSD_BiQuarter' },
+    { txt: 'Okex [BTCUSD_Perpetual]', val: 'BTC_Swap' },
+    { txt: 'Okex [ETHUSD_Perpetual]', val: 'ETH_Swap' },
+    { txt: 'Okex [LINKUSD_Perpetual]', val: 'LINK_Swap' },
+    { txt: 'Okex [XRPUSD_Perpetual]', val: 'XRP_Swap' },
+    { txt: 'Okex [LTCUSD_Perpetual]', val: 'LTC_Swap' },
+    { txt: 'Okex [BCHUSD_Perpetual]', val: 'BCH_Swap' },
     { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
-    { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
     { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
+    { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
     { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' },
 ]
-//Okex [ETHUSD_ThisWeek]
-// Okex [ETHUSD_NextWeek]
-// Okex [ETHUSD_Swap]
-// Okex [BTCUSD_ThisWeek]
-// Okex [BTCUSD_NextWeek]
-// Okex [BTCUSD_Quarter]
-// Okex [BTC_Swap]
+
 const rightContractTypes = [
-    { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
-    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' },
-    { txt: 'Okex [ETHUSD_Quarter]', val: 'ETH_Quarter' },
+    { txt: 'Okex [BTCUSD_Perpetual]', val: 'BTC_Swap' },
     { txt: 'Okex [ETHUSD_Perpetual]', val: 'ETH_Swap' },
+    { txt: 'Okex [LINKUSD_Perpetual]', val: 'LINK_Swap' },
+    { txt: 'Okex [XRPUSD_Perpetual]', val: 'XRP_Swap' },
+    { txt: 'Okex [LTCUSD_Perpetual]', val: 'LTC_Swap' },
+    { txt: 'Okex [BCHUSD_Perpetual]', val: 'BCH_Swap' },
     { txt: 'Okex [BTCUSD_ThisWeek]', val: 'BTC_ThisWeek' },
+    { txt: 'Okex [ETHUSD_ThisWeek]', val: 'ETH_ThisWeek' },
     { txt: 'Okex [BTCUSD_NextWeek]', val: 'BTC_NextWeek' },
+    { txt: 'Okex [ETHUSD_NextWeek]', val: 'ETH_NextWeek' },
     { txt: 'Okex [BTCUSD_Quarter]', val: 'BTC_Quarter' },
+    { txt: 'Okex [ETHUSD_Quarter]', val: 'ETH_Quarter' },
     { txt: 'Okex [BTCUSD_BiQuarter]', val: 'BTC_BiQuarter' },
-    { txt: 'Okex [BTCUSD_Perpetual]', val: 'BTC_Swap' }
 ]
 
 
@@ -1155,6 +1159,9 @@ function getOkexName(allS, ct) {
     // "BTC_Swap": "SWAP",
     // "BTC_BiQuarter": "BTC0925",
     // "ETH_Quarter": "ETH0626"
+    // "LINK_Swap": ...
+    console.log('fromDB=' + ct)
+    console.log(allS.okexContractNames[ct])
     const name = allS.okexContractNames[ct]
     if (name !== 'SWAP') {
         return name.slice(0, 3) + 'USD' + name.substring(3)
