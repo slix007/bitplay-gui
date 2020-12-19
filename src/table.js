@@ -270,6 +270,7 @@ let showMainInfo = function (baseUrl) {
             const quAvg = marketAccount.quAvg
             const ethBtcBid1 = marketAccount.ethBtcBid1
             mobxStore.secondMarketAccount = marketAccount
+          const ppb_str = marketAccount.plPosBest ? ', pl_pos_best_' + marketAccount.plPosBest : ''
             if (ethBtcBid1 === null) {
                 elBalance.innerHTML = 'Balance: w' + marketAccount.wallet + '_' + Utils.toUsd(marketAccount.wallet,
                   quAvg)
@@ -283,7 +284,7 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> e_best_' + marketAccount.eBest + '_' + Utils.toUsd(marketAccount.eBest, quAvg)
                   + ',<br> e_avg_' + marketAccount.eAvg + '_' + Utils.toUsd(marketAccount.eAvg, quAvg)
                   + ',<br> entry_price ' + marketAccount.entryPrice
-                  + ',<br> pl_pos_' + marketAccount.plPos
+                  + ',<br> pl_pos_' + marketAccount.plPos + ppb_str
                   + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
                   + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                   + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
@@ -313,7 +314,7 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> e_best_' + marketAccount.eBest + '_' + eBestBtc + '_' + eBestUsd
                   + ',<br> e_avg_' + marketAccount.eAvg + '_' + eAvgBtc + '_' + eAvgUsd
                   + ',<br> entry_price ' + marketAccount.entryPrice
-                  + ',<br> pl_pos_' + marketAccount.plPos
+                  + ',<br> pl_pos_' + marketAccount.plPos + ppb_str
                   + ',<br> u' + marketAccount.upl + '_' + uBtc + '_' + uUsd
                   + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
                   + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
