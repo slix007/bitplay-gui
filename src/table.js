@@ -288,6 +288,8 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> u' + marketAccount.upl + '_' + Utils.toUsd(marketAccount.upl, quAvg)
                   + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                   + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
+
+                mobxStore.balanceInfo.rightEmark = 'e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
             } else {
                 const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1)
                 const wUsd = Utils.toUsd(wBtc, quAvg)
@@ -319,6 +321,8 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
                   + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
 
+                mobxStore.balanceInfo.rightEmark = 'e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
+
             }
 
         } else {
@@ -345,6 +349,8 @@ let showMainInfo = function (baseUrl) {
               + ',<br> u' + btmAccount.upl + '_' + Utils.toUsd(btmAccount.upl, quAvg)
               + ',<br> m' + btmAccount.margin + '_' + Utils.toUsd(btmAccount.margin, quAvg)
               + ',<br> a' + btmAccount.available + '_' + Utils.toUsd(btmAccount.available, quAvg)
+
+            mobxStore.balanceInfo.leftEmark = 'e_mark_' + btmAccount.eMark + '_' + Utils.toUsd(btmAccount.eMark, quAvg)
         } else {
             elBalance.innerHTML = 'Balance: btc=' + btmAccount.btc
               + ', usd=' + btmAccount.usd
@@ -474,6 +480,7 @@ let showMainInfo = function (baseUrl) {
             showBalanceOkex(marketAccount, oBalance)
         })
         fetch('/market/left/liq-info', function (marketAccount) {
+            mobxStore.balanceInfo.leftDql = marketAccount.dqlVal ? marketAccount.dqlVal : 'n/a'
             let liqInfo = document.getElementById('left-liq-info')
             if (allSettings.leftIsBtm && allSettings.eth) {
                 liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
@@ -488,6 +495,7 @@ let showMainInfo = function (baseUrl) {
             }
         })
         fetch('/market/right/liq-info', function (marketAccount) {
+            mobxStore.balanceInfo.rightDql = marketAccount.dqlVal ? marketAccount.dqlVal : 'n/a'
             let liqInfo = document.getElementById('right-liq-info')
             let labelHtml = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
               + '<br>R_' + marketAccount.mmDql

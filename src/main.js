@@ -23,6 +23,7 @@ let cumParams = require('./components/cum-params');
 let closeAllPos = require('./components/close-all-pos');
 let createRecoveryNtUsd = require('./components/recovery-nt-usd');
 let marketStates = require('./components/comp/market-states');
+let balanceInfo = require('./components/comp/balance-info')
 
 // let portNumber = "4031";
 
@@ -142,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
     marketStates.createDqlState()
     marketStates.createSeBestState()
+    balanceInfo.showCloseAllPosExtraInfo()
 
     registerRoutes(e);
 

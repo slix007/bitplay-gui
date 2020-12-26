@@ -218,6 +218,12 @@ export const mobxStore = observable({
         autoAddBorderJson: {}
     },
 
+    balanceInfo: {
+        leftDql: '',
+        rightDql: '',
+        leftEmark: '',
+        rightEmark: '',
+    }
 });
 
 export const placingOrderObj = observable({

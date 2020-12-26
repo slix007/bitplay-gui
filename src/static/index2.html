@@ -81,7 +81,6 @@
                             liq info ...
                         </span>
                         <button id="left-reset-liq-info">reset</button>
-                        <span id="bitmex-close-all-pos"></span>
                     </div>
                     <!--<button name="sendToSocket">send to socket</button>-->
                     <!--<button name="fetchbitmexOrderBook">fetch bitmex order book(5)</button>-->
@@ -99,7 +98,7 @@
                     <div id="bitmex-future-index3"></div>
 
 
-<!--                 left okex   -->
+                    <!--                 left okex   -->
                     <div id="left-before-orderbook"></div>
 
 
@@ -191,7 +190,6 @@
                         <span id="right-liq-info">liq info ...</span>
                         <button id="right-reset-liq-info">reset</button>
                         <span id="okex_e_best_e_last"></span>
-                        <span id="okex-close-all-pos"></span>
                     </div>
 
                     <div id="right-open-orders" style="border:1px solid black; overflow-y: scroll;"></div>
@@ -230,6 +228,19 @@
 
             </div>
 
+        </div>
+
+        <div id="STOCK_PAIR_AFTER" style="border: solid; display: flex;">
+            <div id="STOCK_PAIR_RELATIVE_AFTER" style="border: solid; float: top;">
+                <div style="width: 875px; float: left; padding-right: 2px; padding-left: 5px; border:1px solid gray; ">
+                    <div><span id="bitmex-close-all-pos"></span></div>
+                    <div id="bitmex-close-all-pos-extra-info"></div>
+                </div>
+                <div style="width: 875px; float: left; padding-right: 2px; padding-left: 5px; border:1px solid gray; ">
+                    <div><span id="okex-close-all-pos"></span></div>
+                    <div id="okex-close-all-pos-extra-info"></div>
+                </div>
+            </div>
         </div>
         <br>
 
