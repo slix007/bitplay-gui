@@ -535,14 +535,25 @@ function createSysOverloadAttemptDelay(mainContainer, obj, SETTINGS_URL) {
 function createXRateLimitBtm (mainCont) {
     const $cont = $('<div>').appendTo(mainCont)
     const label = $('<span>').appendTo($cont)
+    const label1s = $('<div>').appendTo($cont)
     mobx.autorun(r => {
         const lim = mobxStore.allMon.xrateLimitBtm
         const t = mobxStore.allMon.xrateLimitBtmUpdated
-        label.text(`xRateLimit=${lim}; timestamp:${t}`)
+        const resetAt = mobxStore.allMon.xrateLimitBtmResetAt
+        const lim1s = mobxStore.allMon.xrateLimitBtm1s
+        const t1s = mobxStore.allMon.xrateLimitBtmUpdated1s
+        const resetAt1s = mobxStore.allMon.xrateLimitBtmResetAt1s
+        label.text(`x-ratelimit-remaining=${lim}; lastUpdate:${t}; resetAt:${resetAt}`)
         if (lim < 5) {
             label.css('color', 'red')
         } else {
             label.css('color', 'black')
+        }
+        label1s.text(`x-ratelimit-remaining-1s=${lim1s}; lastUpdate:${t1s}; resetAt:${resetAt1s}`)
+        if (lim1s < 5) {
+            label1s.css('color', 'red')
+        } else {
+            label1s.css('color', 'black')
         }
     })
 }

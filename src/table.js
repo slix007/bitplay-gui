@@ -442,6 +442,10 @@ let showMainInfo = function (baseUrl) {
             pTicker.innerHTML = resultJson.allHtml
             mobxStore.allMon.xrateLimitBtm = resultJson.xrateLimitBtm
             mobxStore.allMon.xrateLimitBtmUpdated = resultJson.xrateLimitBtmUpdated
+            mobxStore.allMon.xrateLimitBtmResetAt = resultJson.xrateLimitBtmResetAt
+            mobxStore.allMon.xrateLimitBtm1s = resultJson.xrateLimitBtm1s
+            mobxStore.allMon.xrateLimitBtmUpdated1s = resultJson.xrateLimitBtmUpdated1s
+            mobxStore.allMon.xrateLimitBtmResetAt1s = resultJson.xrateLimitBtmResetAt1s
             let bitmexReconnectCount = document.getElementById('bitmex-reconnect-count')
             bitmexReconnectCount.innerHTML = resultJson.bitmexReconnectCount
             monVar.showMonMoving(baseUrl, resultJson)
