@@ -113,12 +113,18 @@ exports.enableChildren = function enableChildren(obj) {
 exports.setDocumentTitle = function documentTitle(modName) {
     const modPart = modName !== undefined ? modName + '-' : '';
     let hostPart;
+    let hName = ''
     if (process.env.backendUrl === 'use-window.location.hostname') {
-        const hName = window.location.hostname;
-        hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+        hName = window.location.hostname;
     } else {
-        const hName = process.env.backendUrl.slice(7, 13); // http://658-.....
-        hostPart = hName.startsWith('local') ? 'local' : hName.slice(0, 3);
+        hName = process.env.backendUrl.slice(7, 13); // http://658-.....
+    }
+    if (hName.startsWith('local')) {
+        hostPart = 'local'
+    } else if (hName.split('-').length > 1) {
+        hostPart = hName.split('-')[0]
+    } else {
+        hostPart = hName.slice(0, 3)
     }
     document.title = modPart + hostPart;
 };
