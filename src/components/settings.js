@@ -542,14 +542,13 @@ function createXRateLimitBtm (mainCont) {
         const resetAt = mobxStore.allMon.xrateLimitBtmResetAt
         const lim1s = mobxStore.allMon.xrateLimitBtm1s
         const t1s = mobxStore.allMon.xrateLimitBtmUpdated1s
-        const resetAt1s = mobxStore.allMon.xrateLimitBtmResetAt1s
         label.text(`x-ratelimit-remaining=${lim}; lastUpdate:${t}; resetAt:${resetAt}`)
         if (lim < 5) {
             label.css('color', 'red')
         } else {
             label.css('color', 'black')
         }
-        label1s.text(`x-ratelimit-remaining-1s=${lim1s}; lastUpdate:${t1s}; resetAt:${resetAt1s}`)
+        label1s.text(`x-ratelimit-remaining-1s=${lim1s}; lastUpdate:${t1s}`)
         if (lim1s < 5) {
             label1s.css('color', 'red')
         } else {
