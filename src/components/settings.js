@@ -794,7 +794,11 @@ function createComParam(tbody, requestCreator, valExtractor, label_rate, best_sa
     mobx.autorun(r => {
         const realRate = valExtractor(allSettings);
         const best_sam = mobxStore[best_sam_name];
-        const pts = (realRate / 100 * best_sam).toFixed(3);
+        const fractionDigits =
+                (allSettings.contractMode.left.startsWith('XRP') || allSettings.contractMode.right.startsWith('XRP'))
+                ? 4 : 3;
+
+        const pts = (realRate / 100 * best_sam).toFixed(fractionDigits);
         realVal.text(realRate);
         realValPts.text('pts = ' + pts);
         realValPts2.text(' /  ' + pts * 2);

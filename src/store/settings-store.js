@@ -90,6 +90,7 @@ export const allSettings = observable({
         period: -1
     },
     allFtpd: { left: {}, right: {} },
+    contractMode: { left: '', right: '' },
 
     okexEbestElast: false,
 
