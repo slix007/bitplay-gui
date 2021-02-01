@@ -823,16 +823,19 @@ function createComPtsSum($feeCont) {
     mobx.autorun(r => {
         // b_maker + o_maker;
         // b_taker + o_taker.
-        const left_taker_com_pts = Number((allSettings.feeSettings.leftTakerComRate / 100 * mobxStore.left_best_sam).toFixed(3));
-        const left_maker_com_pts = Number((allSettings.feeSettings.leftMakerComRate / 100 * mobxStore.left_best_sam).toFixed(3));
-        const right_taker_com_pts = Number((allSettings.feeSettings.rightTakerComRate / 100 * mobxStore.right_best_sam).toFixed(3));
-        const right_maker_com_pts = Number((allSettings.feeSettings.rightMakerComRate / 100 * mobxStore.right_best_sam).toFixed(3));
+        const fractionDigits =
+          (allSettings.contractMode.left.startsWith('XRP') || allSettings.contractMode.right.startsWith('XRP'))
+            ? 4 : 3;
+        const left_taker_com_pts = Number((allSettings.feeSettings.leftTakerComRate / 100 * mobxStore.left_best_sam).toFixed(fractionDigits));
+        const left_maker_com_pts = Number((allSettings.feeSettings.leftMakerComRate / 100 * mobxStore.left_best_sam).toFixed(fractionDigits));
+        const right_taker_com_pts = Number((allSettings.feeSettings.rightTakerComRate / 100 * mobxStore.right_best_sam).toFixed(fractionDigits));
+        const right_maker_com_pts = Number((allSettings.feeSettings.rightMakerComRate / 100 * mobxStore.right_best_sam).toFixed(fractionDigits));
         // const sumM = (Number(left_maker_com_pts) + Number(right_maker_com_pts));
-        const sumM = Number((left_maker_com_pts + right_maker_com_pts).toFixed(3));
-        const sumM2 = (sumM * 2).toFixed(3);
+        const sumM = Number((left_maker_com_pts + right_maker_com_pts).toFixed(fractionDigits));
+        const sumM2 = (sumM * 2).toFixed(fractionDigits);
         sumMaker.text('L_maker + R_maker = ' + sumM + ' / ' + sumM2);
-        const sumT = Number((left_taker_com_pts + right_taker_com_pts).toFixed(3));
-        const sumT2 = (sumT * 2).toFixed(3);
+        const sumT = Number((left_taker_com_pts + right_taker_com_pts).toFixed(fractionDigits));
+        const sumT2 = (sumT * 2).toFixed(fractionDigits);
         sumTaker.text('L_taker + R_taker = ' + sumT + ' / ' + sumT2);
     });
 
