@@ -232,14 +232,21 @@ let showArbVersion = function (baseUrl) {
     createSignalDelay($signalDelayContV, SETTINGS_URL, x => ({ settingsVolatileMode: { signalDelayMs: x } }),
       x => x.settingsVolatileMode.signalDelayMs)
 
+    function roundPrem (x) {
+        const fractionDigits =
+          (allSettings.contractMode.left.startsWith('XRP') || allSettings.contractMode.right.startsWith('XRP'))
+            ? 4 : 3;
+        return Number(x).toFixed(fractionDigits)
+    }
+
     createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'BCD_prem: ',
-      x => ({ settingsVolatileMode: { prem: { bcdPrem: Number(x).toFixed(3) } } }),
+      x => ({ settingsVolatileMode: { prem: { bcdPrem: roundPrem(x) } } }),
       x => x.settingsVolatileMode.prem.bcdPrem)
     createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'L_add_border_prem: ',
-      x => ({ settingsVolatileMode: { prem: { leftAddBorderPrem: Number(x).toFixed(3) } } }),
+      x => ({ settingsVolatileMode: { prem: { leftAddBorderPrem: roundPrem(x) } } }),
       x => x.settingsVolatileMode.prem.leftAddBorderPrem)
     createSettingsV($('<div>').appendTo($column2Cont), SETTINGS_URL, 'R_add_border_prem: ',
-      x => ({ settingsVolatileMode: { prem: { rightAddBorderPrem: Number(x).toFixed(3) } } }),
+      x => ({ settingsVolatileMode: { prem: { rightAddBorderPrem: roundPrem(x) } } }),
       x => x.settingsVolatileMode.prem.rightAddBorderPrem)
 
     const $leftAddBorder = $('<div>').appendTo($column1Cont)
