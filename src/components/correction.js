@@ -46,7 +46,7 @@ let showCorr = function (baseUrl) {
 
         const mainKillpos = document.getElementById('killpos')
         // createSetParam(mainKillpos, URL, 'killpos max attempts', corrParams, 'killpos', 'maxErrorCount')
-        createSetParam(mainKillpos, URL, 'killpos max total', corrParams, 'killpos', 'maxTotalCount')
+        createSetParam(mainKillpos, URL, 'killpos max attempts', corrParams, 'killpos', 'maxErrorCount')
         // createSetParamBlockUsdPreliq(mainKillpos, URL, corrParams, 'killpos', 'preliqBlockUsd')
 
         const mainAdj = document.getElementById('pos-adj-params')
@@ -255,17 +255,22 @@ function setMonitoringCount(label, corrParams, subParam, subParamPostfix) {
     const failedCount = corrParams[subParam].failedCount;
     const currTotalCount = getCurrTotalCount(corrParams[subParam]);
     const maxTotalCount = corrParams[subParam].maxTotalCount;
-    if (currTotalCount >= maxTotalCount || currErrorCount >= maxErrorCount) {
-        label.style.color = 'red';
-    } else {
-        label.style.color = 'black';
-    }
-
     if (subParam === 'killpos') {
-        label.innerHTML = sprintf('%s: Total(success+fail / totalStarted / max): %s+%s / %s / %s',
+        if (currErrorCount >= maxErrorCount) {
+            label.style.color = 'red';
+        } else {
+            label.style.color = 'black';
+        }
+        label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted): %s+%s / %s',
           subParamPostfix ? subParam + subParamPostfix : subParam,
+          currErrorCount, maxErrorCount,
           succeedCount, failedCount, currTotalCount, maxTotalCount);
     } else {
+        if (currTotalCount >= maxTotalCount || currErrorCount >= maxErrorCount) {
+            label.style.color = 'red';
+        } else {
+            label.style.color = 'black';
+        }
         label.innerHTML = sprintf('%s: Attempts(curr/max): %s/%s. Total(success+fail / totalStarted / max): %s+%s / %s / %s',
           subParamPostfix ? subParam + subParamPostfix : subParam,
           currErrorCount, maxErrorCount,
