@@ -5,7 +5,7 @@ import Http from '../../http'
 import * as mobx from 'mobx'
 import { fillOkexSettlementEnding } from '../settings-okexSettlement'
 
-export { repaintStates, createDqlState, createSeBestState }
+export { repaintStates, createDqlState, createSeBestState, createRecoveryState }
 
 const btmReconId = 'btm-reconnect-state';
 const arbId = 'arb-state';
@@ -245,8 +245,8 @@ let createDqlState = function () {
 
 }
 
-let createSeBestState = function () {
-    let cont = $('#sebest-state')
+const createSeBestState = function () {
+    const cont = $('#sebest-state')
     $('<span>').text('S_e_best: ').css('margin-left', '30px').appendTo(cont)
     const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(cont)
 
@@ -272,6 +272,40 @@ let createSeBestState = function () {
         }
         if (stateValue === 'LOWER') {
             stateVar.css('color', 'red')
+            resetBtn.prop('disabled', false)
+        }
+    });
+
+}
+
+const createRecoveryState = function () {
+    // "Recovery_nt_usd" "IN_PROGRESS/OFF", [reset]
+    const cont = $('#sebest-state')
+    $('<span>').text('Recovery_nt_usd: ').css('margin-left', '30px').appendTo(cont)
+    const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(cont)
+
+    const resetBtn = $('<button>').text('reset').appendTo(cont)
+    const resetRes = $('<span>').appendTo(cont)
+    resetBtn.click(() => {
+        resetBtn.prop('disabled', true)
+        Http.httpAsyncPost(allSettings.BASE_URL + '/market/reset-recovery-state', '',
+          json => {
+              resetBtn.prop('disabled', false)
+              console.log(json)
+              const res = JSON.parse(json)
+              resetRes.text(res.result)
+          })
+    })
+
+    mobx.autorun(r => {
+        const stateValue = mobxStore.marketStates.recoveryStatus
+        stateVar.text(stateValue)
+        if (stateValue === 'OFF') {
+            stateVar.css('color', 'green')
+            resetBtn.prop('disabled', true)
+        }
+        if (stateValue === 'IN_PROGRESS') {
+            stateVar.css('color', 'orange')
             resetBtn.prop('disabled', false)
         }
     });

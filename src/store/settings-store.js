@@ -218,7 +218,9 @@ export const mobxStore = observable({
         rightFtpdJson: {},
         twoMarketsIndexDiff: '',
         lt: {}, rt: {},
-        autoAddBorderJson: {}
+        autoAddBorderJson: {},
+        sebestStatus: 'undefined',
+        recoveryStatus: 'undefined'
     },
 
     balanceInfo: {

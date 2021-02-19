@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     createRecoveryNtUsd.createRecoveryNtUsd(baseUrlWithPort)
     marketStates.createDqlState()
     marketStates.createSeBestState()
+    marketStates.createRecoveryState()
     balanceInfo.showCloseAllPosExtraInfo()
 
     registerRoutes(e);
