@@ -66,7 +66,7 @@ const afterLoginFunc = function (isAuthorized) {
                 // $('#right-contract-usd').text(sprintf('(1 contract = $%s)', rightCt.startsWith('BTC') ? '100' : '10'))
 
                 tableVar.showMainInfo(baseUrlWithPort);
-                settingsVar.showArbVersion(baseUrlWithPort);
+                settingsVar.fillAndShowMainSettings(baseUrlWithPort);
                 bordersVar.showBordersV2(baseUrlWithPort);
                 swapVar.showSwapV2(baseUrlWithPort);
                 orderActionVar.showOrderActions(baseUrlWithPort, parsedResp.eth);

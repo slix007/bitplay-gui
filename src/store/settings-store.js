@@ -91,6 +91,7 @@ export const allSettings = observable({
     },
     allFtpd: { left: {}, right: {} },
     contractMode: { left: '', right: '' },
+    contractModeCurrent: { modeScale: 3 },
 
     okexEbestElast: false,
 
@@ -154,6 +155,7 @@ export const isActiveV = function (field) {
 export const mobxStore = observable({
     cm: 100,
     isEth: false,
+    modeScale: 3,
     baseUrl: '',
     // bitmex swap params
     //bxbtBal: 0,
@@ -171,10 +173,10 @@ export const mobxStore = observable({
         return this.isEth ? 3 : 2;
     },
     get left_best_sam() {
-        return ((this.b_ask_1 + this.b_bid_1) / 2).toFixed(3);
+        return ((this.b_ask_1 + this.b_bid_1) / 2).toFixed(this.modeScale);
     },
     get right_best_sam() {
-        return ((this.o_ask_1 + this.o_bid_1) / 2).toFixed(3);
+        return ((this.o_ask_1 + this.o_bid_1) / 2).toFixed(this.modeScale);
     },
 
     arbMod: {},

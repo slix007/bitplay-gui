@@ -22,7 +22,7 @@ const {allSettings, mobxStore, setAllSettings, setAllSettingsRaw, isActive, isAc
 const enableRestart = require('../components/enable-restart');
 const obTimestamps = require('../components/settings-ob-timestamps');
 
-export {showArbVersion, updateAllSettings, createSettingsInput, createCheckboxV, createSettingsV};
+export {fillAndShowMainSettings, updateAllSettings, createSettingsInput, createCheckboxV, createSettingsV};
 
 let updateAllSettings = function () {
     Http.httpAsyncGet(allSettings.SETTINGS_URL, function (rawData) {
@@ -31,7 +31,7 @@ let updateAllSettings = function () {
     });
 };
 
-let showArbVersion = function (baseUrl) {
+let fillAndShowMainSettings = function (baseUrl) {
     const SETTINGS_URL = baseUrl + '/settings/all';
     const TOGGLE_STOP_MOVING_URL = baseUrl + '/settings/toggle-stop-moving';
     const SETTINGS_ADMIN_URL = baseUrl + '/settings/all-admin';
@@ -41,6 +41,7 @@ let showArbVersion = function (baseUrl) {
         setAllSettings(settingsData, SETTINGS_URL)
         enableRestart.showRestartEnable(baseUrl)
         obTimestamps.showSettingsObTimestamps(baseUrl)
+        mobxStore.modeScale = allSettings.contractModeCurrent.modeScale
 
         // Arb version
         let container = document.getElementById('select-arb-version')

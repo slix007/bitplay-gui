@@ -43,6 +43,23 @@ let fillComponents = function (futureIndex, baseUrl) {
     fillBitmexFunding(futureIndex);
 };
 
+function maxScaleOf (leftNumber, rightNumber) {
+    const getScaleFactor = number => {
+        const n = String(number)
+        if (n.length > 0) {
+            const split = n.split('.')
+            if (split.length > 1) {
+                return split[1].length
+            }
+        }
+        return 2
+    }
+
+    const sf1 = getScaleFactor(leftNumber)
+    const sf2 = getScaleFactor(rightNumber)
+    return sf1 > sf2 ? sf1 : sf2
+}
+
 function createIndexDiff() {
     // indexDiff
     const $cont = $('#index-best-sam');
@@ -57,12 +74,13 @@ function createIndexDiff() {
         // right_best_sam = (o_ask[1] + o_bid[1]) / 2;
         const left_best_sam = mobxStore.left_best_sam;
         const right_best_sam = mobxStore.right_best_sam;
-
-        const ind_b = (left_best_sam - mobxStore.futureIndex.b_index);
-        const ind_o = right_best_sam - mobxStore.futureIndex.o_index;
-        b_sam.text(ind_b.toFixed(2))
+        const ind_b = (left_best_sam - mobxStore.futureIndex.b_index)
+                .toFixed(maxScaleOf(left_best_sam, mobxStore.futureIndex.b_index))
+        const ind_o = (right_best_sam - mobxStore.futureIndex.o_index)
+                .toFixed(maxScaleOf(right_best_sam, mobxStore.futureIndex.o_index))
+        b_sam.text(ind_b)
         .prop('title', 'left_best_sam - left_index\n' + sprintf('%s - %s', left_best_sam, mobxStore.futureIndex.b_index));
-        o_sam.text(ind_o.toFixed(2))
+        o_sam.text(ind_o)
         .prop('title', 'right_best_sam - right_index\n' + sprintf('%s - %s', right_best_sam, mobxStore.futureIndex.o_index));
     });
 }
