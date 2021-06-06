@@ -8,9 +8,10 @@ exports.toUsd = function(btc, quAvg) {
 };
 
 exports.btmUsdToContPure = function (usd, isEth, cm) {
+    // const cv = 100 / cm;
     let num = isEth
             ? (usd * cm / 10)
-            : (usd);
+            : (usd * cm / 100);
     return Number(num).toFixed(0);
 };
 
@@ -24,9 +25,10 @@ exports.okUsdToCont = okUsdToCont;
 
 exports.btmUsdToCont = function (usd, isEth, cm) {
     const okCont = okUsdToCont(usd, isEth);
+    const cv = 100 / cm;
     let num = isEth
             ? (okCont * cm)
-            : (okCont * 100);
+            : (okCont * 100) / cv;
     return Number(num).toFixed(0);
 };
 

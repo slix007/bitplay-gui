@@ -70,7 +70,7 @@ function createOrderActions(container, labelName, idName, ORDER_URL, toolName, C
         // console.log(placingOrderObj[idName]);
         if (placingOrderObj[idName]) {
             label.html(placingOrderObj[idName].amountContLabel);
-            label.prop('title', 'cm=' + placingOrderObj.cm);
+            label.prop('title', 'cm=' + placingOrderObj.cm + ', mobxStore.cm=' + mobxStore.cm);
         }
     });
 

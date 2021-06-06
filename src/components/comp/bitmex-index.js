@@ -189,16 +189,16 @@ function createDelivery() {
 
 function countFCostUsd(mobxStore, fRate, pos_bitmex_cont) {
     let fcost_USD;
+    const cm = mobxStore.cm;
     if (mobxStore.isEth) {
 // для ETHUSD (m21, m22): fcost_USD= -(fRate /100 * eth_mark_price * 0.000001 * .BXBT_price * pos_bitmex_cont);
 // Упрощенная формула для ETH: fcost_USD = -(fRate /100 * (10 / cm * pos_bitmex));
         // let eth_mark_price = ???
         // let BXBT_price = mobxStore.bxbtBal;
-        let cm = mobxStore.cm;
         fcost_USD = (-(fRate / 100 * (10 / cm * pos_bitmex_cont))).toFixed(2);
     } else {
 // для XBTUSD (m10, m11, m20): fcost_USD = -(fRate /100 * pos_bitmex_cont);
-        fcost_USD = (-(fRate / 100 * pos_bitmex_cont)).toFixed(2);
+        fcost_USD = (-(fRate / 100 * (100 / cm * pos_bitmex_cont))).toFixed(2);
     }
     return fcost_USD;
 }
