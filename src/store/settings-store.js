@@ -256,7 +256,12 @@ export const placingOrderObj = observable({
         isUsd: true,
         amount: 0,
         get amountCont() {
-            let num = utils.btmUsdToContPure(this.amount, false, 1) // TODO cm=100 for now, cm=1 after 8 June 2021
+            let num
+            if (this.isUsd) {
+                num = utils.btmUsdToContPure(this.amount, false, 100)
+            } else {
+                num = this.amount;
+            }
             return Number(num).toFixed(0)
         },
         get amountContLabel() {

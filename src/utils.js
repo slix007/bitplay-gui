@@ -7,12 +7,18 @@ exports.toUsd = function(btc, quAvg) {
     return (btc * quAvg).toFixed(2);
 };
 
+exports.scaleBitmexDownByLotSize = function (value) {
+    const lotSize = 100;
+    const reminder = Number(value/lotSize).toFixed(0)
+    return Number(reminder * lotSize).toFixed(0)
+}
+
 exports.btmUsdToContPure = function (usd, isEth, cm) {
     // const cv = 100 / cm;
     let num = isEth
             ? (usd * cm / 10)
-            : (usd * cm / 100);
-    return Number(num).toFixed(0);
+            : this.scaleBitmexDownByLotSize((usd * cm / 100));
+    return Number(num).toFixed(0)
 };
 
 const okUsdToCont = function (usd, isEth) {
@@ -28,8 +34,8 @@ exports.btmUsdToCont = function (usd, isEth, cm) {
     const cv = 100 / cm;
     let num = isEth
             ? (okCont * cm)
-            : (okCont * 100) / cv;
-    return Number(num).toFixed(0);
+            : this.scaleBitmexDownByLotSize((okCont * 100) / cv);
+    return Number(num).toFixed(0)
 };
 
 exports.ethToBtc = function(eth, qu) {
