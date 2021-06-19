@@ -170,6 +170,7 @@ let fillAndShowMainSettings = function (baseUrl) {
             createSysOverloadTime(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
             createSysOverloadAttemptDelay(overloadContainer, settingsData.bitmexSysOverloadArgs, SETTINGS_URL)
             createXRateLimitBtm(overloadContainer)
+            createBtmAvgPriceUpdateSettings(overloadContainer)
 
             // Bitmex price workaround (for testing)
             createBitmexSpecialPrice(settingsData.bitmexPrice, SETTINGS_URL);
@@ -565,9 +566,46 @@ function createXRateLimitBtm (mainCont) {
     })
 }
 
-function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor, sameCont) {
+function createBtmAvgPriceUpdateSettings (mainCont) {
+    const $cont = $('<div>').appendTo(mainCont)
+
+    createSettingsInput($cont, allSettings.SETTINGS_URL, 'AVG price update attempts',
+      x => ({ btmAvgPriceUpdateSettings: { updateAttempts: x } }), x => (x.btmAvgPriceUpdateSettings.updateAttempts),
+      false, 'Количество попыток обновления AVG price по вертикали.')
+    createSettingsInput($cont, allSettings.SETTINGS_URL, 'AVG price update delay, ms',
+      x => ({ btmAvgPriceUpdateSettings: { updateDelayMs: x } }), x => (x.btmAvgPriceUpdateSettings.updateDelayMs))
+
+    // 'checkbox Stop AVG price update'
+    const stopUpdCheckbox = $('<input>').css('margin-left', '15px').attr('type', 'checkbox').appendTo($cont);
+    const stopUpdLb = $('<span>').text('AVG price update ...').appendTo($cont);
+    mobx.autorun(function () {
+        if (allSettings.extraFlags.includes('STOP_UPDATE_AVG_PRICE')) {
+            stopUpdLb.text('AVG price update Stopped').css('color', 'red')
+            stopUpdCheckbox.prop('checked', true)
+        } else {
+            stopUpdLb.text('AVG price update enabled').css('color', 'black')
+            stopUpdCheckbox.prop('checked', false);
+        }
+    });
+  const TOGGLE_STOP_UPD_URL = allSettings.BASE_URL + '/settings/toggle-stop-update-avg-price';
+  stopUpdCheckbox.click(() => {
+        stopUpdCheckbox.prop('disabled', true);
+        Http.httpAsyncPost(TOGGLE_STOP_UPD_URL, "",
+          json => {
+              stopUpdCheckbox.prop('disabled', false);
+              const res = setAllSettingsRaw(json);
+              // alert('New value: ' + res.manageType);
+          })
+    });
+
+}
+
+function createSettingsInput(mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor, sameCont, titleHint) {
     const container = sameCont ? mainCont : $('<div>').appendTo(mainCont);
     const lb = $('<span>').text(labelName).appendTo(container);
+    if (titleHint) {
+        lb.prop('title', titleHint)
+    }
     const edit = $('<input>').width('40px').appendTo(container);
     const updateBtn = $('<button>').text('set').appendTo(container);
     const realValue = $('<span>').appendTo(container);
