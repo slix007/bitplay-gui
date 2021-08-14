@@ -100,9 +100,9 @@ function okexCloseAllPos(baseUrl) {
             btn.prop('disabled', false);
 
             let posLong = secondMarketAccount.positionStr.split('-')[0].substring(1);
-            const posShort = secondMarketAccount.positionStr.split('-')[1];
+            // const posShort = secondMarketAccount.positionStr.split('-')[1];
             const fullAvailable = posLong === secondMarketAccount.longAvailToClose
-                    && posShort === secondMarketAccount.shortAvailToClose;
+                    // && posShort === secondMarketAccount.shortAvailToClose;
 
             if (fullAvailable) {
                 btn.addClass('redBtn');
