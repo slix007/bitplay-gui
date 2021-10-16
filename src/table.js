@@ -1,5 +1,6 @@
 import { decorate_b_border, decorate_o_border } from './components/settings-utils'
 import { updateCumParams } from './components/cum-params'
+import { initDQLSettingsIfNeeded } from './components/settings'
 
 var Handsontable = require('handsontable')
 var $ = require('jquery')
@@ -265,7 +266,7 @@ let showMainInfo = function (baseUrl) {
         return `<span style="${styleStr}" title="${titleStr}">${rawDataStr}</span>`
     }
 
-    function showBalanceOkex (marketAccount, elBalance) {
+    function showBalanceOkex (marketAccount, elBalance, isLeftAccount) {
         if (marketAccount.btc === null) {
             const quAvg = marketAccount.quAvg
             const ethBtcBid1 = marketAccount.ethBtcBid1
@@ -289,7 +290,12 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> m' + marketAccount.margin + '_' + Utils.toUsd(marketAccount.margin, quAvg)
                   + ',<br> a' + marketAccount.available + '_' + Utils.toUsd(marketAccount.available, quAvg)
 
-                mobxStore.balanceInfo.rightEmark = 'e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                const eMarkString = 'e_mark_' + marketAccount.eLast + '_' + Utils.toUsd(marketAccount.eLast, quAvg)
+                if (isLeftAccount) {
+                    mobxStore.balanceInfo.leftEmark = eMarkString
+                } else {
+                    mobxStore.balanceInfo.rightEmark = eMarkString
+                }
             } else {
                 const wBtc = Utils.ethToBtc(marketAccount.wallet, ethBtcBid1)
                 const wUsd = Utils.toUsd(wBtc, quAvg)
@@ -321,7 +327,12 @@ let showMainInfo = function (baseUrl) {
                   + ',<br> m' + marketAccount.margin + '_' + mBtc + '_' + mUsd
                   + ',<br> a' + marketAccount.available + '_' + aBtc + '_' + aUsd
 
-                mobxStore.balanceInfo.rightEmark = 'e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
+                const eMarkString = 'e_mark_' + marketAccount.eLast + '_' + eMarkBtc + '_' + eMarkUsd
+                if (isLeftAccount) {
+                    mobxStore.balanceInfo.leftEmark = eMarkString
+                } else {
+                    mobxStore.balanceInfo.rightEmark = eMarkString
+                }
 
             }
 
@@ -475,40 +486,54 @@ let showMainInfo = function (baseUrl) {
             if (allSettings.marketList.left === 'bitmex') {
                 showBalanceBitmex(leftAccount, elBalance)
             } else {
-                showBalanceOkex(leftAccount, elBalance)
+                showBalanceOkex(leftAccount, elBalance, true)
             }
         })
 
         fetch('/market/right/account', function (marketAccount) {
             let oBalance = document.getElementById('right-balance')
-            showBalanceOkex(marketAccount, oBalance)
+            showBalanceOkex(marketAccount, oBalance, false)
         })
         fetch('/market/left/liq-info', function (marketAccount) {
             mobxStore.balanceInfo.leftDql = marketAccount.dqlVal ? marketAccount.dqlVal : 'n/a'
+            mobxStore.balanceInfo.areBothOkex = marketAccount.areBothOkex
+            initDQLSettingsIfNeeded()
             let liqInfo = document.getElementById('left-liq-info')
-            if (allSettings.leftIsBtm && allSettings.eth) {
-                liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-                  + '<br>L_' + marketAccount.mmDql
-                  + '<br>L_' + marketAccount.mmDmrl
-                  + '<br>' + marketAccount.dqlExtra
-                  + '<br>L_' + marketAccount.mmDqlExtra
+            if (mobxStore.balanceInfo.areBothOkex) {
+                    liqInfo.innerHTML = sprintf('%s', marketAccount.dmrl)
+                      + '<br>L_' + marketAccount.mmDmrl
             } else {
-                liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
-                  + '<br>L_' + marketAccount.mmDql
-                  + '<br>L_' + marketAccount.mmDmrl
+                if (allSettings.leftIsBtm && allSettings.eth) {
+                    liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
+                      + '<br>L_' + marketAccount.mmDql
+                      + '<br>L_' + marketAccount.mmDmrl
+                      + '<br>' + marketAccount.dqlExtra
+                      + '<br>L_' + marketAccount.mmDqlExtra
+                } else {
+                    liqInfo.innerHTML = sprintf('%s %s', marketAccount.dql, marketAccount.dmrl)
+                      + '<br>L_' + marketAccount.mmDql
+                      + '<br>L_' + marketAccount.mmDmrl
+                }
             }
         })
         fetch('/market/right/liq-info', function (marketAccount) {
             mobxStore.balanceInfo.rightDql = marketAccount.dqlVal ? marketAccount.dqlVal : 'n/a'
+            mobxStore.balanceInfo.areBothOkex = marketAccount.areBothOkex
+            initDQLSettingsIfNeeded()
             let liqInfo = document.getElementById('right-liq-info')
-            let labelHtml = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
-              + '<br>R_' + marketAccount.mmDql
-              + '<br>R_' + marketAccount.mmDmrl
-            if (allSettings.leftIsBtm && allSettings.eth) {
-                labelHtml += '<br>'
-                labelHtml += '<br>'
+            if (mobxStore.balanceInfo.areBothOkex) {
+                liqInfo.innerHTML = sprintf('%s', marketAccount.dmrl)
+                  + '<br>R_' + marketAccount.mmDmrl
+            } else {
+                let labelHtml = sprintf('%s %s;', marketAccount.dql, marketAccount.dmrl)
+                  + '<br>R_' + marketAccount.mmDql
+                  + '<br>R_' + marketAccount.mmDmrl
+                if (allSettings.leftIsBtm && allSettings.eth) {
+                    labelHtml += '<br>'
+                    labelHtml += '<br>'
+                }
+                liqInfo.innerHTML = labelHtml
             }
-            liqInfo.innerHTML = labelHtml
         })
         fetch('/delta-params', function (result) {
             let b = document.getElementById('L_delta_minmax')

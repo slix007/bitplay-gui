@@ -228,6 +228,8 @@ export const mobxStore = observable({
         rightDql: '',
         leftEmark: '',
         rightEmark: '',
+        areBothOkex: false,
+        isDefined: false,
     }
 });
 

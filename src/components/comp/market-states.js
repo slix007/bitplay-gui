@@ -215,6 +215,13 @@ function createSignalStatusBar() {
         } else {
             b_order_book_XBTUSD.text('');
         }
+        if (mobxStore.balanceInfo.areBothOkex) {
+            leftDqlOpen.text('L_dmrl_open')
+            rightDqlOpen.text('R_dmrl_open')
+        } else {
+            leftDqlOpen.text('L_dql_open')
+            rightDqlOpen.text('R_dql_open')
+        }
         showPart(o_order_book, sp.okOrderBook);
         showPart(btmMaxDelta, sp.btmMaxDelta);
         showPart(okMaxDelta, sp.okMaxDelta);
@@ -231,10 +238,14 @@ function createSignalStatusBar() {
 
 let createDqlState = function () {
     let markets = $('#dql-state')
-    $('<span>').text('Dql state: ').appendTo(markets)
+    let dqlStateLabel = $('<span>').text('Dql state: ').appendTo(markets)
     const stateVar = $('<span>').css('font-weight', 'bold').text('...').appendTo(markets)
 
     mobx.autorun(r => {
+            dqlStateLabel.text(mobxStore.balanceInfo.areBothOkex
+            ? 'Dmrl state: '
+            : 'Dql state: ')
+
         const stateValue = mobxStore.marketStates.dqlState
         stateVar.text(stateValue);
         if (stateValue === 'KILLPOS') stateVar.css('color', 'red')
