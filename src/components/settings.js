@@ -636,6 +636,24 @@ function createSettingsInput (mainCont, SETTINGS_URL, labelName, requestCreator,
   return realValue
 }
 
+function createSettingsInputDisabled (
+  mainCont, SETTINGS_URL, labelName, requestCreator, valExtractor, sameCont, titleHint) {
+  const container = sameCont ? mainCont : $('<div>').appendTo(mainCont)
+  const lb = $('<span>').text(labelName).appendTo(container)
+  if (titleHint) {
+    lb.prop('title', titleHint)
+  }
+  const edit = $('<input>').width('40px').appendTo(container)
+  const updateBtn = $('<button>').text('set').appendTo(container)
+  const realValue = $('<span>').appendTo(container)
+  Utils.disableElements(container)
+  mobx.autorun(function () {
+    const value = valExtractor(allSettings)
+    realValue.text(value)
+  })
+  return realValue
+}
+
 function createPlacingType (mainContainer, SETTINGS_URL, requestCreator, valExtractor, lb, fieldName, isMain,
   withTakerFok, settingsObj) {
   const select = $('<select>')
@@ -1558,13 +1576,23 @@ function createDqlParams (SETTINGS_URL) {
 
   const dqlParamsCont = $('#dql-params')
   const leftDqlOpenMinCont = $('<div>').appendTo(dqlParamsCont)
-  createSettingsInput(leftDqlOpenMinCont, SETTINGS_URL, `L_${dSym}_open_min`,
-    x => ({ dql: { leftDqlOpenMin: x } }),
-    x => (x.dql.leftDqlOpenMin), true)
-  $('<span>').
-  text(`(new signals only if L_${dSym} >= L_${dSym}_open_min)`).
-  addClass('spanAsHint').
-  appendTo(leftDqlOpenMinCont)
+  if (!mobxStore.balanceInfo.areBothOkex) {
+    createSettingsInput(leftDqlOpenMinCont, SETTINGS_URL, `L_${dSym}_open_min`,
+      x => ({ dql: { leftDqlOpenMin: x } }),
+      x => (x.dql.leftDqlOpenMin), true)
+    $('<span>').
+    text(`(new signals only if L_${dSym} >= L_${dSym}_open_min)`).
+    addClass('spanAsHint').
+    appendTo(leftDqlOpenMinCont)
+  } else {
+    createSettingsInputDisabled(leftDqlOpenMinCont, SETTINGS_URL, `L_${dSym}_open_min`,
+      x => ({ dql: { leftDqlOpenMin: x } }),
+      x => (x.dql.leftDqlOpenMin), true)
+    $('<span>').
+    text(`(new signals only if L_${dSym} >= L_${dSym}_open_min)`).
+    addClass('spanAsHint').
+    appendTo(leftDqlOpenMinCont)
+  }
 
   const rightDqlOpenMinCont = $('<div>').appendTo(dqlParamsCont)
   createSettingsInput(rightDqlOpenMinCont, SETTINGS_URL, `R_${dSym}_open_min`,
@@ -1576,13 +1604,23 @@ function createDqlParams (SETTINGS_URL) {
   appendTo(rightDqlOpenMinCont)
 
   const leftDqlCloseMinCont = $('<div>').appendTo(dqlParamsCont)
-  createSettingsInput(leftDqlCloseMinCont, SETTINGS_URL, `L_${dSym}_close_min`,
-    x => ({ dql: { leftDqlCloseMin: x } }),
-    x => (x.dql.leftDqlCloseMin), true)
-  $('<span>').
-  text(`(#L_preliq correction when L_${dSym} <= L_${dSym}_close_min)`).
-  addClass('spanAsHint').
-  appendTo(leftDqlCloseMinCont)
+  if (!mobxStore.balanceInfo.areBothOkex) {
+    createSettingsInput(leftDqlCloseMinCont, SETTINGS_URL, `L_${dSym}_close_min`,
+      x => ({ dql: { leftDqlCloseMin: x } }),
+      x => (x.dql.leftDqlCloseMin), true)
+    $('<span>').
+    text(`(#L_preliq correction when L_${dSym} <= L_${dSym}_close_min)`).
+    addClass('spanAsHint').
+    appendTo(leftDqlCloseMinCont)
+  } else {
+    createSettingsInputDisabled(leftDqlCloseMinCont, SETTINGS_URL, `L_${dSym}_close_min`,
+      x => ({ dql: { leftDqlCloseMin: x } }),
+      x => (x.dql.leftDqlCloseMin), true)
+    $('<span>').
+    text(`(#L_preliq correction when L_${dSym} <= L_${dSym}_close_min)`).
+    addClass('spanAsHint').
+    appendTo(leftDqlCloseMinCont)
+  }
 
   const rightDqlCloseMinCont = $('<div>').appendTo(dqlParamsCont)
   createSettingsInput(rightDqlCloseMinCont, SETTINGS_URL, `R_${dSym}_close_min`,
@@ -1613,9 +1651,15 @@ function createDqlKillPos (SETTINGS_URL) {
   const $cont = $('#dql-killpos')
 
   const btmKillpos = $('<div>').appendTo($cont)
-  createSettingsInput(btmKillpos, SETTINGS_URL, `L_${dSym}_killpos`,
-    x => ({ dql: { leftDqlKillPos: x } }),
-    x => (x.dql.leftDqlKillPos))
+  if (!mobxStore.balanceInfo.areBothOkex) {
+    createSettingsInput(btmKillpos, SETTINGS_URL, `L_${dSym}_killpos`,
+      x => ({ dql: { leftDqlKillPos: x } }),
+      x => (x.dql.leftDqlKillPos))
+  } else {
+    createSettingsInputDisabled(btmKillpos, SETTINGS_URL, `L_${dSym}_killpos`,
+      x => ({ dql: { leftDqlKillPos: x } }),
+      x => (x.dql.leftDqlKillPos))
+  }
 
   const okKillpos = $('<div>').appendTo($cont)
   createSettingsInput(okKillpos, SETTINGS_URL, `R_${dSym}_killpos`,
@@ -1663,6 +1707,6 @@ function createDqlLevel (SETTINGS_URL) {
         // resLabel.html(res.ntUsdMultiplicityOkex);
         updateBtn.attr('disabled', false)
       }
-    );
-  });
+    )
+  })
 }
