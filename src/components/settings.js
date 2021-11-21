@@ -114,6 +114,10 @@ let fillAndShowMainSettings = function (baseUrl) {
       'L_taker_com_rate', 'left_best_sam', 'L_taker_com_')
     createComParam(tbody, x => ({ feeSettings: { leftMakerComRate: x } }), x => x.feeSettings.leftMakerComRate,
       'L_maker_com_rate', 'left_best_sam', 'L_maker_com_')
+    if (!allSettings.leftIsBtm) {
+      Utils.disableElements(tbody)
+    }
+
     createComParam(tbody, x => ({ feeSettings: { rightTakerComRate: x } }), x => x.feeSettings.rightTakerComRate,
       'R_taker_com_rate', 'right_best_sam', 'R_taker_com_')
     createComParam(tbody, x => ({ feeSettings: { rightMakerComRate: x } }), x => x.feeSettings.rightMakerComRate,
@@ -1569,8 +1573,14 @@ function createDqlParams (SETTINGS_URL) {
   const dSym = mobxStore.balanceInfo.areBothOkex ? 'DMRL' : 'DQL'
   const dqlMrLiqCont = $('#dql-mr-liq')
 
-  createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'L_mr_liq',
-    x => ({ dql: { leftMrLiq: x } }), x => (x.dql.leftMrLiq))
+  if (mobxStore.balanceInfo.areBothOkex) {
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'L_mr_liq',
+      x => ({ dql: { rightMrLiq: x } }), x => (x.dql.rightMrLiq))
+    Utils.disableElements(dqlMrLiqCont)
+  } else {
+    createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'L_mr_liq',
+      x => ({ dql: { leftMrLiq: x } }), x => (x.dql.leftMrLiq))
+  }
   createSettingsInput(dqlMrLiqCont, SETTINGS_URL, 'R_mr_liq',
     x => ({ dql: { rightMrLiq: x } }), x => (x.dql.rightMrLiq))
 

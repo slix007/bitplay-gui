@@ -8,6 +8,7 @@ let Http = require('../http')
 let sprintf = require('sprintf-js').sprintf
 const settingsStore = require('../store/settings-store')
 const { mobxStore } = require('../store/settings-store')
+let Utils = require('../utils')
 let mobx = require('mobx')
 
 let bTimestampDelayMax, oTimestampDelayMax
@@ -28,7 +29,8 @@ const showSettingsObTimestamps = function (baseUrl) {
     const $cont1 = $('<div>').appendTo($cont)
     _createSettingsParam($cont1, 'L_Acceptable_OB_Timestamp_Diff (ms): ',
       x => ({ settingsTimestamps: { l_Acceptable_OB_Timestamp_Diff_ms: x } }),
-      x => x.settingsTimestamps.l_Acceptable_OB_Timestamp_Diff_ms)
+      x => x.settingsTimestamps.l_Acceptable_OB_Timestamp_Diff_ms,
+      x => x.leftIsBtm)
     const $cont2 = $('<div>').appendTo($cont)
     _createSettingsParam($cont2, 'R_Acceptable_OB_Timestamp_Diff (ms): ',
       x => ({ settingsTimestamps: { r_Acceptable_OB_Timestamp_Diff_ms: x } }),
@@ -37,7 +39,8 @@ const showSettingsObTimestamps = function (baseUrl) {
     const $cont3 = $('<div>').appendTo($cont)
     _createSettingsParam($cont3, 'L_Acceptable_Get_OB_Delay (ms): ',
       x => ({ settingsTimestamps: { l_Acceptable_Get_OB_Delay_ms: x } }),
-      x => x.settingsTimestamps.l_Acceptable_Get_OB_Delay_ms)
+      x => x.settingsTimestamps.l_Acceptable_Get_OB_Delay_ms,
+      x => x.leftIsBtm)
     const $cont4 = $('<div>').appendTo($cont)
     _createSettingsParam($cont4, 'R_Acceptable_Get_OB_Delay (ms): ',
       x => ({ settingsTimestamps: { r_Acceptable_Get_OB_Delay_ms: x } }),
