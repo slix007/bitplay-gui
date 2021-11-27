@@ -63,12 +63,8 @@ remotes {
 def remoteInstallDir = '/var/www/bitplay-gui'
 def remoteHomeDir = '/home/' + bpUser
 
-task cleanLogs {
-    doLast {
-        println "delete $project.projectDir/logs"
-        delete "$project.projectDir/logs"
-    }
-}
+task clean { doLast { delete project.buildDir } }
+
 
 // Test servers
 task deployHost5068 { doLast { sshRun(remotes.host5068, remoteHomeDir, remoteInstallDir) } }
