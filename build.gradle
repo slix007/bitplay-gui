@@ -68,15 +68,15 @@ task clean { doLast { delete project.buildDir } }
 
 // Test servers
 task deployHost5068 { doLast { sshRun(remotes.host5068, remoteHomeDir, remoteInstallDir) } }
-task deployHost5060 { doLast { sshRun(remotes.host5060, remoteHomeDir, remoteInstallDir) } }
+task deployHost5060 { doLast { sshRun(remotes.host5060, '/home/ss', remoteInstallDir) } }
 task deployHost5061 { doLast { sshRun(remotes.host5061, remoteHomeDir, remoteInstallDir) } }
-task deployHost5062 { doLast { sshRun(remotes.host5062, remoteHomeDir, remoteInstallDir) } }
-task deployHost5063 { doLast { sshRun(remotes.host5063, remoteHomeDir, remoteInstallDir) } }
-task deployHost5064 { doLast { sshRun(remotes.host5064, remoteHomeDir, remoteInstallDir) } }
+task deployHost5062 { doLast { sshRun(remotes.host5062, '/home/ss', remoteInstallDir) } }
+task deployHost5063 { doLast { sshRun(remotes.host5063, '/home/ss', remoteInstallDir) } }
+task deployHost5064 { doLast { sshRun(remotes.host5064, '/home/ss', remoteInstallDir) } }
 
 // Prod servers
 // Real server
-task deployHost5040 { doLast { sshRun(remotes.host5040, remoteHomeDir, remoteInstallDir) } }
+task deployHost5040 { doLast { sshRun(remotes.host5040, '/home/ss', remoteInstallDir) } }
 
 private void sshRun(hostName, remoteHomeDir, remoteInstallDir) {
     println hostName
@@ -84,8 +84,9 @@ private void sshRun(hostName, remoteHomeDir, remoteInstallDir) {
     println remoteInstallDir
     ssh.run {
         session(hostName) {
-            println remoteInstallDir
-            println remoteHomeDir
+            println "remoteInstallDir=$remoteInstallDir"
+            println "remoteHomeDir=$remoteHomeDir"
+            println "project.projectDir=$project.projectDir"
             put from: "$project.projectDir/output", into: "${remoteHomeDir}/bitplay-gui"
             executeSudo "sudo rm -rf ${remoteInstallDir}/*", pty: true
             executeSudo "sudo cp -r ${remoteHomeDir}/bitplay-gui/output/** ${remoteInstallDir}", pty: true
