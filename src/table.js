@@ -404,6 +404,9 @@ let showMainInfo = function (baseUrl) {
                 placingOrderObj.cm = posDiffJson.cm
                 mobxStore.cm = posDiffJson.cm
             }
+
+            allSettings.hedgeBtc = posDiffJson.hedgeBtc
+            allSettings.hedgeEth = posDiffJson.hedgeEth
         }
 
         fetch('/market/last-price-deviation', function (jsonData) {

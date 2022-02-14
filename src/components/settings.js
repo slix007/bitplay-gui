@@ -1356,11 +1356,23 @@ function createHedgeSettings (settingsData, SETTINGS_URL) {
 
   const parent = $('#hedge-settings').css('display', 'flex')
   // const mainCont = $('#hedge-settings').css('border', 'solid #555555');
-  const mainCont = $('<div/>').
+  const hedgeCont = $('<div/>').
   css('border', 'solid #555555').
   css('padding', '3px').
   css('display', 'block').
   appendTo(parent)
+
+  const mainCont = $('<div/>').
+  css('border', 'dotted #555555').
+  css('padding', '3px').
+  css('display', 'block').
+  appendTo(hedgeCont)
+
+  const cftCont = $('<div/>').
+  css('border', '#555555').
+  css('padding', '3px').
+  css('display', 'block').
+  appendTo(hedgeCont)
 
   /// auto
   const checkboxCont = $('<div/>').appendTo(mainCont)
@@ -1421,6 +1433,37 @@ function createHedgeSettings (settingsData, SETTINGS_URL) {
     })
   }
 
+  /// BTC - CFT
+  function addCftBtcHedge () {
+    const modeName = settingsData.contractModeCurrent.modeName
+    const labelName = sprintf('%s, hedge_cft_btc', modeName)
+    const cont = $('<div/>').appendTo(cftCont)
+    $('<span/>').html(labelName).appendTo(cont) // 'Hedge BTC: '
+    const editHedgeCftBtc = $('<input>').width('80px').appendTo(cont)
+    const resLabelHedgeCftBtc = $('<span/>').html(settingsData.hedgeCftBtc)
+    let updateBtn = $('<button>').
+    text('Update').
+    css('margin-left', '5px').
+    css('margin-right', '5px').
+    click(function () {
+      updateBtn.attr('disabled', true)
+
+      let requestData = JSON.stringify({ hedgeCftBtc: editHedgeCftBtc.val() })
+      console.log(requestData)
+      Http.httpAsyncPost(SETTINGS_URL, requestData,
+        function (rawResp) {
+          const res = JSON.parse(rawResp)
+          resLabelHedgeCftBtc.html(res.hedgeCftBtc)
+          updateBtn.attr('disabled', false)
+        }
+      )
+    }).appendTo(cont)
+    resLabelHedgeCftBtc.appendTo(cont)
+    mobx.autorun(r => {
+      resLabelHedgeCftBtc.html(allSettings.hedgeCftBtc)
+    })
+  }
+
   /// ETH
   function addEthHedge () {
     const modeName = settingsData.contractModeCurrent.modeName
@@ -1453,11 +1496,49 @@ function createHedgeSettings (settingsData, SETTINGS_URL) {
     })
   }
 
+  /// CFT ETH
+  function addCftEthHedge () {
+    const modeName = settingsData.contractModeCurrent.modeName
+    const labelName = sprintf('%s, hedge_cft_eth', modeName)
+
+    const contCftEth = $('<div/>').appendTo(cftCont)
+    $('<span/>').html(labelName).appendTo(contCftEth)
+    const editHedgeCftEth = $('<input>').width('80px').appendTo(contCftEth)
+    const resLabelHedgeCftEth = $('<span/>').html(settingsData.hedgeCftEth)
+    let updateBtnEth = $('<button>').
+    text('Update').
+    css('margin-left', '5px').
+    css('margin-right', '5px').
+    click(function () {
+      updateBtnEth.attr('disabled', true)
+      let requestData = JSON.stringify({ hedgeCftEth: editHedgeCftEth.val() })
+      console.log(requestData)
+      Http.httpAsyncPost(SETTINGS_URL, requestData,
+        function (rawResp) {
+          const res = JSON.parse(rawResp)
+          resLabelHedgeCftEth.html(res.hedgeCftEth)
+          updateBtnEth.attr('disabled', false)
+        }
+      )
+    }).
+    appendTo(contCftEth)
+    resLabelHedgeCftEth.appendTo(contCftEth)
+    mobx.autorun(r => {
+      resLabelHedgeCftEth.html(allSettings.hedgeCftEth)
+    })
+  }
+
   if (settingsData.eth) {
     addEthHedge()
   }
   if (!settingsData.eth || allSettings.leftIsBtm) {
     addBtcHedge()
+  }
+  if (settingsData.eth) {
+    addCftEthHedge()
+  }
+  if (!settingsData.eth || allSettings.leftIsBtm) {
+    addCftBtcHedge()
   }
 
   setCheckBoxState(settingsData)
