@@ -230,6 +230,37 @@ export const mobxStore = observable({
         rightEmark: '',
         areBothOkex: false,
         isDefined: false,
+    },
+
+    fundingRateBordersBlock: {
+        left: {
+            ff: {
+                rate: '0.00',
+                costBtc: '0.0',
+                costUsd: '0.0',
+                costPts: '0.0',
+            },
+            sf: {
+                rate: '0.00',
+                costBtc: '0.0',
+                costUsd: '0.0',
+                costPts: '0.0',
+            }
+        },
+        right: {
+            ff: {
+                rate: '0.00',
+                costBtc: '0.0',
+                costUsd: '0.0',
+                costPts: '0.0',
+            },
+            sf: {
+                rate: '0.00',
+                costBtc: '0.0',
+                costUsd: '0.0',
+                costPts: '0.0',
+            }
+        }
     }
 });
 
