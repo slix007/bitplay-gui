@@ -112,7 +112,14 @@ export const allSettings = observable({
     ///settings/preset-all
     settingsPresets: [],
 
-    allPostOnlyArgs: { left: {}, right: {} }
+    allPostOnlyArgs: { left: {}, right: {} },
+
+    fundingSettings: {
+        leftFf: { time: "", scbSec: ""},
+        leftSf: { time: "", scbSec: ""},
+        rightFf: { time: "", scbSec: ""},
+        rightSf: { time: "", scbSec: ""},
+    }
 
 });
 
@@ -239,12 +246,22 @@ export const mobxStore = observable({
                 costBtc: '0.0',
                 costUsd: '0.0',
                 costPts: '0.0',
+                timer: {
+                    scheduledTime: '',
+                    secondsLeft: '',
+                    active: false
+                }
             },
             sf: {
                 rate: '0.00',
                 costBtc: '0.0',
                 costUsd: '0.0',
                 costPts: '0.0',
+                timer: {
+                    scheduledTime: '',
+                    secondsLeft: '',
+                    active: false
+                }
             }
         },
         right: {
@@ -253,12 +270,22 @@ export const mobxStore = observable({
                 costBtc: '0.0',
                 costUsd: '0.0',
                 costPts: '0.0',
+                timer: {
+                    scheduledTime: '',
+                    secondsLeft: '',
+                    active: false
+                }
             },
             sf: {
                 rate: '0.00',
                 costBtc: '0.0',
                 costUsd: '0.0',
                 costPts: '0.0',
+                timer: {
+                    scheduledTime: '',
+                    secondsLeft: '',
+                    active: false
+                }
             }
         }
     }
