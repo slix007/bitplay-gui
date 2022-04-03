@@ -79,8 +79,9 @@ function _createSettingsParam (
       })
   })
   mobx.autorun(function () {
-    const timeAt = ' ' + valExtractor(allSettings)
+    // const timeAt = ' ' + valExtractor(allSettings)
     const timer = secondsLeftExtractor(mobxStore)
+    const timeAt = timer.scheduledTime
     timer
       ? realValue.text(timeAt + ' TimeLeft: ' + timer.secondsLeft + ' sec')
       : realValue.text(timeAt)
