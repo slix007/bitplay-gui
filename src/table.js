@@ -484,6 +484,8 @@ let showMainInfo = function (baseUrl) {
             const impliedString = boldOneParam(resultJson.sumBalImpliedString, 's_e_best_imp')
             $('#sum-bal-implied').html(impliedString)
             eBestMin.fillComponents(resultJson)
+
+            mobxStore.fundingRateBordersBlock.fundingResultBlock = resultJson.fundingResultBlock
         })
 
         fetch('/market/left/account', function (leftAccount) {

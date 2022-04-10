@@ -13,6 +13,7 @@ import { createBitmexCtList } from './settings-bitmexCtList'
 import { showSumBalImpliedInput } from './settings/sum-bal-implied-input'
 import { createFundingRateBlock } from './settings-fundingRate'
 import { createFundingResultTimerBlock } from './settings-fundingResultTimer'
+import { createFundingResultBlock } from './settings-fundingResultTimer'
 
 let $ = require('jquery')
 let Http = require('../http')
@@ -200,6 +201,7 @@ let fillAndShowMainSettings = function (baseUrl) {
 
   createFundingRateBlock()
   createFundingResultTimerBlock()
+  createFundingResultBlock()
 
   // Volatile mode
   createTradingModeDropdown(SETTINGS_URL)

@@ -287,6 +287,10 @@ export const mobxStore = observable({
                     active: false
                 }
             }
+        },
+        fundingResultBlock: {
+            fundingResult: '0',
+            fundingResultCalcString: ''
         }
     }
 });

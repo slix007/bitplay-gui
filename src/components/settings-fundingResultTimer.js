@@ -6,7 +6,7 @@ import $ from 'jquery'
 import * as mobx from 'mobx'
 import Http from '../http'
 
-export { createFundingResultTimerBlock }
+export { createFundingResultTimerBlock, createFundingResultBlock }
 
 const createFundingResultTimerBlock = function () {
   const container = $('#funding-result-timer-block')
@@ -117,5 +117,44 @@ function _createScbParam (
 
   mobx.autorun(function () {
     realValue.text(' ' + valExtractor(allSettings))
+  })
+}
+
+const createFundingResultBlock = function () {
+  const container = $('#funding-result-timer-block')
+  // const container = $('#funding-result-block')
+  //checkbox
+  const activeCheckbox = $('<input>').
+  css('margin-left', '5px').
+  css('margin-top', '15px').
+  attr('type', 'checkbox').
+  appendTo(container)
+
+  activeCheckbox.click(() => {
+    activeCheckbox.prop('disabled', true)
+    Http.httpAsyncPost(allSettings.SETTINGS_URL, JSON.stringify(
+        { fundingSettingsUpdate: { fundingResultEnabled: activeCheckbox.prop('checked') } }
+      ),
+      json => {
+        setAllSettingsRaw(json)
+        activeCheckbox.prop('disabled', false)
+      }
+    )
+  })
+
+
+  // funding result string
+  const lb1 = $('<span>').
+  // css({ display: 'inline-block', marginLeft: '10px' }).
+  // prop('title', 'Start calculate before').
+  text('FundingResult, pts = ').
+  appendTo(container)
+  const realValue = $('<span>').appendTo(container)
+
+  mobx.autorun(function () {
+    realValue.text(mobxStore.fundingRateBordersBlock.fundingResultBlock.fundingResultCalcString)
+    activeCheckbox.prop('checked', allSettings.fundingSettings.fundingResultEnabled)
+    realValue.css('color', allSettings.fundingSettings.fundingResultEnabled ? 'black' : 'grey')
+
   })
 }
