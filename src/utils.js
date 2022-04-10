@@ -153,3 +153,14 @@ function isProdHost() {
 
 exports.isProdHost = isProdHost;
 exports.isNonProdHost = () => !isProdHost();
+
+exports.extractFirstTool = function extractFirstTool(fullContractName) {
+    if (fullContractName === undefined) {return 'XXX'}
+    if (fullContractName.startsWith('LINK')) {
+        return 'LINK'
+    } else if (fullContractName.startsWith('XBT')) {
+        return 'BTC'
+    } else {
+        return fullContractName.substring(0, 3)
+    }
+}

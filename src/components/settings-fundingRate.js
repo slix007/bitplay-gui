@@ -1,9 +1,10 @@
 'use strict'
 
-import { mobxStore } from '../store/settings-store'
+import { allSettings, mobxStore } from '../store/settings-store'
 
 import $ from 'jquery'
 import * as mobx from 'mobx'
+import { extractFirstTool } from '../utils'
 
 export { createFundingRateBlock }
 
@@ -29,33 +30,39 @@ const createFundingRateBlock = function () {
     $('<div>').appendTo(container).append($('<span>').text('Left ')).append(
       $('<span>').text('FF').prop('title', 'First Funding')
     ),
-    x => (x.fundingRateBordersBlock.left.ff)
+    x => (x.fundingRateBordersBlock.left.ff),
+    allS => extractFirstTool(allS.contractModeCurrent.left)
   )
   _createDynamicInfo(
     $('<div>').appendTo(container).append($('<span>').text('Left ')).append(
       $('<span>').text('SF').prop('title', 'Second Funding')
     ),
-    x => (x.fundingRateBordersBlock.left.sf)
+    x => (x.fundingRateBordersBlock.left.sf),
+    allS => extractFirstTool(allS.contractModeCurrent.left)
   )
   _createDynamicInfo(
     $('<div>').appendTo(container).append($('<span>').text('Right ')).append(
       $('<span>').text('FF').prop('title', 'First Funding')
     ),
-    x => (x.fundingRateBordersBlock.right.ff)
+    x => (x.fundingRateBordersBlock.right.ff),
+    allS => extractFirstTool(allS.contractModeCurrent.right)
   )
   _createDynamicInfo(
     $('<div>').appendTo(container).append($('<span>').text('Right ')).append(
       $('<span>').text('SF').prop('title', 'Second Funding')
     ),
-    x => (x.fundingRateBordersBlock.right.sf)
+    x => (x.fundingRateBordersBlock.right.sf),
+    allS => extractFirstTool(allS.contractModeCurrent.right)
   )
 }
 
-function _createDynamicInfo (container, valExtractor, label1, label2, label3, label4) {
+function _createDynamicInfo (container, valExtractor, contractNameExtractor) {
   $('<span>').text(' rate, % = ').appendTo(container)
   const rateValue = $('<span>').appendTo(container)
   $('<div>').appendTo(container)
-  $('<span>').text('cost: BTC =  ').appendTo(container)
+  $('<span>').text('cost: ').appendTo(container)
+  const contractName = $('<span>').appendTo(container)
+  $('<span>').text(' = ').appendTo(container)
   const btcValue = $('<span>').appendTo(container)
   $('<span>').text(', USD = ').appendTo(container)
   const usdValue = $('<span>').appendTo(container)
@@ -63,6 +70,7 @@ function _createDynamicInfo (container, valExtractor, label1, label2, label3, la
   const ptsValue = $('<span>').appendTo(container)
 
   mobx.autorun(function () {
+    contractName.text(contractNameExtractor(allSettings))
     rateValue.text(valExtractor(mobxStore).rate)
     btcValue.text(valExtractor(mobxStore).costBtc)
     usdValue.text(valExtractor(mobxStore).costUsd)
