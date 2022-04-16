@@ -1,7 +1,7 @@
 'use strict';
 
-import * as mobx from "mobx";
-import {allSettings} from "../store/settings-store";
+import * as mobx from 'mobx'
+import { allSettings } from '../store/settings-store'
 
 var Handsontable = require('handsontable');
 
@@ -26,8 +26,7 @@ let updateTableHash = function (newHashCode) {
         borderTableHashCode = newHashCode;
 
         // update tables
-        const BORDERS_TABLES_URL = BASE_URL + '/borders/tables';
-        updateAllTables(BORDERS_TABLES_URL, function(result) {
+        updateAllTables(function(result) {
             console.log('updated' + result.reduce((sum,item) => sum + item.borderName + ',', ' '));
         });
         updateAutoBaseLvl();
@@ -48,8 +47,8 @@ function updateAutoBaseLvl() {
     });
 }
 
-function updateAllTables(BORDERS_TABLES_URL, callback) {
-    Http.httpAsyncGet(BORDERS_TABLES_URL, function(rawData) {
+function updateAllTables(callback) {
+    Http.httpAsyncGet(BASE_URL + '/borders/tables', function(rawData) {
         let tableData = JSON.parse(rawData);
 
         b_br_close.loadData(extractTableData(tableData, 'b_br_close'));
@@ -71,7 +70,6 @@ function extractTableData(tableData, elementId) {
 let showBordersV2 = function (baseUrl) {
     BASE_URL = baseUrl;
     const MAIN_BORDERS_URL = baseUrl + '/borders/';
-    const BORDERS_TABLES_URL = baseUrl + '/borders/tables';
     const BORDERS_SETTINGS_URL = baseUrl + '/borders/settings';
     const BORDERS_SETTINGS_V2_URL = baseUrl + '/borders/settingsV2';
 
@@ -100,7 +98,7 @@ let showBordersV2 = function (baseUrl) {
         const requestData = JSON.stringify([b_br_closeData, b_br_openData, o_br_closeData, o_br_openData]);
 
         // console.log(requestData);
-        Http.httpAsyncPost(BORDERS_TABLES_URL, requestData, callback);
+        Http.httpAsyncPost(baseUrl + '/borders/tables', requestData, callback);
     }
 
     let updateSaveButtons = function () {
@@ -112,7 +110,7 @@ let showBordersV2 = function (baseUrl) {
         updateBtn.innerHTML = 'reload all tables';
         updateBtn.onclick = function () {
             // update tables
-            updateAllTables(BORDERS_TABLES_URL, function (result) {
+            updateAllTables(function (result) {
                 console.log('reload:');
                 console.log(result);
             });
@@ -143,7 +141,7 @@ let showBordersV2 = function (baseUrl) {
         }
 
         // volatile mode highlight
-        if (col === 1) {
+        if (col === 1 || col === 2) {
             mobx.autorun(r => {
                 const tableSettings = cellProperties.settings;
                 const isActive = allSettings.tradingModeState.tradingMode === 'VOLATILE'
@@ -166,9 +164,9 @@ let showBordersV2 = function (baseUrl) {
     function createTable(container, dataUrl, dataPartName) {
         return new Handsontable(container, {
             data: myData, //fetchBorderTables(dataUrl, dataPartName),
-            colWidths: [40, 40, 110, 110],
+            colWidths: [40, 40, 75, 110, 110],
             rowHeaders: false,
-            colHeaders: ['id', 'value', 'pos_long_limit', 'pos_short_limit'],
+            colHeaders: ['id', 'value', 'valueFinal', 'pos_long_limit', 'pos_short_limit'],
             fixedRowsTop: 1,
             fixedColumnsLeft: 1,
             fixedRowsBottom: 1,
@@ -186,6 +184,9 @@ let showBordersV2 = function (baseUrl) {
                 var cellProperties = {};
 
                 cellProperties.renderer = firstRowRenderer; // uses function directly
+                if (col === 2) {
+                    cellProperties.readOnly = true;
+                }
 
                 return cellProperties;
             }
