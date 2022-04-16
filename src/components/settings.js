@@ -323,6 +323,11 @@ let fillAndShowMainSettings = function (baseUrl) {
     x => x.settingsVolatileMode
   )
 
+  const stopCalculateFundingResultCont = $('<div>').appendTo($column3Cont)
+  createCheckboxV(stopCalculateFundingResultCont, SETTINGS_URL, 'stopCalculateFundingResult',
+    $('<span>').text('stopCalculateFundingResult'))
+  //
+
   if (allSettings.marketList.left === 'bitmex') {
     fillBitmexChangeOnSo()
   }
@@ -354,10 +359,19 @@ let createSettingsV = function (container, SETTINGS_URL, labelName, requestCreat
   })
 }
 
-let createCheckboxV = function (cont, SETTINGS_URL, fieldName) {
+let createCheckboxV = function (cont, SETTINGS_URL, fieldName, label) {
   const checkbox = $('<input>').attr('type', 'checkbox').appendTo(cont)
+  if (label) label.appendTo(cont)
   mobx.autorun(function () {
     checkbox.prop('checked', isActive(fieldName))
+    if (label) {
+      if (isActive(fieldName) && allSettings.tradingModeState.tradingMode === 'VOLATILE') {
+        label.css('font-weight', 'bold').prop('title', '')
+      } else {
+        label.css('font-weight', 'normal').prop('title', '')
+      }
+    }
+
   })
   checkbox.click(function () {
     Utils.disableElements(cont)
