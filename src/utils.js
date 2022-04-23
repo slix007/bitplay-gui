@@ -164,3 +164,22 @@ exports.extractFirstTool = function extractFirstTool(fullContractName) {
         return fullContractName.substring(0, 3)
     }
 }
+
+exports.getHHMMSSFromSeconds = function getHHMMSSFromSeconds(totalSeconds) {
+    if (!totalSeconds) {
+        return '00:00:00';
+    }
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor(totalSeconds % 3600 / 60);
+    const seconds = totalSeconds % 60;
+    const hhmmss = padTo2(hours) + ':' + padTo2(minutes) + ':' + padTo2(seconds);
+    return hhmmss;
+}
+
+// function to convert single digit to double digit
+function padTo2(value) {
+    if (!value) {
+        return '00';
+    }
+    return value < 10 ? String(value).padStart(2, '0') : value;
+}

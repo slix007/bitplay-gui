@@ -81,8 +81,8 @@ let showBordersV2 = function (baseUrl) {
                 let item = {};
                 item.id = el[0];
                 item.value = el[1];
-                item.posLongLimit = el[2];
-                item.posShortLimit = el[3];
+                item.posLongLimit = el[3];
+                item.posShortLimit = el[4];
                 return item;
             });
             return {

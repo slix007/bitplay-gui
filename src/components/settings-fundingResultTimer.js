@@ -5,6 +5,7 @@ import { allSettings, mobxStore, setAllSettingsRaw } from '../store/settings-sto
 import $ from 'jquery'
 import * as mobx from 'mobx'
 import Http from '../http'
+import {getHHMMSSFromSeconds} from "../utils";
 
 export { createFundingResultTimerBlock, createFundingResultBlock }
 
@@ -19,7 +20,7 @@ const createFundingResultTimerBlock = function () {
     x => x.fundingRateBordersBlock.left.ff.timer
   )
   _createScbParam(cont1,
-    x => ({ fundingSettingsUpdate: { paramName: 'leftFf', scbSec: x } }),
+    x => ({ fundingSettingsUpdate: { paramName: 'leftFf', scbString: x } }),
     x => x.fundingSettings.leftFf.scbSec
   )
 
@@ -31,7 +32,7 @@ const createFundingResultTimerBlock = function () {
     x => x.fundingRateBordersBlock.right.ff.timer
   )
   _createScbParam(cont2,
-    x => ({ fundingSettingsUpdate: { paramName: 'rightFf', scbSec: x } }),
+    x => ({ fundingSettingsUpdate: { paramName: 'rightFf', scbString: x } }),
     x => x.fundingSettings.rightFf.scbSec
   )
 
@@ -43,7 +44,7 @@ const createFundingResultTimerBlock = function () {
     x => x.fundingRateBordersBlock.left.sf.timer
   )
   _createScbParam(cont3,
-    x => ({ fundingSettingsUpdate: { paramName: 'leftSf', scbSec: x } }),
+    x => ({ fundingSettingsUpdate: { paramName: 'leftSf', scbString: x } }),
     x => x.fundingSettings.leftSf.scbSec
   )
 
@@ -55,7 +56,7 @@ const createFundingResultTimerBlock = function () {
     x => x.fundingRateBordersBlock.right.sf.timer
   )
   _createScbParam(cont4,
-    x => ({ fundingSettingsUpdate: { paramName: 'rightSf', scbSec: x } }),
+    x => ({ fundingSettingsUpdate: { paramName: 'rightSf', scbString: x } }),
     x => x.fundingSettings.rightSf.scbSec
   )
 }
@@ -83,7 +84,7 @@ function _createSettingsParam (
     const timer = secondsLeftExtractor(mobxStore)
     const timeAt = timer.scheduledTime
     timer
-      ? realValue.text(timeAt + ' TimeLeft: ' + timer.secondsLeft + ' sec')
+      ? realValue.text(timeAt + ' TimeLeft: ' + getHHMMSSFromSeconds(timer.secondsLeft) + ' ')
       : realValue.text(timeAt)
     if (timer.active) {
       lb.css('color', 'green')
@@ -116,7 +117,7 @@ function _createScbParam (
   })
 
   mobx.autorun(function () {
-    realValue.text(' ' + valExtractor(allSettings))
+    realValue.text(' ' + getHHMMSSFromSeconds(valExtractor(allSettings)))
   })
 }
 
