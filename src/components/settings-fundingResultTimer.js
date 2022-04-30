@@ -65,7 +65,7 @@ function _createSettingsParam (
   container, labelName, requestCreator, valExtractor, isActive, secondsLeftExtractor) {
   const lb = $('<span>').css({
     display: 'inline-block',
-    width: '110px'
+    width: '130px'
   }).text(labelName).appendTo(container)
   const edit = $('<input>').width('60px').appendTo(container)
   const updateBtn = $('<button>').text('set').appendTo(container)
@@ -87,11 +87,15 @@ function _createSettingsParam (
       ? realValue.text(timeAt + ' TimeLeft: ' + getHHMMSSFromSeconds(timer.secondsLeft) + ' ')
       : realValue.text(timeAt)
     if (timer.active) {
-      lb.css('color', 'green')
-      realValue.css('color', 'green')
+      lb.css('color', '#19b301')
+      lb.css('font-weight', 'bold')
+      realValue.css('color', '#19b301')
+      realValue.css('font-weight', 'bold')
     } else {
       lb.css('color', 'black')
+      lb.css('font-weight', 'normal')
       realValue.css('color', 'black')
+      realValue.css('font-weight', 'normal')
     }
   })
 }
