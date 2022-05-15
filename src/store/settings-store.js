@@ -46,6 +46,8 @@ export const allSettings = observable({
         leftFutureContractName: 'x',
         rightFutureContractName: 'x',
         eth: false,
+        leftSwap: false,
+        rightSwap: false
     },
     get leftIsBtm() {
         return this.marketList.left === 'bitmex'
